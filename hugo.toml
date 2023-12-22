@@ -1,3 +1,18 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://lyuboslavsky.com/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Victor on Software'
+theme = "hugo-theme-stack"
+
+[params]
+  author = "Victor Lyuboslavsky"
+  description = "Software engineering, security, and related topics. Currently building security telemetry and MDM at Fleet Device Management."
+
+  [[params.social]]
+    icon = "github"
+    name = "GitHub"
+    url = "https://github.com/getvictor"
+
+  [[params.social]]
+    icon = "linkedin"
+    name = "LinkedIn"
+    url = "https://www.linkedin.com/in/lyuboslavsky/"
