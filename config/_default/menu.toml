@@ -1,0 +1,29 @@
+# Configure main menu and social menu
+#[[main]]
+#identifier = "bozo"
+#name = "Bozo"
+#url = "http://bozo.com"
+#[main.params]
+#icon = "bozo"
+
+## Social
+[[social]]
+identifier = "fleet"
+name = "Fleet"
+url = "https://fleetdm.com"
+[social.params]
+icon = "fleet"
+
+[[social]]
+identifier = "github"
+name = "GitHub"
+url = "https://github.com/getvictor"
+[social.params]
+icon = "brand-github"
+
+[[social]]
+identifier = "linkedin"
+name = "LinkedIn"
+url = "https://www.linkedin.com/in/lyuboslavsky/"
+[social.params]
+icon = "brand-linkedin"
