@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>proxmox on Victor on Software</title><link>https://victoronsoftware.com/tags/proxmox/</link><description>Recent content in proxmox on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/proxmox/index.xml" rel="self" type="application/rss+xml"/><item><title>Setting up a virtual router</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router" />&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/uj_lB__QDTc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>Traditionally, network routers used dedicated bare metal machines. However, in the last several
+years, we’ve seen a rise in software-based routers that can be deployed either on bare metal, on a
+VM, or even on a container. This means these virtual routers can be used to replace existing router
+software on an older router. They can run in the cloud. Or they can be installed on do-it-yourself
+(DIY) hardware. A couple popular open source software-based routers
+are &lt;a class="link" href="https://www.pfsense.org/" target="_blank" rel="noopener"
+>pfSense&lt;/a> and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
+>OPNsense&lt;/a>.&lt;/p>
+&lt;h2 id="why-use-a-virtual-router">Why use a virtual router?&lt;/h2>
+&lt;p>For one, these routers offer enterprise-level features such as build-in VPN support, traffic
+analysis, and extensive diagnostics, among others. Another reason is that having a virtual router
+gives you the ability to experiment &amp;ndash; you can install multiple routers on top of your hypervisor,
+and try all of them out. A third reason is that the virtual router may be only one of many VMs that
+you run on your hardware. You can use the same piece of hardware to run a router, an ad-blocking
+service, a media server, and other applications.&lt;/p>
+&lt;h2 id="advanced-virtual-router-installation-and-set-up">Advanced virtual router installation and set up&lt;/h2>
+&lt;p>When setting up our virtual router, we chose to
+use &lt;a class="link" href="https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough" target="_blank" rel="noopener"
+>PCI Passthrough&lt;/a> to allow the virtual router
+direct access to the NIC hardware. Direct access to hardware improves the latency of our internet
+traffic. In addition, we wanted our hypervisor to sit behind the router, and not be exposed to the
+public. This reduces the attack surface for potential bad agents. However, routing hypervisor
+traffic through the router made our setup a bit tricker. It is like the chicken or the egg
+dilemma &amp;ndash; how do you put your hypervisor behind the router when the hypervisor is responsible for
+managing the router? Below is the approach we used when installing pfSense on top
+of &lt;a class="link" href="https://www.proxmox.com/en/proxmox-virtual-environment/overview" target="_blank" rel="noopener"
+>Proxmox Virtual
+Environment (PVE)&lt;/a>.&lt;/p>
+&lt;p>For the initial installation, we did not use PCI Passthrough and instead used a virtual network
+bridge (&lt;strong>vmbr0&lt;/strong>). We configured the router VM to start on boot.&lt;/p>
+&lt;figure>&lt;img src="Virtual-Router-1.jpg"/>&lt;figcaption>
+&lt;h4>Initial virtual router configuration&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the
+router and enabled access to it through the serial interface, which we used in the next step. Then,
+we put the system into its final configuration.&lt;/p>
+&lt;figure>&lt;img src="Virtual-Router-2.jpg"/>&lt;figcaption>
+&lt;h4>Final virtual router configuration&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We
+accessed the virtual router via the serial interface from the PVE command line:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>qm terminal &lt;span style="color:#ae81ff">100&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We updated the WAN interface to use &lt;strong>eth0&lt;/strong>. At this point, the LAN interface &lt;strong>eth1&lt;/strong> had access
+to the internet.&lt;/p>
+&lt;p>In addition, we added a second LAN interface for the network bridge (&lt;strong>vmbr0&lt;/strong>). We made sure
+firewall configurations for both LAN interfaces were the same.&lt;/p>
+&lt;p>Next, from the PVE command line, we updated the PVE IP and gateway to point at the router by
+modifying the following files.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/etc/network/interfaces
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/etc/hosts
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After rebooting PVE, we had access to the internet and to the PVE Web GUI from our new LAN.&lt;/p>
+&lt;h2 id="updating-router-software">Updating router software&lt;/h2>
+&lt;p>Using a virtual router with PCI Passthrough creates a unique challenge when doing software updates.
+What if the new version doesn’t work? What if you lose all internet access.&lt;/p>
+&lt;p>We can mitigate potential issues. First, we recommend always making a backup of the router VM when
+upgrading. That way we can easily roll back the change. Switching to a backup, however, requires
+keyboard and monitor access to your hardware, since it must be done via the PVE command line.&lt;/p>
+&lt;p>Another way to safely upgrade is to spin up a second VM running updated router software. The second
+VM can be either from a backup or brand new. This VM should use virtual network bridges for its
+connections. Once it is properly configured, we can stop the first router VM and switch the port
+connections to the second VM. This flow also requires accessing the router via the serial interface
+to update the WAN/LAN interfaces.&lt;/p></description></item></channel></rss>
