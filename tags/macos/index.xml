@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>macos on Victor on Software</title><link>https://victoronsoftware.com/tags/macos/</link><description>Recent content in macos on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 16 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/macos/index.xml" rel="self" type="application/rss+xml"/><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/QBn_C2nl2ZE"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>Keychains are the macOS’s method to track and protect secure information such as passwords, private keys, and certificates. Traditionally, the keychain information was stored in files, such as:&lt;/p>
+&lt;pre tabindex="0">&lt;code>/Library/Keychains/System.keychain
+/Library/Keychains/apsd.keychain
+/System/Library/Keychains/SystemRootCertificates.keychain
+/Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db
+&lt;/code>&lt;/pre>&lt;p>In the last several years, Apple also introduced data protection keychains, such as the iCloud
+Keychain. Although the file-based keychains above are on the road to deprecation in favor of data
+protection keychains, current macOS systems still heavily rely on them. It is unclear when, if
+ever, these keychains will be replaced by data protection keychains.&lt;/p>
+&lt;p>Inspecting file-based keychains has gotten more difficult as Apple deprecated many of the APIs
+associated with them, such as &lt;a class="link" href="https://developer.apple.com/documentation/security/1396431-seckeychainopen" target="_blank" rel="noopener"
+>SecKeychainOpen&lt;/a>.
+In addition, excessive use of these deprecated APIs may result in corruption of the Login Keychain,
+as mentioned in this &lt;a class="link" href="https://github.com/osquery/osquery/issues/7780" target="_blank" rel="noopener"
+>osquery issue&lt;/a>.
+By NOT using the deprecated APIs, the user only has access to the following keychains from the above list:&lt;/p>
+&lt;pre tabindex="0">&lt;code>/Library/Keychains/System.keychain
+/Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db
+&lt;/code>&lt;/pre>&lt;p>Root certificates are missing. And the APSD (Apple Push Service Daemon) keychain is missing, which is used for device management, among other things.&lt;/p>
+&lt;p>So, how can app developers and IT professionals continue to have access to ALL of these keychain files?&lt;/p>
+&lt;p>One way is to continue using deprecated APIs until they stop working. We recommend making a secure copy of the keychain files before accessing them with the APIs.&lt;/p>
+&lt;p>Another option is to use the macOS &lt;a class="link" href="https://ss64.com/osx/security.html" target="_blank" rel="noopener"
+>security&lt;/a> command line tool. For example, to list root certificates, do the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A third, and hardest, option is to parse the &lt;a class="link" href="https://github.com/libyal/dtformats/blob/main/documentation/MacOS%20keychain%20database%20file%20format.asciidoc" target="_blank" rel="noopener"
+>keychain files&lt;/a> yourself. Some details on the keychain format are available. Please leave a comment if you or someone else has created a tool to parse Apple keychains.&lt;/p>
+&lt;p>The fourth option is to use an existing tool, such as &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+>osquery&lt;/a>. Osquery is an open-source tool built for security and IT professionals. Osquery developers are working on fixing any issues to continue providing access to macOS keychain files via the following tables:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://fleetdm.com/tables/certificates" target="_blank" rel="noopener"
+>certificates&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://fleetdm.com/tables/keychain_acls" target="_blank" rel="noopener"
+>keychain_acls&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://fleetdm.com/tables/keychain_items" target="_blank" rel="noopener"
+>keychain_items&lt;/a>&lt;/li>
+&lt;/ul></description></item></channel></rss>

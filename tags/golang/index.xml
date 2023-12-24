@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>golang on Victor on Software</title><link>https://victoronsoftware.com/tags/golang/</link><description>Recent content in golang on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 10 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/jbkPLQpzPtc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>Authorization is giving permission to a user to do an action on the server.
+As developers, we must ensure that users are only allowed to do what they are authorized.&lt;/p>
+&lt;p>One way to ensure that authorization has happened is to loudly flag when it hasn&amp;rsquo;t.
+This is how we do it at &lt;a class="link" href="https://www.fleetdm.com" target="_blank" rel="noopener"
+>Fleet Device Management&lt;/a>.&lt;/p>
+&lt;p>In our code base, we use the &lt;a class="link" href="https://github.com/go-kit/kit" target="_blank" rel="noopener"
+>go-kit library&lt;/a>. Most of the general endpoints are created
+in the &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
+>handler.go&lt;/a> file. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user-authenticated endpoints
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ue&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">newUserAuthenticatedEndpointer&lt;/span>(&lt;span style="color:#a6e22e">svc&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>, &lt;span style="color:#a6e22e">apiVersions&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ue&lt;/span>.&lt;span style="color:#a6e22e">POST&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/api/_version_/fleet/trigger&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">triggerEndpoint&lt;/span>, &lt;span style="color:#a6e22e">triggerRequest&lt;/span>{})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Every endpoint calls &lt;strong>kithttp.NewServer&lt;/strong> and wraps the endpoint with our &lt;strong>AuthzCheck&lt;/strong>.
+From &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
+>handler.go&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">e&lt;/span> = &lt;span style="color:#a6e22e">authzcheck&lt;/span>.&lt;span style="color:#a6e22e">NewMiddleware&lt;/span>().&lt;span style="color:#a6e22e">AuthzCheck&lt;/span>()(&lt;span style="color:#a6e22e">e&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">kithttp&lt;/span>.&lt;span style="color:#a6e22e">NewServer&lt;/span>(&lt;span style="color:#a6e22e">e&lt;/span>, &lt;span style="color:#a6e22e">decodeFn&lt;/span>, &lt;span style="color:#a6e22e">encodeResponse&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="AuthzCheck.jpg"/>
+&lt;/figure>
+&lt;p>This means that after the business logic is processed, the AuthzCheck is called.
+This check ensures that authorization was checked. Otherwise, an error is returned.
+From &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/middleware/authzcheck/authzcheck.go#L51" target="_blank" rel="noopener"
+>authzcheck.go&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// If authorization was not checked, return a response that will
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// marshal to a generic error and log that the check was missed.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">authzctx&lt;/span>.&lt;span style="color:#a6e22e">Checked&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Getting to here means there is an authorization-related bug in our code.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">authz&lt;/span>.&lt;span style="color:#a6e22e">CheckMissingWithResponse&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This additional check is useful during our development and QA process, to ensure that authorization always happens in our business logic.&lt;/p>
+&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/catch-missed-authorization-checks-during-software-development" target="_blank" rel="noopener"
+>Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item></channel></rss>
