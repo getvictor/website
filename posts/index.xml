@@ -1,4 +1,52 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in Posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;div class="video-wrapper">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in Posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 29 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" />&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/Jh14hNjW0Uo"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
+>Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+>Osquery&lt;/a> agents run on these devices and report to the Fleet server. One of Fleet’s features is the ability to query information from the devices in near real-time, called &lt;em>live queries&lt;/em>. This article discusses how live queries work “under the hood.”&lt;/p>
+&lt;h2 id="why-a-live-query">Why a live query?&lt;/h2>
+&lt;p>Live queries enable administrators to ask near real-time questions of all online devices, such as checking the encryption status of SSH keys across endpoints, or obtaining the uptime of each server within their purview. This enables them to promptly identify and address any issues, thereby reducing downtime and maintaining operational efficiency. These tasks, which would be time-consuming and complex if done manually, are streamlined through live queries, offering real-time insights into the status and posture of the entire fleet of devices helping IT and security.&lt;/p>
+&lt;h2 id="live-queries-under-the-hood">Live queries under the hood&lt;/h2>
+&lt;p>Live queries can be run from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code>, or the REST API. The user creates a query and selects which devices will run that query. Here is an example using &lt;code>fleetctl&lt;/code> to obtain the operating system name and version for all devices:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fleetctl query --query &lt;span style="color:#e6db74">&amp;#34;select name, version from os_version;&amp;#34;&lt;/span> --labels &lt;span style="color:#e6db74">&amp;#34;All Hosts&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When a client initiates a live query, the server first creates a &lt;strong>Query Campaign&lt;/strong> record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p>
+&lt;figure>&lt;img src="Live%20Query.png"/>&lt;figcaption>
+&lt;h4>Query campaign&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>As devices called &lt;strong>Hosts&lt;/strong> in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;queries&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;SELECT name, version FROM os_version;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;discovery&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;SELECT 1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, the osquery agents run the actual query on their host, and write the result back to a Fleet server. As a server receives the result, it publishes it to the common cache using &lt;a class="link" href="https://redis.io/docs/interact/pubsub/" target="_blank" rel="noopener"
+>Redis Pub/Sub&lt;/a>.&lt;/p>
+&lt;p>Only the one server communicating with the client subscribes to the results. It processes the data from the cache, keeps track of how many hosts reported back, and communicates results back to the client. The web UI and &lt;code>fleetctl&lt;/code> interfaces use a &lt;a class="link" href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" target="_blank" rel="noopener"
+>WebSockets API&lt;/a>, and results are reported as they come in. The REST API, on the other hand, only sends a response after all online hosts have reported their query results.&lt;/p>
+&lt;h2 id="discover-more">Discover more&lt;/h2>
+&lt;p>Fleet’s live query feature represents a powerful tool in the arsenal of IT and security administrators. By harnessing the capabilities of live queries, tasks that once required extensive manual effort can now be executed swiftly and efficiently. This real-time querying ability enhances operational efficiency and significantly bolsters security and compliance measures across a range of devices.&lt;/p>
+&lt;p>The integration of Fleet with Osquery agents, the flexibility offered by interfaces like the web UI, &lt;code>fleetctl&lt;/code>, and the REST API, and the efficient data handling through mechanisms like Redis Pub/Sub and WebSockets API all come together to create a robust, real-time telemetry gathering system. This system is designed to keep you informed about the current state of your device fleet, helping you make informed decisions quickly.&lt;/p>
+&lt;p>As you reflect on the capabilities of live queries with Fleet, consider your network environment&amp;rsquo;s unique challenges and needs. &lt;strong>What questions could live queries help you answer about your devices?&lt;/strong> Whether it&amp;rsquo;s security audits, performance monitoring, or compliance checks, live queries offer a dynamic solution to address these concerns.&lt;/p>
+&lt;p>We encourage you to explore the possibilities and share your thoughts or questions. Perhaps you’re facing a specific query challenge or an innovative use case you’ve discovered. Whatever it may be, the world of live queries is vast and ripe for exploration. Join us in &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
+>Fleet’s Slack forums&lt;/a> to engage with a community of like-minded professionals and deepen your understanding of what live queries can achieve in your environment.&lt;/p>
+&lt;p>API Documentation:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://fleetdm.com/docs/rest-api/rest-api#run-live-query" target="_blank" rel="noopener"
+>Run live query with REST API&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6fd06d648601edd89c01e25426e2e35ff2a8a37b/docs/Contributing/API-for-contributors.md#run-live-query" target="_blank" rel="noopener"
+>Run live query with WebSockets&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/get-current-telemetry-from-your-devices-with-live-queries" target="_blank" rel="noopener"
+>Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/q0B4q_0u4XI"
 allowfullscreen
