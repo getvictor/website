@@ -1,4 +1,138 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 30 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;div class="video-wrapper">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/WA_RL_QtIgY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
+&lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
+&lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
+&lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
+&lt;p>mTLS is helpful as an additional layer of security. It is used in many applications, including:&lt;/p>
+&lt;ul>
+&lt;li>VPNs&lt;/li>
+&lt;li>Microservices&lt;/li>
+&lt;li>Service mesh&lt;/li>
+&lt;li>IoT (Internet of Things)&lt;/li>
+&lt;li>Mobile apps&lt;/li>
+&lt;/ul>
+&lt;h2 id="how-does-fleet-device-managementhttpsfleetdmcom-use-mtls">How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
+>Fleet Device Management&lt;/a> use mTLS?&lt;/h2>
+&lt;p>Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects information about the host and sends it to the Fleet server.&lt;/p>
+&lt;h2 id="how-does-mtls-work">How does mTLS work?&lt;/h2>
+&lt;p>TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only go over the basics to understand how mTLS works.&lt;/p>
+&lt;p>TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between the client and the server.&lt;/p>
+&lt;figure>&lt;img src="mtls-handshake.png"/>
+&lt;/figure>
+&lt;p>The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p>
+&lt;p>The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate is valid and has not expired. The client also checks that the server&amp;rsquo;s hostname matches the hostname in the certificate.&lt;/p>
+&lt;p>The client uses the server&amp;rsquo;s public key to encrypt the messages sent to the server, including the session key and its certificate. The server decrypts these messages with its private key.&lt;/p>
+&lt;p>The client also sends a digital signature, encrypted with its private key, to the server. The server verifies the signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p>
+&lt;p>At this point, both the client and the server have verified each other&amp;rsquo;s identity. They complete the TLS handshake and can exchange encrypted messages using a symmetric session key.&lt;/p>
+&lt;h2 id="generate-certificates-and-keys">Generate certificates and keys&lt;/h2>
+&lt;p>We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
+>OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular open-source library for TLS and SSL protocols.&lt;/p>
+&lt;p>The following script generates the certificates and keys for the client and the server. It also creates two certificate authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the certificates, but we will use separate CAs for this example.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This script generates files needed for mTLS.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir -p certs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Private keys for CAs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/server-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/client-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate CA certificates&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/server-ca.key -out certs/server-ca.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/client-ca.key -out certs/client-ca.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate a certificate signing request&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa:2048 -nodes -keyout certs/server.key -out certs/server.req
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa:2048 -nodes -keyout certs/client.key -out certs/client.req
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Have the CA sign the certificate requests and output the certificates.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/server.req -days &lt;span style="color:#ae81ff">1000&lt;/span> -CA certs/server-ca.crt -CAkey certs/server-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/server.crt -extfile localhost.ext
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/client.req -days &lt;span style="color:#ae81ff">1000&lt;/span> -CA certs/client-ca.crt -CAkey certs/client-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/client.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/server.req
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/client.req
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>localhost.ext&lt;/code> file is used to specify the hostname for the server certificate. In our example, we will use &lt;code>localhost&lt;/code>. The file contains the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = localhost
+&lt;/code>&lt;/pre>&lt;h2 id="run-the-mtls-server">Run the mTLS server&lt;/h2>
+&lt;p>We will use &lt;a class="link" href="https://www.nginx.com/" target="_blank" rel="noopener"
+>nginx&lt;/a> as our mTLS server. nginx is a popular open-source web server.&lt;/p>
+&lt;p>Using &lt;code>docker compose&lt;/code>, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We will use the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>---
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nginx-tls&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./certs/server.crt:/etc/nginx/certificates/server.crt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./certs/server.key:/etc/nginx/certificates/server.key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./nginx-tls/nginx.conf:/etc/nginx/conf.d/default.conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./nginx-tls/hello-world.txt:/www/data/hello-world.txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;8888:8888&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nginx-mtls&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">nginx&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./certs/server.crt:/etc/nginx/certificates/server.crt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./certs/server.key:/etc/nginx/certificates/server.key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./certs/client-ca.crt:/etc/nginx/certificates/client-ca.crt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./nginx-mtls/nginx.conf:/etc/nginx/conf.d/default.conf&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">./nginx-mtls/hello-world.txt:/www/data/hello-world.txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;8889:8889&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>nginx-tls&lt;/code> service uses the &lt;code>nginx-tls/nginx.conf&lt;/code> file, which contains the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>server {
+listen 8888 ssl;
+server_name tls-hello-world;
+# Server TLS certificate (client must have the CA cert to connect)
+ssl_certificate /etc/nginx/certificates/server.crt;
+ssl_certificate_key /etc/nginx/certificates/server.key;
+location / {
+root /www/data;
+}
+}
+&lt;/code>&lt;/pre>&lt;p>The &lt;code>nginx-mtls&lt;/code> service uses the &lt;code>nginx-mtls/nginx.conf&lt;/code> file, which contains the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>server {
+listen 8889 ssl;
+server_name mtls-hello-world;
+# Server TLS certificate (client must have the CA cert to connect)
+ssl_certificate /etc/nginx/certificates/server.crt;
+ssl_certificate_key /etc/nginx/certificates/server.key;
+# Enable mTLS
+ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
+ssl_verify_client on;
+location / {
+root /www/data;
+}
+}
+&lt;/code>&lt;/pre>&lt;p>The &lt;code>hello-world.txt&lt;/code> files contain a simple text message.&lt;/p>
+&lt;h2 id="connect-to-the-mtls-server-with-curl-client">Connect to the mTLS server with curl client&lt;/h2>
+&lt;p>We can connect to the mTLS server with the &lt;code>curl&lt;/code> command line tool. We will use the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8889/hello-world.txt --cacert ./certs/server-ca.crt --cert ./certs/client.crt --key ./certs/client.key
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--cacert&lt;/code> option specifies the CA certificate that signed the server certificate. The &lt;code>--cert&lt;/code> and &lt;code>--key&lt;/code> options select the client certificate and key.&lt;/p>
+&lt;p>To connect to the ordinary TLS server, we do not need to specify the client certificate and key:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8888/hello-world.txt --cacert ./certs/server-ca.crt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Curl can use &lt;code>--insecure&lt;/code> to ignore the server certificate:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl --insecure https://localhost:8888/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, it is impossible to ignore the client certificate for mTLS. The server will reject the connection if the client does not provide a valid certificate.&lt;/p>
+&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
+&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
+>https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
+&lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
+&lt;p>In the next article, we will create our own mTLS client with the Go programming language.&lt;/p></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/A-Qapp7vYJk"
 allowfullscreen
