@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/WA_RL_QtIgY"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
 &lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
 &lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
 &lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
@@ -132,7 +124,16 @@ root /www/data;
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
 &lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
-&lt;p>In the next article, we will create our own mTLS client with the Go programming language.&lt;/p></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;div class="video-wrapper">
+&lt;p>In the next article, we will create our own mTLS client with the Go programming language.&lt;/p>
+&lt;h2 id="mtls-hello-world-video">mTLS Hello World video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/WA_RL_QtIgY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/A-Qapp7vYJk"
 allowfullscreen

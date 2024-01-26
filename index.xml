@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/WA_RL_QtIgY"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
 &lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
 &lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
 &lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
@@ -132,15 +124,16 @@ root /www/data;
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
 &lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
-&lt;p>In the next article, we will create our own mTLS client with the Go programming language.&lt;/p></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;div class="video-wrapper">
+&lt;p>In the next article, we will create our own mTLS client with the Go programming language.&lt;/p>
+&lt;h2 id="mtls-hello-world-video">mTLS Hello World video&lt;/h2>
+&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/C9h8YO1NwPM"
+src="https://www.youtube.com/embed/WA_RL_QtIgY"
 allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div>
-&lt;h2 id="simple-cgo-examples">Simple CGO examples&lt;/h2>
+&lt;/div></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">Simple CGO examples&lt;/h2>
 &lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
 &lt;p>Below is a simple example of calling a C function from Go.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
@@ -288,7 +281,16 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">UInt8&lt;/span>)(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CString&lt;/span>(&lt;span style="color:#a6e22e">secret&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We must go through an intermediate cast to &lt;code>unsafe.Pointer&lt;/code>, representing a void C pointer.&lt;/p>
 &lt;h2 id="additional-topics">Additional topics&lt;/h2>
-&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;div class="video-wrapper">
+&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
+&lt;h2 id="cgo-hello-world-fail-video">CGO Hello World fail video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/C9h8YO1NwPM"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/y4Jct7eWLmY"
 allowfullscreen
