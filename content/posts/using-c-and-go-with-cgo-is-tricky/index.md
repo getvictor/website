@@ -7,8 +7,6 @@ tags = ["golang", "cgo", "helloworld"]
 draft = false
 +++
 
-{{< youtube C9h8YO1NwPM >}}
-
 ## Simple CGO examples
 
 CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the `-cgo` build flag.
@@ -210,3 +208,7 @@ We must go through an intermediate cast to `unsafe.Pointer`, representing a void
 ## Additional topics
 
 Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.
+
+## CGO Hello World fail video
+
+{{< youtube C9h8YO1NwPM >}}

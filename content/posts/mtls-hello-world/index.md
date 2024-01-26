@@ -7,8 +7,6 @@ tags = ["tls", "cybersecurity", "helloworld"]
 draft = false
 +++
 
-{{< youtube WA_RL_QtIgY >}}
-
 ## What is mTLS (mutual TLS)?
 
 TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).
@@ -195,3 +193,7 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 ## Creating our own mTLS client
 
 In the next article, we will create our own mTLS client with the Go programming language.
+
+## mTLS Hello World video
+
+{{< youtube WA_RL_QtIgY >}}
