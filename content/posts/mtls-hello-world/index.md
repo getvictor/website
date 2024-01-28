@@ -33,7 +33,7 @@ TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only 
 
 TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between the client and the server.
 
-{{< figure src="mtls-handshake.png" >}}
+{{< figure src="mtls-handshake.png" alt="Mutual TLS (mTLS) handshake diagram" >}}
 
 The client sends a "Client Hello" message to the server. The server responds with a "Server Hello" message and sends its certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.
 
