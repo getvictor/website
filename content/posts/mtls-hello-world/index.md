@@ -191,9 +191,9 @@ However, it is impossible to ignore the client certificate for mTLS. The server 
 
 The example code is available on GitHub at https://github.com/getvictor/mtls/tree/master/hello-world
 
-## Creating our own mTLS client
+## Securing mTLS certificates and keys
 
-In the next article, we will create our own mTLS client with the Go programming language.
+In the next article, we will secure the mTLS certificates and keys with the system keystore.
 
 ## mTLS Hello World video
 
