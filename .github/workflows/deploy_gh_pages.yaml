@@ -11,6 +11,15 @@ permissions:
   contents: write
 
 jobs:
+  broken-link-check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1 # Shallow clone
+
+      - name: Check for broken links
+        uses: marojor/hugo-broken-link-checker@v1.1.0
   deploy:
     runs-on: ubuntu-22.04
     steps:
@@ -27,9 +36,6 @@ jobs:
 
       - name: Build
         run: hugo --minify
-
-      - name: Check for broken Links
-        uses: marojor/hugo-broken-link-checker@v1.1.0
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
