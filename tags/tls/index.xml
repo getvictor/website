@@ -16,7 +16,8 @@
 &lt;h2 id="how-does-mtls-work">How does mTLS work?&lt;/h2>
 &lt;p>TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only go over the basics to understand how mTLS works.&lt;/p>
 &lt;p>TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between the client and the server.&lt;/p>
-&lt;figure>&lt;img src="mtls-handshake.png"/>
+&lt;figure>&lt;img src="mtls-handshake.png"
+alt="Mutual TLS (mTLS) handshake diagram"/>
 &lt;/figure>
 &lt;p>The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p>
 &lt;p>The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate is valid and has not expired. The client also checks that the server&amp;rsquo;s hostname matches the hostname in the certificate.&lt;/p>
