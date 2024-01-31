@@ -193,7 +193,7 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 ## Securing mTLS certificates and keys
 
-In the next article, we will secure the mTLS certificates and keys with the system keystore.
+In the next article, we will [secure the mTLS certificates and keys with the system keystore](../mtls-with-apple-keychain).
 
 ## mTLS Hello World video
 
