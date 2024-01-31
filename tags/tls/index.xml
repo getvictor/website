@@ -1,4 +1,171 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>tls on Victor on Software</title><link>https://victoronsoftware.com/tags/tls/</link><description>Recent content in tls on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/tls/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>tls on Victor on Software</title><link>https://victoronsoftware.com/tags/tls/</link><description>Recent content in tls on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 31 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/tls/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
+&lt;h2 id="securing-mtls-certificates-and-keys">Securing mTLS certificates and keys&lt;/h2>
+&lt;p>In the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p>
+&lt;ul>
+&lt;li>server CA: &lt;code>certs/server-ca.crt&lt;/code>&lt;/li>
+&lt;li>server CA private key: &lt;code>certs/server-ca.key&lt;/code>&lt;/li>
+&lt;li>TLS certificate for localhost server: &lt;code>certs/server.crt&lt;/code>&lt;/li>
+&lt;li>server TLS certificate private key: &lt;code>certs/server.key&lt;/code>&lt;/li>
+&lt;li>client CA: &lt;code>certs/client-ca.crt&lt;/code>&lt;/li>
+&lt;li>client CA private key: &lt;code>certs/client-ca.key&lt;/code>&lt;/li>
+&lt;li>TLS certificate for client: &lt;code>certs/client.crt&lt;/code>&lt;/li>
+&lt;li>client TLS certificate private key: &lt;code>certs/client.key&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>In a real-world scenario, we would need to secure these files. The server CA private key and the client CA private key are the most important files to secure. If an attacker gets access to these files, they can create new certificates and impersonate the server or the client. These two files should be secured in a dedicated secure storage.&lt;/p>
+&lt;p>The server will need access to the client CA, the server TLS certificate, and the server TLS certificate private key. The server TLS certificate private key is the most important to secure out of these three files.&lt;/p>
+&lt;p>The client will need access to the server CA, the client TLS certificate, and the client TLS certificate private key. We can use the macOS keychain to secure these files. In a future article, we will show how to secure these on Windows with certificate stores.&lt;/p>
+&lt;h2 id="apples-macos-keychain">Apple&amp;rsquo;s macOS keychain&lt;/h2>
+&lt;p>As I&amp;rsquo;ve written in &lt;a class="link" href="../inspecting-keychain-files-on-macos" >inspecting keychain files on macOS&lt;/a>, keychains are the macOS&amp;rsquo;s method to track and protect secure information such as passwords, private keys, and certificates.&lt;/p>
+&lt;p>The system keychain is located at &lt;code>/Library/Keychains/System.keychain&lt;/code>. It contains the root certificates and other certificates. The login keychain is located at &lt;code>/Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db&lt;/code>. It contains the user&amp;rsquo;s certificates and private keys. In this example, we will use the system keychain, which all users on the system can access.&lt;/p>
+&lt;h2 id="generating-mtls-certificates-and-keys">Generating mTLS certificates and keys&lt;/h2>
+&lt;p>We will use the following script to generate the mTLS certificates and keys. It resembles the script from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This script generates certificates and keys needed for mTLS.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir -p certs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Private keys for CAs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/server-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/client-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate CA certificates&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/server-ca.key -out certs/server-ca.crt -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testServerCA&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/client-ca.key -out certs/client-ca.crt -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testClientCA&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate a certificate signing request&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa:2048 -nodes -keyout certs/server.key -out certs/server.req -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testServerTLS&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa:2048 -nodes -keyout certs/client.key -out certs/client.req -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testClientTLS&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Have the CA sign the certificate requests and output the certificates.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/server.req -days &lt;span style="color:#ae81ff">398&lt;/span> -CA certs/server-ca.crt -CAkey certs/server-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/server.crt -extfile localhost.ext
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/client.req -days &lt;span style="color:#ae81ff">398&lt;/span> -CA certs/client-ca.crt -CAkey certs/client-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/client.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/server.req
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/client.req
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The maximum validity period for a TLS certificate is 398 days. Apple will reject certificates with a more extended validity period.&lt;/p>
+&lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain">Importing client mTLS certificates and keys into the macOS keychain&lt;/h2>
+&lt;p>We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
+>security&lt;/a> command line tool. Accessing the system keychain must be run as root (&lt;code>sudo&lt;/code>).&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This script imports mTLS certificates and keys into the Apple Keychain.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the server CA&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/server-ca.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the client CA so that client TLS certificates can be verified&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/client-ca.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the client TLS certificate and key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security import certs/client.crt -k /Library/Keychains/System.keychain
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security import certs/client.key -k /Library/Keychains/System.keychain -x -T /usr/bin/curl -T /Applications/Safari.app -T &lt;span style="color:#e6db74">&amp;#39;/Applications/Google Chrome.app&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>-x&lt;/code> option marks the imported key as non-extractable. No application or user can view the private key once it is imported. The private key can only be used indirectly via Apple&amp;rsquo;s APIs.&lt;/p>
+&lt;p>The &lt;code>-T&lt;/code> option specifies the applications that can access the key. Additional applications may be added later to the access control list.&lt;/p>
+&lt;h2 id="verifying-imported-certificates-and-keys">Verifying imported certificates and keys&lt;/h2>
+&lt;p>As an extra step, we can verify the client and server certificates before using them in an application.&lt;/p>
+&lt;p>We can verify the server certificate by running the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>security verify-cert -c certs/server.crt -p ssl -s localhost -k /Library/Keychains/System.keychain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output should include:&lt;/p>
+&lt;pre tabindex="0">&lt;code>...certificate verification successful.
+&lt;/code>&lt;/pre>&lt;p>The Apple keychain automatically combines the certificate and the private key into an identity. We can verify the client identity by running the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>security find-identity -p ssl-client /Library/Keychains/System.keychain
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The list of identities should include:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Policy: SSL (client)
+Matching identities
+1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+1 identities found
+Valid identities only
+1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+1 valid identities found
+&lt;/code>&lt;/pre>&lt;p>macOS can validate the identity because we also imported the client CA into the system keychain.&lt;/p>
+&lt;h2 id="running-the-mtls-server">Running the mTLS server&lt;/h2>
+&lt;p>As in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
+&lt;ul>
+&lt;li>https://localhost:8888 for TLS&lt;/li>
+&lt;li>https://localhost:8889 for mTLS&lt;/li>
+&lt;/ul>
+&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">Connecting to the TLS and mTLS servers with clients&lt;/h2>
+&lt;p>Because the server CA was added to the system keychain, curl can now access the TLS server without any additional flags:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8888/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, the built-in curl client cannot access the mTLS server. We use the &lt;code>-v&lt;/code> option for additional information:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl -v https://localhost:8889/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output:&lt;/p>
+&lt;pre tabindex="0">&lt;code>* Trying [::1]:8889...
+* Connected to localhost (::1) port 8889
+* ALPN: curl offers h2,http/1.1
+* (304) (OUT), TLS handshake, Client hello (1):
+* CAfile: /etc/ssl/cert.pem
+* CApath: none
+* (304) (IN), TLS handshake, Server hello (2):
+* (304) (IN), TLS handshake, Unknown (8):
+* (304) (IN), TLS handshake, Request CERT (13):
+* (304) (IN), TLS handshake, Certificate (11):
+* (304) (IN), TLS handshake, CERT verify (15):
+* (304) (IN), TLS handshake, Finished (20):
+* (304) (OUT), TLS handshake, Certificate (11):
+* (304) (OUT), TLS handshake, Finished (20):
+* SSL connection using TLSv1.3 / AEAD-CHACHA20-POLY1305-SHA256
+* ALPN: server accepted http/1.1
+* Server certificate:
+* subject: C=US; ST=Texas; L=Austin; O=Your Organization; OU=Your Unit; CN=testServerTLS
+* start date: Jan 28 17:08:10 2024 GMT
+* expire date: Mar 1 17:08:10 2025 GMT
+* subjectAltName: host &amp;#34;localhost&amp;#34; matched cert&amp;#39;s &amp;#34;localhost&amp;#34;
+* issuer: C=US; ST=Texas; L=Austin; O=Your Organization; OU=Your Unit; CN=testServerCA
+* SSL certificate verify ok.
+* using HTTP/1.1
+&amp;gt; GET /hello-world.txt HTTP/1.1
+&amp;gt; Host: localhost:8889
+&amp;gt; User-Agent: curl/8.4.0
+&amp;gt; Accept: */*
+&amp;gt;
+&amp;lt; HTTP/1.1 400 Bad Request
+&amp;lt; Server: nginx/1.25.3
+&amp;lt; Date: Sun, 28 Jan 2024 18:28:20 GMT
+&amp;lt; Content-Type: text/html
+&amp;lt; Content-Length: 237
+&amp;lt; Connection: close
+&amp;lt;
+&amp;lt;html&amp;gt;
+&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;400 No required SSL certificate was sent&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;
+&amp;lt;body&amp;gt;
+&amp;lt;center&amp;gt;&amp;lt;h1&amp;gt;400 Bad Request&amp;lt;/h1&amp;gt;&amp;lt;/center&amp;gt;
+&amp;lt;center&amp;gt;No required SSL certificate was sent&amp;lt;/center&amp;gt;
+&amp;lt;hr&amp;gt;&amp;lt;center&amp;gt;nginx/1.25.3&amp;lt;/center&amp;gt;
+&amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;
+* Closing connection
+&lt;/code>&lt;/pre>&lt;p>The client attempted the TLS handshake, but the server rejected the connection because the client did not provide a certificate. Our built-in curl client does not currently support mTLS using the macOS keychain. The client used for this example is:&lt;/p>
+&lt;pre tabindex="0">&lt;code>curl 8.4.0 (x86_64-apple-darwin23.0) libcurl/8.4.0 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.55.1
+Release-Date: 2023-10-11
+Protocols: dict file ftp ftps gopher gophers http https imap imaps ldap ldaps mqtt pop3 pop3s rtsp smb smbs smtp smtps telnet tftp
+Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefile libz MultiSSL NTLM NTLM_WB SPNEGO SSL threadsafe UnixSockets
+&lt;/code>&lt;/pre>&lt;p>On the other hand, Safari can access the mTLS server. We can verify this by opening the following URL in Safari:&lt;/p>
+&lt;pre tabindex="0">&lt;code>https://localhost:8889/hello-world.txt
+&lt;/code>&lt;/pre>&lt;p>We see the following popup:&lt;/p>
+&lt;figure>&lt;img src="mtls-safari.png"
+alt="Safari mTLS popup"/>&lt;figcaption>
+&lt;p>Safari mTLS popup&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We can click &lt;strong>Continue&lt;/strong> to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p>
+&lt;p>Google Chrome&amp;rsquo;s behavior is similar.&lt;/p>
+&lt;p>&lt;strong>Note:&lt;/strong> If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p>
+&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
+&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
+>https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>
+&lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
+&lt;p>In the following article, we will create our own mTLS client with the Go programming language.&lt;/p>
+&lt;h2 id="mtls-with-macos-keychain-video">mTLS with macOS keychain video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/Y0y6-cCzz8w"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">What is mTLS (mutual TLS)?&lt;/h2>
 &lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
 &lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
 &lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
@@ -125,7 +292,7 @@ root /www/data;
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
 &lt;h2 id="securing-mtls-certificates-and-keys">Securing mTLS certificates and keys&lt;/h2>
-&lt;p>In the next article, we will secure the mTLS certificates and keys with the system keystore.&lt;/p>
+&lt;p>In the next article, we will &lt;a class="link" href="../mtls-with-apple-keychain" >secure the mTLS certificates and keys with the system keystore&lt;/a>.&lt;/p>
 &lt;h2 id="mtls-hello-world-video">mTLS Hello World video&lt;/h2>
 &lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
