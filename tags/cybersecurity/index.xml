@@ -1,4 +1,148 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 31 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>cybersecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/cybersecurity/</link><description>Recent content in cybersecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 07 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cybersecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-go">What is Go?&lt;/h2>
+&lt;p>Go is a statically typed, compiled programming language designed at Google. It is known for its simplicity, efficiency, and ease of use. Go is often used for building web servers, APIs, and command-line tools. We will use Go to make a client that uses mTLS.&lt;/p>
+&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
+&lt;p>We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;p>In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.) Keeping private keys on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
+&lt;p>Finally, as in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
+&lt;ul>
+&lt;li>https://localhost:8888 for TLS&lt;/li>
+&lt;li>https://localhost:8889 for mTLS&lt;/li>
+&lt;/ul>
+&lt;h2 id="building-the-tls-go-client">Building the TLS Go client&lt;/h2>
+&lt;p>Below is a simple Go HTTP client.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;flag&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;io&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;net/http&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">Parse&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;URL to make request to is required&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>{}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Trying the ordinary TLS server with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client.go --url https://localhost:8888/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Gives the expected result:&lt;/p>
+&lt;pre tabindex="0">&lt;code>TLS Hello World!
+&lt;/code>&lt;/pre>&lt;p>The Go client is integrated with the system keystore out of the box.&lt;/p>
+&lt;p>However, when trying the mTLS server with the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client.go --url https://localhost:8889/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We get the error:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;&amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;400 No required SSL certificate was sent&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">center&lt;/span>&amp;gt;&amp;lt;&lt;span style="color:#f92672">h1&lt;/span>&amp;gt;400 Bad Request&amp;lt;/&lt;span style="color:#f92672">h1&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">center&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">center&lt;/span>&amp;gt;No required SSL certificate was sent&amp;lt;/&lt;span style="color:#f92672">center&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">hr&lt;/span>&amp;gt;&amp;lt;&lt;span style="color:#f92672">center&lt;/span>&amp;gt;nginx/1.25.3&amp;lt;/&lt;span style="color:#f92672">center&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Go libraries are not integrated with the system keystore for using the mTLS client certificate and key.&lt;/p>
+&lt;h2 id="modifying-the-go-client-for-mtls">Modifying the Go client for mTLS&lt;/h2>
+&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
+>crypto/tls&lt;/a> package to build the mTLS client.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;crypto/tls&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;flag&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;io&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;net/http&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clientCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;cert&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Client certificate file&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clientKey&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;key&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;Client key file&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">Parse&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;URL to make request to is required&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">certificate&lt;/span> &lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">clientCert&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">clientKey&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">certificate&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">LoadX509KeyPair&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">clientCert&lt;/span>, &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">clientKey&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error loading client certificate: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Transport&lt;/span>: &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Transport&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">TLSClientConfig&lt;/span>: &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Config&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Certificates&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>{&lt;span style="color:#a6e22e">certificate&lt;/span>},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, trying the mTLS server with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client-mtls.go --url https://localhost:8889/hello-world.txt --cert certs/client.crt --key certs/client.key
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected result:&lt;/p>
+&lt;pre tabindex="0">&lt;code>mTLS Hello World!
+&lt;/code>&lt;/pre>&lt;p>However, we pass the client certificate and key as command-line arguments. In a real-world scenario, we want to use the system keystore to manage the client certificate and key.&lt;/p>
+&lt;h2 id="using-a-custom-signer-for-the-mtls-client-certificate">Using a custom signer for the mTLS client certificate&lt;/h2>
+&lt;p>The following article will cover creating a custom Go signer for the mTLS client certificate. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p>
+&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
+&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
+>https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a>&lt;/p>
+&lt;h2 id="mtls-go-client-video">mTLS Go client video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/8lNZUTBkfsU"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
 &lt;h2 id="securing-mtls-certificates-and-keys">Securing mTLS certificates and keys&lt;/h2>
 &lt;p>In the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p>
 &lt;ul>
@@ -156,7 +300,7 @@ alt="Safari mTLS popup"/>&lt;figcaption>
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>
 &lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
-&lt;p>In the following article, we will create our own mTLS client with the Go programming language.&lt;/p>
+&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>.&lt;/p>
 &lt;h2 id="mtls-with-macos-keychain-video">mTLS with macOS keychain video&lt;/h2>
 &lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
