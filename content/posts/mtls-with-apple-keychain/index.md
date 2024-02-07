@@ -229,7 +229,7 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 ## Creating our own mTLS client
 
-In the following article, we will create our own mTLS client with the Go programming language.
+In the following article, we will [create our own mTLS client with the Go programming language](../mtls-go-client).
 
 ## mTLS with macOS keychain video
 
