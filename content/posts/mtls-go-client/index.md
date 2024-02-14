@@ -180,7 +180,7 @@ However, we pass the client certificate and key as command-line arguments. In a 
 
 ## Using a custom signer for the mTLS client certificate
 
-The following article will cover creating a custom Go signer for the mTLS client certificate. This work will pave the way for us to use the system keystore to manage the client certificate and key.
+The following article will cover [creating a custom Go signer for the mTLS client certificate](../mtls-go-custom-signer). This work will pave the way for us to use the system keystore to manage the client certificate and key.
 
 ## Example code on GitHub
 
