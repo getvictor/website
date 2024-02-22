@@ -173,7 +173,7 @@ mTLS Hello World!
 
 ## Using certificate and key from the macOS keychain
 
-In the following article, we will use the macOS keychain to load the client certificate and generate the `CertificateVerify` message without extracting the private key.
+In the following article, we will [use the macOS keychain to load the client certificate and generate the `CertificateVerify` message without extracting the private key](../mtls-go-client-using-apple-keychain).
 
 ## Example code on GitHub
 
