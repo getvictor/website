@@ -317,7 +317,7 @@ mTLS Hello World!
 
 ## Using certificate and key from the Windows certificate store
 
-The following article will explore using the Windows certificate store to hold the client certificate and private key.
+The following article will explore [using the Windows certificate store to hold the mTLS client certificate and private key](../mtls-with-windows).
 
 ## Example code on GitHub
 
