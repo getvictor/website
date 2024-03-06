@@ -237,7 +237,7 @@ crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
 &lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">Using certificate and key from the Windows certificate store&lt;/h2>
-&lt;p>The following article will explore using the Windows certificate store to hold the client certificate and private key.&lt;/p>
+&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
 &lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a>&lt;/p>

@@ -1,4 +1,183 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 29 Feb 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">Introduction&lt;/h2>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 06 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="why-use-windows-certificate-store">Why use Windows certificate store?&lt;/h2>
+&lt;p>In our previous articles, we introduced mTLS and demonstrated how to use mTLS client certificates and keys. Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we start exploring how to achieve the same level of protection with Windows certificate store.&lt;/p>
+&lt;p>The Windows certificate store is a secure location to store certificates and keys. Many applications, such as Edge and Powershell use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.&lt;/p>
+&lt;p>The Windows certificate stores have two types:&lt;/p>
+&lt;ul>
+&lt;li>User certificate store: Certificates and keys are stored for the current user, local to a user account.&lt;/li>
+&lt;li>Local machine certificate store: Certificates and keys are stored for all users on the computer.&lt;/li>
+&lt;/ul>
+&lt;p>We will store our client mTLS certificate in the user certificate store and the other certificates in the local machine certificate store.&lt;/p>
+&lt;h2 id="generating-mtls-certificates-and-keys">Generating mTLS certificates and keys&lt;/h2>
+&lt;p>We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
+>OpenSSL&lt;/a> must be installed on your computer.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>New-Item -ItemType Directory -Force certs
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Private keys for CAs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/server-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl genrsa -out certs/client-ca.key &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate CA certificates&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/server-ca.key -out certs/server-ca.crt -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testServerCA&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -new -x509 -nodes -days &lt;span style="color:#ae81ff">1000&lt;/span> -key certs/client-ca.key -out certs/client-ca.crt -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testClientCA&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Generate a certificate signing request&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">2048&lt;/span> -nodes -keyout certs/server.key -out certs/server.req -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testServerTLS&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl req -newkey rsa&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">2048&lt;/span> -nodes -keyout certs/client.key -out certs/client.req -subj &lt;span style="color:#e6db74">&amp;#34;/C=US/ST=Texas/L=Austin/O=Your Organization/OU=Your Unit/CN=testClientTLS&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Have the CA sign the certificate requests and output the certificates.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/server.req -days &lt;span style="color:#ae81ff">398&lt;/span> -CA certs/server-ca.crt -CAkey certs/server-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/server.crt -extfile localhost.ext
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl x509 -req -in certs/client.req -days &lt;span style="color:#ae81ff">398&lt;/span> -CA certs/client-ca.crt -CAkey certs/client-ca.key -set_serial &lt;span style="color:#ae81ff">01&lt;/span> -out certs/client.crt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Create PFX file for importing to certificate store&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl pkcs12 -export -out certs\client.pfx -inkey certs\client.key -in certs\client.crt -passout pass&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Remove-Item certs/server.req
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Remove-Item certs/client.req
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The maximum validity period for a TLS certificate is 398 days.&lt;/p>
+&lt;p>The &lt;code>localhost.ext&lt;/code> file is used to specify the subject alternative name (SAN) for the server certificate. The &lt;code>localhost.ext&lt;/code> file contains the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>[alt_names]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>DNS.1 = localhost
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>DNS.2 = myhost
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can access the server using either &lt;code>localhost&lt;/code> or &lt;code>myhost&lt;/code> names.&lt;/p>
+&lt;p>The above script generates the following files:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>certs/server-ca.crt&lt;/code>: Server CA certificate&lt;/li>
+&lt;li>&lt;code>certs/server-ca.key&lt;/code>: Server CA private key&lt;/li>
+&lt;li>&lt;code>certs/client-ca.crt&lt;/code>: Client CA certificate&lt;/li>
+&lt;li>&lt;code>certs/client-ca.key&lt;/code>: Client CA private key&lt;/li>
+&lt;li>&lt;code>certs/server.crt&lt;/code>: Server certificate&lt;/li>
+&lt;li>&lt;code>certs/server.key&lt;/code>: Server private key&lt;/li>
+&lt;li>&lt;code>certs/client.crt&lt;/code>: Client certificate&lt;/li>
+&lt;li>&lt;code>certs/client.key&lt;/code>: Client private key&lt;/li>
+&lt;li>&lt;code>certs/client.pfx&lt;/code>: Client certificate and private key in PFX format, needed for importing into the Windows certificate store&lt;/li>
+&lt;/ul>
+&lt;h2 id="importing-the-client-certificate-and-key-into-the-windows-certificate-store">Importing the client certificate and key into the Windows certificate store&lt;/h2>
+&lt;p>We will import the client certificate and key into the user certificate store using the following powershell script.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the server CA&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Import-Certificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\server-ca.crt&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the client CA so that client TLS certificates can be verified&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Import-Certificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\client-ca.crt&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the client TLS certificate and key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Import-PfxCertificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\client.pfx&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\CurrentUser\My
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The command result should be similar to the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span> PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\Root
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Thumbprint Subject
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---------- -------
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>0A31BF3C48A3D98A91A2F63B5BD286818311A707 CN=testServerCA, OU=Your Unit, O=Your Organization, L=Austin, S=Texas, C=US
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>7F7E5612F3A90B9EB246762358251F98911A9D1A CN=testClientCA, OU=Your Unit, O=Your Organization, L=Austin, S=Texas, C=US
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PSParentPath: Microsoft.PowerShell.Security\Certificate::CurrentUser\My
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Thumbprint Subject
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---------- -------
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>E2EBB991E3849E32E934D8465FAE42787D34C9ED CN=testClientTLS, OU=Your Unit, O=Your Organization, L=Austin, S=Texas, C=US
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>By default, the private key is marked as non-exportable. A user or an application cannot export the private key from the certificate store. They can only access the private key via Windows APIs. Using a non-exportable private key is the recommended security approach. You can use the &lt;code>-Exportable&lt;/code> parameter if you need to export the private key.&lt;/p>
+&lt;h2 id="verifying-imported-certificates-and-keys">Verifying imported certificates and keys&lt;/h2>
+&lt;p>As an extra step, we can verify that the certificates and keys exist in the Windows certificate store. We can use the &lt;code>certlm&lt;/code> Local Machine Certificate Manager GUI, &lt;code>certmgr&lt;/code> User Certificate Manager GUI, or the &lt;code>Get-ChildItem&lt;/code> powershell command.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Where-Object{$_.Subject &lt;span style="color:#f92672">-match&lt;/span> &lt;span style="color:#e6db74">&amp;#39;testServerCA&amp;#39;&lt;/span>} |
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Test-Certificate -Policy SSL
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\CurrentUser\My | Where-Object{$_.Subject &lt;span style="color:#f92672">-match&lt;/span> &lt;span style="color:#e6db74">&amp;#39;testClientTLS&amp;#39;&lt;/span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-mtls-server">Running the mTLS server&lt;/h2>
+&lt;p>We will use the same &lt;code>docker-compose.yml&lt;/code> file from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article. The &lt;code>docker-compose.yml&lt;/code> file starts two nginx servers:&lt;/p>
+&lt;ul>
+&lt;li>https://&amp;lt;your_host&amp;gt;:8888 for TLS&lt;/li>
+&lt;li>https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li>
+&lt;/ul>
+&lt;p>We can run Docker on WSL (Windows Subsystem for Linux) or another machine. We will run it on a different machine, so we need to copy the &lt;code>certs&lt;/code> directory to the machine running Docker. When running the server on a different machine, we must update the &lt;code>C:\Windows\System32\drivers\etc\hosts&lt;/code> file to point to the other machine.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>10.0.0.5 myhost
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">Connecting to the TLS and mTLS servers with clients&lt;/h2>
+&lt;p>Because we added the server CA to the root certificate store, we can now access the TLS server without any additional flags:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span>/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Result:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>StatusCode : 200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>StatusDescription : OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Content : TLS Hello World!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>RawContent : HTTP/1.1 200 OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Connection: keep-alive
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Accept-Ranges: bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Content-Length: 17
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Content-Type: text/plain
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Date: Sun, 03 Mar 2024 17:28:29 GMT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ETag: &amp;#34;65b29c19-11&amp;#34;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last-Modified: Thu, 25 Jan 2024 1...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Forms : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Headers : {[Connection, keep-alive], [Accept-Ranges, bytes], [Content-Length, 17], [Content-Type, text/plain]...}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Images : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>InputFields : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Links : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ParsedHtml : System.__ComObject
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>RawContentLength : 17
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we cannot access the mTLS server directly.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8889&lt;/span>/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The client attempted the TLS handshake, but the server rejected the connection because the client did not provide a certificate. Result:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>Invoke-WebRequest : 400 Bad Request
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>No required SSL certificate was sent
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>nginx/1.25.3
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>At line:1 char:1
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ Invoke-WebRequest -Uri https://myhost:8889/hello-world.txt
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> + CategoryInfo : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can, however, provide the client certificate thumbprint to access the mTLS server. We saw the thumbprint of the client certificate earlier when we imported it into the Windows certificate store.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8889&lt;/span>/hello-world.txt -CertificateThumbprint E2EBB991E3849E32E934D8465FAE42787D34C9ED
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Result:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>StatusCode : 200
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>StatusDescription : OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Content : mTLS Hello World!
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>RawContent : HTTP/1.1 200 OK
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Connection: keep-alive
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Accept-Ranges: bytes
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Content-Length: 18
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Content-Type: text/plain
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Date: Sun, 03 Mar 2024 17:31:55 GMT
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ETag: &amp;#34;65b29c19-12&amp;#34;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Last-Modified: Thu, 25 Jan 2024 1...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Forms : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Headers : {[Connection, keep-alive], [Accept-Ranges, bytes], [Content-Length, 18], [Content-Type, text/plain]...}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Images : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>InputFields : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Links : {}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>ParsedHtml : System.__ComObject
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>RawContentLength : 18
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Edge browser can access the mTLS server. We can verify this by opening the following URL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>https://myhost:8889/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We see the following popup:&lt;/p>
+&lt;figure>&lt;img src="mtls-edge.png"
+alt="Edge mTLS popup"/>&lt;figcaption>
+&lt;p>Edge mTLS popup&lt;/p>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We can click &lt;strong>OK&lt;/strong> to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p>
+&lt;p>&lt;strong>Note:&lt;/strong> Here is a helpful link that may resolve issues trying to use mTLS client certificates on Windows 10: &lt;a class="link" href="https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10" target="_blank" rel="noopener"
+>https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a>&lt;/p>
+&lt;h2 id="example-code-on-github">Example code on Github&lt;/h2>
+&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
+>https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a>&lt;/p>
+&lt;h2 id="creating-our-own-windows-mtls-client">Creating our own Windows mTLS client&lt;/h2>
+&lt;p>In the following article, we will create a custom Windows mTLS client using the Windows certificate store.&lt;/p>
+&lt;h2 id="mtls-with-windows-certificate-store-video">mTLS with Windows certificate store video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/GuubP7vir1g"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">Introduction&lt;/h2>
 &lt;p>Any app aiming to reach an international audience must support Unicode. Emojis, which are based on Unicode, are everywhere. They are used in text messages, social media, and programming languages. Supporting Unicode and emojis in your app can be tricky. This article will cover common Unicode and emoji support issues and how to fix them.&lt;/p>
 &lt;h2 id="what-is-unicode">What is Unicode?&lt;/h2>
 &lt;p>Unicode is a standard for encoding, representing, and handling text. It is a character set that assigns a unique number to every character. The most common encoding for Unicode is UTF-8, which stands for Unicode Transformation Format 8-bit. UTF-8 is a variable-width encoding that can represent every character in the Unicode character set.&lt;/p>
@@ -327,7 +506,7 @@ crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
 &lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">Using certificate and key from the Windows certificate store&lt;/h2>
-&lt;p>The following article will explore using the Windows certificate store to hold the client certificate and private key.&lt;/p>
+&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
 &lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a>&lt;/p>
