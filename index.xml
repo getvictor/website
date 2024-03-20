@@ -1,4 +1,264 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 06 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 20 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="why-use-the-windows-certificate-store">Why use the Windows certificate store?&lt;/h2>
+&lt;p>Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we reach a similar level of protection with the Windows certificate store.&lt;/p>
+&lt;p>The Windows certificate store is a secure location where certificates and keys can be stored. Many applications, such as Edge and Powershell, use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.&lt;/p>
+&lt;h2 id="building-a-custom-tlscertificate-for-the-windows-certificate-store">Building a custom tls.Certificate for the Windows certificate store&lt;/h2>
+&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the Windows certificate store.&lt;/p>
+&lt;p>However, before the application uses the &lt;code>Public&lt;/code> and &lt;code>Sign&lt;/code> methods of the &lt;code>CustomSigner,&lt;/code> we must retrieve the client certificate using Windows APIs.&lt;/p>
+&lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">Retrieving mTLS client certificate from Windows certificate store using Go&lt;/h3>
+&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
+>golang.org/x/sys/windows&lt;/a> package to access the Windows APIs. We use the &lt;code>windows&lt;/code> package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
+>CertOpenStore&lt;/a>, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
+>CertFindCertificateInStore&lt;/a>, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
+>CryptAcquireCertificatePrivateKey&lt;/a> functions from the &lt;code>crypt32&lt;/code> DLL (dynamic link library).&lt;/p>
+&lt;p>First, we open the &lt;code>MY&lt;/code> store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Open the certificate store
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">storePtr&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#a6e22e">windowsStoreName&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">store&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertOpenStore&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CERT_STORE_PROV_SYSTEM&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">0&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#ae81ff">0&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CERT_SYSTEM_STORE_CURRENT_USER&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">storePtr&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we find the certificate by the common name.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Find the certificate
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pPrevCertContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">certContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">commonNamePtr&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#a6e22e">commonName&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">certContext&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertFindCertificateInStore&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">X509_ASN_ENCODING&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">0&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CERT_FIND_SUBJECT_STR&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">commonNamePtr&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pPrevCertContext&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// We can extract the certificate chain and further filter the certificate
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// we want here.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>&lt;/h3>
+&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Copy the certificate data so that we have our own copy outside the windows context
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">encodedCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Slice&lt;/span>(&lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">EncodedCert&lt;/span>, &lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">Length&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">buf&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Clone&lt;/span>(&lt;span style="color:#a6e22e">encodedCert&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">foundCert&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">ParseCertificate&lt;/span>(&lt;span style="color:#a6e22e">buf&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">Building the custom &lt;code>tls.Certificate&lt;/code>&lt;/h3>
+&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code>. We hold on to the &lt;code>certContext&lt;/code> pointer to get the private key later.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span>: &lt;span style="color:#a6e22e">store&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windowsCertContext&lt;/span>: &lt;span style="color:#a6e22e">certContext&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span>.&lt;span style="color:#a6e22e">x509Cert&lt;/span> = &lt;span style="color:#a6e22e">foundCert&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">certificate&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Certificate&lt;/span>: [][]&lt;span style="color:#66d9ef">byte&lt;/span>{&lt;span style="color:#a6e22e">foundCert&lt;/span>.&lt;span style="color:#a6e22e">Raw&lt;/span>},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">PrivateKey&lt;/span>: &lt;span style="color:#a6e22e">customSigner&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SupportedSignatureAlgorithms&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">SignatureScheme&lt;/span>{&lt;span style="color:#a6e22e">supportedAlgorithm&lt;/span>},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple.&lt;/p>
+&lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">Signing the mTLS digest with the Windows certificate store&lt;/h2>
+&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windowsCertContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">k&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>) &lt;span style="color:#a6e22e">Public&lt;/span>() &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">PublicKey&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;crypto.Signer.Public\n&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">k&lt;/span>.&lt;span style="color:#a6e22e">x509Cert&lt;/span>.&lt;span style="color:#a6e22e">PublicKey&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">k&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>) &lt;span style="color:#a6e22e">Sign&lt;/span>(&lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">Reader&lt;/span>, &lt;span style="color:#a6e22e">digest&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">SignerOpts&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) (&lt;span style="color:#a6e22e">signature&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">Retrieve the private key reference from the Windows certificate store&lt;/h4>
+&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get private key
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pdwKeySpec&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pfCallerFreeProvOrNCryptKey&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CryptAcquireCertificatePrivateKey&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">k&lt;/span>.&lt;span style="color:#a6e22e">windowsCertContext&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CRYPT_ACQUIRE_CACHE_FLAG&lt;/span>|&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CRYPT_ACQUIRE_SILENT_FLAG&lt;/span>|
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">nil&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">privateKey&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">pdwKeySpec&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">pfCallerFreeProvOrNCryptKey&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="signing-the-mtls-digest">Signing the mTLS digest&lt;/h4>
+&lt;p>We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
+>NCryptSignHash&lt;/a> function from &lt;code>ncrypt.dll&lt;/code> to sign the digest.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">nCrypt&lt;/span> = &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">MustLoadDLL&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ncrypt.dll&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">nCryptSignHash&lt;/span> = &lt;span style="color:#a6e22e">nCrypt&lt;/span>.&lt;span style="color:#a6e22e">MustFindProc&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>But before we do that, we must create a &lt;code>BCRYPT_PSS_PADDING_INFO&lt;/code> structure for our supported RSA-PSS algorithm.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">flags&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">nCryptSilentFlag&lt;/span> | &lt;span style="color:#a6e22e">bCryptPadPss&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">pPaddingInfo&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">getRsaPssPadding&lt;/span>(&lt;span style="color:#a6e22e">opts&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>getRsaPssPadding&lt;/code> is a helper function:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">getRsaPssPadding&lt;/span>(&lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">SignerOpts&lt;/span>) (&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pssOpts&lt;/span>, &lt;span style="color:#a6e22e">ok&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">opts&lt;/span>.(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">rsa&lt;/span>.&lt;span style="color:#a6e22e">PSSOptions&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">ok&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#a6e22e">pssOpts&lt;/span>.&lt;span style="color:#a6e22e">Hash&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">SHA256&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;unsupported hash function %s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>.&lt;span style="color:#a6e22e">HashFunc&lt;/span>().&lt;span style="color:#a6e22e">String&lt;/span>())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">pssOpts&lt;/span>.&lt;span style="color:#a6e22e">SaltLength&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">rsa&lt;/span>.&lt;span style="color:#a6e22e">PSSSaltLengthEqualsHash&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;unsupported salt length %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">pssOpts&lt;/span>.&lt;span style="color:#a6e22e">SaltLength&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sha256&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;SHA256&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Create BCRYPT_PSS_PADDING_INFO structure:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// typedef struct _BCRYPT_PSS_PADDING_INFO {
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// LPCWSTR pszAlgId;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// ULONG cbSalt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// } BCRYPT_PSS_PADDING_INFO;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pszAlgId&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">uint16&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cbSalt&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pszAlgId&lt;/span>: &lt;span style="color:#a6e22e">sha256&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cbSalt&lt;/span>: uint32(&lt;span style="color:#a6e22e">pssOpts&lt;/span>.&lt;span style="color:#a6e22e">HashFunc&lt;/span>().&lt;span style="color:#a6e22e">Size&lt;/span>()),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ), &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally, we sign the digest using the &lt;code>NCryptSignHash&lt;/code> function.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Sign the digest
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// The first call to NCryptSignHash retrieves the size of the signature
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">size&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">success&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">nCryptSignHash&lt;/span>.&lt;span style="color:#a6e22e">Call&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">privateKey&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">pPaddingInfo&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">digest&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(len(&lt;span style="color:#a6e22e">digest&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#ae81ff">0&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#ae81ff">0&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">size&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">flags&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">success&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash: failed to get signature length: %#x&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">success&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The second call to NCryptSignHash retrieves the signature
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">signature&lt;/span> = make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">size&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">success&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">nCryptSignHash&lt;/span>.&lt;span style="color:#a6e22e">Call&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">privateKey&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">pPaddingInfo&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">digest&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(len(&lt;span style="color:#a6e22e">digest&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">signature&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">size&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">size&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">flags&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">success&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash: failed to generate signature: %#x&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">success&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">signature&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
+&lt;p>With the above code, we can create our new Go mTLS client that uses the Windows certificate store.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">Parse&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;URL to make request to is required&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Transport&lt;/span>: &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Transport&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">TLSClientConfig&lt;/span>: &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Config&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">GetClientCertificate&lt;/span>: &lt;span style="color:#a6e22e">signer&lt;/span>.&lt;span style="color:#a6e22e">GetClientCertificate&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">MinVersion&lt;/span>: &lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">VersionTLS13&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">MaxVersion&lt;/span>: &lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">VersionTLS13&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
+&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
+&lt;p>The next step is to use the Windows certificate store to store the client certificate and private key. We will use the certificates and keys scripts from the previous &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;p>Finally, as in the &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article, we start two nginx servers:&lt;/p>
+&lt;ul>
+&lt;li>https://&amp;lt;your_host&amp;gt;:8888 for TLS&lt;/li>
+&lt;li>https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li>
+&lt;/ul>
+&lt;h2 id="running-the-go-mtls-client-using-the-windows-certificate-store">Running the Go mTLS client using the Windows certificate store&lt;/h2>
+&lt;p>We can run our mTLS client without pointing to certificate/key files and retrieving everything from the Windows certificate store. Hitting the ordinary TLS server:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>go run .\client-signer.go --url https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span>/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected:&lt;/p>
+&lt;pre tabindex="0">&lt;code>TLS Hello World!
+&lt;/code>&lt;/pre>&lt;p>While hitting the mTLS server:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>go run .\client-signer.go --url https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8889&lt;/span>/hello-world.txt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns a more detailed message, including the print statements in our custom code:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Server requested certificate
+Found certificate with common name testClientTLS
+crypto.Signer.Public
+crypto.Signer.Public
+crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
+mTLS Hello World!
+&lt;/code>&lt;/pre>&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
+&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
+>https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a>&lt;/p>
+&lt;h2 id="mtls-go-client-using-windows-certificate-store-video">mTLS Go client using Windows certificate store video&lt;/h2>
+&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/L4uk43i3kyY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -156,8 +416,8 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Edge browser can access the mTLS server. We can verify this by opening the following URL:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>https://myhost:8889/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We see the following popup:&lt;/p>
-&lt;figure>&lt;img src="mtls-edge.png"
-alt="Edge mTLS popup"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
+alt="Edge mTLS popup">&lt;figcaption>
 &lt;p>Edge mTLS popup&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -168,7 +428,7 @@ alt="Edge mTLS popup"/>&lt;figcaption>
 &lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a>&lt;/p>
 &lt;h2 id="creating-our-own-windows-mtls-client">Creating our own Windows mTLS client&lt;/h2>
-&lt;p>In the following article, we will create a custom Windows mTLS client using the Windows certificate store.&lt;/p>
+&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create a custom Windows mTLS client using the Windows certificate store&lt;/a>.&lt;/p>
 &lt;h2 id="mtls-with-windows-certificate-store-video">mTLS with Windows certificate store video&lt;/h2>
 &lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -528,7 +788,7 @@ title="YouTube Video"
 &lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
 &lt;p>The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code>CertificateVerify&lt;/code> message. The &lt;code>CertificateVerify&lt;/code> message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p>
 &lt;figure>&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"/>
+alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/figure>
 &lt;p>From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
 >Wikipedia entry on TLS&lt;/a>:&lt;/p>
@@ -957,8 +1217,8 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;/code>&lt;/pre>&lt;p>On the other hand, Safari can access the mTLS server. We can verify this by opening the following URL in Safari:&lt;/p>
 &lt;pre tabindex="0">&lt;code>https://localhost:8889/hello-world.txt
 &lt;/code>&lt;/pre>&lt;p>We see the following popup:&lt;/p>
-&lt;figure>&lt;img src="mtls-safari.png"
-alt="Safari mTLS popup"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
+alt="Safari mTLS popup">&lt;figcaption>
 &lt;p>Safari mTLS popup&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
@@ -996,8 +1256,8 @@ title="YouTube Video"
 &lt;h2 id="how-does-mtls-work">How does mTLS work?&lt;/h2>
 &lt;p>TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only go over the basics to understand how mTLS works.&lt;/p>
 &lt;p>TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between the client and the server.&lt;/p>
-&lt;figure>&lt;img src="mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
+alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/figure>
 &lt;p>The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p>
 &lt;p>The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate is valid and has not expired. The client also checks that the server&amp;rsquo;s hostname matches the hostname in the certificate.&lt;/p>
@@ -1295,7 +1555,7 @@ extension of your application to perform tasks such as:&lt;/p>
 &lt;li>and many others&lt;/li>
 &lt;/ul>
 &lt;p>A GitHub action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p>
-&lt;figure>&lt;img src="GitHub-action.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png">
 &lt;/figure>
 &lt;p>You can use a GitHub action as a worker for your application. For example, you can use it to process data from a database and then
 send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p>
@@ -1416,7 +1676,7 @@ title="YouTube Video"
 &lt;h2 id="policy-creation">Policy creation&lt;/h2>
 &lt;p>Policies can be created from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code> with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p>
 &lt;p>When a policy is created, a record for it is stored in the &lt;strong>policies&lt;/strong> table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p>
-&lt;figure>&lt;img src="understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png">
 &lt;/figure>
 &lt;h2 id="policy-execution">Policy execution&lt;/h2>
 &lt;p>Policies are executed on the devices, which are called &lt;strong>hosts&lt;/strong> in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
@@ -1431,15 +1691,15 @@ title="YouTube Video"
 }
 }
 &lt;/code>&lt;/pre>&lt;p>Once the host has executed the policy, it writes the result to the server. The server updates the result in the &lt;strong>policy_membership&lt;/strong> table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.&lt;/p>
-&lt;figure>&lt;img src="understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png">
 &lt;/figure>
 &lt;h2 id="force-policy-execution-on-a-device">Force policy execution on a device&lt;/h2>
 &lt;p>The user can force the host to execute all of its policies by clicking the &lt;strong>Refetch&lt;/strong> link:&lt;/p>
-&lt;figure>&lt;img src="understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png">
 &lt;/figure>
 &lt;h2 id="policy-results-aggregation">Policy results aggregation&lt;/h2>
 &lt;p>However, the main &lt;strong>Policies&lt;/strong> page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong>policy_stats&lt;/strong> table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p>
-&lt;figure>&lt;img src="understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png">
 &lt;/figure>
 &lt;h2 id="summary">Summary&lt;/h2>
 &lt;p>Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
@@ -1462,7 +1722,7 @@ title="YouTube Video"
 &lt;p>Live queries can be run from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code>, or the REST API. The user creates a query and selects which devices will run that query. Here is an example using &lt;code>fleetctl&lt;/code> to obtain the operating system name and version for all devices:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fleetctl query --query &lt;span style="color:#e6db74">&amp;#34;select name, version from os_version;&amp;#34;&lt;/span> --labels &lt;span style="color:#e6db74">&amp;#34;All Hosts&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When a client initiates a live query, the server first creates a &lt;strong>Query Campaign&lt;/strong> record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p>
-&lt;figure>&lt;img src="Live%20Query.png"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png">&lt;figcaption>
 &lt;h4>Query campaign&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
@@ -1552,7 +1812,7 @@ interoperability. This means that you will no longer need to be an expert hacker
 control devices from multiple manufacturers under a single application. Apple, Amazon, and Google
 are some of the major members driving the standard. This is great news for the majority of adopters
 who haven’t yet fully embraced home automation and security.&lt;/p>
-&lt;figure>&lt;img src="matter.jpeg"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/matter.jpeg">
 &lt;/figure>
 &lt;p>The Matter specification is published by
 the &lt;a class="link" href="https://csa-iot.org/" target="_blank" rel="noopener"
@@ -1582,7 +1842,7 @@ example, suppose a business’s device management server uses Matter to subscrib
 lock. It receives an alert that &lt;em>User A&lt;/em> has entered their code. Afterwards, via regular scheduled
 telemetry, it notices a successful login to &lt;em>Computer B&lt;/em>. The business SIEM (security information and
 event management) system should immediately flag this suspicious sequence of events.&lt;/p>
-&lt;figure>&lt;img src="cover.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/cover.png">
 &lt;/figure>
 &lt;p>Of course, the example above can be accomplished today by writing some custom code or using a third party integration. What Matter brings is scalability to such security approaches. The code and integration will no longer need to be redone for each new device and version that comes onto the market.&lt;/p></description></item><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -1698,7 +1958,7 @@ GitBook is a newcomer to the space, and is still reaching maturity.&lt;/p>
 &lt;p>To set up a personal GitBook, make a fork of the open source projects that contain documentation
 you’d like to search, and integrate them into GitBook spaces. After indexing is complete, you’ll be
 able to effectively search the documentation.&lt;/p>
-&lt;figure>&lt;img src="GitBook-1.png"/>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/GitBook-1.png">
 &lt;/figure>
 &lt;p>To keep the forks in sync with the parent repositories, we use Github Actions. Github Actions are
 free for open source projects. Searching GitHub for &lt;strong>sync-fork&lt;/strong> returned several examples. We
@@ -1778,14 +2038,14 @@ of &lt;a class="link" href="https://www.proxmox.com/en/proxmox-virtual-environme
 Environment (PVE)&lt;/a>.&lt;/p>
 &lt;p>For the initial installation, we did not use PCI Passthrough and instead used a virtual network
 bridge (&lt;strong>vmbr0&lt;/strong>). We configured the router VM to start on boot.&lt;/p>
-&lt;figure>&lt;img src="Virtual-Router-1.jpg"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-1.jpg">&lt;figcaption>
 &lt;h4>Initial virtual router configuration&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the
 router and enabled access to it through the serial interface, which we used in the next step. Then,
 we put the system into its final configuration.&lt;/p>
-&lt;figure>&lt;img src="Virtual-Router-2.jpg"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-2.jpg">&lt;figcaption>
 &lt;h4>Final virtual router configuration&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
@@ -1880,7 +2140,7 @@ From &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d
 >handler.go&lt;/a>:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">e&lt;/span> = &lt;span style="color:#a6e22e">authzcheck&lt;/span>.&lt;span style="color:#a6e22e">NewMiddleware&lt;/span>().&lt;span style="color:#a6e22e">AuthzCheck&lt;/span>()(&lt;span style="color:#a6e22e">e&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">kithttp&lt;/span>.&lt;span style="color:#a6e22e">NewServer&lt;/span>(&lt;span style="color:#a6e22e">e&lt;/span>, &lt;span style="color:#a6e22e">decodeFn&lt;/span>, &lt;span style="color:#a6e22e">encodeResponse&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="AuthzCheck.jpg"/>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg">
 &lt;/figure>
 &lt;p>This means that after the business logic is processed, the AuthzCheck is called.
 This check ensures that authorization was checked. Otherwise, an error is returned.

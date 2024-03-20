@@ -395,8 +395,8 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;/code>&lt;/pre>&lt;p>On the other hand, Safari can access the mTLS server. We can verify this by opening the following URL in Safari:&lt;/p>
 &lt;pre tabindex="0">&lt;code>https://localhost:8889/hello-world.txt
 &lt;/code>&lt;/pre>&lt;p>We see the following popup:&lt;/p>
-&lt;figure>&lt;img src="mtls-safari.png"
-alt="Safari mTLS popup"/>&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
+alt="Safari mTLS popup">&lt;figcaption>
 &lt;p>Safari mTLS popup&lt;/p>
 &lt;/figcaption>
 &lt;/figure>
