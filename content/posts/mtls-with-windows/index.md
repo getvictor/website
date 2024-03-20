@@ -235,7 +235,7 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 ## Creating our own Windows mTLS client
 
-In the following article, we will create a custom Windows mTLS client using the Windows certificate store.
+In the following article, we will [create a custom Windows mTLS client using the Windows certificate store](../mtls-go-client-windows-certificate-store).
 
 ## mTLS with Windows certificate store video
 
