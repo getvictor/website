@@ -48,6 +48,6 @@ lock. It receives an alert that _User A_ has entered their code. Afterwards, via
 telemetry, it notices a successful login to _Computer B_. The business SIEM (security information and
 event management) system should immediately flag this suspicious sequence of events.
 
-{{< figure src="cover.png" >}}
+{{< figure src="cover.png" alt="Physical security with Matter">}}
 
 Of course, the example above can be accomplished today by writing some custom code or using a third party integration. What Matter brings is scalability to such security approaches. The code and integration will no longer need to be redone for each new device and version that comes onto the market.

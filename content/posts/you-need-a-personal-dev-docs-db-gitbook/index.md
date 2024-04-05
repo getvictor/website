@@ -46,7 +46,7 @@ To set up a personal GitBook, make a fork of the open source projects that conta
 you’d like to search, and integrate them into GitBook spaces. After indexing is complete, you’ll be
 able to effectively search the documentation.
 
-{{< figure src="GitBook-1.png" >}}
+{{< figure src="GitBook-1.png" alt="Search for database migrations in Fleet's GitBook" >}}
 
 To keep the forks in sync with the parent repositories, we use Github Actions. Github Actions are
 free for open source projects. Searching GitHub for **sync-fork** returned several examples. We

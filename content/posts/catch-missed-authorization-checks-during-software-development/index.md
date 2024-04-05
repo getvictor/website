@@ -32,7 +32,7 @@ e = authzcheck.NewMiddleware().AuthzCheck()(e)
 return kithttp.NewServer(e, decodeFn, encodeResponse, opts...)
 ```
 
-{{< figure src="AuthzCheck.jpg" >}}
+{{< figure src="AuthzCheck.jpg" alt="Catch missed authorization check block diagram" >}}
 
 This means that after the business logic is processed, the AuthzCheck is called. 
 This check ensures that authorization was checked. Otherwise, an error is returned. 

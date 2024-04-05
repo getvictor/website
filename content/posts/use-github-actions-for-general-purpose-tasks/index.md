@@ -30,7 +30,7 @@ extension of your application to perform tasks such as:
 
 A GitHub action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.
 
-{{< figure src="GitHub-action.png" >}}
+{{< figure src="GitHub-action.png" alt="GitHub action block diagram" >}}
 
 You can use a GitHub action as a worker for your application. For example, you can use it to process data from a database and then
 send a notification to a user. Or you can use it to generate a report and upload it to a file server.

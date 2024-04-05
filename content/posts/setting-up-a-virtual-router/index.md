@@ -41,13 +41,13 @@ Environment (PVE)](https://www.proxmox.com/en/proxmox-virtual-environment/overvi
 For the initial installation, we did not use PCI Passthrough and instead used a virtual network
 bridge (**vmbr0**). We configured the router VM to start on boot.
 
-{{< figure src="Virtual-Router-1.jpg" title="Initial virtual router configuration" >}}
+{{< figure src="Virtual-Router-1.jpg" title="Initial virtual router configuration" alt="Initial virtual router configuration" >}}
 
 This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the
 router and enabled access to it through the serial interface, which we used in the next step. Then,
 we put the system into its final configuration.
 
-{{< figure src="Virtual-Router-2.jpg" title="Final virtual router configuration" >}}
+{{< figure src="Virtual-Router-2.jpg" title="Final virtual router configuration" alt="Final virtual router configuration" >}}
 
 In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We
 accessed the virtual router via the serial interface from the PVE command line:

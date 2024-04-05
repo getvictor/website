@@ -136,7 +136,7 @@ After signing the code, we can distribute the signed executable to users. Users 
 
 However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted. Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root certificate store.
 
-{{< figure src="certificate-signature-not-verified.png" title="Certificate in code signature cannot be verified" >}}
+{{< figure src="certificate-signature-not-verified.png" title="Certificate in code signature cannot be verified" alt="Certificate in code signature cannot be verified" >}}
 
 We can add the certificate authority to the Windows trusted root certificate store with the following Powershell command:
 
@@ -146,7 +146,7 @@ Import-Certificate -FilePath "certs\ca.crt" -CertStoreLocation Cert:\LocalMachin
 
 After adding the certificate authority to the trusted root certificate store, users will see that the certificate is trusted and the signature is valid.
 
-{{< figure src="certificate-signature-verified.png" title="Certificate in code signature is be verified" >}}
+{{< figure src="certificate-signature-verified.png" title="Certificate in code signature is be verified" alt="Certificate in code signature is be verified" >}}
 
 ## Code signing using a certificate from a public CA
 

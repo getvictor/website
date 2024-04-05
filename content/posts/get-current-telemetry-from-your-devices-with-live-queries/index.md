@@ -29,7 +29,7 @@ fleetctl query --query "select name, version from os_version;" --labels "All Hos
 
 When a client initiates a live query, the server first creates a **Query Campaign** record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.
 
-{{< figure src="Live Query.png" title="Query campaign" >}}
+{{< figure src="Live Query.png" title="Query campaign" alt="Query campaign" >}}
 
 As devices called **Hosts** in Fleet check in with the servers, they receive instructions to run a query. For example:
 

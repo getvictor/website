@@ -20,7 +20,7 @@ Policies can be created from the web UI, the command-line interface called `flee
 
 When a policy is created, a record for it is stored in the **policies** table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.
 
-{{< figure src="understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png" >}}
+{{< figure src="understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png" alt="Fleet policies block diagram">}}
 
 ## Policy execution
 
@@ -43,21 +43,21 @@ Policies are simply SQL queries that return a true or false result, so the flow 
 
 Once the host has executed the policy, it writes the result to the server. The server updates the result in the **policy_membership** table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.
 
-{{< figure src="understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png" >}}
+{{< figure src="understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png" alt="Fleet policies on host details page" >}}
 
 
 ## Force policy execution on a device
 
 The user can force the host to execute all of its policies by clicking the **Refetch** link:
 
-{{< figure src="understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png" >}}
+{{< figure src="understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png" alt="Fleet refetch host details" >}}
 
 
 ## Policy results aggregation
 
 However, the main **Policies** page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the **policy_stats** table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.
 
-{{< figure src="understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" >}}
+{{< figure src="understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Fleet policies page" >}}
 
 
 ## Summary
