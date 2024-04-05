@@ -24,7 +24,8 @@ From &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d
 >handler.go&lt;/a>:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">e&lt;/span> = &lt;span style="color:#a6e22e">authzcheck&lt;/span>.&lt;span style="color:#a6e22e">NewMiddleware&lt;/span>().&lt;span style="color:#a6e22e">AuthzCheck&lt;/span>()(&lt;span style="color:#a6e22e">e&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">kithttp&lt;/span>.&lt;span style="color:#a6e22e">NewServer&lt;/span>(&lt;span style="color:#a6e22e">e&lt;/span>, &lt;span style="color:#a6e22e">decodeFn&lt;/span>, &lt;span style="color:#a6e22e">encodeResponse&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg">
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg"
+alt="Catch missed authorization check block diagram">
 &lt;/figure>
 &lt;p>This means that after the business logic is processed, the AuthzCheck is called.
 This check ensures that authorization was checked. Otherwise, an error is returned.

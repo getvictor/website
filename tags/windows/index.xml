@@ -99,14 +99,16 @@
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">Distributing and manually verifying the signed code&lt;/h2>
 &lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
 &lt;p>However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted. Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root certificate store.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png">&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
+alt="Certificate in code signature cannot be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature cannot be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>We can add the certificate authority to the Windows trusted root certificate store with the following Powershell command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Import-Certificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\ca.crt&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After adding the certificate authority to the trusted root certificate store, users will see that the certificate is trusted and the signature is valid.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png">&lt;figcaption>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
+alt="Certificate in code signature is be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature is be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
