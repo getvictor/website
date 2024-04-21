@@ -4,6 +4,7 @@ paginate = 10
 title = 'Victor on Software'
 theme = "hugo-theme-stack"
 enableRobotsTXT = false
+capitalizeListTitles = false
 
 [params]
 description = "Software engineering, security, and related topics. Currently building security telemetry and MDM at Fleet Device Management."
@@ -18,5 +19,17 @@ local = true
 src = "img/avatar.png"
 
 ## Widgets
-[[widgets.homepage]]
+[[params.widgets.homepage]]
 type = "search"
+
+[[params.widgets.homepage]]
+type = "categories"
+
+[params.widgets.homepage.params]
+limit = 10
+
+[[params.widgets.homepage]]
+type = "tag-cloud"
+
+[params.widgets.homepage.params]
+limit = 20

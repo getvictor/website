@@ -3,7 +3,7 @@ title = 'Setting up a virtual router'
 description = 'Using a virtual router to protect its own hypervisor is tricky'
 image = "cover.jpeg"
 date = 2023-11-22
-tags = ["proxmox", "pfsense", "cybersecurity"]
+tags = ["Proxmox", "pfSense", "CyberSecurity"]
 draft = false
 +++
 

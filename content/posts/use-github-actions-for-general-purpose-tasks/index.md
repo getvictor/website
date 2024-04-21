@@ -3,7 +3,7 @@ title = "Use GitHub actions for general-purpose tasks"
 description = "Using GitHub actions for good"
 image = "GitHub-action.png"
 date = 2024-01-11
-tags = ["github", "githubactions", "cloudcomputing"]
+tags = ["GitHub", "GitHubActions", "CloudComputing"]
 draft = false
 +++
 

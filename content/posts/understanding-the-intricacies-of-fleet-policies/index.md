@@ -3,7 +3,7 @@ title = 'Understanding the intricacies of Fleet policies'
 description = "Device security with Fleet policies"
 image = "understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
 date = 2023-12-30
-tags = ["fleet", "cybersecurity", "underthehood", "devicetrust"]
+tags = ["Fleet", "CyberSecurity", "UnderTheHood", "DeviceTrust"]
 draft = false
 +++
 

@@ -3,7 +3,7 @@ title = 'Mutual TLS (mTLS) Go client with custom certificate signer'
 description = "How to build an mTLS Go client that sends a custom CertificateVerify message"
 image = "signer.png"
 date = 2024-02-14
-tags = ["tls", "golang", "cybersecurity"]
+tags = ["TLS", "Golang", "CyberSecurity"]
 categories = ["mTLS"]
 draft = false
 +++

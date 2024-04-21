@@ -3,7 +3,7 @@ title = 'You need a personal dev docs DB (GitBook)'
 description = 'Create a free personalized dev docs database'
 image = "cover.png"
 date = 2023-11-30
-tags = ["developer", "knowledgesharing", "gitbook"]
+tags = ["Developer", "KnowledgeSharing", "GitBook"]
 draft = false
 +++
 

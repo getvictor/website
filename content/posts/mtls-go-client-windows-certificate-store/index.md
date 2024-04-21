@@ -3,7 +3,7 @@ title = 'Mutual TLS (mTLS) Go client using Windows certificate store'
 description = "How to build an mTLS Go client that uses the Windows certificate store"
 image = "mtls-go-windows.png"
 date = 2024-03-20
-tags = ["TLS", "golang", "Windows", "CyberSecurity"]
+tags = ["TLS", "Golang", "Windows", "CyberSecurity"]
 categories = ["mTLS"]
 draft = false
 +++

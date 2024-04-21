@@ -3,7 +3,7 @@ title = 'Using C and Go with CGO is tricky'
 description = "CGO Hello World fail!"
 image = "cgo-hello-world-fail.png"
 date = 2024-01-18
-tags = ["golang", "cgo", "helloworld"]
+tags = ["Golang", "CGO", "HelloWorld"]
 draft = false
 +++
 

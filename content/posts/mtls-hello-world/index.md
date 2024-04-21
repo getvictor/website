@@ -3,7 +3,7 @@ title = 'Mutual TLS intro and hands-on example'
 description = "mTLS Hello World"
 image = "mtls-handshake.png"
 date = 2024-01-24
-tags = ["tls", "cybersecurity", "helloworld"]
+tags = ["tls", "CyberSecurity", "HelloWorld"]
 categories = ["mTLS"]
 draft = false
 +++

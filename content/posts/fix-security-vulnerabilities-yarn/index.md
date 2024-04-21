@@ -3,7 +3,7 @@ title = 'Fix security vulnerabilities in Yarn'
 description = "Real-world examples of fixing security vulnerabilities in Yarn"
 image = "cover.png"
 date = 2024-04-10
-tags = ["Yarn", "vulnerabilities", "CyberSecurity"]
+tags = ["Yarn", "Vulnerabilities", "CyberSecurity"]
 draft = false
 +++
 

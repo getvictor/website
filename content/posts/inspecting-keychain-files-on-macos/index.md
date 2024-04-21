@@ -2,7 +2,7 @@
 title = 'Inspecting keychain files on macOS'
 description = 'Extracting info from macOS keychain files has gotten harder, but not impossible'
 date = 2023-11-16
-tags = ["macos", "cybersecurity"]
+tags = ["macOS", "CyberSecurity"]
 draft = false
 +++
 

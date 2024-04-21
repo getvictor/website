@@ -3,7 +3,7 @@ title = 'Fully supporting Unicode and emojis in your app'
 description = "Common issues with Unicode and emoji support"
 image = "unicode-emoji.png"
 date = 2024-02-29
-tags = ["Unicode", "emoji", "MySQL"]
+tags = ["Unicode", "Emoji", "MySQL"]
 categories = []
 draft = false
 +++

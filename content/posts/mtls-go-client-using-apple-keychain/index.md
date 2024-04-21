@@ -3,7 +3,7 @@ title = 'Mutual TLS (mTLS) Go client using macOS keychain'
 description = "How to build an mTLS Go client that uses Apple's macOS keychain"
 image = "mtls-go-apple-keychain.png"
 date = 2024-02-22
-tags = ["tls", "golang", "macos", "cybersecurity"]
+tags = ["TLS", "Golang", "macOS", "CyberSecurity"]
 categories = ["mTLS"]
 draft = false
 +++

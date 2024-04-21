@@ -3,7 +3,7 @@ title = 'Mutual TLS (mTLS) with macOS keychain'
 description = "How to configure mTLS using Apple's macOS keychain"
 image = "mtls-safari.png"
 date = 2024-01-31
-tags = ["tls", "macos", "cybersecurity"]
+tags = ["tls", "macOS", "CyberSecurity"]
 categories = ["mTLS"]
 draft = false
 +++

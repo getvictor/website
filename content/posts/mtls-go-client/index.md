@@ -3,7 +3,7 @@ title = 'Mutual TLS (mTLS) Go client'
 description = "How to build a Go client for mTLS"
 image = "go-client.png"
 date = 2024-02-07
-tags = ["tls", "golang", "cybersecurity"]
+tags = ["TLS", "Golang", "CyberSecurity"]
 categories = ["mTLS"]
 draft = false
 +++
