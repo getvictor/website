@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cgo on Victor on Software</title><link>https://victoronsoftware.com/tags/cgo/</link><description>Recent content in Cgo on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 18 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cgo/index.xml" rel="self" type="application/rss+xml"/><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">Simple CGO examples&lt;/h2>
-&lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Cgo on Victor on Software</title><link>https://victoronsoftware.com/tags/cgo/</link><description>Recent content in Cgo on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 18 Jan 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/cgo/index.xml" rel="self" type="application/rss+xml"/><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">
+&lt;a href="#simple-cgo-examples">#&lt;/a>
+Simple CGO examples
+&lt;/h2>&lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
 &lt;p>Below is a simple example of calling a C function from Go.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -32,8 +34,10 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">add&lt;/span>(&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2.1&lt;/span>)))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We call the &lt;code>floor&lt;/code> function from the &lt;code>math.h&lt;/code> library. The &lt;code>math.h&lt;/code> library is included with the C compiler, so we don&amp;rsquo;t need to do anything special to use it.&lt;/p>
-&lt;h2 id="cgo-hello-world-fail">CGO Hello World fail&lt;/h2>
-&lt;p>Here is another example where we print &amp;ldquo;Hello World&amp;rdquo; from C.&lt;/p>
+&lt;h2 id="cgo-hello-world-fail">
+&lt;a href="#cgo-hello-world-fail">#&lt;/a>
+CGO Hello World fail
+&lt;/h2>&lt;p>Here is another example where we print &amp;ldquo;Hello World&amp;rdquo; from C.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -63,8 +67,10 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">wrapPrintf&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CString&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, World\n&amp;#34;&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="c-hello-world-fail">C++ Hello World fail&lt;/h2>
-&lt;p>Another issue with CGO is only C code can be called from Go. C++ code cannot be called from Go. The following code will fail to compile:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="c-hello-world-fail">
+&lt;a href="#c-hello-world-fail">#&lt;/a>
+C++ Hello World fail
+&lt;/h2>&lt;p>Another issue with CGO is only C code can be called from Go. C++ code cannot be called from Go. The following code will fail to compile:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -79,8 +85,10 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">helloWorld&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, C++ code can be called from C, so we can write a C wrapper for the C++ code.&lt;/p>
-&lt;h2 id="cgo-real-world-example">CGO real-world example&lt;/h2>
-&lt;p>The following is an example of real-world usage of CGO, which uses Apple&amp;rsquo;s APIs to add a secret to the keychain.&lt;/p>
+&lt;h2 id="cgo-real-world-example">
+&lt;a href="#cgo-real-world-example">#&lt;/a>
+CGO real-world example
+&lt;/h2>&lt;p>The following is an example of real-world usage of CGO, which uses Apple&amp;rsquo;s APIs to add a secret to the keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">keystore&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -145,10 +153,14 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;p>Unfortunately, CGO cannot cast a C string to a &lt;code>(*C.UInt8)&lt;/code> directly. The following will fail to compile:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">UInt8&lt;/span>)(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CString&lt;/span>(&lt;span style="color:#a6e22e">secret&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We must go through an intermediate cast to &lt;code>unsafe.Pointer&lt;/code>, representing a void C pointer.&lt;/p>
-&lt;h2 id="additional-topics">Additional topics&lt;/h2>
-&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
-&lt;h2 id="cgo-hello-world-fail-video">CGO Hello World fail video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="additional-topics">
+&lt;a href="#additional-topics">#&lt;/a>
+Additional topics
+&lt;/h2>&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
+&lt;h2 id="cgo-hello-world-fail-video">
+&lt;a href="#cgo-hello-world-fail-video">#&lt;/a>
+CGO Hello World fail video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/C9h8YO1NwPM"
 allowfullscreen

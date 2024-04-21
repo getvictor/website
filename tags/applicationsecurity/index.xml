@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ApplicationSecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/applicationsecurity/</link><description>Recent content in ApplicationSecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/applicationsecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">What is code signing?&lt;/h2>
-&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
-&lt;h2 id="the-benefits-of-code-signing">The benefits of code signing&lt;/h2>
-&lt;p>Code signing provides several benefits:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ApplicationSecurity on Victor on Software</title><link>https://victoronsoftware.com/tags/applicationsecurity/</link><description>Recent content in ApplicationSecurity on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/applicationsecurity/index.xml" rel="self" type="application/rss+xml"/><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">
+&lt;a href="#what-is-code-signing">#&lt;/a>
+What is code signing?
+&lt;/h2>&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
+&lt;h2 id="the-benefits-of-code-signing">
+&lt;a href="#the-benefits-of-code-signing">#&lt;/a>
+The benefits of code signing
+&lt;/h2>&lt;p>Code signing provides several benefits:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>User trust&lt;/strong>: Users are likelier to trust signed software because they can verify its origin.&lt;/li>
 &lt;li>&lt;strong>Security&lt;/strong>: Code signing helps prevent tampering and makes sure that bad actors have not altered the software.&lt;/li>
@@ -9,8 +13,10 @@
 &lt;li>&lt;strong>Software updates&lt;/strong>: Code signing helps users verify that software updates are legitimate and not malicious.&lt;/li>
 &lt;li>&lt;strong>Windows Defender&lt;/strong>: Code signing helps prevent Windows Defender warnings.&lt;/li>
 &lt;/ul>
-&lt;h2 id="code-signing-process-for-windows">Code signing process for Windows&lt;/h2>
-&lt;p>The code signing process for Windows involves the following steps:&lt;/p>
+&lt;h2 id="code-signing-process-for-windows">
+&lt;a href="#code-signing-process-for-windows">#&lt;/a>
+Code signing process for Windows
+&lt;/h2>&lt;p>The code signing process for Windows involves the following steps:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>Obtain a code signing certificate&lt;/strong>: Purchase a code signing certificate from a trusted certificate authority (CA) or use a self-signed certificate.&lt;/li>
 &lt;li>&lt;strong>Sign the code&lt;/strong>: Use a code signing tool to sign the code with the code signing certificate.&lt;/li>
@@ -18,8 +24,10 @@
 &lt;li>&lt;strong>Distribute the signed code&lt;/strong>: Distribute the signed code to users.&lt;/li>
 &lt;li>&lt;strong>Verify the signature&lt;/strong>: Users can verify the signature to confirm the software&amp;rsquo;s authenticity.&lt;/li>
 &lt;/ul>
-&lt;h2 id="obtaining-a-code-signing-certificate">Obtaining a code signing certificate&lt;/h2>
-&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
+&lt;h2 id="obtaining-a-code-signing-certificate">
+&lt;a href="#obtaining-a-code-signing-certificate">#&lt;/a>
+Obtaining a code signing certificate
+&lt;/h2>&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
 &lt;p>We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
 >OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular open-source library for TLS and SSL protocols.&lt;/p>
 &lt;p>The following script generates the certificate and key needed for code signing. It also generates a certificate authority (CA) and signs the code signing certificate with the CA.&lt;/p>
@@ -45,14 +53,18 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/sign.req
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-application">Building the application&lt;/h2>
-&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile the application with:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-application">
+&lt;a href="#building-the-application">#&lt;/a>
+Building the application
+&lt;/h2>&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile the application with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export GOOS&lt;span style="color:#f92672">=&lt;/span>windows
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export GOARCH&lt;span style="color:#f92672">=&lt;/span>amd64
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go build ./hello-world.go
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Go build process generates the &lt;code>hello-world.exe&lt;/code> Windows executable.&lt;/p>
-&lt;h2 id="signing-and-timestamping-the-code">Signing and timestamping the code&lt;/h2>
-&lt;p>To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
+&lt;h2 id="signing-and-timestamping-the-code">
+&lt;a href="#signing-and-timestamping-the-code">#&lt;/a>
+Signing and timestamping the code
+&lt;/h2>&lt;p>To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
 >osslsigncode&lt;/a>, an open-source code signing tool that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code>signtool,&lt;/code> &lt;code>osslsigncode&lt;/code> is cross-platform and can be used on Linux and macOS.&lt;/p>
 &lt;p>To sign the code, we use the following script:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
@@ -96,8 +108,10 @@
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>input_file&lt;span style="color:#f92672">=&lt;/span>$1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>osslsigncode verify -CAfile ./certs/ca.crt &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$input_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">Distributing and manually verifying the signed code&lt;/h2>
-&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">
+&lt;a href="#distributing-and-manually-verifying-the-signed-code">#&lt;/a>
+Distributing and manually verifying the signed code
+&lt;/h2>&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
 &lt;p>However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted. Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root certificate store.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
 alt="Certificate in code signature cannot be verified">&lt;figcaption>
@@ -112,14 +126,20 @@ alt="Certificate in code signature is be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature is be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;h2 id="code-signing-using-a-certificate-from-a-public-ca">Code signing using a certificate from a public CA&lt;/h2>
-&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud HSM vendor or a private pipeline runner with an HSM.&lt;/p>
+&lt;h2 id="code-signing-using-a-certificate-from-a-public-ca">
+&lt;a href="#code-signing-using-a-certificate-from-a-public-ca">#&lt;/a>
+Code signing using a certificate from a public CA
+&lt;/h2>&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud HSM vendor or a private pipeline runner with an HSM.&lt;/p>
 &lt;p>In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">
+&lt;a href="#example-code-on-github">#&lt;/a>
+Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/code-sign-windows&lt;/a>&lt;/p>
-&lt;h2 id="code-signing-a-windows-application-video">Code signing a Windows application video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="code-signing-a-windows-application-video">
+&lt;a href="#code-signing-a-windows-application-video">#&lt;/a>
+Code signing a Windows application video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/NQYUgHznXew"
 allowfullscreen

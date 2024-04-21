@@ -20,16 +20,20 @@ and use the &lt;strong>testing.F&lt;/strong> struct instead of the usual &lt;str
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">FuzzSample&lt;/span>(&lt;span style="color:#a6e22e">f&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">F&lt;/span>) {
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here is a workflow for using fuzz testing. First, you create a fuzz test. Then, you run it with fuzzing to automatically find failing corner
 cases and make any fixes. Thirdly, you include the test and the corner cases in your continuous integration testing suite.&lt;/p>
-&lt;h2 id="create-a-fuzz-test">Create a fuzz test&lt;/h2>
-&lt;p>When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use before applying
+&lt;h2 id="create-a-fuzz-test">
+&lt;a href="#create-a-fuzz-test">#&lt;/a>
+Create a fuzz test
+&lt;/h2>&lt;p>When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use before applying
 randomization. Add the seed corpus with the &lt;strong>Add&lt;/strong> method. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(&lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Num&lt;/span>, &lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(uint8(&lt;span style="color:#ae81ff">0&lt;/span>), &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The inputs to the &lt;strong>Add&lt;/strong> method indicate which types will be fuzzed, and these types must match the subsequent call to the &lt;strong>Fuzz&lt;/strong> method:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Fuzz&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>, &lt;span style="color:#a6e22e">num&lt;/span> &lt;span style="color:#66d9ef">uint8&lt;/span>, &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) {
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The fuzz test can randomize any number of inputs, as long as they are one of the supported types.&lt;/p>
-&lt;h2 id="run-the-test-with-fuzzing">Run the test with fuzzing&lt;/h2>
-&lt;p>To run the test with fuzzing, use the &lt;strong>-fuzz&lt;/strong> switch, like:&lt;/p>
+&lt;h2 id="run-the-test-with-fuzzing">
+&lt;a href="#run-the-test-with-fuzzing">#&lt;/a>
+Run the test with fuzzing
+&lt;/h2>&lt;p>To run the test with fuzzing, use the &lt;strong>-fuzz&lt;/strong> switch, like:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go test -fuzz FuzzSample
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The test will continuously run on all your CPUs until it fails, or you kill it:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=== RUN FuzzSample
@@ -52,19 +56,25 @@ string(&amp;#34;0a0000&amp;#34;)
 &lt;/code>&lt;/pre>&lt;p>Adding the failure to the seed corpus means that the failing case will always run when this test is run again as a unit test or with
 fuzzing.&lt;/p>
 &lt;p>Now, you must fix the failing test and continue the loop of fuzzing and fixing.&lt;/p>
-&lt;h2 id="include-the-test-in-continuous-integration">Include the test in continuous integration&lt;/h2>
-&lt;p>When checking in the test to your repository, you must either include the &lt;strong>testdata/fuzz/Fuzz&lt;/strong>* files or convert those files into individual
+&lt;h2 id="include-the-test-in-continuous-integration">
+&lt;a href="#include-the-test-in-continuous-integration">#&lt;/a>
+Include the test in continuous integration
+&lt;/h2>&lt;p>When checking in the test to your repository, you must either include the &lt;strong>testdata/fuzz/Fuzz&lt;/strong>* files or convert those files into individual
 &lt;strong>Add&lt;/strong> method calls in your test. Once the test is checked in, all the inputs in the seed corpus will run as part of the standard Go unit test
 flow.&lt;/p>
-&lt;h2 id="initial-impressions">Initial impressions&lt;/h2>
-&lt;p>Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library documentation mentions
+&lt;h2 id="initial-impressions">
+&lt;a href="#initial-impressions">#&lt;/a>
+Initial impressions
+&lt;/h2>&lt;p>Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library documentation mentions
 the following about the function under test:&lt;/p>
 &lt;blockquote>
 &lt;p>This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p>
 &lt;/blockquote>
 &lt;p>I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p>
-&lt;h2 id="concerns-and-issues">Concerns and Issues&lt;/h2>
-&lt;p>Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in features and usability.
+&lt;h2 id="concerns-and-issues">
+&lt;a href="#concerns-and-issues">#&lt;/a>
+Concerns and Issues
+&lt;/h2>&lt;p>Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in features and usability.
 The types of functions, fast and deterministic, that fuzzing is intended for are generally not very interesting when testing real
 applications. They are good examples for students learning how to code. However, more interesting testing scenarios include:&lt;/p>
 &lt;ul>

@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Windows on Victor on Software</title><link>https://victoronsoftware.com/tags/windows/</link><description>Recent content in Windows on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/windows/index.xml" rel="self" type="application/rss+xml"/><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">What is code signing?&lt;/h2>
-&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
-&lt;h2 id="the-benefits-of-code-signing">The benefits of code signing&lt;/h2>
-&lt;p>Code signing provides several benefits:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Windows on Victor on Software</title><link>https://victoronsoftware.com/tags/windows/</link><description>Recent content in Windows on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/windows/index.xml" rel="self" type="application/rss+xml"/><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">
+&lt;a href="#what-is-code-signing">#&lt;/a>
+What is code signing?
+&lt;/h2>&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
+&lt;h2 id="the-benefits-of-code-signing">
+&lt;a href="#the-benefits-of-code-signing">#&lt;/a>
+The benefits of code signing
+&lt;/h2>&lt;p>Code signing provides several benefits:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>User trust&lt;/strong>: Users are likelier to trust signed software because they can verify its origin.&lt;/li>
 &lt;li>&lt;strong>Security&lt;/strong>: Code signing helps prevent tampering and makes sure that bad actors have not altered the software.&lt;/li>
@@ -9,8 +13,10 @@
 &lt;li>&lt;strong>Software updates&lt;/strong>: Code signing helps users verify that software updates are legitimate and not malicious.&lt;/li>
 &lt;li>&lt;strong>Windows Defender&lt;/strong>: Code signing helps prevent Windows Defender warnings.&lt;/li>
 &lt;/ul>
-&lt;h2 id="code-signing-process-for-windows">Code signing process for Windows&lt;/h2>
-&lt;p>The code signing process for Windows involves the following steps:&lt;/p>
+&lt;h2 id="code-signing-process-for-windows">
+&lt;a href="#code-signing-process-for-windows">#&lt;/a>
+Code signing process for Windows
+&lt;/h2>&lt;p>The code signing process for Windows involves the following steps:&lt;/p>
 &lt;ul>
 &lt;li>&lt;strong>Obtain a code signing certificate&lt;/strong>: Purchase a code signing certificate from a trusted certificate authority (CA) or use a self-signed certificate.&lt;/li>
 &lt;li>&lt;strong>Sign the code&lt;/strong>: Use a code signing tool to sign the code with the code signing certificate.&lt;/li>
@@ -18,8 +24,10 @@
 &lt;li>&lt;strong>Distribute the signed code&lt;/strong>: Distribute the signed code to users.&lt;/li>
 &lt;li>&lt;strong>Verify the signature&lt;/strong>: Users can verify the signature to confirm the software&amp;rsquo;s authenticity.&lt;/li>
 &lt;/ul>
-&lt;h2 id="obtaining-a-code-signing-certificate">Obtaining a code signing certificate&lt;/h2>
-&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
+&lt;h2 id="obtaining-a-code-signing-certificate">
+&lt;a href="#obtaining-a-code-signing-certificate">#&lt;/a>
+Obtaining a code signing certificate
+&lt;/h2>&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
 &lt;p>We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
 >OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular open-source library for TLS and SSL protocols.&lt;/p>
 &lt;p>The following script generates the certificate and key needed for code signing. It also generates a certificate authority (CA) and signs the code signing certificate with the CA.&lt;/p>
@@ -45,14 +53,18 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/sign.req
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-application">Building the application&lt;/h2>
-&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile the application with:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-application">
+&lt;a href="#building-the-application">#&lt;/a>
+Building the application
+&lt;/h2>&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile the application with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export GOOS&lt;span style="color:#f92672">=&lt;/span>windows
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export GOARCH&lt;span style="color:#f92672">=&lt;/span>amd64
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go build ./hello-world.go
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Go build process generates the &lt;code>hello-world.exe&lt;/code> Windows executable.&lt;/p>
-&lt;h2 id="signing-and-timestamping-the-code">Signing and timestamping the code&lt;/h2>
-&lt;p>To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
+&lt;h2 id="signing-and-timestamping-the-code">
+&lt;a href="#signing-and-timestamping-the-code">#&lt;/a>
+Signing and timestamping the code
+&lt;/h2>&lt;p>To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
 >osslsigncode&lt;/a>, an open-source code signing tool that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code>signtool,&lt;/code> &lt;code>osslsigncode&lt;/code> is cross-platform and can be used on Linux and macOS.&lt;/p>
 &lt;p>To sign the code, we use the following script:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
@@ -96,8 +108,10 @@
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>input_file&lt;span style="color:#f92672">=&lt;/span>$1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>osslsigncode verify -CAfile ./certs/ca.crt &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$input_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">Distributing and manually verifying the signed code&lt;/h2>
-&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">
+&lt;a href="#distributing-and-manually-verifying-the-signed-code">#&lt;/a>
+Distributing and manually verifying the signed code
+&lt;/h2>&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
 &lt;p>However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted. Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root certificate store.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
 alt="Certificate in code signature cannot be verified">&lt;figcaption>
@@ -112,14 +126,20 @@ alt="Certificate in code signature is be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature is be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;h2 id="code-signing-using-a-certificate-from-a-public-ca">Code signing using a certificate from a public CA&lt;/h2>
-&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud HSM vendor or a private pipeline runner with an HSM.&lt;/p>
+&lt;h2 id="code-signing-using-a-certificate-from-a-public-ca">
+&lt;a href="#code-signing-using-a-certificate-from-a-public-ca">#&lt;/a>
+Code signing using a certificate from a public CA
+&lt;/h2>&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud HSM vendor or a private pipeline runner with an HSM.&lt;/p>
 &lt;p>In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">
+&lt;a href="#example-code-on-github">#&lt;/a>
+Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/code-sign-windows&lt;/a>&lt;/p>
-&lt;h2 id="code-signing-a-windows-application-video">Code signing a Windows application video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="code-signing-a-windows-application-video">
+&lt;a href="#code-signing-a-windows-application-video">#&lt;/a>
+Code signing a Windows application video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/NQYUgHznXew"
 allowfullscreen
@@ -135,14 +155,20 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-use-the-windows-certificate-store">Why use the Windows certificate store?&lt;/h2>
-&lt;p>Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we reach a similar level of protection with the Windows certificate store.&lt;/p>
+&lt;h2 id="why-use-the-windows-certificate-store">
+&lt;a href="#why-use-the-windows-certificate-store">#&lt;/a>
+Why use the Windows certificate store?
+&lt;/h2>&lt;p>Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we reach a similar level of protection with the Windows certificate store.&lt;/p>
 &lt;p>The Windows certificate store is a secure location where certificates and keys can be stored. Many applications, such as Edge and Powershell, use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.&lt;/p>
-&lt;h2 id="building-a-custom-tlscertificate-for-the-windows-certificate-store">Building a custom tls.Certificate for the Windows certificate store&lt;/h2>
-&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the Windows certificate store.&lt;/p>
+&lt;h2 id="building-a-custom-tlscertificate-for-the-windows-certificate-store">
+&lt;a href="#building-a-custom-tlscertificate-for-the-windows-certificate-store">#&lt;/a>
+Building a custom tls.Certificate for the Windows certificate store
+&lt;/h2>&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the Windows certificate store.&lt;/p>
 &lt;p>However, before the application uses the &lt;code>Public&lt;/code> and &lt;code>Sign&lt;/code> methods of the &lt;code>CustomSigner,&lt;/code> we must retrieve the client certificate using Windows APIs.&lt;/p>
-&lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">Retrieving mTLS client certificate from Windows certificate store using Go&lt;/h3>
-&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
+&lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">
+&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">#&lt;/a>
+Retrieving mTLS client certificate from Windows certificate store using Go
+&lt;/h3>&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
 >golang.org/x/sys/windows&lt;/a> package to access the Windows APIs. We use the &lt;code>windows&lt;/code> package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
 >CertOpenStore&lt;/a>, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
 >CertFindCertificateInStore&lt;/a>, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
@@ -184,8 +210,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// we want here.
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">break&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>&lt;/h3>
-&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">
+&lt;a href="#converting-the-windows-certificate-to-a-go-x509certificate">#&lt;/a>
+Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>
+&lt;/h3>&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Copy the certificate data so that we have our own copy outside the windows context
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">encodedCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Slice&lt;/span>(&lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">EncodedCert&lt;/span>, &lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">Length&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">buf&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Clone&lt;/span>(&lt;span style="color:#a6e22e">encodedCert&lt;/span>)
@@ -193,8 +221,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">Building the custom &lt;code>tls.Certificate&lt;/code>&lt;/h3>
-&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code>. We hold on to the &lt;code>certContext&lt;/code> pointer to get the private key later.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">
+&lt;a href="#building-the-custom-tlscertificate">#&lt;/a>
+Building the custom &lt;code>tls.Certificate&lt;/code>
+&lt;/h3>&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code>. We hold on to the &lt;code>certContext&lt;/code> pointer to get the private key later.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span>: &lt;span style="color:#a6e22e">store&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windowsCertContext&lt;/span>: &lt;span style="color:#a6e22e">certContext&lt;/span>,
@@ -208,8 +238,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SupportedSignatureAlgorithms&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">SignatureScheme&lt;/span>{&lt;span style="color:#a6e22e">supportedAlgorithm&lt;/span>},
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple.&lt;/p>
-&lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">Signing the mTLS digest with the Windows certificate store&lt;/h2>
-&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
+&lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">
+&lt;a href="#signing-the-mtls-digest-with-the-windows-certificate-store">#&lt;/a>
+Signing the mTLS digest with the Windows certificate store
+&lt;/h2>&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
@@ -225,8 +257,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">k&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>) &lt;span style="color:#a6e22e">Sign&lt;/span>(&lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">Reader&lt;/span>, &lt;span style="color:#a6e22e">digest&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">SignerOpts&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) (&lt;span style="color:#a6e22e">signature&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">Retrieve the private key reference from the Windows certificate store&lt;/h4>
-&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">
+&lt;a href="#retrieve-the-private-key-reference-from-the-windows-certificate-store">#&lt;/a>
+Retrieve the private key reference from the Windows certificate store
+&lt;/h4>&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get private key
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
@@ -245,8 +279,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="signing-the-mtls-digest">Signing the mTLS digest&lt;/h4>
-&lt;p>We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="signing-the-mtls-digest">
+&lt;a href="#signing-the-mtls-digest">#&lt;/a>
+Signing the mTLS digest
+&lt;/h4>&lt;p>We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
 >NCryptSignHash&lt;/a> function from &lt;code>ncrypt.dll&lt;/code> to sign the digest.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">nCrypt&lt;/span> = &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">MustLoadDLL&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ncrypt.dll&amp;#34;&lt;/span>)
@@ -317,8 +353,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash: failed to generate signature: %#x&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">success&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">signature&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
-&lt;p>With the above code, we can create our new Go mTLS client that uses the Windows certificate store.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">
+&lt;a href="#putting-it-all-together">#&lt;/a>
+Putting it all together
+&lt;/h2>&lt;p>With the above code, we can create our new Go mTLS client that uses the Windows certificate store.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
@@ -354,15 +392,19 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>The next step is to use the Windows certificate store to store the client certificate and private key. We will use the certificates and keys scripts from the previous &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="setting-up-the-environment">
+&lt;a href="#setting-up-the-environment">#&lt;/a>
+Setting up the environment
+&lt;/h2>&lt;p>The next step is to use the Windows certificate store to store the client certificate and private key. We will use the certificates and keys scripts from the previous &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>Finally, as in the &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article, we start two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8888 for TLS&lt;/li>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="running-the-go-mtls-client-using-the-windows-certificate-store">Running the Go mTLS client using the Windows certificate store&lt;/h2>
-&lt;p>We can run our mTLS client without pointing to certificate/key files and retrieving everything from the Windows certificate store. Hitting the ordinary TLS server:&lt;/p>
+&lt;h2 id="running-the-go-mtls-client-using-the-windows-certificate-store">
+&lt;a href="#running-the-go-mtls-client-using-the-windows-certificate-store">#&lt;/a>
+Running the Go mTLS client using the Windows certificate store
+&lt;/h2>&lt;p>We can run our mTLS client without pointing to certificate/key files and retrieving everything from the Windows certificate store. Hitting the ordinary TLS server:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>go run .\client-signer.go --url https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span>/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected:&lt;/p>
 &lt;pre tabindex="0">&lt;code>TLS Hello World!
@@ -375,11 +417,15 @@ crypto.Signer.Public
 crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
-&lt;/code>&lt;/pre>&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h2 id="example-code-on-github">
+&lt;a href="#example-code-on-github">#&lt;/a>
+Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-using-windows-certificate-store-video">mTLS Go client using Windows certificate store video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-using-windows-certificate-store-video">
+&lt;a href="#mtls-go-client-using-windows-certificate-store-video">#&lt;/a>
+mTLS Go client using Windows certificate store video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/L4uk43i3kyY"
 allowfullscreen
@@ -394,8 +440,10 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-use-windows-certificate-store">Why use Windows certificate store?&lt;/h2>
-&lt;p>In our previous articles, we introduced mTLS and demonstrated how to use mTLS client certificates and keys. Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we start exploring how to achieve the same level of protection with Windows certificate store.&lt;/p>
+&lt;h2 id="why-use-windows-certificate-store">
+&lt;a href="#why-use-windows-certificate-store">#&lt;/a>
+Why use Windows certificate store?
+&lt;/h2>&lt;p>In our previous articles, we introduced mTLS and demonstrated how to use mTLS client certificates and keys. Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we start exploring how to achieve the same level of protection with Windows certificate store.&lt;/p>
 &lt;p>The Windows certificate store is a secure location to store certificates and keys. Many applications, such as Edge and Powershell use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.&lt;/p>
 &lt;p>The Windows certificate stores have two types:&lt;/p>
 &lt;ul>
@@ -403,8 +451,10 @@ title="YouTube Video"
 &lt;li>Local machine certificate store: Certificates and keys are stored for all users on the computer.&lt;/li>
 &lt;/ul>
 &lt;p>We will store our client mTLS certificate in the user certificate store and the other certificates in the local machine certificate store.&lt;/p>
-&lt;h2 id="generating-mtls-certificates-and-keys">Generating mTLS certificates and keys&lt;/h2>
-&lt;p>We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
+&lt;h2 id="generating-mtls-certificates-and-keys">
+&lt;a href="#generating-mtls-certificates-and-keys">#&lt;/a>
+Generating mTLS certificates and keys
+&lt;/h2>&lt;p>We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
 >OpenSSL&lt;/a> must be installed on your computer.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>New-Item -ItemType Directory -Force certs
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -447,8 +497,10 @@ title="YouTube Video"
 &lt;li>&lt;code>certs/client.key&lt;/code>: Client private key&lt;/li>
 &lt;li>&lt;code>certs/client.pfx&lt;/code>: Client certificate and private key in PFX format, needed for importing into the Windows certificate store&lt;/li>
 &lt;/ul>
-&lt;h2 id="importing-the-client-certificate-and-key-into-the-windows-certificate-store">Importing the client certificate and key into the Windows certificate store&lt;/h2>
-&lt;p>We will import the client certificate and key into the user certificate store using the following powershell script.&lt;/p>
+&lt;h2 id="importing-the-client-certificate-and-key-into-the-windows-certificate-store">
+&lt;a href="#importing-the-client-certificate-and-key-into-the-windows-certificate-store">#&lt;/a>
+Importing the client certificate and key into the Windows certificate store
+&lt;/h2>&lt;p>We will import the client certificate and key into the user certificate store using the following powershell script.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the server CA&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Import-Certificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\server-ca.crt&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the client CA so that client TLS certificates can be verified&lt;/span>
@@ -470,23 +522,29 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>---------- -------
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>E2EBB991E3849E32E934D8465FAE42787D34C9ED CN=testClientTLS, OU=Your Unit, O=Your Organization, L=Austin, S=Texas, C=US
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>By default, the private key is marked as non-exportable. A user or an application cannot export the private key from the certificate store. They can only access the private key via Windows APIs. Using a non-exportable private key is the recommended security approach. You can use the &lt;code>-Exportable&lt;/code> parameter if you need to export the private key.&lt;/p>
-&lt;h2 id="verifying-imported-certificates-and-keys">Verifying imported certificates and keys&lt;/h2>
-&lt;p>As an extra step, we can verify that the certificates and keys exist in the Windows certificate store. We can use the &lt;code>certlm&lt;/code> Local Machine Certificate Manager GUI, &lt;code>certmgr&lt;/code> User Certificate Manager GUI, or the &lt;code>Get-ChildItem&lt;/code> powershell command.&lt;/p>
+&lt;h2 id="verifying-imported-certificates-and-keys">
+&lt;a href="#verifying-imported-certificates-and-keys">#&lt;/a>
+Verifying imported certificates and keys
+&lt;/h2>&lt;p>As an extra step, we can verify that the certificates and keys exist in the Windows certificate store. We can use the &lt;code>certlm&lt;/code> Local Machine Certificate Manager GUI, &lt;code>certmgr&lt;/code> User Certificate Manager GUI, or the &lt;code>Get-ChildItem&lt;/code> powershell command.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root |
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Where-Object{$_.Subject &lt;span style="color:#f92672">-match&lt;/span> &lt;span style="color:#e6db74">&amp;#39;testServerCA&amp;#39;&lt;/span>} |
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Test-Certificate -Policy SSL
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\CurrentUser\My | Where-Object{$_.Subject &lt;span style="color:#f92672">-match&lt;/span> &lt;span style="color:#e6db74">&amp;#39;testClientTLS&amp;#39;&lt;/span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-mtls-server">Running the mTLS server&lt;/h2>
-&lt;p>We will use the same &lt;code>docker-compose.yml&lt;/code> file from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article. The &lt;code>docker-compose.yml&lt;/code> file starts two nginx servers:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-mtls-server">
+&lt;a href="#running-the-mtls-server">#&lt;/a>
+Running the mTLS server
+&lt;/h2>&lt;p>We will use the same &lt;code>docker-compose.yml&lt;/code> file from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article. The &lt;code>docker-compose.yml&lt;/code> file starts two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8888 for TLS&lt;/li>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li>
 &lt;/ul>
 &lt;p>We can run Docker on WSL (Windows Subsystem for Linux) or another machine. We will run it on a different machine, so we need to copy the &lt;code>certs&lt;/code> directory to the machine running Docker. When running the server on a different machine, we must update the &lt;code>C:\Windows\System32\drivers\etc\hosts&lt;/code> file to point to the other machine.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>10.0.0.5 myhost
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">Connecting to the TLS and mTLS servers with clients&lt;/h2>
-&lt;p>Because we added the server CA to the root certificate store, we can now access the TLS server without any additional flags:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">
+&lt;a href="#connecting-to-the-tls-and-mtls-servers-with-clients">#&lt;/a>
+Connecting to the TLS and mTLS servers with clients
+&lt;/h2>&lt;p>Because we added the server CA to the root certificate store, we can now access the TLS server without any additional flags:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span>/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Result:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>StatusCode : 200
@@ -552,13 +610,19 @@ alt="Edge mTLS popup">&lt;figcaption>
 &lt;p>We can click &lt;strong>OK&lt;/strong> to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> Here is a helpful link that may resolve issues trying to use mTLS client certificates on Windows 10: &lt;a class="link" href="https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10" target="_blank" rel="noopener"
 >https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a>&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on Github&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">
+&lt;a href="#example-code-on-github">#&lt;/a>
+Example code on Github
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a>&lt;/p>
-&lt;h2 id="creating-our-own-windows-mtls-client">Creating our own Windows mTLS client&lt;/h2>
-&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create a custom Windows mTLS client using the Windows certificate store&lt;/a>.&lt;/p>
-&lt;h2 id="mtls-with-windows-certificate-store-video">mTLS with Windows certificate store video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="creating-our-own-windows-mtls-client">
+&lt;a href="#creating-our-own-windows-mtls-client">#&lt;/a>
+Creating our own Windows mTLS client
+&lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create a custom Windows mTLS client using the Windows certificate store&lt;/a>.&lt;/p>
+&lt;h2 id="mtls-with-windows-certificate-store-video">
+&lt;a href="#mtls-with-windows-certificate-store-video">#&lt;/a>
+mTLS with Windows certificate store video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/GuubP7vir1g"
 allowfullscreen
