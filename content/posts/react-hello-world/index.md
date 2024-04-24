@@ -270,7 +270,7 @@ It is possible to host these production files on a local HTTP server like Apache
 
 The example code is available on GitHub at https://github.com/getvictor/react/tree/main/1-hello-world
 
-## React hello world video
+## React Hello World video
 
 {{< youtube BSjmsUpdSYE >}}
 
