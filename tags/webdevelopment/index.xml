@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>WebDevelopment on Victor on Software</title><link>https://victoronsoftware.com/tags/webdevelopment/</link><description>Recent content in WebDevelopment on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/webdevelopment/index.xml" rel="self" type="application/rss+xml"/><item><title>Build a React app from scratch</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch" />&lt;h2 id="introduction">
+&lt;a href="#introduction">#&lt;/a>
+Introduction
+&lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim to reduce tool usage and fully understand each step of the process.&lt;/p>
+&lt;h2 id="what-is-react">
+&lt;a href="#what-is-react">#&lt;/a>
+What is React?
+&lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web applications.&lt;/p>
+&lt;h2 id="prerequisites----nodejs-and-npm">
+&lt;a href="#prerequisites----nodejs-and-npm">#&lt;/a>
+Prerequisites &amp;ndash; Node.js and npm
+&lt;/h2>&lt;p>&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
+>Node.js and npm&lt;/a> are the most popular tools for working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential for modern web development.&lt;/p>
+&lt;h2 id="packagejson">
+&lt;a href="#packagejson">#&lt;/a>
+package.json
+&lt;/h2>&lt;p>We will start by creating a &lt;code>package.json&lt;/code> file. This file contains metadata about the project and its dependencies. You can use the &lt;code>npm init&lt;/code> command to create the &lt;code>package.json&lt;/code> file. Or create one yourself containing something like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-hello-world&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1.0.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Hello world app using React&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;repository&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://github.com/getvictor/react&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;author&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;getvictor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;license&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;MIT&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="typescript">
+&lt;a href="#typescript">#&lt;/a>
+TypeScript
+&lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
+>TypeScript&lt;/a> to our project. TypeScript is a superset of JavaScript that adds static types to the language. It helps catch errors early in the development process and improves code quality.&lt;/p>
+&lt;p>Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the React community and provides many benefits. Modern IDEs, such as Visual Studio Code and WebStorm, support TypeScript, making development and learning easier.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev typescript
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command updates the &lt;code>package.json&lt;/code> file with the TypeScript dependency.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-hello-world&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1.0.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Hello world app using React&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;repository&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://github.com/getvictor/react&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;author&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;getvictor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;license&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;MIT&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;devDependencies&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;typescript&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.4.5&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It also creates a &lt;code>node_modules&lt;/code> directory. This directory contains the packages installed by npm.&lt;/p>
+&lt;p>Finally, the command creates a &lt;code>package-lock.json&lt;/code> file. This file locks the dependencies to specific versions, ensuring that the project is built with the same versions of the dependencies across different machines.&lt;/p>
+&lt;p>The &lt;code>--save-dev&lt;/code> flag tells npm to save the package as a development dependency. Development dependencies are not required for the production build of the app.&lt;/p>
+&lt;h3 id="tsconfigjson">
+&lt;a href="#tsconfigjson">#&lt;/a>
+tsconfig.json
+&lt;/h3>&lt;p>We need to create a &lt;code>tsconfig.json&lt;/code> file to &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
+>configure TypeScript&lt;/a>. This file specifies the root files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p>
+&lt;p>Install the recommended configuration with the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @tsconfig/recommended
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, create a &lt;code>tsconfig.json&lt;/code> file with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;extends&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;@tsconfig/recommended/tsconfig.json&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;compilerOptions&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;jsx&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-jsx&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-jsx">
+&lt;a href="#what-is-jsx">#&lt;/a>
+What is JSX?
+&lt;/h2>&lt;p>In our &lt;code>tsconfig.json&lt;/code> file, we set the &lt;code>jsx&lt;/code> option to &lt;code>react-jsx&lt;/code>. This option tells TypeScript to treat JSX as React JSX.&lt;/p>
+&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/JSX_%28JavaScript%29" target="_blank" rel="noopener"
+>JSX&lt;/a> is a syntax extension for JavaScript. It allows you to write HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript by the build tool.&lt;/p>
+&lt;h2 id="react-and-reactdom">
+&lt;a href="#react-and-reactdom">#&lt;/a>
+React and ReactDOM
+&lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://react.dev/" target="_blank" rel="noopener"
+>React&lt;/a> and &lt;a class="link" href="https://react.dev/reference/react-dom" target="_blank" rel="noopener"
+>ReactDOM&lt;/a> to our project. React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install react react-dom
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since we are using TypeScript, we must also install &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
+>type definitions&lt;/a> for React and ReactDOM. The TypeScript compiler uses these definitions for type checking.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @types/react @types/react-dom
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-webpack">
+&lt;a href="#what-is-webpack">#&lt;/a>
+What is Webpack?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
+>Webpack&lt;/a> is a module bundler for JavaScript. It takes modules with dependencies and generates static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p>
+&lt;p>We will install the Webpack packages:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin ts-loader
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;code>webpack&lt;/code> is the core package&lt;/li>
+&lt;li>&lt;code>webpack-cli&lt;/code> provides the command-line interface, which we will use to run Webpack commands&lt;/li>
+&lt;li>&lt;code>webpack-dev-server&lt;/code> is a development server that serves the app&lt;/li>
+&lt;li>&lt;code>html-webpack-plugin&lt;/code> will generate the index.html file to serve our app&lt;/li>
+&lt;li>&lt;code>ts-loader&lt;/code> is a TypeScript loader for Webpack. It allows Webpack to compile TypeScript files.&lt;/li>
+&lt;/ul>
+&lt;h3 id="webpackconfigts">
+&lt;a href="#webpackconfigts">#&lt;/a>
+webpack.config.ts
+&lt;/h3>&lt;p>By default, Webpack does not need a configuration file. However, since we use TypeScript, we must create a &lt;code>webpack.config.ts&lt;/code> file to configure Webpack.&lt;/p>
+&lt;p>Note that we use the &lt;code>.ts&lt;/code> extension for the configuration file. The TypeScript compiler will compile this file. Using a &lt;code>.js&lt;/code> file is also possible, but we prefer TypeScript for type safety.&lt;/p>
+&lt;p>No additional type definitions are required for our Webpack configuration at this time.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">HtmlWebpackPlugin&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;html-webpack-plugin&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">module&lt;/span>.&lt;span style="color:#a6e22e">exports&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/index.tsx&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">module&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rules&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/\.(ts|tsx)$/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">loader&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ts-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">exclude&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/node_modules/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">HtmlWebpackPlugin&lt;/span>()],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We specify &lt;code>src/index.tsx&lt;/code> as our app&amp;rsquo;s top-level file. By default, the build&amp;rsquo;s output will go to the &lt;code>dist&lt;/code> directory.&lt;/p>
+&lt;p>We configure the TypeScript loader to compile &lt;code>.ts&lt;/code> and &lt;code>.tsx&lt;/code> files.&lt;/p>
+&lt;p>We also use the &lt;code>html-webpack-plugin&lt;/code> to generate an &lt;code>index.html&lt;/code> file. This file will load the Webpack bundle.&lt;/p>
+&lt;p>We need to add a TypeScript execution engine to the Node.js runtime so that it can understand the above TypeScript configuration file. We will use &lt;code>ts-node&lt;/code> for this purpose.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev ts-node
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="final-packagejson">
+&lt;a href="#final-packagejson">#&lt;/a>
+Final package.json
+&lt;/h2>&lt;p>After all the installations, our &lt;code>package.json&lt;/code> file should look similar to this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-hello-world&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1.0.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;description&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Hello world app using React&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;repository&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://github.com/getvictor/react&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;author&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;getvictor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;license&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;MIT&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;devDependencies&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;@tsconfig/recommended&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^1.0.6&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;@types/react&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^18.2.79&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;@types/react-dom&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^18.2.25&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;html-webpack-plugin&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.6.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ts-loader&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^9.5.1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ts-node&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^10.9.2&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;typescript&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.4.5&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.91.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack-cli&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.1.4&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack-dev-server&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.0.4&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;dependencies&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;react&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^18.2.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;react-dom&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^18.2.0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="srcindextsx">
+&lt;a href="#srcindextsx">#&lt;/a>
+src/index.tsx
+&lt;/h2>&lt;p>We are finally ready to write some React code. TSX files are TypeScript files that contain JSX.&lt;/p>
+&lt;p>We will create the &lt;code>src/index.tsx&lt;/code> file. It will render a simple React component. React components are the reusable building blocks of React apps.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">React&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">createRoot&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react-dom/client&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// A simple Class component
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">class&lt;/span> &lt;span style="color:#a6e22e">HelloWorld&lt;/span> &lt;span style="color:#66d9ef">extends&lt;/span> &lt;span style="color:#a6e22e">React&lt;/span>.&lt;span style="color:#a6e22e">Component&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">render() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &amp;lt;&lt;span style="color:#f92672">h1&lt;/span>&amp;gt;&lt;span style="color:#a6e22e">Hello&lt;/span> &lt;span style="color:#a6e22e">world&lt;/span>&lt;span style="color:#f92672">!&lt;/span>&amp;lt;/&lt;span style="color:#f92672">h1&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Use traditional DOM manipulation to create a root element for React
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>document.&lt;span style="color:#a6e22e">body&lt;/span>.&lt;span style="color:#a6e22e">innerHTML&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;lt;div id=&amp;#34;app&amp;#34;&amp;gt;&amp;lt;/div&amp;gt;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Create a root element for React
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">app&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">createRoot&lt;/span>(document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;app&amp;#34;&lt;/span>)&lt;span style="color:#f92672">!&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Render our HelloWorld component
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">render&lt;/span>(&amp;lt;&lt;span style="color:#f92672">HelloWorld&lt;/span>/&amp;gt;)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-app-on-the-webpack-development-server">
+&lt;a href="#running-the-app-on-the-webpack-development-server">#&lt;/a>
+Running the app on the Webpack development server
+&lt;/h2>&lt;p>Now, we can run the app on the Webpack development server. This server will serve the app and automatically reload the page when the code changes.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack serve --mode development --open
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--mode development&lt;/code> flag tells Webpack to build the app in development mode. The &lt;code>--open&lt;/code> flag tells Webpack to open the app in the default browser.&lt;/p>
+&lt;p>The browser should show the following:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
+alt="React app served by Webpack dev server">&lt;figcaption>
+&lt;h4>React app served by Webpack dev server&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="packagejson-scripts">
+&lt;a href="#packagejson-scripts">#&lt;/a>
+package.json scripts
+&lt;/h3>&lt;p>Instead of remembering the above &lt;code>webpack&lt;/code> command, we can add a script to the &lt;code>package.json&lt;/code> file to run the Webpack development server.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;start&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;webpack serve --mode development --open&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>start&lt;/code> is a special script name that maps to the &lt;code>npm start&lt;/code> command. Now, we can run the development server with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm start
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>or&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm run start
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-app-for-production">
+&lt;a href="#building-the-app-for-production">#&lt;/a>
+Building the app for production
+&lt;/h2>&lt;p>To build the app for production, we can run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack --mode production
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will create a &lt;code>dist&lt;/code> directory with the app&amp;rsquo;s production build. The directory will contain the &lt;code>index.html&lt;/code> file and the &lt;code>main.js&lt;/code> JavaScript bundle. The production files are optimized for performance, and they are minified and compressed to reduce their size.&lt;/p>
+&lt;p>It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p>
+&lt;h2 id="example-code-on-github">
+&lt;a href="#example-code-on-github">#&lt;/a>
+Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/react/tree/main/1-hello-world" target="_blank" rel="noopener"
+>https://github.com/getvictor/react/tree/main/1-hello-world&lt;/a>&lt;/p>
+&lt;h2 id="react-hello-world-video">
+&lt;a href="#react-hello-world-video">#&lt;/a>
+React hello world video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/BSjmsUpdSYE"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
