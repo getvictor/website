@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQLDeveloper on Victor on Software</title><link>https://victoronsoftware.com/tags/sqldeveloper/</link><description>Recent content in SQLDeveloper on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/sqldeveloper/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Deadlock on Victor on Software</title><link>https://victoronsoftware.com/tags/deadlock/</link><description>Recent content in Deadlock on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/deadlock/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">
 &lt;a href="#what-is-an-sql-deadlock">#&lt;/a>
 What is an SQL deadlock?
 &lt;/h2>&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
@@ -105,71 +105,4 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JHoEKmNj8t8"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>A prepared statement is a feature of modern databases intended to help execute the same SQL
-statement multiple times. For example, the following statement is a prepared statement:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> id, name &lt;span style="color:#66d9ef">FROM&lt;/span> users &lt;span style="color:#66d9ef">WHERE&lt;/span> email &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The presence of an unspecified parameter, labeled “?”, makes it a prepared statement. When a
-prepared statement is sent to the database, it is compiled, optimized, and stored in memory on the
-database server. Subsequently, the client application may execute the same prepared statement
-multiple times with different parameter values. This results in a speedup.&lt;/p>
-&lt;p>Prepared statements are well suited for long and complex queries that require significant
-compilation and optimization times. They are kept prepared on the DB server, and the application
-must only pass the parameters to execute them.&lt;/p>
-&lt;p>Another benefit of using prepared statements is the protection they provide
-against &lt;a class="link" href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank" rel="noopener"
->SQL injection&lt;/a>. The application does
-not need to properly escape the parameter values provided to the statement. Because of this
-protection, many experts recommend always using prepared statements for accessing the database.&lt;/p>
-&lt;p>However, by always using prepared statements for accessing the database, we force the SQL driver to
-send the extra prepare command for every ad-hoc statement we execute. The driver sends the following
-commands:&lt;/p>
-&lt;ol>
-&lt;li>Prepare the statement&lt;/li>
-&lt;li>Execute statement with given parameters&lt;/li>
-&lt;li>Close the statement (and deallocate the prepared statement created above)&lt;/li>
-&lt;/ol>
-&lt;p>Another issue with prepared statements is the memory requirement. In large application deployments
-with large numbers of connections, prepared statements can crash your environment. This issue
-happened to one of our customers.&lt;/p>
-&lt;p>A prepared statement is only valid for a single session, which typically maps to a single database
-connection. If the application runs multiple servers, with many connections, it may end up storing a
-prepared statement for each one of those sessions.&lt;/p>
-&lt;p>For example, given 100 servers with 100 connections each, we have 10,000 connections to the
-database. Assuming a memory requirement of 50 KB per prepared statement (derived from the
-following &lt;a class="link" href="https://blog.searce.com/how-max-prepared-stmt-count-bring-down-the-production-mysql-system-6ca28e577663" target="_blank" rel="noopener"
->article&lt;/a>),
-we arrive at the maximum memory requirement of:&lt;/p>
-&lt;pre tabindex="0">&lt;code>10,000 * 50 KB = 500 MB per single saved prepared statement
-&lt;/code>&lt;/pre>&lt;p>Some databases also have limits on the number of prepared statements. MySQL’s
-&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_prepared_stmt_count" target="_blank" rel="noopener"
->max_prepared_stmt_count&lt;/a> defaults to 16,382 for the entire server. Yes, this is a global limit, and
-&lt;strong>not&lt;/strong> per session. In the above example, if the application uses prepared statements for every
-database access, then each database connection will always be using up 1 short-lived prepared
-statement. A short-lived prepared statement is the prepared statement, as we described above, that
-will be created for the purposes of executing one statement, and then immediately deallocated
-afterwards. This means the above application running with a default MySQL config &lt;strong>cannot explicitly
-save any prepared statements&lt;/strong> &amp;ndash; 10,000 transient prepared statements + 10,000 saved prepared
-statements is greater than the max_prepared_stmt_count of 16,382.&lt;/p>
-&lt;p>This is &lt;strong>extremely inconvenient&lt;/strong> for application developers, because they must keep track of:&lt;/p>
-&lt;ul>
-&lt;li>The number of saved prepared statements they are using&lt;/li>
-&lt;li>How many application servers are running&lt;/li>
-&lt;li>How many database connections each server has&lt;/li>
-&lt;li>The prepared statement limits of the database&lt;/li>
-&lt;/ul>
-&lt;p>This detail can easily be overlooked when scaling applications.&lt;/p>
-&lt;p>In the end, is it really worth using prepared statements, and especially saved prepared statements, in your application? Yes, saved prepared statements can offer performance advantages, especially for complex queries executed frequently. However they must also be kept in check.&lt;/p>
-&lt;p>A few ways to mitigate prepared statement issues for large application deployments include:&lt;/p>
-&lt;ul>
-&lt;li>Limit the number of database connections per application server&lt;/li>
-&lt;li>Increase the prepared statement limit on the database server(s)&lt;/li>
-&lt;li>Limit the maximum lifespan of connections. When closing a connection, the database will deallocate all prepared statements on that connection.&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>

@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 24 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Build a React app from scratch</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch" />&lt;h2 id="introduction">
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">
+&lt;a href="#what-is-an-sql-deadlock">#&lt;/a>
+What is an SQL deadlock?
+&lt;/h2>&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
+&lt;h2 id="what-is-an-upsert">
+&lt;a href="#what-is-an-upsert">#&lt;/a>
+What is an upsert?
+&lt;/h2>&lt;p>An upsert combines the words &amp;ldquo;update&amp;rdquo; and &amp;ldquo;insert.&amp;rdquo; It is a database operation that inserts a new row into a table if the row does not exist or updates the row if it already exists.&lt;/p>
+&lt;h2 id="insertupdate-upsert-pattern">
+&lt;a href="#insertupdate-upsert-pattern">#&lt;/a>
+INSERT/UPDATE upsert pattern
+&lt;/h2>&lt;p>One common way to implement an upsert operation in MySQL is to use the following pattern:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> &lt;span style="color:#66d9ef">SET&lt;/span> column1 &lt;span style="color:#f92672">=&lt;/span> value1, column2 &lt;span style="color:#f92672">=&lt;/span> value2 &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- If the UPDATE statement does not affect any rows, insert a new row:
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> (id, column1, column2) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#f92672">?&lt;/span>, value1, value2);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/update.html" target="_blank" rel="noopener"
+>UPDATE&lt;/a> returns the number of rows that were actually changed.&lt;/p>
+&lt;p>This UPDATE/INSERT pattern is optimized for frequent updates and rare inserts. However, it can lead to deadlocks when multiple transactions try to insert simultaneously.&lt;/p>
+&lt;h2 id="mysql-deadlock-example">
+&lt;a href="#mysql-deadlock-example">#&lt;/a>
+MySQL deadlock example
+&lt;/h2>&lt;p>We assume the default transaction isolation level of &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"
+>REPEATABLE READ&lt;/a>. Given the following table with one row:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> my_table (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> id int(&lt;span style="color:#ae81ff">10&lt;/span>) unsigned &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> amount int(&lt;span style="color:#ae81ff">10&lt;/span>) unsigned &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span> (id)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One transaction executes the following SQL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> my_table &lt;span style="color:#66d9ef">SET&lt;/span> amount &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Another transaction executes the following SQL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> my_table &lt;span style="color:#66d9ef">SET&lt;/span> amount &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">3&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>At this point, the second transaction is waiting for the first transaction to release the lock.&lt;/p>
+&lt;p>The first transaction then executes the following SQL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Causing a deadlock:&lt;/p>
+&lt;pre tabindex="0">&lt;code>[40001][1213] Deadlock found when trying to get lock; try restarting transaction
+&lt;/code>&lt;/pre>&lt;h3 id="why-does-the-deadlock-occur">
+&lt;a href="#why-does-the-deadlock-occur">#&lt;/a>
+Why does the deadlock occur?
+&lt;/h3>&lt;p>The deadlock occurs because both transactions set &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener"
+>next-key locks&lt;/a> on the rows they attempted to update. Since the rows they attempted to update did not exist, the lock is set on the &amp;ldquo;supremum&amp;rdquo; pseudo-record. This pseudo-record has a value higher than any value actually in the index. This lock prevents the other transaction from inserting the row it needs.&lt;/p>
+&lt;h2 id="debugging-mysql-deadlocks">
+&lt;a href="#debugging-mysql-deadlocks">#&lt;/a>
+Debugging MySQL deadlocks
+&lt;/h2>&lt;p>To view the last deadlock detected by MySQL, you can use:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> ENGINE INNODB STATUS;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will contain a section like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>------------------------
+LATEST DETECTED DEADLOCK
+------------------------
+2024-04-28 12:29:17 281472351068032
+*** (1) TRANSACTION:
+TRANSACTION 1638819, ACTIVE 7 sec inserting
+mysql tables in use 1, locked 1
+LOCK WAIT 3 lock struct(s), heap size 1128, 2 row lock(s)
+MySQL thread id 97926, OS thread handle 281471580295040, query id 24192112 192.168.65.1 root update
+/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (host_id, os_id) VALUES (3, 3)
+*** (1) HOLDS THE LOCK(S):
+RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638819 lock_mode X
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+0: len 8; hex 73757072656d756d; asc supremum;;
+*** (1) WAITING FOR THIS LOCK TO BE GRANTED:
+RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638819 lock_mode X insert intention waiting
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+0: len 8; hex 73757072656d756d; asc supremum;;
+*** (2) TRANSACTION:
+TRANSACTION 1638812, ACTIVE 13 sec inserting
+mysql tables in use 1, locked 1
+LOCK WAIT 3 lock struct(s), heap size 1128, 2 row lock(s)
+MySQL thread id 97875, OS thread handle 281471585578880, query id 24192285 192.168.65.1 root update
+/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (host_id, os_id) VALUES (2, 2)
+*** (2) HOLDS THE LOCK(S):
+RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638812 lock_mode X
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+0: len 8; hex 73757072656d756d; asc supremum;;
+*** (2) WAITING FOR THIS LOCK TO BE GRANTED:
+RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638812 lock_mode X insert intention waiting
+Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
+0: len 8; hex 73757072656d756d; asc supremum;;
+&lt;/code>&lt;/pre>&lt;p>We can see the supremum locks held by both transactions: &lt;code> 0: len 8; hex 73757072656d756d; asc supremum;;&lt;/code>.&lt;/p>
+&lt;p>Another way to debug MySQL deadlocks is to enable the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_print_all_deadlocks" target="_blank" rel="noopener"
+>innodb_print_all_deadlocks&lt;/a> option. This option prints all deadlocks to the error log.&lt;/p>
+&lt;h2 id="preventing-the-updateinsert-deadlock">
+&lt;a href="#preventing-the-updateinsert-deadlock">#&lt;/a>
+Preventing the UPDATE/INSERT deadlock
+&lt;/h2>&lt;p>One way to prevent the deadlock is to use the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html" target="_blank" rel="noopener"
+>INSERT &amp;hellip; ON DUPLICATE KEY UPDATE&lt;/a> pattern. This syntax allows you to insert a new row or update an existing row in a single statement. However, it is slower than an UPDATE and always increments the auto-increment value if present.&lt;/p>
+&lt;p>Another way is to roll back the transaction once we know that the UPDATE did not affect any rows. This avoids the deadlock by not holding the lock while we insert the new row. After the rollback, we can retry the transaction using the above &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern.&lt;/p>
+&lt;p>A third way is not to use transactions. In this case, the locks are released immediately after the statement is executed. However, this approach may not be suitable for all use cases.&lt;/p>
+&lt;h2 id="conclusion">
+&lt;a href="#conclusion">#&lt;/a>
+Conclusion
+&lt;/h2>&lt;p>The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple transactions try to insert simultaneously. To prevent deadlocks, consider using the &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern, rolling back the transaction, or not using transactions.&lt;/p>
+&lt;h2 id="mysql-deadlock-on-updateinsert-upsert-pattern-video">
+&lt;a href="#mysql-deadlock-on-updateinsert-upsert-pattern-video">#&lt;/a>
+MySQL deadlock on UPDATE/INSERT upsert pattern video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/ADerRg7tzag"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a React app from scratch</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch" />&lt;h2 id="introduction">
 &lt;a href="#introduction">#&lt;/a>
 Introduction
 &lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim to reduce tool usage and fully understand each step of the process.&lt;/p>
