@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yarn on Victor on Software</title><link>https://victoronsoftware.com/tags/yarn/</link><description>Recent content in Yarn on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 10 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/yarn/index.xml" rel="self" type="application/rss+xml"/><item><title>Fix security vulnerabilities in Yarn</title><link>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</link><pubDate>Wed, 10 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/cover.png" alt="Featured image of post Fix security vulnerabilities in Yarn" />&lt;h2 id="why-fix-security-vulnerabilities">
-&lt;a href="#why-fix-security-vulnerabilities">#&lt;/a>
-Why fix security vulnerabilities?
-&lt;/h2>&lt;p>Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect your data and users.&lt;/p>
-&lt;h2 id="finding-vulnerabilities">
-&lt;a href="#finding-vulnerabilities">#&lt;/a>
-Finding vulnerabilities
-&lt;/h2>&lt;p>Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can help you identify security vulnerabilities in your code and dependencies. One such tool is &lt;a class="link" href="https://securityscorecards.dev/" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Yarn on Victor on Software</title><link>https://victoronsoftware.com/tags/yarn/</link><description>Recent content in Yarn on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 10 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/yarn/index.xml" rel="self" type="application/rss+xml"/><item><title>Fix security vulnerabilities in Yarn</title><link>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</link><pubDate>Wed, 10 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/cover.png" alt="Featured image of post Fix security vulnerabilities in Yarn" />&lt;h2 id="why-fix-security-vulnerabilities">Why fix security vulnerabilities?&lt;/h2>
+&lt;p>Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect your data and users.&lt;/p>
+&lt;h2 id="finding-vulnerabilities">Finding vulnerabilities&lt;/h2>
+&lt;p>Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can help you identify security vulnerabilities in your code and dependencies. One such tool is &lt;a class="link" href="https://securityscorecards.dev/" target="_blank" rel="noopener"
 >OpenSSF Scorecard&lt;/a>, which combines multiple other tools into a single GitHub action. It uses the &lt;a class="link" href="https://osv.dev/" target="_blank" rel="noopener"
 >OSV service&lt;/a> to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects&amp;rsquo; vulnerabilities.&lt;/p>
 &lt;p>In this article, we will focus on fixing a few recent real-world security vulnerabilities in our &lt;code>yarn.lock&lt;/code> dependencies.&lt;/p>
@@ -17,10 +13,8 @@ Warn: Project is vulnerable to: GHSA-566m-qj78-rww5
 Warn: Project is vulnerable to: GHSA-7fh5-64p2-3v2j
 Warn: Project is vulnerable to: GHSA-4wf5-vphf-c2xc
 Click Remediation section below to solve this issue
-&lt;/code>&lt;/pre>&lt;h3 id="using-local-tools-to-find-vulnerabilities">
-&lt;a href="#using-local-tools-to-find-vulnerabilities">#&lt;/a>
-Using local tools to find vulnerabilities
-&lt;/h3>&lt;p>In a local environment, we can use &lt;a class="link" href="https://google.github.io/osv-scanner/" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h3 id="using-local-tools-to-find-vulnerabilities">Using local tools to find vulnerabilities&lt;/h3>
+&lt;p>In a local environment, we can use &lt;a class="link" href="https://google.github.io/osv-scanner/" target="_blank" rel="noopener"
 >OSV-Scanner&lt;/a> to find vulnerabilities in our dependencies. Running:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>osv-scanner scan --lockfile yarn.lock
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It will output the same vulnerabilities mentioned above but with additional details.&lt;/p>
@@ -38,19 +32,15 @@ Using local tools to find vulnerabilities
 ╰─────────────────────────────────────┴──────┴───────────┴────────────────┴─────────┴───────────╯
 &lt;/code>&lt;/pre>&lt;p>Another way to find these vulnerabilities is by using the built-in &lt;a class="link" href="https://yarnpkg.com/cli/audit" target="_blank" rel="noopener"
 >yarn audit&lt;/a> command.&lt;/p>
-&lt;h2 id="waiving-vulnerabilities">
-&lt;a href="#waiving-vulnerabilities">#&lt;/a>
-Waiving vulnerabilities
-&lt;/h2>&lt;p>In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability documentation and acknowledge it but decide not to fix it.&lt;/p>
+&lt;h2 id="waiving-vulnerabilities">Waiving vulnerabilities&lt;/h2>
+&lt;p>In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability documentation and acknowledge it but decide not to fix it.&lt;/p>
 &lt;p>To waive a vulnerability for the OSV flow, you can create an &lt;code>osv-scanner.toml&lt;/code> file in the root of your project. For example, to waive the &lt;code>GHSA-crh6-fp67-6883&lt;/code> vulnerability, you can add the following to the &lt;code>osv-scanner.toml&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>[[&lt;span style="color:#a6e22e">IgnoredVulns&lt;/span>]]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">id&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;GHSA-crh6-fp67-6883&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">reason&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;We examined this vulnerability and concluded that it does not affect our project for a very good reason.&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we will not waive any vulnerabilities, but we will fix them by updating the dependencies.&lt;/p>
-&lt;h2 id="updating-an-inner-dependency">
-&lt;a href="#updating-an-inner-dependency">#&lt;/a>
-Updating an inner dependency
-&lt;/h2>&lt;p>In our example, we have a vulnerability in the &lt;code>@xmldom/xmldom&lt;/code> package. From the vulnerability URL, we know we must update this package to &lt;code>0.8.4&lt;/code> or later.&lt;/p>
+&lt;h2 id="updating-an-inner-dependency">Updating an inner dependency&lt;/h2>
+&lt;p>In our example, we have a vulnerability in the &lt;code>@xmldom/xmldom&lt;/code> package. From the vulnerability URL, we know we must update this package to &lt;code>0.8.4&lt;/code> or later.&lt;/p>
 &lt;p>Running &lt;code>yarn why @xmldom/xmldom&lt;/code> will show that it is an inner dependency of another package:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=&amp;gt; Found &amp;#34;@xmldom/xmldom@0.8.3&amp;#34;
 info Reasons this module exists
@@ -67,34 +57,26 @@ integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJ
 version &amp;#34;0.8.10&amp;#34;
 resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
 integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
-&lt;/code>&lt;/pre>&lt;h2 id="upgrading-an-inner-dependency-by-overriding-the-version">
-&lt;a href="#upgrading-an-inner-dependency-by-overriding-the-version">#&lt;/a>
-Upgrading an inner dependency by overriding the version
-&lt;/h2>&lt;p>Our following vulnerability is in the &lt;code>axios&lt;/code> package. We need to update it to &lt;code>0.28.0&lt;/code> or later. By running &lt;code>yarn why axios&lt;/code> we see that this package is part of a deep dependency chain:&lt;/p>
+&lt;/code>&lt;/pre>&lt;h2 id="upgrading-an-inner-dependency-by-overriding-the-version">Upgrading an inner dependency by overriding the version&lt;/h2>
+&lt;p>Our following vulnerability is in the &lt;code>axios&lt;/code> package. We need to update it to &lt;code>0.28.0&lt;/code> or later. By running &lt;code>yarn why axios&lt;/code> we see that this package is part of a deep dependency chain:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=&amp;gt; Found &amp;#34;wait-on#axios@0.21.4&amp;#34;
 info This module exists because &amp;#34;@storybook#test-runner#jest-playwright-preset#jest-process-manager#wait-on&amp;#34; depends on it.
 &lt;/code>&lt;/pre>&lt;p>The needed version &lt;code>0.28.0&lt;/code> does not satisfy the &lt;code>^0.21.4&lt;/code> requirement. We can override the version by adding the following to the &lt;code>package.json&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;resolutions&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;**/wait-on/axios&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^0.28.0&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="upgrading-the-parent-dependency">
-&lt;a href="#upgrading-the-parent-dependency">#&lt;/a>
-Upgrading the parent dependency
-&lt;/h2>&lt;p>The following vulnerability is in the &lt;code>lodash.set&lt;/code> package. The vulnerability URL shows that there is no fix for this vulnerability. We also see at &lt;a class="link" href="https://www.npmjs.com/package/lodash.set" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="upgrading-the-parent-dependency">Upgrading the parent dependency&lt;/h2>
+&lt;p>The following vulnerability is in the &lt;code>lodash.set&lt;/code> package. The vulnerability URL shows that there is no fix for this vulnerability. We also see at &lt;a class="link" href="https://www.npmjs.com/package/lodash.set" target="_blank" rel="noopener"
 >npmjs.com&lt;/a> that this package was last updated eight years ago.&lt;/p>
 &lt;p>We need to update the parent package that uses &lt;code>lodash.set&lt;/code>. Running &lt;code>yarn why lodash.set&lt;/code> shows:&lt;/p>
 &lt;pre tabindex="0">&lt;code>info Reasons this module exists
 - &amp;#34;nock&amp;#34; depends on it
 - Hoisted from &amp;#34;nock#lodash.set&amp;#34;
 &lt;/code>&lt;/pre>&lt;p>We update the parent by running &lt;code>yarn upgrade nock@latest&lt;/code>. Luckily, the latest version of &lt;code>nock&lt;/code> does not depend on &lt;code>lodash.set&lt;/code>, and &lt;code>lodash.set&lt;/code> is removed from &lt;code>yarn.lock&lt;/code>.&lt;/p>
-&lt;h2 id="removing-a-dependency">
-&lt;a href="#removing-a-dependency">#&lt;/a>
-Removing a dependency
-&lt;/h2>&lt;p>Sometimes the best way to fix a vulnerability is to remove the vulnerable dependency. This can be done with the &lt;code>yarn remove &amp;lt;dependency&amp;gt;&lt;/code> command. However, this requires code changes. You must find a different library or implement the removed functionality yourself.&lt;/p>
-&lt;h2 id="conclusion">
-&lt;a href="#conclusion">#&lt;/a>
-Conclusion
-&lt;/h2>&lt;p>We use the above strategies to fix the vulnerabilities in our project.&lt;/p>
+&lt;h2 id="removing-a-dependency">Removing a dependency&lt;/h2>
+&lt;p>Sometimes the best way to fix a vulnerability is to remove the vulnerable dependency. This can be done with the &lt;code>yarn remove &amp;lt;dependency&amp;gt;&lt;/code> command. However, this requires code changes. You must find a different library or implement the removed functionality yourself.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>We use the above strategies to fix the vulnerabilities in our project.&lt;/p>
 &lt;ul>
 &lt;li>Updating an inner dependency&lt;/li>
 &lt;li>Upgrading an inner dependency by overriding the version&lt;/li>
@@ -103,10 +85,8 @@ Conclusion
 &lt;/ul>
 &lt;p>We can now rerun the vulnerability scanner to verify that we fixed the vulnerabilities.&lt;/p>
 &lt;p>In addition, we must run our unit test and integration test suite to ensure that the updates do not break our application.&lt;/p>
-&lt;h2 id="fix-security-vulnerabilities-in-yarn-video">
-&lt;a href="#fix-security-vulnerabilities-in-yarn-video">#&lt;/a>
-Fix security vulnerabilities in Yarn video
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;h2 id="fix-security-vulnerabilities-in-yarn-video">Fix security vulnerabilities in Yarn video&lt;/h2>
+&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/59EpVz9mH_w"
 allowfullscreen

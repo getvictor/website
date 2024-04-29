@@ -14,19 +14,15 @@ software on an older router. They can run in the cloud. Or they can be installed
 are &lt;a class="link" href="https://www.pfsense.org/" target="_blank" rel="noopener"
 >pfSense&lt;/a> and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
 >OPNsense&lt;/a>.&lt;/p>
-&lt;h2 id="why-use-a-virtual-router">
-&lt;a href="#why-use-a-virtual-router">#&lt;/a>
-Why use a virtual router?
-&lt;/h2>&lt;p>For one, these routers offer enterprise-level features such as build-in VPN support, traffic
+&lt;h2 id="why-use-a-virtual-router">Why use a virtual router?&lt;/h2>
+&lt;p>For one, these routers offer enterprise-level features such as build-in VPN support, traffic
 analysis, and extensive diagnostics, among others. Another reason is that having a virtual router
 gives you the ability to experiment &amp;ndash; you can install multiple routers on top of your hypervisor,
 and try all of them out. A third reason is that the virtual router may be only one of many VMs that
 you run on your hardware. You can use the same piece of hardware to run a router, an ad-blocking
 service, a media server, and other applications.&lt;/p>
-&lt;h2 id="advanced-virtual-router-installation-and-set-up">
-&lt;a href="#advanced-virtual-router-installation-and-set-up">#&lt;/a>
-Advanced virtual router installation and set up
-&lt;/h2>&lt;p>When setting up our virtual router, we chose to
+&lt;h2 id="advanced-virtual-router-installation-and-set-up">Advanced virtual router installation and set up&lt;/h2>
+&lt;p>When setting up our virtual router, we chose to
 use &lt;a class="link" href="https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough" target="_blank" rel="noopener"
 >PCI Passthrough&lt;/a> to allow the virtual router
 direct access to the NIC hardware. Direct access to hardware improves the latency of our internet
@@ -65,10 +61,8 @@ modifying the following files.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/etc/network/interfaces
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/etc/hosts
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After rebooting PVE, we had access to the internet and to the PVE Web GUI from our new LAN.&lt;/p>
-&lt;h2 id="updating-router-software">
-&lt;a href="#updating-router-software">#&lt;/a>
-Updating router software
-&lt;/h2>&lt;p>Using a virtual router with PCI Passthrough creates a unique challenge when doing software updates.
+&lt;h2 id="updating-router-software">Updating router software&lt;/h2>
+&lt;p>Using a virtual router with PCI Passthrough creates a unique challenge when doing software updates.
 What if the new version doesn’t work? What if you lose all internet access.&lt;/p>
 &lt;p>We can mitigate potential issues. First, we recommend always making a backup of the router VM when
 upgrading. That way we can easily roll back the change. Switching to a backup, however, requires

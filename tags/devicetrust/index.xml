@@ -11,18 +11,14 @@ title="YouTube Video"
 >osquery&lt;/a>. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
 >Fleet policies&lt;/a>.&lt;/p>
 &lt;p>Policies in Fleet are more than just rules; they are the gatekeepers of your device&amp;rsquo;s security, ensuring stringent adherence to security standards. By dissecting how Fleet policies operate &amp;ldquo;under the hood,&amp;rdquo; IT administrators and security professionals can gain invaluable insights. These insights allow for setting up efficient security protocols and rapid response to potential vulnerabilities, a necessity in a landscape where cyber threats are constantly evolving. This article delves into the inner workings of Fleet policies, providing you with the knowledge to better configure, manage, and leverage these policies for optimal device security and efficiency.&lt;/p>
-&lt;h2 id="policy-creation">
-&lt;a href="#policy-creation">#&lt;/a>
-Policy creation
-&lt;/h2>&lt;p>Policies can be created from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code> with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p>
+&lt;h2 id="policy-creation">Policy creation&lt;/h2>
+&lt;p>Policies can be created from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code> with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p>
 &lt;p>When a policy is created, a record for it is stored in the &lt;strong>policies&lt;/strong> table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"
 alt="Fleet policies block diagram">
 &lt;/figure>
-&lt;h2 id="policy-execution">
-&lt;a href="#policy-execution">#&lt;/a>
-Policy execution
-&lt;/h2>&lt;p>Policies are executed on the devices, which are called &lt;strong>hosts&lt;/strong> in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
+&lt;h2 id="policy-execution">Policy execution&lt;/h2>
+&lt;p>Policies are executed on the devices, which are called &lt;strong>hosts&lt;/strong> in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
 >FLEET_OSQUERY_POLICY_UPDATE_INTERVAL&lt;/a>, which is set to 1 hour by default. This interval can be adjusted with the environment variable or set from the server’s command line.&lt;/p>
 &lt;p>Policies are simply SQL queries that return a true or false result, so the flow they use on the hosts is the same as other queries. Hosts check in with Fleet servers every 10 seconds (the default) and access the &lt;code>/api/v1/osquery/distributed/read&lt;/code> API endpoint. The server checks when the policy was last executed to determine whether it should be executed again. If so, the server adds the policy to its response. For example, this policy in the server response checks if the macOS firewall is enabled:&lt;/p>
 &lt;pre tabindex="0">&lt;code>{
@@ -37,24 +33,18 @@ Policy execution
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"
 alt="Fleet policies on host details page">
 &lt;/figure>
-&lt;h2 id="force-policy-execution-on-a-device">
-&lt;a href="#force-policy-execution-on-a-device">#&lt;/a>
-Force policy execution on a device
-&lt;/h2>&lt;p>The user can force the host to execute all of its policies by clicking the &lt;strong>Refetch&lt;/strong> link:&lt;/p>
+&lt;h2 id="force-policy-execution-on-a-device">Force policy execution on a device&lt;/h2>
+&lt;p>The user can force the host to execute all of its policies by clicking the &lt;strong>Refetch&lt;/strong> link:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"
 alt="Fleet refetch host details">
 &lt;/figure>
-&lt;h2 id="policy-results-aggregation">
-&lt;a href="#policy-results-aggregation">#&lt;/a>
-Policy results aggregation
-&lt;/h2>&lt;p>However, the main &lt;strong>Policies&lt;/strong> page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong>policy_stats&lt;/strong> table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p>
+&lt;h2 id="policy-results-aggregation">Policy results aggregation&lt;/h2>
+&lt;p>However, the main &lt;strong>Policies&lt;/strong> page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong>policy_stats&lt;/strong> table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
 alt="Fleet policies page">
 &lt;/figure>
-&lt;h2 id="summary">
-&lt;a href="#summary">#&lt;/a>
-Summary
-&lt;/h2>&lt;p>Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;p>Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
 >Fleet community Slack channels&lt;/a>.&lt;/p>
 &lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies" target="_blank" rel="noopener"
 >Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item></channel></rss>
