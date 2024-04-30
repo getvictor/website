@@ -31,7 +31,7 @@ TRANSACTION 1638819, ACTIVE 7 sec inserting
 mysql tables in use 1, locked 1
 LOCK WAIT 3 lock struct(s), heap size 1128, 2 row lock(s)
 MySQL thread id 97926, OS thread handle 281471580295040, query id 24192112 192.168.65.1 root update
-/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (host_id, os_id) VALUES (3, 3)
+/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (id, amount) VALUES (3, 3)
 
 *** (1) HOLDS THE LOCK(S):
 RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638819 lock_mode X
@@ -50,7 +50,7 @@ TRANSACTION 1638812, ACTIVE 13 sec inserting
 mysql tables in use 1, locked 1
 LOCK WAIT 3 lock struct(s), heap size 1128, 2 row lock(s)
 MySQL thread id 97875, OS thread handle 281471585578880, query id 24192285 192.168.65.1 root update
-/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (host_id, os_id) VALUES (2, 2)
+/* ApplicationName=DataGrip 2024.1 */ INSERT INTO my_table (id, amount) VALUES (2, 2)
 
 *** (2) HOLDS THE LOCK(S):
 RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638812 lock_mode X
