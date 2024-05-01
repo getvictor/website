@@ -1,7 +1,7 @@
 +++
 title = 'GitHub Actions reusable workflows and steps'
 description = "How to create reusable workflows and reusable steps in GitHub Actions"
-image = "GitHub Actions thumbnail.svg"
+image = "GitHub Actions thumbnail.png"
 date = 2024-05-01
 tags = ["GitHub", "GitHubActions", "CodeReuse"]
 draft = false
