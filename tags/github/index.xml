@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Actions reusable workflows and steps</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post GitHub Actions reusable workflows and steps" />&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Actions reusable workflows and steps</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post GitHub Actions reusable workflows and steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
 >GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
 alt="High level diagram of GitHub Actions">&lt;figcaption>
@@ -7,8 +7,8 @@ alt="High level diagram of GitHub Actions">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a separate command.&lt;/p>
-&lt;h2 id="why-reuse">Why reuse?&lt;/h2>
-&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
+&lt;h2 id="why-reuse">&lt;a href="#why-reuse" class="header-anchor">&lt;/a>Why reuse?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
 >Code reuse&lt;/a> is a fundamental principle of software development. Reusing GitHub Actions code allows you to:&lt;/p>
 &lt;ul>
 &lt;li>Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li>
@@ -26,8 +26,8 @@ alt="High level diagram of GitHub Actions">&lt;figcaption>
 &lt;li>Data processing&lt;/li>
 &lt;li>and many others&lt;/li>
 &lt;/ul>
-&lt;h2 id="reusable-workflows">Reusable workflows&lt;/h2>
-&lt;p>A reusable workflow replaces a job in the main workflow.&lt;/p>
+&lt;h2 id="reusable-workflows">&lt;a href="#reusable-workflows" class="header-anchor">&lt;/a>Reusable workflows
+&lt;/h2>&lt;p>A reusable workflow replaces a job in the main workflow.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
 alt="GitHub Actions reusable workflow">&lt;figcaption>
 &lt;h4>GitHub Actions reusable workflow&lt;/h4>
@@ -105,8 +105,8 @@ alt="GitHub Actions reusable workflow success">&lt;figcaption>
 &lt;h4>GitHub Actions reusable workflow success&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;h2 id="reusable-steps-composite-action">Reusable steps (composite action)&lt;/h2>
-&lt;p>Reusable steps replace a regular step in a job. We will use a &lt;code>composite action&lt;/code> for reusable steps in our example.&lt;/p>
+&lt;h2 id="reusable-steps-composite-action">&lt;a href="#reusable-steps-composite-action" class="header-anchor">&lt;/a>Reusable steps (composite action)
+&lt;/h2>&lt;p>Reusable steps replace a regular step in a job. We will use a &lt;code>composite action&lt;/code> for reusable steps in our example.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
 alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
 &lt;h4>GitHub Actions reusable steps (composite action)&lt;/h4>
@@ -163,14 +163,14 @@ alt="GitHub Actions composite action success">&lt;figcaption>
 &lt;h4>GitHub Actions composite action success&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.&lt;/p>
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.&lt;/p>
 &lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of work that may run on the same runner and share the same work area.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
-&lt;h2 id="github-actions-reusable-workflows-and-steps-video">GitHub Actions reusable workflows and steps video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="github-actions-reusable-workflows-and-steps-video">&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor">&lt;/a>GitHub Actions reusable workflows and steps video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/ciHJzV6TZB8"
 allowfullscreen
@@ -186,13 +186,13 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;h2 id="what-are-github-actions">What are GitHub actions?&lt;/h2>
-&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins, CircleCI,
+&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub actions?
+&lt;/h2>&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins, CircleCI,
 and TravisCI. However, GitHub actions are built into GitHub.&lt;/p>
 &lt;p>GitHub actions are not entirely free, but they have very high usage limits for open-source projects. For private repositories, you can
 run up to 2,000 minutes per month for free. After that, you will be charged.&lt;/p>
-&lt;h2 id="github-actions-for-non-cicd-tasks">GitHub actions for non-CI/CD tasks&lt;/h2>
-&lt;p>However, GitHub actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can use them as an
+&lt;h2 id="github-actions-for-non-cicd-tasks">&lt;a href="#github-actions-for-non-cicd-tasks" class="header-anchor">&lt;/a>GitHub actions for non-CI/CD tasks
+&lt;/h2>&lt;p>However, GitHub actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can use them as an
 extension of your application to perform tasks such as:&lt;/p>
 &lt;ul>
 &lt;li>generating aggregate reports&lt;/li>
@@ -209,8 +209,8 @@ alt="GitHub action block diagram">
 send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p>
 &lt;p>Although GitHub actions in open-source repositories are public, they can still use secrets that are not accessible to the public.
 For example, secrets can be API keys and database access credentials.&lt;/p>
-&lt;h2 id="a-real-world-github-action-doing-data-processing">A real-world GitHub action doing data processing&lt;/h2>
-&lt;p>Below is an example GitHub action that does general data processing. It uses API calls to download data from NVD (National Vulnerability
+&lt;h2 id="a-real-world-github-action-doing-data-processing">&lt;a href="#a-real-world-github-action-doing-data-processing" class="header-anchor">&lt;/a>A real-world GitHub action doing data processing
+&lt;/h2>&lt;p>Below is an example GitHub action that does general data processing. It uses API calls to download data from NVD (National Vulnerability
 Database), generates files from this data, and then creates a release. Subsequently, the application can download these files and use them
 directly without making the API calls or processing the data itself.&lt;/p>
 &lt;p>GitHub gist:

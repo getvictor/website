@@ -5,14 +5,14 @@
 &lt;li>&lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-use-macos-keychain">Why use macOS keychain?&lt;/h2>
-&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
+&lt;h2 id="why-use-macos-keychain">&lt;a href="#why-use-macos-keychain" class="header-anchor">&lt;/a>Why use macOS keychain?
+&lt;/h2>&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
 &lt;p>The macOS keychain is a secure storage system for passwords and other confidential information. It is used by many Apple applications, such as Safari, Mail, and iCloud, to store the user&amp;rsquo;s passwords and additional sensitive information.&lt;/p>
-&lt;h2 id="building-a-custom-tlscertificate-for-macos-keychain">Building a custom tls.Certificate for macOS keychain&lt;/h2>
-&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the macOS keychain.&lt;/p>
+&lt;h2 id="building-a-custom-tlscertificate-for-macos-keychain">&lt;a href="#building-a-custom-tlscertificate-for-macos-keychain" class="header-anchor">&lt;/a>Building a custom tls.Certificate for macOS keychain
+&lt;/h2>&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the macOS keychain.&lt;/p>
 &lt;p>However, before the application uses the &lt;code>Public&lt;/code> and &lt;code>Sign&lt;/code> methods of the &lt;code>CustomSigner,&lt;/code> we need to retrieve the certificate from the keychain using Apple&amp;rsquo;s API.&lt;/p>
-&lt;h3 id="retrieving-certificate-from-macos-keychain-with-cgo">Retrieving certificate from macOS keychain with CGO&lt;/h3>
-&lt;p>We will use CGO to call the macOS keychain API to retrieve the client certificate. To set up CGO, we include the following code above our imports:&lt;/p>
+&lt;h3 id="retrieving-certificate-from-macos-keychain-with-cgo">&lt;a href="#retrieving-certificate-from-macos-keychain-with-cgo" class="header-anchor">&lt;/a>Retrieving certificate from macOS keychain with CGO
+&lt;/h3>&lt;p>We will use CGO to call the macOS keychain API to retrieve the client certificate. To set up CGO, we include the following code above our imports:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> #cgo LDFLAGS: -framework CoreFoundation -framework Security
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> #include &amp;lt;CoreFoundation/CoreFoundation.h&amp;gt;
@@ -48,8 +48,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFRelease&lt;/span>(&lt;span style="color:#a6e22e">identityMatches&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we find the identities by a common name, which we hardcode for demonstration purposes. We can filter by the certificate issuer, as shown in the commented-out code. Filtering by issuer requires an array of DER-encoded ASN.1 items, which can be created from the &lt;code>tls.CertificateRequestInfo&lt;/code> object. Another approach to finding the proper certificate is to retrieve all the keychain certificates and filter them in Go code.&lt;/p>
-&lt;h3 id="converting-the-apple-identity-to-a-go-x509certificate">Converting the Apple identity to a Go &lt;code>x509.Certificate&lt;/code>&lt;/h3>
-&lt;p>After we retrieve the array of identities from the keychain, we convert them to Go &lt;code>x509.Certificate&lt;/code> objects and pick the first one that is not expired.&lt;/p>
+&lt;h3 id="converting-the-apple-identity-to-a-go-x509certificate">&lt;a href="#converting-the-apple-identity-to-a-go-x509certificate" class="header-anchor">&lt;/a>Converting the Apple identity to a Go &lt;code>x509.Certificate&lt;/code>
+&lt;/h3>&lt;p>After we retrieve the array of identities from the keychain, we convert them to Go &lt;code>x509.Certificate&lt;/code> objects and pick the first one that is not expired.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">foundCert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">foundIdentity&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">identityMatchesArrayRef&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFArrayRef&lt;/span>(&lt;span style="color:#a6e22e">identityMatches&lt;/span>)
@@ -106,15 +106,15 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="retrieve-the-private-key-reference-from-the-keychain">Retrieve the private key reference from the keychain&lt;/h3>
-&lt;p>At this point, we also retrieve the private key reference from the keychain. We will use the private key reference to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. The reference does not contain the private key. When importing private keys to the keychain, they should be marked as non-exportable so that no one can retrieve the private key cleartext from the keychain.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="retrieve-the-private-key-reference-from-the-keychain">&lt;a href="#retrieve-the-private-key-reference-from-the-keychain" class="header-anchor">&lt;/a>Retrieve the private key reference from the keychain
+&lt;/h3>&lt;p>At this point, we also retrieve the private key reference from the keychain. We will use the private key reference to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. The reference does not contain the private key. When importing private keys to the keychain, they should be marked as non-exportable so that no one can retrieve the private key cleartext from the keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecKeyRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityCopyPrivateKey&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>(&lt;span style="color:#a6e22e">foundIdentity&lt;/span>), &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">privateKey&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;failed to copy private key ref from identity: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">status&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">Building the custom &lt;code>tls.Certificate&lt;/code>&lt;/h3>
-&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code> and the private key reference.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">&lt;a href="#building-the-custom-tlscertificate" class="header-anchor">&lt;/a>Building the custom &lt;code>tls.Certificate&lt;/code>
+&lt;/h3>&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code> and the private key reference.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>: &lt;span style="color:#a6e22e">foundCert&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span>: &lt;span style="color:#a6e22e">privateKey&lt;/span>,
@@ -125,8 +125,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SupportedSignatureAlgorithms&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">SignatureScheme&lt;/span>{&lt;span style="color:#a6e22e">supportedAlgorithm&lt;/span>},
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple. Adding additional algorithm support is easy since it only requires passing the right parameter to the &lt;code>SecKeyCreateSignature&lt;/code> function, which we will review next.&lt;/p>
-&lt;h2 id="signing-the-mtls-digest-with-apples-keychain">Signing the mTLS digest with Apple&amp;rsquo;s keychain&lt;/h2>
-&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we need to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
+&lt;h2 id="signing-the-mtls-digest-with-apples-keychain">&lt;a href="#signing-the-mtls-digest-with-apples-keychain" class="header-anchor">&lt;/a>Signing the mTLS digest with Apple&amp;rsquo;s keychain
+&lt;/h2>&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we need to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecKeyRef&lt;/span>
@@ -165,8 +165,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
 >SecKeyCreateSignature&lt;/a> function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code>CFErrorRef.&lt;/code> The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code>SecKeyCreateSignature&lt;/code> function.&lt;/p>
-&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
-&lt;p>With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p>
+&lt;h2 id="putting-it-all-together">&lt;a href="#putting-it-all-together" class="header-anchor">&lt;/a>Putting it all together
+&lt;/h2>&lt;p>With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
@@ -202,10 +202,10 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
-&lt;h2 id="build-the-mtls-client">Build the mTLS client&lt;/h2>
-&lt;p>With &lt;code>go build client-signer.go&lt;/code>, we generate the &lt;code>client-signer&lt;/code> executable.&lt;/p>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>The next step is to use the macOS keychain to store the client certificate and private key. We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="build-the-mtls-client">&lt;a href="#build-the-mtls-client" class="header-anchor">&lt;/a>Build the mTLS client
+&lt;/h2>&lt;p>With &lt;code>go build client-signer.go&lt;/code>, we generate the &lt;code>client-signer&lt;/code> executable.&lt;/p>
+&lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
+&lt;/h2>&lt;p>The next step is to use the macOS keychain to store the client certificate and private key. We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>We must also import the generated certificates and keys into the macOS keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the server CA&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/server-ca.crt
@@ -221,8 +221,8 @@
 &lt;li>https://localhost:8888 for TLS&lt;/li>
 &lt;li>https://localhost:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="running-the-go-mtls-client-using-the-macos-keychain">Running the Go mTLS client using the macOS keychain&lt;/h2>
-&lt;p>We can now run our mTLS client without pointing to certificate and key files. Hitting the ordinary TLS server:&lt;/p>
+&lt;h2 id="running-the-go-mtls-client-using-the-macos-keychain">&lt;a href="#running-the-go-mtls-client-using-the-macos-keychain" class="header-anchor">&lt;/a>Running the Go mTLS client using the macOS keychain
+&lt;/h2>&lt;p>We can now run our mTLS client without pointing to certificate and key files. Hitting the ordinary TLS server:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./client-signer --url https://localhost:8888/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected:&lt;/p>
 &lt;pre tabindex="0">&lt;code>TLS Hello World!
@@ -236,13 +236,13 @@ crypto.Signer.Public
 crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
-&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">Using certificate and key from the Windows certificate store&lt;/h2>
-&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">&lt;a href="#using-certificate-and-key-from-the-windows-certificate-store" class="header-anchor">&lt;/a>Using certificate and key from the Windows certificate store
+&lt;/h2>&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-using-macos-keychain-video">mTLS Go client using macOS keychain video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-using-macos-keychain-video">&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor">&lt;/a>mTLS Go client using macOS keychain video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/iYWPrL4sR5U"
 allowfullscreen
@@ -250,8 +250,8 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div></description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
-&lt;h2 id="securing-mtls-certificates-and-keys">Securing mTLS certificates and keys&lt;/h2>
-&lt;p>In the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p>
+&lt;h2 id="securing-mtls-certificates-and-keys">&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor">&lt;/a>Securing mTLS certificates and keys
+&lt;/h2>&lt;p>In the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p>
 &lt;ul>
 &lt;li>server CA: &lt;code>certs/server-ca.crt&lt;/code>&lt;/li>
 &lt;li>server CA private key: &lt;code>certs/server-ca.key&lt;/code>&lt;/li>
@@ -265,11 +265,11 @@ title="YouTube Video"
 &lt;p>In a real-world scenario, we would need to secure these files. The server CA private key and the client CA private key are the most important files to secure. If an attacker gets access to these files, they can create new certificates and impersonate the server or the client. These two files should be secured in a dedicated secure storage.&lt;/p>
 &lt;p>The server will need access to the client CA, the server TLS certificate, and the server TLS certificate private key. The server TLS certificate private key is the most important to secure out of these three files.&lt;/p>
 &lt;p>The client will need access to the server CA, the client TLS certificate, and the client TLS certificate private key. We can use the macOS keychain to secure these files. In a future article, we will show how to secure these on Windows with certificate stores.&lt;/p>
-&lt;h2 id="apples-macos-keychain">Apple&amp;rsquo;s macOS keychain&lt;/h2>
-&lt;p>As I&amp;rsquo;ve written in &lt;a class="link" href="../inspecting-keychain-files-on-macos" >inspecting keychain files on macOS&lt;/a>, keychains are the macOS&amp;rsquo;s method to track and protect secure information such as passwords, private keys, and certificates.&lt;/p>
+&lt;h2 id="apples-macos-keychain">&lt;a href="#apples-macos-keychain" class="header-anchor">&lt;/a>Apple&amp;rsquo;s macOS keychain
+&lt;/h2>&lt;p>As I&amp;rsquo;ve written in &lt;a class="link" href="../inspecting-keychain-files-on-macos" >inspecting keychain files on macOS&lt;/a>, keychains are the macOS&amp;rsquo;s method to track and protect secure information such as passwords, private keys, and certificates.&lt;/p>
 &lt;p>The system keychain is located at &lt;code>/Library/Keychains/System.keychain&lt;/code>. It contains the root certificates and other certificates. The login keychain is located at &lt;code>/Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db&lt;/code>. It contains the user&amp;rsquo;s certificates and private keys. In this example, we will use the system keychain, which all users on the system can access.&lt;/p>
-&lt;h2 id="generating-mtls-certificates-and-keys">Generating mTLS certificates and keys&lt;/h2>
-&lt;p>We will use the following script to generate the mTLS certificates and keys. It resembles the script from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article.&lt;/p>
+&lt;h2 id="generating-mtls-certificates-and-keys">&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor">&lt;/a>Generating mTLS certificates and keys
+&lt;/h2>&lt;p>We will use the following script to generate the mTLS certificates and keys. It resembles the script from the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This script generates certificates and keys needed for mTLS.&lt;/span>
@@ -296,8 +296,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/server.req
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/client.req
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The maximum validity period for a TLS certificate is 398 days. Apple will reject certificates with a more extended validity period.&lt;/p>
-&lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain">Importing client mTLS certificates and keys into the macOS keychain&lt;/h2>
-&lt;p>We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
+&lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain">&lt;a href="#importing-client-mtls-certificates-and-keys-into-the-macos-keychain" class="header-anchor">&lt;/a>Importing client mTLS certificates and keys into the macOS keychain
+&lt;/h2>&lt;p>We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
 >security&lt;/a> command line tool. Accessing the system keychain must be run as root (&lt;code>sudo&lt;/code>).&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
@@ -313,8 +313,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security import certs/client.key -k /Library/Keychains/System.keychain -x -T /usr/bin/curl -T /Applications/Safari.app -T &lt;span style="color:#e6db74">&amp;#39;/Applications/Google Chrome.app&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>-x&lt;/code> option marks the imported key as non-extractable. No application or user can view the private key once it is imported. The private key can only be used indirectly via Apple&amp;rsquo;s APIs.&lt;/p>
 &lt;p>The &lt;code>-T&lt;/code> option specifies the applications that can access the key. Additional applications may be added later to the access control list.&lt;/p>
-&lt;h2 id="verifying-imported-certificates-and-keys">Verifying imported certificates and keys&lt;/h2>
-&lt;p>As an extra step, we can verify the client and server certificates before using them in an application.&lt;/p>
+&lt;h2 id="verifying-imported-certificates-and-keys">&lt;a href="#verifying-imported-certificates-and-keys" class="header-anchor">&lt;/a>Verifying imported certificates and keys
+&lt;/h2>&lt;p>As an extra step, we can verify the client and server certificates before using them in an application.&lt;/p>
 &lt;p>We can verify the server certificate by running the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>security verify-cert -c certs/server.crt -p ssl -s localhost -k /Library/Keychains/System.keychain
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output should include:&lt;/p>
@@ -330,14 +330,14 @@ Valid identities only
 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
 1 valid identities found
 &lt;/code>&lt;/pre>&lt;p>macOS can validate the identity because we also imported the client CA into the system keychain.&lt;/p>
-&lt;h2 id="running-the-mtls-server">Running the mTLS server&lt;/h2>
-&lt;p>As in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
+&lt;h2 id="running-the-mtls-server">&lt;a href="#running-the-mtls-server" class="header-anchor">&lt;/a>Running the mTLS server
+&lt;/h2>&lt;p>As in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://localhost:8888 for TLS&lt;/li>
 &lt;li>https://localhost:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">Connecting to the TLS and mTLS servers with clients&lt;/h2>
-&lt;p>Because the server CA was added to the system keychain, curl can now access the TLS server without any additional flags:&lt;/p>
+&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients">&lt;a href="#connecting-to-the-tls-and-mtls-servers-with-clients" class="header-anchor">&lt;/a>Connecting to the TLS and mTLS servers with clients
+&lt;/h2>&lt;p>Because the server CA was added to the system keychain, curl can now access the TLS server without any additional flags:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8888/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, the built-in curl client cannot access the mTLS server. We use the &lt;code>-v&lt;/code> option for additional information:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl -v https://localhost:8889/hello-world.txt
@@ -403,13 +403,13 @@ alt="Safari mTLS popup">&lt;figcaption>
 &lt;p>We can click &lt;strong>Continue&lt;/strong> to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p>
 &lt;p>Google Chrome&amp;rsquo;s behavior is similar.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>
-&lt;h2 id="creating-our-own-mtls-client">Creating our own mTLS client&lt;/h2>
-&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>.&lt;/p>
-&lt;h2 id="mtls-with-macos-keychain-video">mTLS with macOS keychain video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="creating-our-own-mtls-client">&lt;a href="#creating-our-own-mtls-client" class="header-anchor">&lt;/a>Creating our own mTLS client
+&lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>.&lt;/p>
+&lt;h2 id="mtls-with-macos-keychain-video">&lt;a href="#mtls-with-macos-keychain-video" class="header-anchor">&lt;/a>mTLS with macOS keychain video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/Y0y6-cCzz8w"
 allowfullscreen

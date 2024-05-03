@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MySQL on Victor on Software</title><link>https://victoronsoftware.com/tags/mysql/</link><description>Recent content in MySQL on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/mysql/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">What is an SQL deadlock?&lt;/h2>
-&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
-&lt;h2 id="what-is-an-upsert">What is an upsert?&lt;/h2>
-&lt;p>An upsert combines the words &amp;ldquo;update&amp;rdquo; and &amp;ldquo;insert.&amp;rdquo; It is a database operation that inserts a new row into a table if the row does not exist or updates the row if it already exists.&lt;/p>
-&lt;h2 id="insertupdate-upsert-pattern">INSERT/UPDATE upsert pattern&lt;/h2>
-&lt;p>One common way to implement an upsert operation in MySQL is to use the following pattern:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>MySQL on Victor on Software</title><link>https://victoronsoftware.com/tags/mysql/</link><description>Recent content in MySQL on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 28 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/mysql/index.xml" rel="self" type="application/rss+xml"/><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">&lt;a href="#what-is-an-sql-deadlock" class="header-anchor">&lt;/a>What is an SQL deadlock?
+&lt;/h2>&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
+&lt;h2 id="what-is-an-upsert">&lt;a href="#what-is-an-upsert" class="header-anchor">&lt;/a>What is an upsert?
+&lt;/h2>&lt;p>An upsert combines the words &amp;ldquo;update&amp;rdquo; and &amp;ldquo;insert.&amp;rdquo; It is a database operation that inserts a new row into a table if the row does not exist or updates the row if it already exists.&lt;/p>
+&lt;h2 id="insertupdate-upsert-pattern">&lt;a href="#insertupdate-upsert-pattern" class="header-anchor">&lt;/a>INSERT/UPDATE upsert pattern
+&lt;/h2>&lt;p>One common way to implement an upsert operation in MySQL is to use the following pattern:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> &lt;span style="color:#66d9ef">SET&lt;/span> column1 &lt;span style="color:#f92672">=&lt;/span> value1, column2 &lt;span style="color:#f92672">=&lt;/span> value2 &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- If the UPDATE statement does not affect any rows, insert a new row:
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> (id, column1, column2) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#f92672">?&lt;/span>, value1, value2);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/update.html" target="_blank" rel="noopener"
 >UPDATE&lt;/a> returns the number of rows that were actually changed.&lt;/p>
 &lt;p>This UPDATE/INSERT pattern is optimized for frequent updates and rare inserts. However, it can lead to deadlocks when multiple transactions try to insert simultaneously.&lt;/p>
-&lt;h2 id="mysql-deadlock-example">MySQL deadlock example&lt;/h2>
-&lt;p>We assume the default transaction isolation level of &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"
+&lt;h2 id="mysql-deadlock-example">&lt;a href="#mysql-deadlock-example" class="header-anchor">&lt;/a>MySQL deadlock example
+&lt;/h2>&lt;p>We assume the default transaction isolation level of &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"
 >REPEATABLE READ&lt;/a>. Given the following table with one row:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> my_table (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> id int(&lt;span style="color:#ae81ff">10&lt;/span>) unsigned &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
@@ -29,11 +29,11 @@
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Causing a deadlock:&lt;/p>
 &lt;pre tabindex="0">&lt;code>[40001][1213] Deadlock found when trying to get lock; try restarting transaction
-&lt;/code>&lt;/pre>&lt;h3 id="why-does-the-deadlock-occur">Why does the deadlock occur?&lt;/h3>
-&lt;p>The deadlock occurs because both transactions set &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h3 id="why-does-the-deadlock-occur">&lt;a href="#why-does-the-deadlock-occur" class="header-anchor">&lt;/a>Why does the deadlock occur?
+&lt;/h3>&lt;p>The deadlock occurs because both transactions set &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener"
 >next-key locks&lt;/a> on the rows they attempted to update. Since the rows they attempted to update did not exist, the lock is set on the &amp;ldquo;supremum&amp;rdquo; pseudo-record. This pseudo-record has a value higher than any value actually in the index. This lock prevents the other transaction from inserting the row it needs.&lt;/p>
-&lt;h2 id="debugging-mysql-deadlocks">Debugging MySQL deadlocks&lt;/h2>
-&lt;p>To view the last deadlock detected by MySQL, you can use:&lt;/p>
+&lt;h2 id="debugging-mysql-deadlocks">&lt;a href="#debugging-mysql-deadlocks" class="header-anchor">&lt;/a>Debugging MySQL deadlocks
+&lt;/h2>&lt;p>To view the last deadlock detected by MySQL, you can use:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> ENGINE INNODB STATUS;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will contain a section like this:&lt;/p>
 &lt;pre tabindex="0">&lt;code>------------------------
@@ -71,15 +71,15 @@ Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
 &lt;/code>&lt;/pre>&lt;p>We can see the supremum locks held by both transactions: &lt;code> 0: len 8; hex 73757072656d756d; asc supremum;;&lt;/code>.&lt;/p>
 &lt;p>Another way to debug MySQL deadlocks is to enable the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_print_all_deadlocks" target="_blank" rel="noopener"
 >innodb_print_all_deadlocks&lt;/a> option. This option prints all deadlocks to the error log.&lt;/p>
-&lt;h2 id="preventing-the-updateinsert-deadlock">Preventing the UPDATE/INSERT deadlock&lt;/h2>
-&lt;p>One way to prevent the deadlock is to use the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html" target="_blank" rel="noopener"
+&lt;h2 id="preventing-the-updateinsert-deadlock">&lt;a href="#preventing-the-updateinsert-deadlock" class="header-anchor">&lt;/a>Preventing the UPDATE/INSERT deadlock
+&lt;/h2>&lt;p>One way to prevent the deadlock is to use the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html" target="_blank" rel="noopener"
 >INSERT &amp;hellip; ON DUPLICATE KEY UPDATE&lt;/a> pattern. This syntax allows you to insert a new row or update an existing row in a single statement. However, it is slower than an UPDATE and always increments the auto-increment value if present.&lt;/p>
 &lt;p>Another way is to roll back the transaction once we know that the UPDATE did not affect any rows. This avoids the deadlock by not holding the lock while we insert the new row. After the rollback, we can retry the transaction using the above &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern.&lt;/p>
 &lt;p>A third way is not to use transactions. In this case, the locks are released immediately after the statement is executed. However, this approach may not be suitable for all use cases.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple transactions try to insert simultaneously. To prevent deadlocks, consider using the &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern, rolling back the transaction, or not using transactions.&lt;/p>
-&lt;h2 id="mysql-deadlock-on-updateinsert-upsert-pattern-video">MySQL deadlock on UPDATE/INSERT upsert pattern video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple transactions try to insert simultaneously. To prevent deadlocks, consider using the &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern, rolling back the transaction, or not using transactions.&lt;/p>
+&lt;h2 id="mysql-deadlock-on-updateinsert-upsert-pattern-video">&lt;a href="#mysql-deadlock-on-updateinsert-upsert-pattern-video" class="header-anchor">&lt;/a>MySQL deadlock on UPDATE/INSERT upsert pattern video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/ADerRg7tzag"
 allowfullscreen
@@ -87,13 +87,13 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>Any app aiming to reach an international audience must support Unicode. Emojis, which are based on Unicode, are everywhere. They are used in text messages, social media, and programming languages. Supporting Unicode and emojis in your app can be tricky. This article will cover common Unicode and emoji support issues and how to fix them.&lt;/p>
-&lt;h2 id="what-is-unicode">What is Unicode?&lt;/h2>
-&lt;p>Unicode is a standard for encoding, representing, and handling text. It is a character set that assigns a unique number to every character. The most common encoding for Unicode is UTF-8, which stands for Unicode Transformation Format 8-bit. UTF-8 is a variable-width encoding that can represent every character in the Unicode character set.&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h2>&lt;p>Any app aiming to reach an international audience must support Unicode. Emojis, which are based on Unicode, are everywhere. They are used in text messages, social media, and programming languages. Supporting Unicode and emojis in your app can be tricky. This article will cover common Unicode and emoji support issues and how to fix them.&lt;/p>
+&lt;h2 id="what-is-unicode">&lt;a href="#what-is-unicode" class="header-anchor">&lt;/a>What is Unicode?
+&lt;/h2>&lt;p>Unicode is a standard for encoding, representing, and handling text. It is a character set that assigns a unique number to every character. The most common encoding for Unicode is UTF-8, which stands for Unicode Transformation Format 8-bit. UTF-8 is a variable-width encoding that can represent every character in the Unicode character set.&lt;/p>
 &lt;p>UTF-8 format can take one to four bytes to represent a code point. Multiple code points can be combined to form a single character. For example, the emoji &amp;ldquo;👍&amp;rdquo; is represented by the code point &lt;code>U+1F44D&lt;/code>. In UTF-8, it is represented by the bytes &lt;code>F0 9F 91 8D&lt;/code>. The same emoji with skin tone &amp;ldquo;👍🏽&amp;rdquo; is represented by the code point &lt;code>U+1F44D U+1F3FD&lt;/code>. In UTF-8, that emoji is represented by the bytes &lt;code>F0 9F 91 8D F0 9F 8F BD&lt;/code>. Generally, emojis take up at least four bytes in UTF-8.&lt;/p>
-&lt;h2 id="unicode-equivalence">Unicode equivalence&lt;/h2>
-&lt;p>Our first gotcha is unicode equivalence.&lt;/p>
+&lt;h2 id="unicode-equivalence">&lt;a href="#unicode-equivalence" class="header-anchor">&lt;/a>Unicode equivalence
+&lt;/h2>&lt;p>Our first gotcha is unicode equivalence.&lt;/p>
 &lt;p>Unicode equivalence is the concept that two different sequences of code points can represent the same character. For example, the character &lt;code>é&lt;/code> can be represented by the code point &lt;code>U+00E9&lt;/code> or by the sequence of code points &lt;code>U+0065 U+0301&lt;/code>. The first representation is the composed form, and the second is the decomposed form. Unicode equivalence is essential when comparing strings or searching for a string character.&lt;/p>
 &lt;p>Databases typically do not support Unicode equivalence out of the box. For example, given this table using MySQL 5.7:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> test (
@@ -106,8 +106,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> test &lt;span style="color:#66d9ef">WHERE&lt;/span> name &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;가&amp;#39;&lt;/span>;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The query will return a single row, even though the Korean character &lt;code>가&lt;/code> and character sequence &lt;code>ᄀ&lt;/code> + &lt;code>ᅡ&lt;/code> are equivalent. The incorrect result is because the &lt;code>utf8mb4_unicode_ci&lt;/code> collation does not support Unicode equivalence. One way to fix this is to use the &lt;code>utf8mb4_0900_ai_ci&lt;/code> collation, which supports Unicode equivalence. However, this requires updating the database to MySQL 8.0 or later, which may not be possible in some cases.&lt;/p>
-&lt;h2 id="emoji-equivalence">Emoji equivalence&lt;/h2>
-&lt;p>Our second gotcha is emoji equivalence.&lt;/p>
+&lt;h2 id="emoji-equivalence">&lt;a href="#emoji-equivalence" class="header-anchor">&lt;/a>Emoji equivalence
+&lt;/h2>&lt;p>Our second gotcha is emoji equivalence.&lt;/p>
 &lt;p>Some databases may not support emoji equivalence out of the box. For example, given this table using MySQL 5.7:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> test (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> id INT UNSIGNED &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span> AUTO_INCREMENT,
@@ -132,11 +132,11 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Will return the single correct result:&lt;/p>
 &lt;pre tabindex="0">&lt;code>1,🔥
 &lt;/code>&lt;/pre>&lt;p>However, this solution is not ideal because it requires the developer to remember to use the &lt;code>utf8mb4_bin&lt;/code> collation for emoji equivalence. There is also a slight performance impact when using a different collation.&lt;/p>
-&lt;h2 id="case-insensitive-sorting">Case-insensitive sorting&lt;/h2>
-&lt;p>Our third gotcha is sorting.&lt;/p>
+&lt;h2 id="case-insensitive-sorting">&lt;a href="#case-insensitive-sorting" class="header-anchor">&lt;/a>Case-insensitive sorting
+&lt;/h2>&lt;p>Our third gotcha is sorting.&lt;/p>
 &lt;p>Typically, app users want to see case-insensitive sorting of strings. For example, the strings &amp;ldquo;apple&amp;rdquo;, &amp;ldquo;Banana&amp;rdquo;, and &amp;ldquo;cherry&amp;rdquo; should be sorted as &amp;ldquo;apple&amp;rdquo;, &amp;ldquo;Banana&amp;rdquo;, and &amp;ldquo;cherry&amp;rdquo;. The &lt;code>utf8mb4_unicode_ci&lt;/code> collation used above supports case-insensitive sorting. However, switching to another collation, such as &lt;code>utf8mb4_bin&lt;/code>, to support emoji equivalence will break case-insensitive sorting. Hence, whatever solution you develop for full Unicode support should also support case-insensitive sorting.&lt;/p>
-&lt;h2 id="solving-our-gotchas-with-normalization">Solving our gotchas with normalization&lt;/h2>
-&lt;p>A partial solution to the above gotchas is to use normalization. Normalization is the process of transforming text into a standard form. Unicode defines four normalization forms: NFC, NFD, NFKC, and NFKD. The most common normalization form is NFC, which is the composed form. NFC is the standard form for most text processing.&lt;/p>
+&lt;h2 id="solving-our-gotchas-with-normalization">&lt;a href="#solving-our-gotchas-with-normalization" class="header-anchor">&lt;/a>Solving our gotchas with normalization
+&lt;/h2>&lt;p>A partial solution to the above gotchas is to use normalization. Normalization is the process of transforming text into a standard form. Unicode defines four normalization forms: NFC, NFD, NFKC, and NFKD. The most common normalization form is NFC, which is the composed form. NFC is the standard form for most text processing.&lt;/p>
 &lt;p>For example, in the following Go code:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -167,10 +167,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The two strings are not equal in their raw form but equal after normalization. Normalizing before inserting, updating, and searching in the database can solve the Unicode equivalence issue while allowing the user to keep the case-insensitive sorting.&lt;/p>
 &lt;p>To solve emoji equivalence, we can use the &lt;code>utf8mb4_bin&lt;/code> collation for the &lt;code>=&lt;/code> comparison. However, if our column is indexed, we may need to use the &lt;code>utf8mb4_bin&lt;/code> collation for the index. We cannot have a different collation for the column and the index, but we could use a second generated column with the &lt;code>utf8mb4_bin&lt;/code> collation and index that column.&lt;/p>
-&lt;h2 id="conclusion">Conclusion&lt;/h2>
-&lt;p>Unicode and emoji support is essential for any app aiming to reach an international audience. Unicode equivalence, emoji equivalence, and case-insensitive sorting are common issues with Unicode and emoji support. Normalization can solve the Unicode equivalence issue while allowing the user to keep the case-insensitive sorting. Using the &lt;code>utf8mb4_bin&lt;/code> collation for the &lt;code>=&lt;/code> comparison can solve the emoji equivalence issue.&lt;/p>
-&lt;h2 id="fully-supporting-unicode-and-emojis-in-your-app-video">Fully supporting Unicode and emojis in your app video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>Unicode and emoji support is essential for any app aiming to reach an international audience. Unicode equivalence, emoji equivalence, and case-insensitive sorting are common issues with Unicode and emoji support. Normalization can solve the Unicode equivalence issue while allowing the user to keep the case-insensitive sorting. Using the &lt;code>utf8mb4_bin&lt;/code> collation for the &lt;code>=&lt;/code> comparison can solve the emoji equivalence issue.&lt;/p>
+&lt;h2 id="fully-supporting-unicode-and-emojis-in-your-app-video">&lt;a href="#fully-supporting-unicode-and-emojis-in-your-app-video" class="header-anchor">&lt;/a>Fully supporting Unicode and emojis in your app video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/u9jFFHifa0Q"
 allowfullscreen

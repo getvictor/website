@@ -7,14 +7,14 @@
 &lt;li>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-use-the-windows-certificate-store">Why use the Windows certificate store?&lt;/h2>
-&lt;p>Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we reach a similar level of protection with the Windows certificate store.&lt;/p>
+&lt;h2 id="why-use-the-windows-certificate-store">&lt;a href="#why-use-the-windows-certificate-store" class="header-anchor">&lt;/a>Why use the Windows certificate store?
+&lt;/h2>&lt;p>Keeping the mTLS client private key on the filesystem is insecure and not recommended. In the &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >mTLS Go client using macOS keychain&lt;/a>, we demonstrated achieving greater mTLS security with macOS keychain. In this article, we reach a similar level of protection with the Windows certificate store.&lt;/p>
 &lt;p>The Windows certificate store is a secure location where certificates and keys can be stored. Many applications, such as Edge and Powershell, use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.&lt;/p>
-&lt;h2 id="building-a-custom-tlscertificate-for-the-windows-certificate-store">Building a custom tls.Certificate for the Windows certificate store&lt;/h2>
-&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the Windows certificate store.&lt;/p>
+&lt;h2 id="building-a-custom-tlscertificate-for-the-windows-certificate-store">&lt;a href="#building-a-custom-tlscertificate-for-the-windows-certificate-store" class="header-anchor">&lt;/a>Building a custom tls.Certificate for the Windows certificate store
+&lt;/h2>&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the Windows certificate store.&lt;/p>
 &lt;p>However, before the application uses the &lt;code>Public&lt;/code> and &lt;code>Sign&lt;/code> methods of the &lt;code>CustomSigner,&lt;/code> we must retrieve the client certificate using Windows APIs.&lt;/p>
-&lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">Retrieving mTLS client certificate from Windows certificate store using Go&lt;/h3>
-&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
+&lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go">&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go" class="header-anchor">&lt;/a>Retrieving mTLS client certificate from Windows certificate store using Go
+&lt;/h3>&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
 >golang.org/x/sys/windows&lt;/a> package to access the Windows APIs. We use the &lt;code>windows&lt;/code> package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
 >CertOpenStore&lt;/a>, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
 >CertFindCertificateInStore&lt;/a>, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
@@ -56,8 +56,8 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// we want here.
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">break&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>&lt;/h3>
-&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">&lt;a href="#converting-the-windows-certificate-to-a-go-x509certificate" class="header-anchor">&lt;/a>Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>
+&lt;/h3>&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Copy the certificate data so that we have our own copy outside the windows context
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">encodedCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Slice&lt;/span>(&lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">EncodedCert&lt;/span>, &lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">Length&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">buf&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Clone&lt;/span>(&lt;span style="color:#a6e22e">encodedCert&lt;/span>)
@@ -65,8 +65,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">Building the custom &lt;code>tls.Certificate&lt;/code>&lt;/h3>
-&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code>. We hold on to the &lt;code>certContext&lt;/code> pointer to get the private key later.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">&lt;a href="#building-the-custom-tlscertificate" class="header-anchor">&lt;/a>Building the custom &lt;code>tls.Certificate&lt;/code>
+&lt;/h3>&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code>. We hold on to the &lt;code>certContext&lt;/code> pointer to get the private key later.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span>: &lt;span style="color:#a6e22e">store&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windowsCertContext&lt;/span>: &lt;span style="color:#a6e22e">certContext&lt;/span>,
@@ -80,8 +80,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SupportedSignatureAlgorithms&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">SignatureScheme&lt;/span>{&lt;span style="color:#a6e22e">supportedAlgorithm&lt;/span>},
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple.&lt;/p>
-&lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">Signing the mTLS digest with the Windows certificate store&lt;/h2>
-&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
+&lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">&lt;a href="#signing-the-mtls-digest-with-the-windows-certificate-store" class="header-anchor">&lt;/a>Signing the mTLS digest with the Windows certificate store
+&lt;/h2>&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
@@ -97,8 +97,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">k&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>) &lt;span style="color:#a6e22e">Sign&lt;/span>(&lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">Reader&lt;/span>, &lt;span style="color:#a6e22e">digest&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">SignerOpts&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) (&lt;span style="color:#a6e22e">signature&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">Retrieve the private key reference from the Windows certificate store&lt;/h4>
-&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">&lt;a href="#retrieve-the-private-key-reference-from-the-windows-certificate-store" class="header-anchor">&lt;/a>Retrieve the private key reference from the Windows certificate store
+&lt;/h4>&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get private key
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
@@ -117,8 +117,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="signing-the-mtls-digest">Signing the mTLS digest&lt;/h4>
-&lt;p>We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="signing-the-mtls-digest">&lt;a href="#signing-the-mtls-digest" class="header-anchor">&lt;/a>Signing the mTLS digest
+&lt;/h4>&lt;p>We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
 >NCryptSignHash&lt;/a> function from &lt;code>ncrypt.dll&lt;/code> to sign the digest.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">nCrypt&lt;/span> = &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">MustLoadDLL&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;ncrypt.dll&amp;#34;&lt;/span>)
@@ -189,8 +189,8 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash: failed to generate signature: %#x&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">success&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">signature&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
-&lt;p>With the above code, we can create our new Go mTLS client that uses the Windows certificate store.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">&lt;a href="#putting-it-all-together" class="header-anchor">&lt;/a>Putting it all together
+&lt;/h2>&lt;p>With the above code, we can create our new Go mTLS client that uses the Windows certificate store.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
@@ -226,15 +226,15 @@
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>The next step is to use the Windows certificate store to store the client certificate and private key. We will use the certificates and keys scripts from the previous &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
+&lt;/h2>&lt;p>The next step is to use the Windows certificate store to store the client certificate and private key. We will use the certificates and keys scripts from the previous &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>Finally, as in the &lt;a class="link" href="../mtls-with-windows" >mTLS with Windows certificate store&lt;/a> article, we start two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8888 for TLS&lt;/li>
 &lt;li>https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="running-the-go-mtls-client-using-the-windows-certificate-store">Running the Go mTLS client using the Windows certificate store&lt;/h2>
-&lt;p>We can run our mTLS client without pointing to certificate/key files and retrieving everything from the Windows certificate store. Hitting the ordinary TLS server:&lt;/p>
+&lt;h2 id="running-the-go-mtls-client-using-the-windows-certificate-store">&lt;a href="#running-the-go-mtls-client-using-the-windows-certificate-store" class="header-anchor">&lt;/a>Running the Go mTLS client using the Windows certificate store
+&lt;/h2>&lt;p>We can run our mTLS client without pointing to certificate/key files and retrieving everything from the Windows certificate store. Hitting the ordinary TLS server:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>go run .\client-signer.go --url https&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>//myhost&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>&lt;span style="color:#ae81ff">8888&lt;/span>/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected:&lt;/p>
 &lt;pre tabindex="0">&lt;code>TLS Hello World!
@@ -247,11 +247,11 @@ crypto.Signer.Public
 crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
-&lt;/code>&lt;/pre>&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-using-windows-certificate-store-video">mTLS Go client using Windows certificate store video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-using-windows-certificate-store-video">&lt;a href="#mtls-go-client-using-windows-certificate-store-video" class="header-anchor">&lt;/a>mTLS Go client using Windows certificate store video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/L4uk43i3kyY"
 allowfullscreen
@@ -265,14 +265,14 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-use-macos-keychain">Why use macOS keychain?&lt;/h2>
-&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
+&lt;h2 id="why-use-macos-keychain">&lt;a href="#why-use-macos-keychain" class="header-anchor">&lt;/a>Why use macOS keychain?
+&lt;/h2>&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
 &lt;p>The macOS keychain is a secure storage system for passwords and other confidential information. It is used by many Apple applications, such as Safari, Mail, and iCloud, to store the user&amp;rsquo;s passwords and additional sensitive information.&lt;/p>
-&lt;h2 id="building-a-custom-tlscertificate-for-macos-keychain">Building a custom tls.Certificate for macOS keychain&lt;/h2>
-&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the macOS keychain.&lt;/p>
+&lt;h2 id="building-a-custom-tlscertificate-for-macos-keychain">&lt;a href="#building-a-custom-tlscertificate-for-macos-keychain" class="header-anchor">&lt;/a>Building a custom tls.Certificate for macOS keychain
+&lt;/h2>&lt;p>This work builds on the &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article. We will use the &lt;code>CustomSigner&lt;/code> from that article to build a custom &lt;code>tls.Certificate&lt;/code> that uses the macOS keychain.&lt;/p>
 &lt;p>However, before the application uses the &lt;code>Public&lt;/code> and &lt;code>Sign&lt;/code> methods of the &lt;code>CustomSigner,&lt;/code> we need to retrieve the certificate from the keychain using Apple&amp;rsquo;s API.&lt;/p>
-&lt;h3 id="retrieving-certificate-from-macos-keychain-with-cgo">Retrieving certificate from macOS keychain with CGO&lt;/h3>
-&lt;p>We will use CGO to call the macOS keychain API to retrieve the client certificate. To set up CGO, we include the following code above our imports:&lt;/p>
+&lt;h3 id="retrieving-certificate-from-macos-keychain-with-cgo">&lt;a href="#retrieving-certificate-from-macos-keychain-with-cgo" class="header-anchor">&lt;/a>Retrieving certificate from macOS keychain with CGO
+&lt;/h3>&lt;p>We will use CGO to call the macOS keychain API to retrieve the client certificate. To set up CGO, we include the following code above our imports:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> #cgo LDFLAGS: -framework CoreFoundation -framework Security
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> #include &amp;lt;CoreFoundation/CoreFoundation.h&amp;gt;
@@ -308,8 +308,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFRelease&lt;/span>(&lt;span style="color:#a6e22e">identityMatches&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we find the identities by a common name, which we hardcode for demonstration purposes. We can filter by the certificate issuer, as shown in the commented-out code. Filtering by issuer requires an array of DER-encoded ASN.1 items, which can be created from the &lt;code>tls.CertificateRequestInfo&lt;/code> object. Another approach to finding the proper certificate is to retrieve all the keychain certificates and filter them in Go code.&lt;/p>
-&lt;h3 id="converting-the-apple-identity-to-a-go-x509certificate">Converting the Apple identity to a Go &lt;code>x509.Certificate&lt;/code>&lt;/h3>
-&lt;p>After we retrieve the array of identities from the keychain, we convert them to Go &lt;code>x509.Certificate&lt;/code> objects and pick the first one that is not expired.&lt;/p>
+&lt;h3 id="converting-the-apple-identity-to-a-go-x509certificate">&lt;a href="#converting-the-apple-identity-to-a-go-x509certificate" class="header-anchor">&lt;/a>Converting the Apple identity to a Go &lt;code>x509.Certificate&lt;/code>
+&lt;/h3>&lt;p>After we retrieve the array of identities from the keychain, we convert them to Go &lt;code>x509.Certificate&lt;/code> objects and pick the first one that is not expired.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">foundCert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">foundIdentity&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">identityMatchesArrayRef&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFArrayRef&lt;/span>(&lt;span style="color:#a6e22e">identityMatches&lt;/span>)
@@ -366,15 +366,15 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="retrieve-the-private-key-reference-from-the-keychain">Retrieve the private key reference from the keychain&lt;/h3>
-&lt;p>At this point, we also retrieve the private key reference from the keychain. We will use the private key reference to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. The reference does not contain the private key. When importing private keys to the keychain, they should be marked as non-exportable so that no one can retrieve the private key cleartext from the keychain.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="retrieve-the-private-key-reference-from-the-keychain">&lt;a href="#retrieve-the-private-key-reference-from-the-keychain" class="header-anchor">&lt;/a>Retrieve the private key reference from the keychain
+&lt;/h3>&lt;p>At this point, we also retrieve the private key reference from the keychain. We will use the private key reference to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. The reference does not contain the private key. When importing private keys to the keychain, they should be marked as non-exportable so that no one can retrieve the private key cleartext from the keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecKeyRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityCopyPrivateKey&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>(&lt;span style="color:#a6e22e">foundIdentity&lt;/span>), &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">privateKey&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;failed to copy private key ref from identity: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">status&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">Building the custom &lt;code>tls.Certificate&lt;/code>&lt;/h3>
-&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code> and the private key reference.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="building-the-custom-tlscertificate">&lt;a href="#building-the-custom-tlscertificate" class="header-anchor">&lt;/a>Building the custom &lt;code>tls.Certificate&lt;/code>
+&lt;/h3>&lt;p>Finally, we put together the custom &lt;code>tls.Certificate&lt;/code> using the &lt;code>x509.Certificate&lt;/code> and the private key reference.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">customSigner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">CustomSigner&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>: &lt;span style="color:#a6e22e">foundCert&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span>: &lt;span style="color:#a6e22e">privateKey&lt;/span>,
@@ -385,8 +385,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SupportedSignatureAlgorithms&lt;/span>: []&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">SignatureScheme&lt;/span>{&lt;span style="color:#a6e22e">supportedAlgorithm&lt;/span>},
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple. Adding additional algorithm support is easy since it only requires passing the right parameter to the &lt;code>SecKeyCreateSignature&lt;/code> function, which we will review next.&lt;/p>
-&lt;h2 id="signing-the-mtls-digest-with-apples-keychain">Signing the mTLS digest with Apple&amp;rsquo;s keychain&lt;/h2>
-&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we need to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
+&lt;h2 id="signing-the-mtls-digest-with-apples-keychain">&lt;a href="#signing-the-mtls-digest-with-apples-keychain" class="header-anchor">&lt;/a>Signing the mTLS digest with Apple&amp;rsquo;s keychain
+&lt;/h2>&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we need to sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecKeyRef&lt;/span>
@@ -425,8 +425,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
 >SecKeyCreateSignature&lt;/a> function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code>CFErrorRef.&lt;/code> The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code>SecKeyCreateSignature&lt;/code> function.&lt;/p>
-&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
-&lt;p>With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p>
+&lt;h2 id="putting-it-all-together">&lt;a href="#putting-it-all-together" class="header-anchor">&lt;/a>Putting it all together
+&lt;/h2>&lt;p>With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">urlPath&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">flag&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;url&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;URL to make request to&amp;#34;&lt;/span>)
@@ -462,10 +462,10 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
-&lt;h2 id="build-the-mtls-client">Build the mTLS client&lt;/h2>
-&lt;p>With &lt;code>go build client-signer.go&lt;/code>, we generate the &lt;code>client-signer&lt;/code> executable.&lt;/p>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>The next step is to use the macOS keychain to store the client certificate and private key. We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="build-the-mtls-client">&lt;a href="#build-the-mtls-client" class="header-anchor">&lt;/a>Build the mTLS client
+&lt;/h2>&lt;p>With &lt;code>go build client-signer.go&lt;/code>, we generate the &lt;code>client-signer&lt;/code> executable.&lt;/p>
+&lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
+&lt;/h2>&lt;p>The next step is to use the macOS keychain to store the client certificate and private key. We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>We must also import the generated certificates and keys into the macOS keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Import the server CA&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/server-ca.crt
@@ -481,8 +481,8 @@ title="YouTube Video"
 &lt;li>https://localhost:8888 for TLS&lt;/li>
 &lt;li>https://localhost:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="running-the-go-mtls-client-using-the-macos-keychain">Running the Go mTLS client using the macOS keychain&lt;/h2>
-&lt;p>We can now run our mTLS client without pointing to certificate and key files. Hitting the ordinary TLS server:&lt;/p>
+&lt;h2 id="running-the-go-mtls-client-using-the-macos-keychain">&lt;a href="#running-the-go-mtls-client-using-the-macos-keychain" class="header-anchor">&lt;/a>Running the Go mTLS client using the macOS keychain
+&lt;/h2>&lt;p>We can now run our mTLS client without pointing to certificate and key files. Hitting the ordinary TLS server:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>./client-signer --url https://localhost:8888/hello-world.txt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected:&lt;/p>
 &lt;pre tabindex="0">&lt;code>TLS Hello World!
@@ -496,13 +496,13 @@ crypto.Signer.Public
 crypto.Signer.Public
 crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash SHA-256
 mTLS Hello World!
-&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">Using certificate and key from the Windows certificate store&lt;/h2>
-&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-windows-certificate-store">&lt;a href="#using-certificate-and-key-from-the-windows-certificate-store" class="header-anchor">&lt;/a>Using certificate and key from the Windows certificate store
+&lt;/h2>&lt;p>The following article will explore &lt;a class="link" href="../mtls-with-windows" >using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a>.&lt;/p>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-using-macos-keychain-video">mTLS Go client using macOS keychain video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-using-macos-keychain-video">&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor">&lt;/a>mTLS Go client using macOS keychain video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/iYWPrL4sR5U"
 allowfullscreen
@@ -515,8 +515,8 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="why-a-custom-certificate-signer">Why a custom certificate signer?&lt;/h2>
-&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
+&lt;h2 id="why-a-custom-certificate-signer">&lt;a href="#why-a-custom-certificate-signer" class="header-anchor">&lt;/a>Why a custom certificate signer?
+&lt;/h2>&lt;p>In the &lt;a class="link" href="../mtls-go-client" >mTLS Go client&lt;/a> article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
 &lt;p>The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code>CertificateVerify&lt;/code> message. The &lt;code>CertificateVerify&lt;/code> message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p>
 &lt;figure>&lt;img src="../mtls-hello-world/mtls-handshake.png"
 alt="Mutual TLS (mTLS) handshake diagram">
@@ -526,16 +526,16 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;blockquote>
 &lt;p>The client sends a &lt;strong>CertificateVerify&lt;/strong> message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p>
 &lt;/blockquote>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
+&lt;/h2>&lt;p>We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p>
 &lt;p>Finally, as in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://localhost:8888 for TLS&lt;/li>
 &lt;li>https://localhost:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="building-our-cryptosigner">Building our crypto.Signer&lt;/h2>
-&lt;p>We will build a custom &lt;code>crypto.Signer&lt;/code> that signs the &lt;code>CertificateVerify&lt;/code> message. The &lt;code>crypto.Signer&lt;/code> interface is defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package. It is used to sign messages with a private key.&lt;/p>
+&lt;h2 id="building-our-cryptosigner">&lt;a href="#building-our-cryptosigner" class="header-anchor">&lt;/a>Building our crypto.Signer
+&lt;/h2>&lt;p>We will build a custom &lt;code>crypto.Signer&lt;/code> that signs the &lt;code>CertificateVerify&lt;/code> message. The &lt;code>crypto.Signer&lt;/code> interface is defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package. It is used to sign messages with a private key.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
@@ -558,8 +558,8 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">tlsCert&lt;/span>.&lt;span style="color:#a6e22e">PrivateKey&lt;/span>.(&lt;span style="color:#a6e22e">crypto&lt;/span>.&lt;span style="color:#a6e22e">Signer&lt;/span>).&lt;span style="color:#a6e22e">Sign&lt;/span>(&lt;span style="color:#a6e22e">rand&lt;/span>, &lt;span style="color:#a6e22e">digest&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although we still use the filesystem to load the client certificate and private key, we now use the &lt;code>crypto.Signer&lt;/code> interface to sign the &lt;code>CertificateVerify&lt;/code> message. In the future, we will replace this code by calls to the operating system&amp;rsquo;s keystore. The vital thing to note is that we only load the private key when we need to sign the digest and do not load the key during the client configuration.&lt;/p>
-&lt;h2 id="getting-the-client-certificate">Getting the client certificate&lt;/h2>
-&lt;p>Besides building a custom &lt;code>crypto.Signer&lt;/code>, we will implement a custom &lt;code>GetClientCertificate&lt;/code> function. This function will be called during the TLS handshake when the server requests a certificate from the client. The function will load the client certificate and create a &lt;code>CustomSigner&lt;/code> instance. It will not load the private key at this time. Once again, the client certificate is only loaded when needed and not during the client&amp;rsquo;s configuration.&lt;/p>
+&lt;h2 id="getting-the-client-certificate">&lt;a href="#getting-the-client-certificate" class="header-anchor">&lt;/a>Getting the client certificate
+&lt;/h2>&lt;p>Besides building a custom &lt;code>crypto.Signer&lt;/code>, we will implement a custom &lt;code>GetClientCertificate&lt;/code> function. This function will be called during the TLS handshake when the server requests a certificate from the client. The function will load the client certificate and create a &lt;code>CustomSigner&lt;/code> instance. It will not load the private key at this time. Once again, the client certificate is only loaded when needed and not during the client&amp;rsquo;s configuration.&lt;/p>
 &lt;p>We set &lt;code>Certificate: [][]byte{cert.Raw},&lt;/code> because the Go implementation of the TLS handshake requires the client certificate here to validate it against the server&amp;rsquo;s CA.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">GetClientCertificate&lt;/span>(&lt;span style="color:#a6e22e">clientCertPath&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#a6e22e">clientKeyPath&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">tls&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Server requested certificate\n&amp;#34;&lt;/span>)
@@ -590,8 +590,8 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">certificate&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">Putting it all together&lt;/h2>
-&lt;p>With the above customizations, we create our new Go mTLS client:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="putting-it-all-together">&lt;a href="#putting-it-all-together" class="header-anchor">&lt;/a>Putting it all together
+&lt;/h2>&lt;p>With the above customizations, we create our new Go mTLS client:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
@@ -645,13 +645,13 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client-signer.go --url https://localhost:8889/hello-world.txt --cert certs/client.crt --key certs/client.key
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected result:&lt;/p>
 &lt;pre tabindex="0">&lt;code>mTLS Hello World!
-&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-macos-keychain">Using certificate and key from the macOS keychain&lt;/h2>
-&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >use the macOS keychain to load the client certificate and generate the &lt;code>CertificateVerify&lt;/code> message without extracting the private key&lt;/a>.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer" target="_blank" rel="noopener"
+&lt;/code>&lt;/pre>&lt;h2 id="using-certificate-and-key-from-the-macos-keychain">&lt;a href="#using-certificate-and-key-from-the-macos-keychain" class="header-anchor">&lt;/a>Using certificate and key from the macOS keychain
+&lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >use the macOS keychain to load the client certificate and generate the &lt;code>CertificateVerify&lt;/code> message without extracting the private key&lt;/a>.&lt;/p>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-with-custom-certificate-signer-video">mTLS Go client with custom certificate signer video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-with-custom-certificate-signer-video">&lt;a href="#mtls-go-client-with-custom-certificate-signer-video" class="header-anchor">&lt;/a>mTLS Go client with custom certificate signer video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/FsKMAEfn21w"
 allowfullscreen
@@ -663,18 +663,18 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="what-is-go">What is Go?&lt;/h2>
-&lt;p>Go is a statically typed, compiled programming language designed at Google. It is known for its simplicity, efficiency, and ease of use. Go is often used for building web servers, APIs, and command-line tools. We will use Go to make a client that uses mTLS.&lt;/p>
-&lt;h2 id="setting-up-the-environment">Setting up the environment&lt;/h2>
-&lt;p>We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
+&lt;h2 id="what-is-go">&lt;a href="#what-is-go" class="header-anchor">&lt;/a>What is Go?
+&lt;/h2>&lt;p>Go is a statically typed, compiled programming language designed at Google. It is known for its simplicity, efficiency, and ease of use. Go is often used for building web servers, APIs, and command-line tools. We will use Go to make a client that uses mTLS.&lt;/p>
+&lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
+&lt;/h2>&lt;p>We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a> article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p>
 &lt;p>In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.) Keeping private keys on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p>
 &lt;p>Finally, as in the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we will use &lt;code>docker compose up&lt;/code> to start two nginx servers:&lt;/p>
 &lt;ul>
 &lt;li>https://localhost:8888 for TLS&lt;/li>
 &lt;li>https://localhost:8889 for mTLS&lt;/li>
 &lt;/ul>
-&lt;h2 id="building-the-tls-go-client">Building the TLS Go client&lt;/h2>
-&lt;p>Below is a simple Go HTTP client.&lt;/p>
+&lt;h2 id="building-the-tls-go-client">&lt;a href="#building-the-tls-go-client" class="header-anchor">&lt;/a>Building the TLS Go client
+&lt;/h2>&lt;p>Below is a simple Go HTTP client.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
@@ -728,8 +728,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Go libraries are not integrated with the system keystore for using the mTLS client certificate and key.&lt;/p>
-&lt;h2 id="modifying-the-go-client-for-mtls">Modifying the Go client for mTLS&lt;/h2>
-&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
+&lt;h2 id="modifying-the-go-client-for-mtls">&lt;a href="#modifying-the-go-client-for-mtls" class="header-anchor">&lt;/a>Modifying the Go client for mTLS
+&lt;/h2>&lt;p>We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
 >crypto/tls&lt;/a> package to build the mTLS client.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -789,21 +789,21 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Returns the expected result:&lt;/p>
 &lt;pre tabindex="0">&lt;code>mTLS Hello World!
 &lt;/code>&lt;/pre>&lt;p>However, we pass the client certificate and key as command-line arguments. In a real-world scenario, we want to use the system keystore to manage the client certificate and key.&lt;/p>
-&lt;h2 id="using-a-custom-signer-for-the-mtls-client-certificate">Using a custom signer for the mTLS client certificate&lt;/h2>
-&lt;p>The following article will cover &lt;a class="link" href="../mtls-go-custom-signer" >creating a custom Go signer for the mTLS client certificate&lt;/a>. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p>
-&lt;h2 id="example-code-on-github">Example code on GitHub&lt;/h2>
-&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
+&lt;h2 id="using-a-custom-signer-for-the-mtls-client-certificate">&lt;a href="#using-a-custom-signer-for-the-mtls-client-certificate" class="header-anchor">&lt;/a>Using a custom signer for the mTLS client certificate
+&lt;/h2>&lt;p>The following article will cover &lt;a class="link" href="../mtls-go-custom-signer" >creating a custom Go signer for the mTLS client certificate&lt;/a>. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a>&lt;/p>
-&lt;h2 id="mtls-go-client-video">mTLS Go client video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="mtls-go-client-video">&lt;a href="#mtls-go-client-video" class="header-anchor">&lt;/a>mTLS Go client video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/8lNZUTBkfsU"
 allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">Simple CGO examples&lt;/h2>
-&lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
+&lt;/div></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">&lt;a href="#simple-cgo-examples" class="header-anchor">&lt;/a>Simple CGO examples
+&lt;/h2>&lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
 &lt;p>Below is a simple example of calling a C function from Go.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -836,8 +836,8 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">floor&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">add&lt;/span>(&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2.1&lt;/span>)))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We call the &lt;code>floor&lt;/code> function from the &lt;code>math.h&lt;/code> library. The &lt;code>math.h&lt;/code> library is included with the C compiler, so we don&amp;rsquo;t need to do anything special to use it.&lt;/p>
-&lt;h2 id="cgo-hello-world-fail">CGO Hello World fail&lt;/h2>
-&lt;p>Here is another example where we print &amp;ldquo;Hello World&amp;rdquo; from C.&lt;/p>
+&lt;h2 id="cgo-hello-world-fail">&lt;a href="#cgo-hello-world-fail" class="header-anchor">&lt;/a>CGO Hello World fail
+&lt;/h2>&lt;p>Here is another example where we print &amp;ldquo;Hello World&amp;rdquo; from C.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -867,8 +867,8 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">wrapPrintf&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CString&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, World\n&amp;#34;&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="c-hello-world-fail">C++ Hello World fail&lt;/h2>
-&lt;p>Another issue with CGO is only C code can be called from Go. C++ code cannot be called from Go. The following code will fail to compile:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="c-hello-world-fail">&lt;a href="#c-hello-world-fail" class="header-anchor">&lt;/a>C++ Hello World fail
+&lt;/h2>&lt;p>Another issue with CGO is only C code can be called from Go. C++ code cannot be called from Go. The following code will fail to compile:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -883,8 +883,8 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">helloWorld&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, C++ code can be called from C, so we can write a C wrapper for the C++ code.&lt;/p>
-&lt;h2 id="cgo-real-world-example">CGO real-world example&lt;/h2>
-&lt;p>The following is an example of real-world usage of CGO, which uses Apple&amp;rsquo;s APIs to add a secret to the keychain.&lt;/p>
+&lt;h2 id="cgo-real-world-example">&lt;a href="#cgo-real-world-example" class="header-anchor">&lt;/a>CGO real-world example
+&lt;/h2>&lt;p>The following is an example of real-world usage of CGO, which uses Apple&amp;rsquo;s APIs to add a secret to the keychain.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">keystore&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/*
@@ -949,10 +949,10 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;p>Unfortunately, CGO cannot cast a C string to a &lt;code>(*C.UInt8)&lt;/code> directly. The following will fail to compile:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">UInt8&lt;/span>)(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CString&lt;/span>(&lt;span style="color:#a6e22e">secret&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We must go through an intermediate cast to &lt;code>unsafe.Pointer&lt;/code>, representing a void C pointer.&lt;/p>
-&lt;h2 id="additional-topics">Additional topics&lt;/h2>
-&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
-&lt;h2 id="cgo-hello-world-fail-video">CGO Hello World fail video&lt;/h2>
-&lt;div class="video-wrapper">
+&lt;h2 id="additional-topics">&lt;a href="#additional-topics" class="header-anchor">&lt;/a>Additional topics
+&lt;/h2>&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
+&lt;h2 id="cgo-hello-world-fail-video">&lt;a href="#cgo-hello-world-fail-video" class="header-anchor">&lt;/a>CGO Hello World fail video
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/C9h8YO1NwPM"
 allowfullscreen
@@ -981,16 +981,16 @@ and use the &lt;strong>testing.F&lt;/strong> struct instead of the usual &lt;str
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">FuzzSample&lt;/span>(&lt;span style="color:#a6e22e">f&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">F&lt;/span>) {
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here is a workflow for using fuzz testing. First, you create a fuzz test. Then, you run it with fuzzing to automatically find failing corner
 cases and make any fixes. Thirdly, you include the test and the corner cases in your continuous integration testing suite.&lt;/p>
-&lt;h2 id="create-a-fuzz-test">Create a fuzz test&lt;/h2>
-&lt;p>When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use before applying
+&lt;h2 id="create-a-fuzz-test">&lt;a href="#create-a-fuzz-test" class="header-anchor">&lt;/a>Create a fuzz test
+&lt;/h2>&lt;p>When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use before applying
 randomization. Add the seed corpus with the &lt;strong>Add&lt;/strong> method. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(&lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Num&lt;/span>, &lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(uint8(&lt;span style="color:#ae81ff">0&lt;/span>), &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The inputs to the &lt;strong>Add&lt;/strong> method indicate which types will be fuzzed, and these types must match the subsequent call to the &lt;strong>Fuzz&lt;/strong> method:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Fuzz&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>, &lt;span style="color:#a6e22e">num&lt;/span> &lt;span style="color:#66d9ef">uint8&lt;/span>, &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) {
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The fuzz test can randomize any number of inputs, as long as they are one of the supported types.&lt;/p>
-&lt;h2 id="run-the-test-with-fuzzing">Run the test with fuzzing&lt;/h2>
-&lt;p>To run the test with fuzzing, use the &lt;strong>-fuzz&lt;/strong> switch, like:&lt;/p>
+&lt;h2 id="run-the-test-with-fuzzing">&lt;a href="#run-the-test-with-fuzzing" class="header-anchor">&lt;/a>Run the test with fuzzing
+&lt;/h2>&lt;p>To run the test with fuzzing, use the &lt;strong>-fuzz&lt;/strong> switch, like:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go test -fuzz FuzzSample
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The test will continuously run on all your CPUs until it fails, or you kill it:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=== RUN FuzzSample
@@ -1013,19 +1013,19 @@ string(&amp;#34;0a0000&amp;#34;)
 &lt;/code>&lt;/pre>&lt;p>Adding the failure to the seed corpus means that the failing case will always run when this test is run again as a unit test or with
 fuzzing.&lt;/p>
 &lt;p>Now, you must fix the failing test and continue the loop of fuzzing and fixing.&lt;/p>
-&lt;h2 id="include-the-test-in-continuous-integration">Include the test in continuous integration&lt;/h2>
-&lt;p>When checking in the test to your repository, you must either include the &lt;strong>testdata/fuzz/Fuzz&lt;/strong>* files or convert those files into individual
+&lt;h2 id="include-the-test-in-continuous-integration">&lt;a href="#include-the-test-in-continuous-integration" class="header-anchor">&lt;/a>Include the test in continuous integration
+&lt;/h2>&lt;p>When checking in the test to your repository, you must either include the &lt;strong>testdata/fuzz/Fuzz&lt;/strong>* files or convert those files into individual
 &lt;strong>Add&lt;/strong> method calls in your test. Once the test is checked in, all the inputs in the seed corpus will run as part of the standard Go unit test
 flow.&lt;/p>
-&lt;h2 id="initial-impressions">Initial impressions&lt;/h2>
-&lt;p>Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library documentation mentions
+&lt;h2 id="initial-impressions">&lt;a href="#initial-impressions" class="header-anchor">&lt;/a>Initial impressions
+&lt;/h2>&lt;p>Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library documentation mentions
 the following about the function under test:&lt;/p>
 &lt;blockquote>
 &lt;p>This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p>
 &lt;/blockquote>
 &lt;p>I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p>
-&lt;h2 id="concerns-and-issues">Concerns and Issues&lt;/h2>
-&lt;p>Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in features and usability.
+&lt;h2 id="concerns-and-issues">&lt;a href="#concerns-and-issues" class="header-anchor">&lt;/a>Concerns and Issues
+&lt;/h2>&lt;p>Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in features and usability.
 The types of functions, fast and deterministic, that fuzzing is intended for are generally not very interesting when testing real
 applications. They are good examples for students learning how to code. However, more interesting testing scenarios include:&lt;/p>
 &lt;ul>
