@@ -10,6 +10,9 @@ capitalizeListTitles = false
 description = "Software engineering, security, and related topics. Currently building security telemetry and MDM at Fleet Device Management."
 mainSections = ["posts"]
 
+[params.article]
+headingAnchor = true
+
 [params.sidebar]
 subtitle = "Software engineering, security, and related topics"
 
