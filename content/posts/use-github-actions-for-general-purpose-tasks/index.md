@@ -7,8 +7,6 @@ tags = ["GitHub", "GitHubActions", "CloudComputing"]
 draft = false
 +++
 
-{{< youtube y4Jct7eWLmY >}}
-
 ## What are GitHub actions?
 
 GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins, CircleCI,
@@ -52,3 +50,13 @@ the generated files as a new release. As a final step, it deletes any old releas
 
 A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be careful with
 process-intensive actions.
+
+## Use GitHub actions for general-purpose tasks video
+
+{{< youtube y4Jct7eWLmY >}}
+
+## Other articles related to GitHub Actions
+
+- [How to reuse workflows and steps in GitHub Actions](../github-reusable-workflows-and-steps/)
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

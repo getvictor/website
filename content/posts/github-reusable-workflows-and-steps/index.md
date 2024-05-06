@@ -1,5 +1,5 @@
 +++
-title = 'GitHub Actions reusable workflows and steps'
+title = 'How to reuse workflows and steps in GitHub Actions (2024)'
 description = "How to create reusable workflows and reusable steps in GitHub Actions"
 image = "GitHub Actions thumbnail.png"
 date = 2024-05-01
@@ -198,5 +198,9 @@ The example code is available on GitHub at: https://github.com/getvictor/github-
 ## GitHub Actions reusable workflows and steps video
 
 {{< youtube ciHJzV6TZB8 >}}
+
+## Other articles related to GitHub Actions
+
+- [Use GitHub actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/)
 
 *Note:* If you want to comment on this article, please do so on the YouTube video.
