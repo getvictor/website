@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQLPerformance on Victor on Software</title><link>https://victoronsoftware.com/tags/sqlperformance/</link><description>Recent content in SQLPerformance on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 06 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/sqlperformance/index.xml" rel="self" type="application/rss+xml"/><item><title>Optimize MySQL query performance: INSERT with subqueries</title><link>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</link><pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/INSERT%20with%20subqueries.png" alt="Featured image of post Optimize MySQL query performance: INSERT with subqueries" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h2>&lt;p>We recently encountered a performance issue in production. Once an hour, we saw a spike in average DB lock time, along with occasional deadlocks and server errors. We identified the problematic query using &lt;a class="link" href="https://aws.amazon.com/rds/" target="_blank" rel="noopener"
+>Amazon RDS&lt;/a> logs. It was an &lt;code>INSERT&lt;/code> statement with subqueries.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p.id,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> t.id &lt;span style="color:#66d9ef">AS&lt;/span> inherited_team_id,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> passing_host_count,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> failing_host_count
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">FROM&lt;/span> policies p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CROSS&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> teams t
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WHERE&lt;/span> p.team_id &lt;span style="color:#66d9ef">IS&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> p.id, t.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ON&lt;/span> DUPLICATE &lt;span style="color:#66d9ef">KEY&lt;/span> &lt;span style="color:#66d9ef">UPDATE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This statement calculated passing/failing results and inserted them into a &lt;code>policy_stats&lt;/code> summary table. Unfortunately, this query took over 30 seconds to execute. During this time, it locked the important &lt;code>policy_membership&lt;/code> table, preventing other threads from writing to it.&lt;/p>
+&lt;h2 id="reproducing-slow-sql-queries">&lt;a href="#reproducing-slow-sql-queries" class="header-anchor">&lt;/a>Reproducing slow SQL queries
+&lt;/h2>&lt;p>Since we saw the issue in production, we needed to reproduce it in a test environment. We created a similar schema and loaded it with data. We used a Go script to populate the tables with dummy data: &lt;a class="link" href="https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go" target="_blank" rel="noopener"
+>https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go&lt;/a>.&lt;/p>
+&lt;p>Initially, we used ten policies and ten teams with 10,000 hosts each, resulting in 100 inserted rows with the above query. However, the performance was only three to six seconds. Then, we increased the number of policies to 50, resulting in 500 inserted rows. The performance dropped to 30 to 60 seconds.&lt;/p>
+&lt;p>The above data made it clear that this query needed to be more scalable. As the &lt;code>GROUP BY p.id, t.id&lt;/code> clause demonstrates, performance exponentially degrades with the number of policies and teams.&lt;/p>
+&lt;h2 id="debugging-slow-sql-queries">&lt;a href="#debugging-slow-sql-queries" class="header-anchor">&lt;/a>Debugging slow SQL queries
+&lt;/h2>&lt;p>MySQL has powerful tools called &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/explain.html" target="_blank" rel="noopener"
+>EXPLAIN&lt;/a> and &lt;code>EXPLAIN ANALYSE&lt;/code>. These tools show how MySQL executes a query and help identify performance bottlenecks. We ran &lt;code>EXPLAIN ANALYSE&lt;/code> on the problematic query and viewed the results as a tree and a diagram.&lt;/p>
+&lt;p>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-tree.png"
+alt="MySQL EXPLAIN result in TREE format">&lt;figcaption>
+&lt;h4>MySQL EXPLAIN result in TREE format&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;br>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-diagram.png"
+alt="MySQL EXPLAIN result as a diagram">&lt;figcaption>
+&lt;h4>MySQL EXPLAIN result as a diagram&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;/p>
+&lt;p>Although the &lt;code>EXPLAIN&lt;/code> output was complex, it was clear that the &lt;code>SELECT&lt;/code> subqueries were executing too many times.&lt;/p>
+&lt;h2 id="fixing-insert-with-subqueries-performance">&lt;a href="#fixing-insert-with-subqueries-performance" class="header-anchor">&lt;/a>Fixing INSERT with subqueries performance
+&lt;/h2>&lt;p>The first step was to separate the &lt;code>INSERT&lt;/code> from the &lt;code>SELECT&lt;/code>. The top &lt;code>SELECT&lt;/code> subquery took most of the time. But, more importantly, the &lt;code>SELECT&lt;/code> does not block other threads from updating the &lt;code>policy_membership&lt;/code> table.&lt;/p>
+&lt;p>However, the single standalone &lt;code>SELECT&lt;/code> subquery was still slow. In addition, memory usage could be high for many teams and policies.&lt;/p>
+&lt;p>We decided to process one policy row at a time. This reduced the time to complete an individual &lt;code>SELECT&lt;/code> query to less than two seconds and limited the memory usage. We did not use a transaction to minimize locks. Not utilizing a transaction meant that the &lt;code>INSERT&lt;/code> could fail if a parallel process deleted the policy. Also, the &lt;code>INSERT&lt;/code> could overwrite a clearing of the &lt;code>policy_stats&lt;/code> row. These drawbacks were acceptable, as they were rare cases.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p.id &lt;span style="color:#66d9ef">as&lt;/span> policy_id,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> t.id &lt;span style="color:#66d9ef">AS&lt;/span> inherited_team_id,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> passing_host_count,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> failing_host_count
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">FROM&lt;/span> policies p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CROSS&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> teams t
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WHERE&lt;/span> p.team_id &lt;span style="color:#66d9ef">IS&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> p.id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> t.id, p.id;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After each &lt;code>SELECT&lt;/code>, we inserted the results into the &lt;code>policy_stats&lt;/code> table.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>), ...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ON&lt;/span> DUPLICATE &lt;span style="color:#66d9ef">KEY&lt;/span> &lt;span style="color:#66d9ef">UPDATE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
+&lt;/h2>&lt;p>The code to populate our test DB is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf" target="_blank" rel="noopener"
+>https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf&lt;/a>&lt;/p>
+&lt;h2 id="mysql-query-performance-insert-with-subqueries-video">&lt;a href="#mysql-query-performance-insert-with-subqueries-video" class="header-anchor">&lt;/a>MySQL query performance: INSERT with subqueries video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/9vulV3W-bp8"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>

@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>BackendDeveloper on Victor on Software</title><link>https://victoronsoftware.com/tags/backenddeveloper/</link><description>Recent content in BackendDeveloper on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 14 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/backenddeveloper/index.xml" rel="self" type="application/rss+xml"/><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JHoEKmNj8t8"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>A prepared statement is a feature of modern databases intended to help execute the same SQL
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>BackendDeveloper on Victor on Software</title><link>https://victoronsoftware.com/tags/backenddeveloper/</link><description>Recent content in BackendDeveloper on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 14 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/backenddeveloper/index.xml" rel="self" type="application/rss+xml"/><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" />&lt;p>A prepared statement is a feature of modern databases intended to help execute the same SQL
 statement multiple times. For example, the following statement is a prepared statement:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> id, name &lt;span style="color:#66d9ef">FROM&lt;/span> users &lt;span style="color:#66d9ef">WHERE&lt;/span> email &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The presence of an unspecified parameter, labeled “?”, makes it a prepared statement. When a
@@ -65,4 +57,20 @@ statements is greater than the max_prepared_stmt_count of 16,382.&lt;/p>
 &lt;li>Limit the number of database connections per application server&lt;/li>
 &lt;li>Increase the prepared statement limit on the database server(s)&lt;/li>
 &lt;li>Limit the maximum lifespan of connections. When closing a connection, the database will deallocate all prepared statements on that connection.&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/ul>
+&lt;h2 id="sql-prepared-statements-are-broken-when-scaling-applications-video">&lt;a href="#sql-prepared-statements-are-broken-when-scaling-applications-video" class="header-anchor">&lt;/a>SQL prepared statements are broken when scaling applications video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/JHoEKmNj8t8"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" >Optimize MySQL query performance: INSERT with subqueries&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
