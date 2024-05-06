@@ -1,5 +1,5 @@
 +++
-title = 'Build a React app from scratch: a complete guide (2024)'
+title = 'Build a React app from scratch: getting started (2024)'
 description = "React Hello World -- no templates, no junk, just React"
 image = "react-hello-world.png"
 date = 2024-04-24
