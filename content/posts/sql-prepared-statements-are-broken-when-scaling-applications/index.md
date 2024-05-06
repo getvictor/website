@@ -7,8 +7,6 @@ tags = ["SQLDeveloper", "MySQL", "BackendDeveloper"]
 draft = false
 +++
 
-{{< youtube JHoEKmNj8t8 >}}
-
 A prepared statement is a feature of modern databases intended to help execute the same SQL
 statement multiple times. For example, the following statement is a prepared statement:
 
@@ -79,3 +77,15 @@ A few ways to mitigate prepared statement issues for large application deploymen
 - Limit the number of database connections per application server
 - Increase the prepared statement limit on the database server(s)
 - Limit the maximum lifespan of connections. When closing a connection, the database will deallocate all prepared statements on that connection.
+
+## SQL prepared statements are broken when scaling applications video
+
+{{< youtube JHoEKmNj8t8 >}}
+
+## Other articles related to MySQL
+
+- [Optimize MySQL query performance: INSERT with subqueries](../mysql-query-performance-insert-subqueries/)
+- [MySQL deadlock on UPDATE/INSERT upsert pattern](../mysql-upsert-deadlock/)
+- [Fully supporting Unicode and emojis in your app](../unicode-and-emoji-gotchas/)
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

@@ -145,3 +145,11 @@ Unicode and emoji support is essential for any app aiming to reach an internatio
 ## Fully supporting Unicode and emojis in your app video
 
 {{< youtube u9jFFHifa0Q >}}
+
+## Other articles related to MySQL
+
+- [Optimize MySQL query performance: INSERT with subqueries](../mysql-query-performance-insert-subqueries/)
+- [MySQL deadlock on UPDATE/INSERT upsert pattern](../mysql-upsert-deadlock/)
+- [SQL prepared statements are broken when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications/)
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

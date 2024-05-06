@@ -146,4 +146,11 @@ The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple trans
 
 {{< youtube ADerRg7tzag >}}
 
+## Other articles related to MySQL
+
+- [Optimize MySQL query performance: INSERT with subqueries](../mysql-query-performance-insert-subqueries/)
+- [Fully supporting Unicode and emojis in your app](../unicode-and-emoji-gotchas/)
+- [SQL prepared statements are broken when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications/)
+
 *Note:* If you want to comment on this article, please do so on the YouTube video.
+
