@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHubActions on Victor on Software</title><link>https://victoronsoftware.com/tags/githubactions/</link><description>Recent content in GitHubActions on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/githubactions/index.xml" rel="self" type="application/rss+xml"/><item><title>GitHub Actions reusable workflows and steps</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post GitHub Actions reusable workflows and steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHubActions on Victor on Software</title><link>https://victoronsoftware.com/tags/githubactions/</link><description>Recent content in GitHubActions on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/githubactions/index.xml" rel="self" type="application/rss+xml"/><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
 >GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
@@ -178,15 +178,11 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/y4Jct7eWLmY"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub actions?
+&lt;h2 id="other-articles-related-to-github-actions">&lt;a href="#other-articles-related-to-github-actions" class="header-anchor">&lt;/a>Other articles related to GitHub Actions
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub actions?
 &lt;/h2>&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins, CircleCI,
 and TravisCI. However, GitHub actions are built into GitHub.&lt;/p>
 &lt;p>GitHub actions are not entirely free, but they have very high usage limits for open-source projects. For private repositories, you can
@@ -219,4 +215,18 @@ directly without making the API calls or processing the data itself.&lt;/p>
 &lt;p>The GitHub action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files. Then, it publishes
 the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
 &lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be careful with
-process-intensive actions.&lt;/p></description></item></channel></rss>
+process-intensive actions.&lt;/p>
+&lt;h2 id="use-github-actions-for-general-purpose-tasks-video">&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor">&lt;/a>Use GitHub actions for general-purpose tasks video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/y4Jct7eWLmY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;h2 id="other-articles-related-to-github-actions">&lt;a href="#other-articles-related-to-github-actions" class="header-anchor">&lt;/a>Other articles related to GitHub Actions
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps/" >How to reuse workflows and steps in GitHub Actions&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
