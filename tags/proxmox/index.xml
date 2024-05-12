@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxmox on Victor on Software</title><link>https://victoronsoftware.com/tags/proxmox/</link><description>Recent content in Proxmox on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/proxmox/index.xml" rel="self" type="application/rss+xml"/><item><title>Setting up a virtual router</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/uj_lB__QDTc"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>Traditionally, network routers used dedicated bare metal machines. However, in the last several
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Proxmox on Victor on Software</title><link>https://victoronsoftware.com/tags/proxmox/</link><description>Recent content in Proxmox on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/proxmox/index.xml" rel="self" type="application/rss+xml"/><item><title>Setting up a virtual router (pfSense on Proxmox)</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router (pfSense on Proxmox)" />&lt;p>Traditionally, network routers used dedicated bare metal machines. However, in the last several
 years, we’ve seen a rise in software-based routers that can be deployed either on bare metal, on a
 VM, or even on a container. This means these virtual routers can be used to replace existing router
 software on an older router. They can run in the cloud. Or they can be installed on do-it-yourself
@@ -71,4 +63,13 @@ keyboard and monitor access to your hardware, since it must be done via the PVE 
 VM can be either from a backup or brand new. This VM should use virtual network bridges for its
 connections. Once it is properly configured, we can stop the first router VM and switch the port
 connections to the second VM. This flow also requires accessing the router via the serial interface
-to update the WAN/LAN interfaces.&lt;/p></description></item></channel></rss>
+to update the WAN/LAN interfaces.&lt;/p>
+&lt;h2 id="setting-up-a-virtual-router-video">&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor">&lt;/a>Setting up a virtual router video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/uj_lB__QDTc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item></channel></rss>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Code Reuse on Victor on Software</title><link>https://victoronsoftware.com/tags/code-reuse/</link><description>Recent content in Code Reuse on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/code-reuse/index.xml" rel="self" type="application/rss+xml"/><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
+>GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
+alt="High level diagram of GitHub Actions">&lt;figcaption>
+&lt;h4>High level diagram of GitHub Actions&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a separate command.&lt;/p>
+&lt;h2 id="why-reuse">&lt;a href="#why-reuse" class="header-anchor">&lt;/a>Why reuse?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
+>Code reuse&lt;/a> is a fundamental principle of software development. Reusing GitHub Actions code allows you to:&lt;/p>
+&lt;ul>
+&lt;li>Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li>
+&lt;li>Increase consistency since multiple workflows can use the same code&lt;/li>
+&lt;li>Promote best practices&lt;/li>
+&lt;li>Increase productivity&lt;/li>
+&lt;li>Reduce errors&lt;/li>
+&lt;/ul>
+&lt;p>Examples of reusable GitHub Actions code include:&lt;/p>
+&lt;ul>
+&lt;li>Code signing&lt;/li>
+&lt;li>Uploading artifacts to cloud services&lt;/li>
+&lt;li>Security checks&lt;/li>
+&lt;li>Notifications and reports&lt;/li>
+&lt;li>Data processing&lt;/li>
+&lt;li>and many others&lt;/li>
+&lt;/ul>
+&lt;h2 id="reusable-workflows">&lt;a href="#reusable-workflows" class="header-anchor">&lt;/a>Reusable workflows
+&lt;/h2>&lt;p>A reusable workflow replaces a job in the main workflow.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
+alt="GitHub Actions reusable workflow">&lt;figcaption>
+&lt;h4>GitHub Actions reusable workflow&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p>
+&lt;p>For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>Here is an example of a reusable workflow. It uses the same schema as a regular workflow.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable workflow&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">workflow_call&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">inputs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_input&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Input to the reusable workflow&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">filename&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">type&lt;/span>: &lt;span style="color:#ae81ff">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">secrets&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">HELLO_WORLD_SECRET&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">outputs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Map the workflow output(s) to job output(s)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_output&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Output from the reusable workflow&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">value&lt;/span>: &lt;span style="color:#ae81ff">${{ jobs.reusable-workflow-job.outputs.job_output }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">defaults&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">shell&lt;/span>: &lt;span style="color:#ae81ff">bash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable-workflow-job&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-20.04&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Map the job output(s) to step output(s)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">outputs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">job_output&lt;/span>: &lt;span style="color:#ae81ff">${{ steps.process-step.outputs.step_output }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Process reusable input&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">process-step&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">env&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">HELLO_WORLD_SECRET&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.HELLO_WORLD_SECRET }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;reusable_input=${{ inputs.reusable_input }}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;HELLO_WORLD_SECRET=${HELLO_WORLD_SECRET}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;step_output=${{ inputs.reusable_input }}_processed&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/download-artifact@v4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">input_file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Process file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;Processing file: ${{ inputs.filename }}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;file processed&amp;#34; &amp;gt;&amp;gt; ${{ inputs.filename }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/upload-artifact@v4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">output_file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">path&lt;/span>: &lt;span style="color:#ae81ff">${{ inputs.filename }}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The reusable workflow is triggered &lt;code>on: workflow_call&lt;/code>. It accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also downloads an artifact called &lt;code>input_file&lt;/code>, processes a file, and uploads an artifact called &lt;code>output_file&lt;/code>.&lt;/p>
+&lt;p>The main workflow calls the reusable workflow using the &lt;code>uses&lt;/code> keyword.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">job-2&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">needs&lt;/span>: &lt;span style="color:#ae81ff">job-1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># We do not need to check out the repository to use the reusable workflow&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">./.github/workflows/reusable-workflow.yml&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_input&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;job-2-input&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">filename&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;input.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">secrets&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Can also implicitly pass the secrets with: secrets: inherit&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">HELLO_WORLD_SECRET&lt;/span>: &lt;span style="color:#ae81ff">TERCES_DLROW_OLLEH&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A successful run of the main workflow looks like this on GitHub:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
+alt="GitHub Actions reusable workflow success">&lt;figcaption>
+&lt;h4>GitHub Actions reusable workflow success&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="reusable-steps-composite-action">&lt;a href="#reusable-steps-composite-action" class="header-anchor">&lt;/a>Reusable steps (composite action)
+&lt;/h2>&lt;p>Reusable steps replace a regular step in a job. We will use a &lt;code>composite action&lt;/code> for reusable steps in our example.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
+alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
+&lt;h4>GitHub Actions reusable steps (composite action)&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets. Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use &amp;lsquo;build artifacts&amp;rsquo; to share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p>
+&lt;p>Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named &lt;code>action.yml&lt;/code> or similar.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable steps (AKA composite action)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#ae81ff">Demonstrate how to use reusable steps in a workflow&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Schema: https://json.schemastore.org/github-action.json&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">inputs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_input&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Input to the reusable workflow&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">filename&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">required&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">outputs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Map the action output(s) to step output(s)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_output&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Output from the reusable workflow&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">value&lt;/span>: &lt;span style="color:#ae81ff">${{ steps.process-step.outputs.step_output }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">runs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">using&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;composite&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Process reusable input&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">process-step&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># Shell must explicitly specify the shell for each step. https://github.com/orgs/community/discussions/18597&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">shell&lt;/span>: &lt;span style="color:#ae81ff">bash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;reusable_input=${{ inputs.reusable_input }}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;HELLO_WORLD_SECRET=${HELLO_WORLD_SECRET}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;step_output=${{ inputs.reusable_input }}_processed&amp;#34; &amp;gt;&amp;gt; $GITHUB_OUTPUT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Process file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">shell&lt;/span>: &lt;span style="color:#ae81ff">bash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;Processing file: ${{ inputs.filename }}&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;file processed&amp;#34; &amp;gt;&amp;gt; ${{ inputs.filename }}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The composite action is called via the &lt;code>uses&lt;/code> setting on a step. Our action accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also processes a file called &lt;code>filename&lt;/code>.&lt;/p>
+&lt;p>The following code snippet shows how to use the composite action in a job.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Use reusable steps&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">reusable-steps&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">./.github/reusable-steps&lt;/span> &lt;span style="color:#75715e"># To use this syntax, we must have the repository checked out&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">reusable_input&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;job-2-input&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">filename&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;input.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">env&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">HELLO_WORLD_SECRET&lt;/span>: &lt;span style="color:#ae81ff">TERCES_DLROW_OLLEH&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
+alt="GitHub Actions composite action success">&lt;figcaption>
+&lt;h4>GitHub Actions composite action success&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.&lt;/p>
+&lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of work that may run on the same runner and share the same work area.&lt;/p>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
+>https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
+&lt;h2 id="github-actions-reusable-workflows-and-steps-video">&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor">&lt;/a>GitHub Actions reusable workflows and steps video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/ciHJzV6TZB8"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;h2 id="other-articles-related-to-github-actions">&lt;a href="#other-articles-related-to-github-actions" class="header-anchor">&lt;/a>Other articles related to GitHub Actions
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>

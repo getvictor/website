@@ -179,7 +179,13 @@ alt="MySQL EXPLAIN result as a diagram">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-about-mysql">&lt;a href="#further-reading-about-mysql" class="header-anchor">&lt;/a>Further reading about MySQL
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
 &lt;/h2>&lt;p>The code to populate our test DB is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf" target="_blank" rel="noopener"
 >https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf&lt;/a>&lt;/p>
 &lt;h2 id="mysql-query-performance-insert-with-subqueries-video">&lt;a href="#mysql-query-performance-insert-with-subqueries-video" class="header-anchor">&lt;/a>MySQL query performance: INSERT with subqueries video
@@ -191,12 +197,6 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
-&lt;/ul>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
 >GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
@@ -751,7 +751,27 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">&lt;a href="#what-is-code-signing" class="header-anchor">&lt;/a>What is code signing?
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the filesystem.&lt;/p>
+&lt;p>Here is a summary of the articles in the series:&lt;/p>
+&lt;h3 id="mutual-tls-intro-and-hands-on-examplemtls-hello-world">&lt;a href="#mutual-tls-intro-and-hands-on-examplemtls-hello-world" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-hello-world" >Mutual TLS intro and hands-on example&lt;/a>
+&lt;/h3>&lt;p>An introduction to mTLS and a hands-on example of using an mTLS client to connect to an mTLS server.&lt;/p>
+&lt;h3 id="using-mtls-with-the-macos-keychainmtls-with-apple-keychain">&lt;a href="#using-mtls-with-the-macos-keychainmtls-with-apple-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-apple-keychain" >Using mTLS with the macOS keychain&lt;/a>
+&lt;/h3>&lt;p>A guide on how to use the macOS system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the macOS system keychain to find the mTLS certificates.&lt;/p>
+&lt;h3 id="create-an-mtls-go-clientmtls-go-client">&lt;a href="#create-an-mtls-go-clientmtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client" >Create an mTLS Go client&lt;/a>
+&lt;/h3>&lt;p>We create a standard mTLS client in Go using the &lt;code>crypto/tls&lt;/code> library. This client loads the client certificate and private key from the filesystem.&lt;/p>
+&lt;h3 id="add-a-custom-certificate-signer-to-the-mtls-go-clientmtls-go-custom-signer">&lt;a href="#add-a-custom-certificate-signer-to-the-mtls-go-clientmtls-go-custom-signer" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-custom-signer" >Add a custom certificate signer to the mTLS Go client&lt;/a>
+&lt;/h3>&lt;p>We implement a custom &lt;code>crypto.Signer&lt;/code> to sign a client certificate during the mTLS handshake. Thus, we are a step closer to removing our client certificate and private key from the filesystem.&lt;/p>
+&lt;h3 id="a-complete-mtls-go-client-using-the-macos-keychainmtls-go-client-using-apple-keychain">&lt;a href="#a-complete-mtls-go-client-using-the-macos-keychainmtls-go-client-using-apple-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >A complete mTLS Go client using the macOS keychain&lt;/a>
+&lt;/h3>&lt;p>In this article, we continue the previous article by connecting our custom signer to the macOS keychain using CGO and Apple APIs.&lt;/p>
+&lt;h3 id="using-mtls-with-the-windows-system-keystoremtls-with-windows">&lt;a href="#using-mtls-with-the-windows-system-keystoremtls-with-windows" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-windows" >Using mTLS with the Windows system keystore&lt;/a>
+&lt;/h3>&lt;p>Switching to Windows, we learn how to use the Windows system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the Windows system keystore to find the mTLS certificates.&lt;/p>
+&lt;h3 id="create-an-mtls-go-client-using-the-windows-certificate-storemtls-go-client-windows-certificate-store">&lt;a href="#create-an-mtls-go-client-using-the-windows-certificate-storemtls-go-client-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-windows-certificate-store" >Create an mTLS Go client using the Windows certificate store&lt;/a>
+&lt;/h3>&lt;p>Using the software pattern from the previous articles on the macOS keychain, we build an mTLS client in Go integrated with the Windows certificate store to store the mTLS certificates and keys.&lt;/p>
+&lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist">&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor">&lt;/a>Mutual TLS (mTLS): building a client using the system keystore video playlist
+&lt;/h3>
+&lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+&lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
+&lt;/div></description></item><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">&lt;a href="#what-is-code-signing" class="header-anchor">&lt;/a>What is code signing?
 &lt;/h2>&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
 &lt;h2 id="the-benefits-of-code-signing">&lt;a href="#the-benefits-of-code-signing" class="header-anchor">&lt;/a>The benefits of code signing
 &lt;/h2>&lt;p>Code signing provides several benefits:&lt;/p>
@@ -879,7 +899,7 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;/div></description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -1139,7 +1159,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -1318,7 +1339,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Fully supporting Unicode and emojis in your app</title><link>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</link><pubDate>Thu, 29 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/</guid><description>&lt;img src="https://victoronsoftware.com/posts/unicode-and-emoji-gotchas/unicode-emoji.png" alt="Featured image of post Fully supporting Unicode and emojis in your app" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>Any app aiming to reach an international audience must support Unicode. Emojis, which are based on Unicode, are everywhere. They are used in text messages, social media, and programming languages. Supporting Unicode and emojis in your app can be tricky. This article will cover common Unicode and emoji support issues and how to fix them.&lt;/p>
 &lt;h2 id="what-is-unicode">&lt;a href="#what-is-unicode" class="header-anchor">&lt;/a>What is Unicode?
 &lt;/h2>&lt;p>Unicode is a standard for encoding, representing, and handling text. It is a character set that assigns a unique number to every character. The most common encoding for Unicode is UTF-8, which stands for Unicode Transformation Format 8-bit. UTF-8 is a variable-width encoding that can represent every character in the Unicode character set.&lt;/p>
@@ -1415,7 +1437,7 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -1666,7 +1688,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS) Go client with custom certificate signer</title><link>https://victoronsoftware.com/posts/mtls-go-custom-signer/</link><pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-custom-signer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-custom-signer/signer.png" alt="Featured image of post Mutual TLS (mTLS) Go client with custom certificate signer" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) Go client with custom certificate signer</title><link>https://victoronsoftware.com/posts/mtls-go-custom-signer/</link><pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-custom-signer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-custom-signer/signer.png" alt="Featured image of post Mutual TLS (mTLS) Go client with custom certificate signer" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -1815,7 +1838,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mtls-with-apple-keychain" >mTLS with macOS keychain&lt;/a>&lt;/li>
@@ -1959,7 +1983,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="https://victoronsoftware.com/categories/mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" />&lt;p>&lt;em>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a>.&lt;/em>&lt;/p>
 &lt;h2 id="securing-mtls-certificates-and-keys">&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor">&lt;/a>Securing mTLS certificates and keys
 &lt;/h2>&lt;p>In the &lt;a class="link" href="../mtls-hello-world" >mTLS Hello World&lt;/a> article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p>
 &lt;ul>
@@ -2113,11 +2138,12 @@ alt="Safari mTLS popup">&lt;figcaption>
 &lt;p>We can click &lt;strong>Continue&lt;/strong> to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p>
 &lt;p>Google Chrome&amp;rsquo;s behavior is similar.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p>
+&lt;h2 id="creating-our-own-mtls-client">&lt;a href="#creating-our-own-mtls-client" class="header-anchor">&lt;/a>Creating our own mTLS client
+&lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>. This is the first step toward &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >creating an mTLS client integrated with the macOS keychain&lt;/a>.&lt;/p>
+&lt;p>Later, we will &lt;a class="link" href="../mtls-with-windows" >use mTLS with the Windows certificate store&lt;/a> and &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create an mTLS client integrated with the Windows certificate store&lt;/a>.&lt;/p>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>
-&lt;h2 id="creating-our-own-mtls-client">&lt;a href="#creating-our-own-mtls-client" class="header-anchor">&lt;/a>Creating our own mTLS client
-&lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>.&lt;/p>
 &lt;h2 id="mtls-with-macos-keychain-video">&lt;a href="#mtls-with-macos-keychain-video" class="header-anchor">&lt;/a>mTLS with macOS keychain video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -2126,7 +2152,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor">&lt;/a>What is mTLS (mutual TLS)?
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor">&lt;/a>What is mTLS (mutual TLS)?
 &lt;/h2>&lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
 &lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
 &lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
@@ -2253,7 +2280,9 @@ root /www/data;
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
 &lt;h2 id="securing-mtls-certificates-and-keys">&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor">&lt;/a>Securing mTLS certificates and keys
-&lt;/h2>&lt;p>In the next article, we will &lt;a class="link" href="../mtls-with-apple-keychain" >secure the mTLS certificates and keys with the system keystore&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>In the next article, we will &lt;a class="link" href="../mtls-with-apple-keychain" >secure the mTLS certificates and keys with the macOS keychain&lt;/a>.&lt;/p>
+&lt;p>In a later article, we also &lt;a class="link" href="../mtls-with-windows" >secure the mTLS certificates and keys with the Windows certificate store&lt;/a>.&lt;/p>
+&lt;p>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>.&lt;/p>
 &lt;h2 id="mtls-hello-world-video">&lt;a href="#mtls-hello-world-video" class="header-anchor">&lt;/a>mTLS Hello World video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -2262,7 +2291,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">&lt;a href="#simple-cgo-examples" class="header-anchor">&lt;/a>Simple CGO examples
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" />&lt;h2 id="simple-cgo-examples">&lt;a href="#simple-cgo-examples" class="header-anchor">&lt;/a>Simple CGO examples
 &lt;/h2>&lt;p>CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code>-cgo&lt;/code> build flag.&lt;/p>
 &lt;p>Below is a simple example of calling a C function from Go.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
@@ -2555,15 +2585,7 @@ not run, and the developer unfamiliar with fuzz testing will not have a clear id
 accesses. I will report my findings in a future post.&lt;/p>
 &lt;p>GitHub gist:
 &lt;script src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>
-&lt;/p></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/A-Qapp7vYJk"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it&amp;rsquo;s about empowering IT professionals to safeguard digital assets more effectively. &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
+&lt;/p></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;p>In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it&amp;rsquo;s about empowering IT professionals to safeguard digital assets more effectively. &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
 >Fleet&lt;/a> gathers telemetry from various devices, from laptops to virtual machines, using &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
 >osquery&lt;/a>. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
 >Fleet policies&lt;/a>.&lt;/p>
@@ -2603,6 +2625,15 @@ alt="Fleet policies page">
 &lt;h2 id="summary">&lt;a href="#summary" class="header-anchor">&lt;/a>Summary
 &lt;/h2>&lt;p>Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
 >Fleet community Slack channels&lt;/a>.&lt;/p>
+&lt;h2 id="understanding-the-intricacies-of-fleet-policies-video">&lt;a href="#understanding-the-intricacies-of-fleet-policies-video" class="header-anchor">&lt;/a>Understanding the intricacies of Fleet policies video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/A-Qapp7vYJk"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
 &lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies" target="_blank" rel="noopener"
 >Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" />&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -2910,15 +2941,7 @@ market. In addition, Markdown notes from the popular note-taking
 app &lt;a class="link" href="https://obsidian.md/" target="_blank" rel="noopener"
 >Obsidian&lt;/a> can be kept in GitHub. This turns GitBook into a true
 personalized developer documentation database &amp;ndash; one place to search through developer docs as well
-as your own private notes.&lt;/p></description></item><item><title>Setting up a virtual router</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/uj_lB__QDTc"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>Traditionally, network routers used dedicated bare metal machines. However, in the last several
+as your own private notes.&lt;/p></description></item><item><title>Setting up a virtual router (pfSense on Proxmox)</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router (pfSense on Proxmox)" />&lt;p>Traditionally, network routers used dedicated bare metal machines. However, in the last several
 years, we’ve seen a rise in software-based routers that can be deployed either on bare metal, on a
 VM, or even on a container. This means these virtual routers can be used to replace existing router
 software on an older router. They can run in the cloud. Or they can be installed on do-it-yourself
@@ -2983,7 +3006,16 @@ keyboard and monitor access to your hardware, since it must be done via the PVE 
 VM can be either from a backup or brand new. This VM should use virtual network bridges for its
 connections. Once it is properly configured, we can stop the first router VM and switch the port
 connections to the second VM. This flow also requires accessing the router via the serial interface
-to update the WAN/LAN interfaces.&lt;/p></description></item><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;div class="video-wrapper">
+to update the WAN/LAN interfaces.&lt;/p>
+&lt;h2 id="setting-up-a-virtual-router-video">&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor">&lt;/a>Setting up a virtual router video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/uj_lB__QDTc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/QBn_C2nl2ZE"
 allowfullscreen

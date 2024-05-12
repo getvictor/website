@@ -77,7 +77,13 @@ alt="MySQL EXPLAIN result as a diagram">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-about-mysql">&lt;a href="#further-reading-about-mysql" class="header-anchor">&lt;/a>Further reading about MySQL
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
 &lt;/h2>&lt;p>The code to populate our test DB is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf" target="_blank" rel="noopener"
 >https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf&lt;/a>&lt;/p>
 &lt;h2 id="mysql-query-performance-insert-with-subqueries-video">&lt;a href="#mysql-query-performance-insert-with-subqueries-video" class="header-anchor">&lt;/a>MySQL query performance: INSERT with subqueries video
@@ -89,12 +95,6 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
-&lt;/ul>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">&lt;a href="#what-is-an-sql-deadlock" class="header-anchor">&lt;/a>What is an SQL deadlock?
 &lt;/h2>&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
 &lt;h2 id="what-is-an-upsert">&lt;a href="#what-is-an-upsert" class="header-anchor">&lt;/a>What is an upsert?
