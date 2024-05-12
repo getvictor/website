@@ -3,7 +3,7 @@ title = 'Build a React app from scratch: getting started (2024)'
 description = "React Hello World -- no templates, no junk, just React"
 image = "react-hello-world.png"
 date = 2024-04-24
-tags = ["React", "TypeScript", "WebDevelopment", "HelloWorld"]
+tags = ["React", "TypeScript", "Web Development", "Hello World"]
 draft = false
 +++
 
