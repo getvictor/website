@@ -3,7 +3,8 @@ title = 'Get current telemetry from your devices with live queries'
 description = "Query devices with Fleet"
 image = "Live Query.png"
 date = 2023-12-29
-tags = ["fleet", "CyberSecurity", "UnderTheHood"]
+categories = ["Security"]
+tags = ["Fleet", "Cyber Security", "Under the Hood"]
 draft = false
 +++
 

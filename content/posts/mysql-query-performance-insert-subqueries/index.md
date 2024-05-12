@@ -3,7 +3,8 @@ title = 'Optimize MySQL query performance: INSERT with subqueries'
 description = "Real world example of fixing a slow MySQL query doing an INSERT with subqueries"
 image = "INSERT with subqueries.png"
 date = 2024-05-06
-tags = ["SQLDeveloper", "MySQL", "SQLPerformance"]
+categories = ["Database Administration"]
+tags = ["SQL Developer", "MySQL", "SQL Performance"]
 draft = false
 +++
 
@@ -99,6 +100,12 @@ ON DUPLICATE KEY UPDATE
     failing_host_count = VALUES(failing_host_count);
 ```
 
+## Further reading about MySQL
+
+- [MySQL deadlock on UPDATE/INSERT upsert pattern](../mysql-upsert-deadlock/)
+- [Fully supporting Unicode and emojis in your app](../unicode-and-emoji-gotchas/)
+- [SQL prepared statements are broken when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications/)
+
 ## MySQL code to populate DB on GitHub
 
 The code to populate our test DB is available on GitHub at: https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf
@@ -106,11 +113,5 @@ The code to populate our test DB is available on GitHub at: https://github.com/g
 ## MySQL query performance: INSERT with subqueries video
 
 {{< youtube 9vulV3W-bp8 >}}
-
-## Other articles related to MySQL
-
-- [MySQL deadlock on UPDATE/INSERT upsert pattern](../mysql-upsert-deadlock/)
-- [Fully supporting Unicode and emojis in your app](../unicode-and-emoji-gotchas/)
-- [SQL prepared statements are broken when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications/)
 
 *Note:* If you want to comment on this article, please do so on the YouTube video.

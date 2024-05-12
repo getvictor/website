@@ -3,12 +3,12 @@ title = 'Mutual TLS (mTLS) with Windows certificate store'
 description = "How to configure mTLS using Windows certificate store"
 image = "mtls-edge.png"
 date = 2024-03-06
-tags = ["TLS", "Windows", "CyberSecurity"]
-categories = ["mTLS"]
+categories = ["Security"]
+tags = ["mTLS", "TLS", "Windows", "Cyber Security"]
 draft = false
 +++
 
-_This article is part of a series on [mTLS](/categories/mtls). Check out the previous articles:_
+_This article is part of a series on [mTLS](../mtls). Check out the previous articles:_
 - [mTLS Hello World](../mtls-hello-world)
 - [mTLS with macOS keychain](../mtls-with-apple-keychain)
 - [mTLS Go client](../mtls-go-client)
@@ -240,3 +240,5 @@ In the following article, we will [create a custom Windows mTLS client using the
 ## mTLS with Windows certificate store video
 
 {{< youtube GuubP7vir1g >}}
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

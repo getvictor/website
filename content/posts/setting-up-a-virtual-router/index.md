@@ -1,13 +1,12 @@
 +++
-title = 'Setting up a virtual router'
+title = 'Setting up a virtual router (pfSense on Proxmox)'
 description = 'Using a virtual router to protect its own hypervisor is tricky'
 image = "cover.jpeg"
 date = 2023-11-22
-tags = ["Proxmox", "pfSense", "CyberSecurity"]
+categories = ["DevOps & Infrastructure"]
+tags = ["Proxmox", "pfSense", "Cyber Security"]
 draft = false
 +++
-
-{{< youtube uj_lB__QDTc >}}
 
 Traditionally, network routers used dedicated bare metal machines. However, in the last several
 years, we’ve seen a rise in software-based routers that can be deployed either on bare metal, on a
@@ -86,3 +85,7 @@ VM can be either from a backup or brand new. This VM should use virtual network 
 connections. Once it is properly configured, we can stop the first router VM and switch the port
 connections to the second VM. This flow also requires accessing the router via the serial interface
 to update the WAN/LAN interfaces.
+
+## Setting up a virtual router video
+
+{{< youtube uj_lB__QDTc >}}

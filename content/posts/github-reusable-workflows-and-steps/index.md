@@ -3,7 +3,8 @@ title = 'How to reuse workflows and steps in GitHub Actions (2024)'
 description = "How to create reusable workflows and reusable steps in GitHub Actions"
 image = "GitHub Actions thumbnail.png"
 date = 2024-05-01
-tags = ["GitHub", "GitHubActions", "CodeReuse"]
+categories = ["DevOps & Infrastructure"]
+tags = ["GitHub", "GitHub Actions", "Code Reuse"]
 draft = false
 +++
 

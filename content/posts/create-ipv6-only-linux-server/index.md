@@ -3,6 +3,7 @@ title = "Create an IPv6-only Linux server in 3 easy steps"
 description = "How to create a Linux VM using IPv6 (with IPv4 disabled) using Digital Ocean"
 image = "ipv6-only.png"
 date = 2024-05-08
+categories = ["DevOps & Infrastructure"]
 tags = ["IPv6", "Linux", "Hello World"]
 draft = false
 +++

@@ -3,8 +3,8 @@ title = 'Code signing a Windows application'
 description = "How to sign a Windows application with a code signing certificate"
 image = "digital-signature-ok.png"
 date = 2024-03-27
-tags = ["CodeSigning", "Windows", "ApplicationSecurity"]
-categories = []
+categories = ["DevOps & Infrastructure"]
+tags = ["Code Signing", "Windows", "Application Security"]
 draft = false
 +++
 

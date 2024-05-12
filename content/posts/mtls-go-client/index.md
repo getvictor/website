@@ -3,12 +3,12 @@ title = 'Mutual TLS (mTLS) Go client'
 description = "How to build a Go client for mTLS"
 image = "go-client.png"
 date = 2024-02-07
-tags = ["TLS", "Golang", "CyberSecurity"]
-categories = ["mTLS"]
+categories = ["Security", "Software Development"]
+tags = ["mTLS", "TLS", "Golang", "Application Security"]
 draft = false
 +++
 
-_This article is part of a series on [mTLS](/categories/mtls). Check out the previous articles:_
+_This article is part of a series on [mTLS](../mtls). Check out the previous articles:_
 - [mTLS Hello World](../mtls-hello-world)
 - [mTLS with macOS keychain](../mtls-with-apple-keychain)
 
@@ -189,3 +189,5 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 ## mTLS Go client video
 
 {{< youtube 8lNZUTBkfsU >}}
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

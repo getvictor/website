@@ -3,7 +3,8 @@ title = 'MySQL deadlock on UPDATE/INSERT upsert pattern'
 description = "Using the UPDATE/INSERT upsert pattern can lead to MySQL deadlocks"
 image = "MySQL deadlock.png"
 date = 2024-04-28
-tags = ["SQLDeveloper", "MySQL", "Deadlock"]
+categories = ["Database Administration"]
+tags = ["SQL Developer", "MySQL", "Deadlock"]
 draft = false
 +++
 

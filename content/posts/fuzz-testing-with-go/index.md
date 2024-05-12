@@ -3,7 +3,8 @@ title = 'Fuzz testing in Go'
 description = "Is fuzz testing any good?"
 image = "fuzz.png"
 date = 2024-01-04
-tags = ["Golang", "UnitTesting", "Fuzzing"]
+categories = ["Software Development"]
+tags = ["Golang", "Unit Testing", "Fuzzing"]
 draft = false
 +++
 

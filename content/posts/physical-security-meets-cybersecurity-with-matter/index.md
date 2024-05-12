@@ -3,7 +3,8 @@ title = 'Physical security meets cybersecurity with Matter'
 description = 'Will Matter change the landscape of physical security?'
 image = "cover.png"
 date = 2023-12-20
-tags = ["PhysicalSecurity", "CyberSecurity", "Matter"]
+categories = ["Security"]
+tags = ["Physical Security", "Cyber Security", "Matter"]
 draft = false
 +++
 

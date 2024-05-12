@@ -3,7 +3,8 @@ title = 'Building a webhook flow with Tines'
 description = "Trigger an action from a webhook callback with Tines"
 image = "tines-fleet-webhook-workflow.png"
 date = 2024-03-29
-tags = ["webhook", "Tines", "MDM", "Fleet"]
+categories = ["DevOps & Infrastructure"]
+tags = ["Webhook", "Tines", "MDM", "Fleet"]
 draft = true
 +++
 

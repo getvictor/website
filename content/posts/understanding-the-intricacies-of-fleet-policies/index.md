@@ -3,11 +3,10 @@ title = 'Understanding the intricacies of Fleet policies'
 description = "Device security with Fleet policies"
 image = "understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
 date = 2023-12-30
-tags = ["Fleet", "CyberSecurity", "UnderTheHood", "DeviceTrust"]
+categories = ["Security"]
+tags = ["Fleet", "Cyber Security", "Under the Hood", "Device Trust"]
 draft = false
 +++
-
-{{< youtube A-Qapp7vYJk >}}
 
 In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it's about empowering IT professionals to safeguard digital assets more effectively. [Fleet](https://fleetdm.com) gathers telemetry from various devices, from laptops to virtual machines, using [osquery](https://www.osquery.io/). At the heart of this system lies a crucial feature: [Fleet policies](https://fleetdm.com/securing/what-are-fleet-policies).
 
@@ -63,5 +62,9 @@ However, the main **Policies** page is not updated. This page shows the counts o
 ## Summary
 
 Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization's digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the [Fleet community Slack channels](https://fleetdm.com/support).
+
+## Understanding the intricacies of Fleet policies video
+
+{{< youtube A-Qapp7vYJk >}}
 
 _This article originally appeared in [Fleet's blog](https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies)._

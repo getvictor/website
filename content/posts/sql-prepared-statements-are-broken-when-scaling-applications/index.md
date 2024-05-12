@@ -3,7 +3,8 @@ title = 'SQL prepared statements are broken when scaling applications'
 description = 'We hit a snag with SQL prepared statements recently'
 image = "cover.png"
 date = 2023-12-14
-tags = ["SQLDeveloper", "MySQL", "BackendDeveloper"]
+categories = ["Database Administration"]
+tags = ["SQL Developer", "MySQL", "Backend Developer"]
 draft = false
 +++
 

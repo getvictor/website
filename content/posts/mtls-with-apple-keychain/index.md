@@ -3,12 +3,12 @@ title = 'Mutual TLS (mTLS) with macOS keychain'
 description = "How to configure mTLS using Apple's macOS keychain"
 image = "mtls-safari.png"
 date = 2024-01-31
-tags = ["tls", "macOS", "CyberSecurity"]
-categories = ["mTLS"]
+categories = ["Security"]
+tags = ["mTLS", "TLS", "macOS", "Cyber Security"]
 draft = false
 +++
 
-_This article is part of a series on [mTLS](/categories/mtls). Check out the previous article: [mTLS Hello World](../mtls-hello-world)._
+_This article is part of a series on [mTLS](../mtls). Check out the previous article: [mTLS Hello World](../mtls-hello-world)._
 
 ## Securing mTLS certificates and keys
 
@@ -223,14 +223,18 @@ Google Chrome's behavior is similar.
 
 **Note:** If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.
 
+## Creating our own mTLS client
+
+In the following article, we will [create our own mTLS client with the Go programming language](../mtls-go-client). This is the first step toward [creating an mTLS client integrated with the macOS keychain](../mtls-go-client-using-apple-keychain).
+
+Later, we will [use mTLS with the Windows certificate store](../mtls-with-windows) and [create an mTLS client integrated with the Windows certificate store](../mtls-go-client-windows-certificate-store).
+
 ## Example code on GitHub
 
 The example code is available on GitHub at https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain
 
-## Creating our own mTLS client
-
-In the following article, we will [create our own mTLS client with the Go programming language](../mtls-go-client).
-
 ## mTLS with macOS keychain video
 
 {{< youtube Y0y6-cCzz8w >}}
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

@@ -2,7 +2,8 @@
 title = 'Catch missed authorization checks during software development'
 description = "Authorization checks in Fleet's Go codebase"
 date = 2023-11-10
-tags = ["Authorization", "Golang", "CyberSecurity"]
+categories = ["Software Development", "Security"]
+tags = ["Authorization", "Golang", "Application Security"]
 draft = false
 +++
 

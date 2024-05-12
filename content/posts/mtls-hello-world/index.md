@@ -3,8 +3,8 @@ title = 'Mutual TLS intro and hands-on example'
 description = "mTLS Hello World"
 image = "mtls-handshake.png"
 date = 2024-01-24
-tags = ["tls", "CyberSecurity", "Hello World"]
-categories = ["mTLS"]
+categories = ["Security"]
+tags = ["mTLS", "TLS", "Cyber Security", "Hello World"]
 draft = false
 +++
 
@@ -193,8 +193,14 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 ## Securing mTLS certificates and keys
 
-In the next article, we will [secure the mTLS certificates and keys with the system keystore](../mtls-with-apple-keychain).
+In the next article, we will [secure the mTLS certificates and keys with the macOS keychain](../mtls-with-apple-keychain).
+
+In a later article, we also [secure the mTLS certificates and keys with the Windows certificate store](../mtls-with-windows).
+
+This article is part of a series on [mTLS](../mtls).
 
 ## mTLS Hello World video
 
 {{< youtube WA_RL_QtIgY >}}
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

@@ -3,12 +3,12 @@ title = 'Mutual TLS (mTLS) Go client using Windows certificate store'
 description = "How to build an mTLS Go client that uses the Windows certificate store"
 image = "mtls-go-windows.png"
 date = 2024-03-20
-tags = ["TLS", "Golang", "Windows", "CyberSecurity"]
-categories = ["mTLS"]
+categories = ["Security", "Software Development"]
+tags = ["mTLS", "TLS", "Golang", "Windows", "Application Security"]
 draft = false
 +++
 
-_This article is part of a series on [mTLS](/categories/mtls). Check out the previous articles:_
+_This article is part of a series on [mTLS](../mtls). Check out the previous articles:_
 - [mTLS Hello World](../mtls-hello-world)
 - [mTLS with macOS keychain](../mtls-with-apple-keychain)
 - [mTLS Go client](../mtls-go-client)
@@ -335,3 +335,5 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 ## mTLS Go client using Windows certificate store video
 
 {{< youtube L4uk43i3kyY >}}
+
+*Note:* If you want to comment on this article, please do so on the YouTube video.

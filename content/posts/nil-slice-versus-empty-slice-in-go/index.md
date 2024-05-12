@@ -3,7 +3,8 @@ title = 'Nil slice versus empty slice in Go'
 description = "Don't fear the nil slice!"
 image = "cover.png"
 date = 2023-12-28
-tags = ["Golang", "null", "GoStyleGuide"]
+categories = ["Software Development"]
+tags = ["Golang", "null", "Go Style Guide"]
 draft = false
 +++
 
