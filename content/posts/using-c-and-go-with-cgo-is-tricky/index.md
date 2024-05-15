@@ -210,6 +210,11 @@ We must go through an intermediate cast to `unsafe.Pointer`, representing a void
 
 Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.
 
+## Other getting started guides
+
+- Recently, we explained [how to build a Chrome extension **without** any additional tools](../create-chrome-extension).
+- Also, we wrote a [guide to creating a React Hello World app](../react-hello-world).
+
 ## CGO Hello World fail video
 
 {{< youtube C9h8YO1NwPM >}}

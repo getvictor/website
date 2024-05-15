@@ -267,6 +267,11 @@ This command will create a `dist` directory with the app's production build. The
 
 It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.
 
+## Other getting started guides
+
+- Recently, we wrote about [creating a Chrome extension from scratch **without** any additional tooling](../create-chrome-extension).
+- We also have a guide on [using CGO in Go programming language](../using-c-and-go-with-cgo-is-tricky).
+
 ## Example code on GitHub
 
 The example code is available on GitHub at https://github.com/getvictor/react/tree/main/1-hello-world
