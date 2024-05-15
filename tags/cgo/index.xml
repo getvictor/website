@@ -147,6 +147,11 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We must go through an intermediate cast to &lt;code>unsafe.Pointer&lt;/code>, representing a void C pointer.&lt;/p>
 &lt;h2 id="additional-topics">&lt;a href="#additional-topics" class="header-anchor">&lt;/a>Additional topics
 &lt;/h2>&lt;p>Our custom C and Go code was always in the same file in the above examples. However, the C code can be in a separate file and linked to our Go executable.&lt;/p>
+&lt;h2 id="other-getting-started-guides">&lt;a href="#other-getting-started-guides" class="header-anchor">&lt;/a>Other getting started guides
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../create-chrome-extension" >how to build a Chrome extension &lt;strong>without&lt;/strong> any additional tools&lt;/a>.&lt;/li>
+&lt;li>Also, we wrote a &lt;a class="link" href="../react-hello-world" >guide to creating a React Hello World app&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="cgo-hello-world-fail-video">&lt;a href="#cgo-hello-world-fail-video" class="header-anchor">&lt;/a>CGO Hello World fail video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
