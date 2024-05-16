@@ -528,7 +528,11 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;ul>
+&lt;li>&lt;a class="link" href="#reusable-workflows" >GitHub reusable workflows&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#reusable-steps-composite-action" >GitHub reusable steps (composite action)&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
 >GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
