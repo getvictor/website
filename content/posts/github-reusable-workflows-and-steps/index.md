@@ -8,6 +8,9 @@ tags = ["GitHub", "GitHub Actions", "Code Reuse"]
 draft = false
 +++
 
+- [GitHub reusable workflows](#reusable-workflows)
+- [GitHub reusable steps (composite action)](#reusable-steps-composite-action)
+
 ## Introduction
 
 [GitHub Actions](https://github.com/features/actions) is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.
@@ -33,7 +36,7 @@ Examples of reusable GitHub Actions code include:
 - Data processing
 - and many others
 
-## Reusable workflows
+## Reusable workflows {#reusable-workflows}
 
 A reusable workflow replaces a job in the main workflow.
 
@@ -120,7 +123,7 @@ A successful run of the main workflow looks like this on GitHub:
 
 {{< figure src="GitHub Actions reusable workflow success.png" alt="GitHub Actions reusable workflow success" title="GitHub Actions reusable workflow success" >}}
 
-## Reusable steps (composite action)
+## Reusable steps (composite action) {#reusable-steps-composite-action}
 
 Reusable steps replace a regular step in a job. We will use a `composite action` for reusable steps in our example.
 
