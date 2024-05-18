@@ -20,7 +20,7 @@ alt="Parts of a Chrome extension">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;ol>
-&lt;li>&lt;a class="link" href="#create-background-script" >background script&lt;/a>: Also known as a ** service worker **, this is a long-running script that runs in the background. It can listen for events and perform tasks.&lt;/li>
+&lt;li>&lt;a class="link" href="#create-background-script" >background script&lt;/a>: Also known as a &lt;strong>service worker&lt;/strong>, this is a long-running script that runs in the background. It can listen for events and perform tasks.&lt;/li>
 &lt;li>&lt;a class="link" href="#create-content-script" >content script(s)&lt;/a>: This script runs in the context of a web page. It can interact with the DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically inject it by the background script or the popup.&lt;/li>
 &lt;li>&lt;a class="link" href="#create-popup" >popup&lt;/a>: This small HTML page appears when a user clicks the extension icon. It can contain buttons, forms, and other UI elements. This is the extension&amp;rsquo;s user interface.&lt;/li>
 &lt;/ol>
