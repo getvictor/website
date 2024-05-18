@@ -33,7 +33,7 @@ The three main parts of a Chrome extension are the background script, content sc
 
 {{< figure src="chrome-extension-parts.svg" title="Parts of a Chrome extension" alt="Parts of a Chrome extension" >}}
 
-1. [background script](#create-background-script): Also known as a ** service worker **, this is a long-running script that runs in the background. It can listen for events and perform tasks.
+1. [background script](#create-background-script): Also known as a **service worker**, this is a long-running script that runs in the background. It can listen for events and perform tasks.
 2. [content script(s)](#create-content-script): This script runs in the context of a web page. It can interact with the DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically inject it by the background script or the popup.
 3. [popup](#create-popup): This small HTML page appears when a user clicks the extension icon. It can contain buttons, forms, and other UI elements. This is the extension's user interface.
 

@@ -103,6 +103,7 @@ ON DUPLICATE KEY UPDATE
 ## Further reading about MySQL
 
 - [MySQL deadlock on UPDATE/INSERT upsert pattern](../mysql-upsert-deadlock/)
+- [Scaling DB performance using master slave replication](../mysql-master-slave-replication/)
 - [Fully supporting Unicode and emojis in your app](../unicode-and-emoji-gotchas/)
 - [SQL prepared statements are broken when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications/)
 
