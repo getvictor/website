@@ -6,6 +6,10 @@ theme = "hugo-theme-stack"
 enableRobotsTXT = false
 capitalizeListTitles = false
 
+[services]
+[services.googleAnalytics]
+ID = 'G-1XV381YSQ8'
+
 [params]
 description = "Software engineering, security, and related topics. Currently building security telemetry and MDM at Fleet Device Management."
 mainSections = ["posts"]
