@@ -1,4 +1,395 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 18 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Create a MySQL slave replica in 4 short steps</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL slave replica in 4 short steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 23 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Add webpack and TypeScript to a Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</link><pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-typescript-webpack.png" alt="Featured image of post Add webpack and TypeScript to a Chrome extension (2024)" />&lt;p>This article is part of a series on creating a production-ready Chrome extension. The previous article covered &lt;a class="link" href="../create-chrome-extension" >creating a basic Chrome extension without any tooling&lt;/a>.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#what-is-webpack" >Add webpack bundler&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#what-is-typescript" >Add TypeScript&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#convert-webpack-configuration-from-javascript-to-typescript" >Convert webpack configuration from JavaScript to TypeScript&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h1 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h1>&lt;p>This article will add the webpack module bundler and TypeScript support to the Chrome extension we created in the previous article. This software tooling will allow us to use modern JavaScript features and development tools.&lt;/p>
+&lt;p>A module bundler and TypeScript are essential tools for modern web development. They improve the development experience for large or long-running projects.&lt;/p>
+&lt;h1 id="prerequisites---nodejs-and-npm">&lt;a href="#prerequisites---nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites - Node.js and npm
+&lt;/h1>&lt;p>Before we start, make sure you have &lt;a class="link" href="https://nodejs.org/" target="_blank" rel="noopener"
+>Node.js&lt;/a> and &lt;a class="link" href="https://www.npmjs.com/" target="_blank" rel="noopener"
+>npm&lt;/a> installed. Node.js is a JavaScript runtime. We will use it to run webpack and future development tools. npm is a JavaScript package manager.&lt;/p>
+&lt;p>You can check if you have them installed by running the following commands:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>node -v
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npm -v
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="packagejson">&lt;a href="#packagejson" class="header-anchor">&lt;/a>package.json
+&lt;/h1>&lt;p>First, we will create a &lt;code>package.json&lt;/code> file containing project and dependency info. We can use the &lt;code>npm init&lt;/code> command to create the file. Or manually create one containing something like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-chrome-extension&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;0.1.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;repository&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://github.com/getvictor/create-chrome-extension&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;author&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;getvictor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;license&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;MIT&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="what-is-webpack">&lt;a href="#what-is-webpack" class="header-anchor">&lt;/a>What is webpack?
+&lt;/h1>&lt;p>&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
+>Webpack&lt;/a> is a module bundler for JavaScript applications. It takes modules with dependencies and generates static assets representing those modules. We will use webpack to bundle multiple JavaScript files into a single file.&lt;/p>
+&lt;p>A module bundler allows you to write modular code and bundle it into a single file. TypeScript is a superset of JavaScript that adds static typing and other features to the language.&lt;/p>
+&lt;p>We will install webpack with &lt;code>npm&lt;/code>:&lt;/p>
+&lt;pre tabindex="0">&lt;code>npm install --save-dev webpack webpack-cli webpack-merge copy-webpack-plugin
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/webpack" target="_blank" rel="noopener"
+>webpack&lt;/a> is the core module bundler&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/webpack-cli" target="_blank" rel="noopener"
+>webpack-cli&lt;/a> is the command-line interface for webpack&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/webpack-merge" target="_blank" rel="noopener"
+>webpack-merge&lt;/a> is a utility to merge multiple webpack configurations, which we will use to differentiate development and production configs&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/copy-webpack-plugin" target="_blank" rel="noopener"
+>copy-webpack-plugin&lt;/a> is a plugin to copy files and directories in webpack&lt;/li>
+&lt;/ul>
+&lt;p>The above &lt;code>npm&lt;/code> command will install the packages, create a &lt;code>package-lock.json&lt;/code> file, and add them to the &lt;code>devDependencies&lt;/code> section of the &lt;code>package.json&lt;/code> file. The updated &lt;code>package.json&lt;/code> should look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;my-chrome-extension&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;0.1.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;repository&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://github.com/getvictor/create-chrome-extension&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;author&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;getvictor&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;license&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;MIT&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;devDependencies&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;copy-webpack-plugin&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^12.0.2&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.91.0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack-cli&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.1.4&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;webpack-merge&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^5.10.0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="webpack-configuration">&lt;a href="#webpack-configuration" class="header-anchor">&lt;/a>webpack configuration
+&lt;/h1>&lt;p>Next, we will create webpack configuration files. Webpack uses a configuration file to define how to bundle the project. We will create two configurations: one for development and one for production. Initially, we will use JavaScript for the configuration files, but we will convert them to TypeScript later.&lt;/p>
+&lt;p>Create a &lt;code>webpack.common.js&lt;/code> file with the shared configuration:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">path&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;path&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;copy-webpack-plugin&amp;#39;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">module&lt;/span>.&lt;span style="color:#a6e22e">exports&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">background&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/background.js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/content.js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">popup&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/popup.js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">output&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">filename&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;[name].js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">path&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">path&lt;/span>.&lt;span style="color:#a6e22e">resolve&lt;/span>(&lt;span style="color:#a6e22e">__dirname&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;dist&amp;#39;&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clean&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Clean the output directory before emit.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">patterns&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [{ &lt;span style="color:#a6e22e">from&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;static&amp;#39;&lt;/span> }],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create a &lt;code>webpack.dev.js&lt;/code> file with the development configuration:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> { &lt;span style="color:#a6e22e">merge&lt;/span> } &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;webpack-merge&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">common&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;./webpack.common.js&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">module&lt;/span>.&lt;span style="color:#a6e22e">exports&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">merge&lt;/span>(&lt;span style="color:#a6e22e">common&lt;/span>, {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;development&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">devtool&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;inline-source-map&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create a &lt;code>webpack.prod.js&lt;/code> file with the production configuration:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> { &lt;span style="color:#a6e22e">merge&lt;/span> } &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;webpack-merge&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">common&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">require&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;./webpack.common.js&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">module&lt;/span>.&lt;span style="color:#a6e22e">exports&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">merge&lt;/span>(&lt;span style="color:#a6e22e">common&lt;/span>, {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;production&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">devtool&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;source-map&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="refactoring-directory-structure">&lt;a href="#refactoring-directory-structure" class="header-anchor">&lt;/a>Refactoring directory structure
+&lt;/h2>&lt;p>We will refactor the directory structure to separate the source code from the static files. Create a &lt;code>src&lt;/code> directory and move the JavaScript files (&lt;code>background.js&lt;/code>, &lt;code>content.js&lt;/code>, &lt;code>popup.js&lt;/code>) into it. Create a &lt;code>static&lt;/code> directory and move the &lt;code>manifest.json&lt;/code>, &lt;code>popup.html&lt;/code>, and &lt;code>popup.css&lt;/code> file into it.&lt;/p>
+&lt;p>The directory structure should look like this (running &lt;a class="link" href="https://en.wikipedia.org/wiki/Tree_%28command%29" target="_blank" rel="noopener"
+>tree&lt;/a>&lt;code> . -I node_modules&lt;/code>):&lt;/p>
+&lt;pre tabindex="0">&lt;code>.
+├── package-lock.json
+├── package.json
+├── src
+│   ├── background.js
+│   ├── content.js
+│   └── popup.js
+├── static
+│   ├── manifest.json
+│   ├── popup.css
+│   └── popup.html
+├── webpack.common.js
+├── webpack.dev.js
+└── webpack.prod.js
+&lt;/code>&lt;/pre>&lt;h2 id="running-webpack">&lt;a href="#running-webpack" class="header-anchor">&lt;/a>Running webpack
+&lt;/h2>&lt;p>Now, we can run the webpack bundler using the following command:&lt;/p>
+&lt;pre tabindex="0">&lt;code>./node_modules/.bin/webpack --watch --config webpack.dev.js
+&lt;/code>&lt;/pre>&lt;p>This command creates a &lt;code>dist&lt;/code> directory with the bundled files. The &lt;code>--watch&lt;/code> flag tells webpack to continue running, watch for changes, and recompile the files when changes occur. This recompilation is crucial for development, as it allows us to see our code changes in real time.&lt;/p>
+&lt;p>We can run the production build with:&lt;/p>
+&lt;pre tabindex="0">&lt;code>./node_modules/.bin/webpack --config webpack.prod.js
+&lt;/code>&lt;/pre>&lt;p>Now, we can add scripts to the &lt;code>package.json&lt;/code> file to simplify how we run webpack:&lt;/p>
+&lt;pre tabindex="0">&lt;code> ...
+&amp;#34;scripts&amp;#34;: {
+&amp;#34;build&amp;#34;: &amp;#34;webpack --config webpack.prod.js&amp;#34;,
+&amp;#34;start&amp;#34;: &amp;#34;webpack --watch --config webpack.dev.js&amp;#34;
+}
+&lt;/code>&lt;/pre>&lt;p>These scripts allow us to run &lt;code>npm run build&lt;/code> to build the production version and &lt;code>npm start&lt;/code> (or &lt;code>npm run start&lt;/code>) to start the development version.&lt;/p>
+&lt;p>At this point, we can test the browser extension to ensure it is still working as before. Open the Chrome browser, go to &lt;code>chrome://extensions&lt;/code>, enable &lt;code>Developer mode&lt;/code>, click on &lt;code>Load unpacked&lt;/code>, and select the &lt;code>dist&lt;/code> directory.&lt;/p>
+&lt;h1 id="what-is-typescript">&lt;a href="#what-is-typescript" class="header-anchor">&lt;/a>What is TypeScript?
+&lt;/h1>&lt;p>&lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
+>TypeScript&lt;/a> is a superset of JavaScript that adds static typing and other features to the language. It compiles to plain JavaScript and can be used in any browser or JavaScript engine. Although TypeScript is not required for writing Chrome extensions, it
+is highly recommended as it can help catch errors early and improve code quality.&lt;/p>
+&lt;p>We install TypeScript with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev typescript @tsconfig/recommended ts-node ts-loader @types/chrome
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/typescript" target="_blank" rel="noopener"
+>typescript&lt;/a> is the core TypeScript compiler&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/@tsconfig/recommended" target="_blank" rel="noopener"
+>@tsconfig/recommended&lt;/a> is a recommended TypeScript configuration, which we will use&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/ts-node" target="_blank" rel="noopener"
+>ts-node&lt;/a> is a TypeScript execution environment for Node.js, which is needed for converting the webpack configuration to TypeScript&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/ts-loader" target="_blank" rel="noopener"
+>ts-loader&lt;/a> is a TypeScript loader for webpack, which is needed for webpack to understand TypeScript source files&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/@types/chrome" target="_blank" rel="noopener"
+>@types/chrome&lt;/a> is the TypeScript type definitions for the Chrome extension API&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-are-typescript-type-definitions">&lt;a href="#what-are-typescript-type-definitions" class="header-anchor">&lt;/a>What are TypeScript type definitions?
+&lt;/h2>&lt;p>We loaded the &lt;code>@types/chrome&lt;/code> packages to provide TypeScript type definitions for the Chrome extension API.&lt;/p>
+&lt;p>TypeScript type definitions are files that describe the shape of a JavaScript library. They provide type information for JavaScript libraries that were not written in TypeScript. This information allows TypeScript to understand the library&amp;rsquo;s API and provide type checking. With this information, TypeScript can check our code.&lt;/p>
+&lt;p>&lt;code>@types/chrome&lt;/code> provides a global &lt;code>chrome&lt;/code> object representing the Chrome extension API. No additional code is needed to use it from the command line, as TypeScript automatically loads it. However, IDEs may need to be configured to recognize this global type definition.&lt;/p>
+&lt;h3 id="tsconfigjson">&lt;a href="#tsconfigjson" class="header-anchor">&lt;/a>&lt;code>tsconfig.json&lt;/code>
+&lt;/h3>&lt;p>Next, we will create a &lt;code>tsconfig.json&lt;/code> file to configure TypeScript. This file tells the TypeScript compiler how to compile the project. Create a &lt;code>tsconfig.json&lt;/code> file with the recommended config:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;extends&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;@tsconfig/recommended/tsconfig.json&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;compilerOptions&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;sourceMap&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We added the &lt;code>sourceMap&lt;/code> option to generate source maps, which help debug TypeScript code in the browser.&lt;/p>
+&lt;h2 id="convert-webpack-configuration-from-javascript-to-typescript">&lt;a href="#convert-webpack-configuration-from-javascript-to-typescript" class="header-anchor">&lt;/a>Convert webpack configuration from JavaScript to TypeScript
+&lt;/h2>&lt;p>First, rename the webpack configuration files to TypeScript files by changing the extension from &lt;code>.js&lt;/code> to &lt;code>.ts&lt;/code>. For example, &lt;code>webpack.common.js&lt;/code> becomes &lt;code>webpack.common.ts&lt;/code>. Then, update the contents of the files to TypeScript syntax.&lt;/p>
+&lt;p>&lt;code>webpack.common.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">path&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;path&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">webpack&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;copy-webpack-plugin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>: &lt;span style="color:#66d9ef">webpack.Configuration&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">background&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/background.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/content.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">popup&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/popup.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">output&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">filename&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;[name].js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">path&lt;/span>: &lt;span style="color:#66d9ef">path.resolve&lt;/span>(&lt;span style="color:#a6e22e">__dirname&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;dist&amp;#39;&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clean&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Clean the output directory before emit.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">patterns&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [{&lt;span style="color:#66d9ef">from&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;static&amp;#39;&lt;/span>}],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We made the following changes to the shared config:&lt;/p>
+&lt;ul>
+&lt;li>We changed the &lt;code>require&lt;/code> statements to &lt;code>import&lt;/code> statements&lt;/li>
+&lt;li>We changed the &lt;code>module.exports&lt;/code> to &lt;code>export default&lt;/code>&lt;/li>
+&lt;li>We added the &lt;code>webpack.Configuration&lt;/code> type from the &lt;code>webpack&lt;/code> package&lt;/li>
+&lt;/ul>
+&lt;p>&lt;code>webpack.dev.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">Configuration&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">merge&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack-merge&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./webpack.common&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">merged&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">merge&lt;/span>&amp;lt;&lt;span style="color:#f92672">Configuration&lt;/span>&amp;gt;(&lt;span style="color:#a6e22e">config&lt;/span>,{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;development&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">devtool&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;inline-source-map&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">merged&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>webpack.prod.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">Configuration&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">merge&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack-merge&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./webpack.common&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">merged&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">merge&lt;/span>&amp;lt;&lt;span style="color:#f92672">Configuration&lt;/span>&amp;gt;(&lt;span style="color:#a6e22e">config&lt;/span>,{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;production&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">devtool&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;source-map&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">merged&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And update the &lt;code>package.json&lt;/code> scripts to use the TypeScript configuration files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;build&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;webpack --config webpack.prod.ts&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;start&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;webpack --watch --config webpack.dev.ts&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can test &lt;code>npm run start&lt;/code> and &lt;code>npm run build&lt;/code> to ensure the new webpack Typescript configurations are working correctly.&lt;/p>
+&lt;h2 id="convert-javascript-source-files-to-typescript">&lt;a href="#convert-javascript-source-files-to-typescript" class="header-anchor">&lt;/a>Convert JavaScript source files to TypeScript
+&lt;/h2>&lt;p>Finally, we will convert the JavaScript source files to TypeScript. Rename the &lt;code>.js&lt;/code> files to &lt;code>.ts&lt;/code> files. For example, &lt;code>background.js&lt;/code> becomes &lt;code>background.ts&lt;/code>. Update the contents of the files to TypeScript syntax.&lt;/p>
+&lt;p>Also, we will refactor the common &lt;code>setBadgeText&lt;/code> function to a shared &lt;code>common.ts&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">setBadgeText&lt;/span>(&lt;span style="color:#a6e22e">enabled&lt;/span>: &lt;span style="color:#66d9ef">boolean&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">text&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ON&amp;#34;&lt;/span> &lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;OFF&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">action&lt;/span>.&lt;span style="color:#a6e22e">setBadgeText&lt;/span>({&lt;span style="color:#a6e22e">text&lt;/span>: &lt;span style="color:#66d9ef">text&lt;/span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Updated &lt;code>background.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">setBadgeText&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./common&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">startUp() {&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">data&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">setBadgeText&lt;/span>(&lt;span style="color:#f92672">!!&lt;/span>&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">enabled&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Ensure the background script always runs.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">onStartup&lt;/span>.&lt;span style="color:#a6e22e">addListener&lt;/span>(&lt;span style="color:#a6e22e">startUp&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">onInstalled&lt;/span>.&lt;span style="color:#a6e22e">addListener&lt;/span>(&lt;span style="color:#a6e22e">startUp&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Updated &lt;code>content.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">blurFilter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;blur(6px)&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">textToBlur&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Search this DOM node for text to blur and blur the parent element if found.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">processNode&lt;/span>(&lt;span style="color:#a6e22e">node&lt;/span>: &lt;span style="color:#66d9ef">Node&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">childNodes&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> Array.&lt;span style="color:#66d9ef">from&lt;/span>(&lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">childNodes&lt;/span>).&lt;span style="color:#a6e22e">forEach&lt;/span>(&lt;span style="color:#a6e22e">processNode&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">nodeType&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#a6e22e">Node&lt;/span>.&lt;span style="color:#a6e22e">TEXT_NODE&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">textContent&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">textContent&lt;/span>.&lt;span style="color:#a6e22e">trim&lt;/span>().&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">parent&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">parentElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">parent&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">null&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">parent&lt;/span>.&lt;span style="color:#a6e22e">tagName&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#e6db74">&amp;#39;SCRIPT&amp;#39;&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#a6e22e">parent&lt;/span>.&lt;span style="color:#a6e22e">style&lt;/span>.&lt;span style="color:#a6e22e">filter&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#a6e22e">blurFilter&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Already blurred
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">node&lt;/span>.&lt;span style="color:#a6e22e">textContent&lt;/span>.&lt;span style="color:#a6e22e">includes&lt;/span>(&lt;span style="color:#a6e22e">textToBlur&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">blurElement&lt;/span>(&lt;span style="color:#a6e22e">parent&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">function&lt;/span> &lt;span style="color:#a6e22e">blurElement&lt;/span>(&lt;span style="color:#a6e22e">elem&lt;/span>: &lt;span style="color:#66d9ef">HTMLElement&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">elem&lt;/span>.&lt;span style="color:#a6e22e">style&lt;/span>.&lt;span style="color:#a6e22e">filter&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">blurFilter&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">debug&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;blurred id:&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">elem&lt;/span>.&lt;span style="color:#a6e22e">id&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34; class:&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">elem&lt;/span>.&lt;span style="color:#a6e22e">className&lt;/span> &lt;span style="color:#f92672">+&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34; tag:&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">elem&lt;/span>.&lt;span style="color:#a6e22e">tagName&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34; text:&amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">elem&lt;/span>.&lt;span style="color:#a6e22e">textContent&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Create a MutationObserver to watch for changes to the DOM.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">observer&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">MutationObserver&lt;/span>((&lt;span style="color:#a6e22e">mutations&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mutations&lt;/span>.&lt;span style="color:#a6e22e">forEach&lt;/span>((&lt;span style="color:#a6e22e">mutation&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">mutation&lt;/span>.&lt;span style="color:#a6e22e">addedNodes&lt;/span>.&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">mutation&lt;/span>.&lt;span style="color:#a6e22e">addedNodes&lt;/span>.&lt;span style="color:#a6e22e">forEach&lt;/span>(&lt;span style="color:#a6e22e">processNode&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">processNode&lt;/span>(&lt;span style="color:#a6e22e">mutation&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Enable the content script by default.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">let&lt;/span> &lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">keys&lt;/span> &lt;span style="color:#f92672">=&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">get&lt;/span>(&lt;span style="color:#a6e22e">keys&lt;/span>, (&lt;span style="color:#a6e22e">data&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">===&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">textToBlur&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">item&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Only start observing the DOM if the extension is enabled and there is text to blur.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> &lt;span style="color:#a6e22e">textToBlur&lt;/span>.&lt;span style="color:#a6e22e">trim&lt;/span>().&lt;span style="color:#a6e22e">length&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">observer&lt;/span>.&lt;span style="color:#a6e22e">observe&lt;/span>(document, {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attributes&lt;/span>: &lt;span style="color:#66d9ef">false&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">characterData&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">childList&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">subtree&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Loop through all elements on the page for initial processing.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">processNode&lt;/span>(document)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Updated &lt;code>popup.ts&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">setBadgeText&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./common&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, world from popup!&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Handle the ON/OFF switch
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">checkbox&lt;/span> &lt;span style="color:#f92672">=&lt;/span> document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">data&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">checkbox&lt;/span>.&lt;span style="color:#a6e22e">checked&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">!!&lt;/span>&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">enabled&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">setBadgeText&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">enabled&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">checkbox&lt;/span>.&lt;span style="color:#a6e22e">addEventListener&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;change&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">event&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#66d9ef">instanceof&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">set&lt;/span>({&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">checked&lt;/span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">setBadgeText&lt;/span>(&lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">checked&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Handle the input field
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">input&lt;/span> &lt;span style="color:#f92672">=&lt;/span> document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">get&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">data&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">input&lt;/span>.&lt;span style="color:#a6e22e">value&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">data&lt;/span>.&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#f92672">||&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>});
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">input&lt;/span>.&lt;span style="color:#a6e22e">addEventListener&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;change&amp;#34;&lt;/span>, (&lt;span style="color:#a6e22e">event&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span> &lt;span style="color:#66d9ef">instanceof&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#66d9ef">set&lt;/span>({&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">value&lt;/span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="update-webpack-configuration-to-handle-typescript-source-files">&lt;a href="#update-webpack-configuration-to-handle-typescript-source-files" class="header-anchor">&lt;/a>Update webpack configuration to handle TypeScript source files
+&lt;/h2>&lt;p>Update &lt;code>webpack.common.ts&lt;/code> to use the new TypeScript source files and add the &lt;code>ts-loader&lt;/code> to the webpack configuration:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">path&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;path&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">webpack&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;webpack&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;copy-webpack-plugin&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>: &lt;span style="color:#66d9ef">webpack.Configuration&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">background&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/background.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/content.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">popup&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;./src/popup.ts&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">resolve&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">extensions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;.ts&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">module&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rules&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/\.ts$/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">loader&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ts-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">exclude&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/node_modules/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">output&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">filename&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;[name].js&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">path&lt;/span>: &lt;span style="color:#66d9ef">path.resolve&lt;/span>(&lt;span style="color:#a6e22e">__dirname&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;dist&amp;#39;&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clean&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Clean the output directory before emit.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">new&lt;/span> &lt;span style="color:#a6e22e">CopyWebpackPlugin&lt;/span>({
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">patterns&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [{&lt;span style="color:#66d9ef">from&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;static&amp;#39;&lt;/span>}],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="debug-our-typescript-extension-in-chrome">&lt;a href="#debug-our-typescript-extension-in-chrome" class="header-anchor">&lt;/a>Debug our TypeScript extension in Chrome
+&lt;/h2>&lt;p>Build the extension with &lt;code>npm run start&lt;/code> and load it in Chrome.&lt;/p>
+&lt;p>Right-click the extension icon (&lt;code>M&lt;/code>) and select &lt;code>Inspect popup&lt;/code> to open the Chrome Developer Tools. By default, you can see the console logs from the &lt;code>popup.ts&lt;/code> file.&lt;/p>
+&lt;p>Go to the &lt;code>Sources&lt;/code> tab in the Chrome Developer Tools and open the &lt;code>top/my-chrome-extension/src/popup.ts&lt;/code> file. You can set breakpoints and debug the popup script.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-extension-debug.png"
+alt="Debugging Chrome extension popup">&lt;figcaption>
+&lt;h4>Debugging Chrome extension popup&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The &lt;code>popup.ts&lt;/code> file should exactly match the TypeScript code we wrote. You can set breakpoints, inspect variables, and step through the code.&lt;/p>
+&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
+&lt;/h2>&lt;p>In the next part of this series, we will add message passing between the content script, the background script, and the popup script. This communication will allow us to make real-time changes across all parts of our Chrome extension.&lt;/p>
+&lt;h2 id="chrome-extension-with-webpack-and-typescript-code-on-github">&lt;a href="#chrome-extension-with-webpack-and-typescript-code-on-github" class="header-anchor">&lt;/a>Chrome extension with webpack and TypeScript code on GitHub
+&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/2-webpack-typescript" target="_blank" rel="noopener"
+>https://github.com/getvictor/create-chrome-extension/tree/main/2-webpack-typescript&lt;/a>&lt;/p>
+&lt;h2 id="add-webpack-and-typescript-to-a-chrome-extension-video">&lt;a href="#add-webpack-and-typescript-to-a-chrome-extension-video" class="header-anchor">&lt;/a>Add webpack and TypeScript to a Chrome extension video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/a3n-C-7u3VE"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Create a MySQL slave replica in 4 short steps</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL slave replica in 4 short steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
 &lt;p>The steps we will follow are:&lt;/p>
 &lt;ol>
@@ -382,12 +773,7 @@ alt="Chrome extension popup">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for the startup and installation events and sets the badge text based on the extension&amp;rsquo;s saved state.&lt;/p>
 &lt;p>At this point, our basic extension is complete. We can test the extension.&lt;/p>
 &lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will add development tooling to the extension, such as:&lt;/p>
-&lt;ul>
-&lt;li>support for TypeScript&lt;/li>
-&lt;li>a bundling tool&lt;/li>
-&lt;li>a development mode which will reload the extension automatically when changes are made&lt;/li>
-&lt;/ul>
+&lt;/h2>&lt;p>In the next part of this series, we will &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made&lt;/a>.&lt;/p>
 &lt;h2 id="other-getting-started-guides">&lt;a href="#other-getting-started-guides" class="header-anchor">&lt;/a>Other getting started guides
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../react-hello-world" >creating a React application from scratch while minimizing the amount of tools used&lt;/a>.&lt;/li>
