@@ -1,6 +1,7 @@
 ---
 title: "Software tools"
 slug: "tools"
+layout: "single"
 readingTime: false
 menu:
     main:
