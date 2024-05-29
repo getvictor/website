@@ -117,7 +117,7 @@ INSERT INTO users VALUES (1, 'Alice');
 
 ## Further reading on database scaling
 
-- Recently, we wrote about [optimizing a MySQL INSERT with subqueries](../mysql-query-performance-insert-subqueries).
+- Recently, we wrote about [database gotchas when scaling applications](../database-gotchas-when-scaling-apps). One of the issues we summarized was [optimizing a MySQL INSERT with subqueries](../mysql-query-performance-insert-subqueries).
 - In the past, we encountered a [memory issue with MySQL prepared statements when scaling applications](../sql-prepared-statements-are-broken-when-scaling-applications).
 
 ## Follow along with the MySQL master-slave replication on video
