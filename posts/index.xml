@@ -1,4 +1,86 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 23 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Add webpack and TypeScript to a Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</link><pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-typescript-webpack.png" alt="Featured image of post Add webpack and TypeScript to a Chrome extension (2024)" />&lt;p>This article is part of a series on creating a production-ready Chrome extension. The previous article covered &lt;a class="link" href="../create-chrome-extension" >creating a basic Chrome extension without any tooling&lt;/a>.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 29 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" />&lt;ul>
+&lt;li>&lt;a class="link" href="#excessive-database-locks" >Excessive database locks&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#read-after-write-consistency" >Read-after-write consistency&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#index-limitations" >Index limitations&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>When building an application, the database is often an afterthought. The database used in a development environment often contains limited data with little traffic. However, when the application is deployed to production, real-world traffic can expose issues that were not caught in development or testing.&lt;/p>
+&lt;p>In this article, we cover issues we ran into with our customers. We assume the production application is deployed with one master and one or more read replicas. See this article on &lt;a class="link" href="../mysql-master-slave-replication" >creating a MySQL slave replica in dev environment&lt;/a>.&lt;/p>
+&lt;h2 id="excessive-database-locks">&lt;a href="#excessive-database-locks" class="header-anchor">&lt;/a>Excessive database locks
+&lt;/h2>&lt;p>One write query can bring your database to its knees if it locks too many rows.&lt;/p>
+&lt;p>Consider this simplified INSERT with a subquery transaction:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> software_counts (host_id, &lt;span style="color:#66d9ef">count&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> host_id, &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#66d9ef">count&lt;/span> &lt;span style="color:#66d9ef">FROM&lt;/span> host_software
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> host_software.host_id;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
+alt="Simplified INSERT with a subquery">&lt;figcaption>
+&lt;h4>Simplified INSERT with a subquery&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The above query scans the entire &lt;code>host_software&lt;/code> table index to create a count. While the database is doing the scan and the INSERT, it locks the &lt;code>host_software&lt;/code> table, preventing other transactions from writing to that table. If the table and insert are large, the query can hold the lock for a long time. In production, we saw a lock time of over 30 seconds, creating a bottleneck and spiking DB resource usage.&lt;/p>
+&lt;p>Pay special attention to the following queries, as they can cause performance issues:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>COUNT(*)&lt;/code>&lt;/li>
+&lt;li>Using a non-indexed column, like &lt;code>WHERE non_indexed_column = value&lt;/code>&lt;/li>
+&lt;li>Returning a large number of rows, like &lt;code>SELECT * FROM table&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>One way to solve the above performance issue is to separate the &lt;code>SELECT&lt;/code> and &lt;code>INSERT&lt;/code> queries. First, run the &lt;code>SELECT&lt;/code> query on the replica to get the data, then run the &lt;code>INSERT&lt;/code> query on the master to insert the data. We completely eliminate the lock since the read is done on the replica. This article goes through &lt;a class="link" href=".../mysql-query-performance-insert-subqueries" >a specific example of optimizing an INSERT with subqueries&lt;/a>.&lt;/p>
+&lt;p>As general advice, avoid running &lt;code>SELECT&lt;/code> queries and subqueries on the master, especially if they scan the entire table.&lt;/p>
+&lt;h2 id="read-after-write-consistency">&lt;a href="#read-after-write-consistency" class="header-anchor">&lt;/a>Read-after-write consistency
+&lt;/h2>&lt;p>When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
+alt="Read-after-write database issue">&lt;figcaption>
+&lt;h4>Read-after-write database issue&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>These issues are typically not caught in development since dev environments usually have one database instance. Unit or integration tests might not even see these issues if they run on a single database instance. Even in testing or small production environments, you might only see these issues if the replica sync time is high. Customers with large deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p>
+&lt;p>One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data you just wrote. In &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/b7aac2cfabf17fcb5142808fb80352113710ec5c/server/contexts/ctxdb/ctxdb.go#L17" target="_blank" rel="noopener"
+>our Go backend&lt;/a>, forcing reads from the master can be done by updating the &lt;code>Context&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ctxUsePrimary&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">ctxdb&lt;/span>.&lt;span style="color:#a6e22e">RequirePrimary&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#66d9ef">true&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, additional master reads increase the load on the master, defeating the purpose of having a replica for read scaling.&lt;/p>
+&lt;p>In addition, what about expensive read queries, like &lt;code>COUNT(*)&lt;/code> and calculations, which we don&amp;rsquo;t want to run on the master? In this case, we can wait for the replica to catch up with the master.&lt;/p>
+&lt;p>One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if the data is not found. The app could check the &lt;code>updated_at&lt;/code> column to see if the data is recent. If the data is not found, the app can sleep for a few milliseconds and retry the read. This approach is imperfect but a good compromise between read consistency and performance.&lt;/p>
+&lt;p>Note: &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-type-syntax.html#:~:text=default%20precision%20is%200." target="_blank" rel="noopener"
+>The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a>.&lt;/p>
+&lt;h2 id="index-limitations">&lt;a href="#index-limitations" class="header-anchor">&lt;/a>Index limitations
+&lt;/h2>&lt;h3 id="what-are-sql-indexes">&lt;a href="#what-are-sql-indexes" class="header-anchor">&lt;/a>What are SQL indexes?
+&lt;/h3>&lt;p>Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure. Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
+alt="Database index">&lt;figcaption>
+&lt;h4>Database index&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be large and take up a lot of disk space.&lt;/p>
+&lt;h3 id="index-size-is-limited">&lt;a href="#index-size-is-limited" class="header-anchor">&lt;/a>Index size is limited
+&lt;/h3>&lt;p>As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new columns need to be part of a unique index. However, the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html" target="_blank" rel="noopener"
+>maximum index size in MySQL is 3072 bytes&lt;/a>. This limit can be quickly reached if columns are of type &lt;code>VARCHAR&lt;/code> or &lt;code>TEXT&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> &lt;span style="color:#f92672">`&lt;/span>activities&lt;span style="color:#f92672">`&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>user_name&lt;span style="color:#f92672">`&lt;/span> VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>) &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other relevant column(s), and use that as the unique index. For example, in our backend &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6f008b40f24bcd000c1450d7438be99d30c518c5/server/datastore/mysql/schema.sql#L1450" target="_blank" rel="noopener"
+>we use a &lt;code>checksum&lt;/code> column in the &lt;code>software&lt;/code> table to create a unique index for a software item&lt;/a>.&lt;/p>
+&lt;h3 id="foreign-keys-may-cause-performance-issues">&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor">&lt;/a>Foreign keys may cause performance issues
+&lt;/h3>&lt;p>If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the corresponding row in the parent table. This locking can lead to performance issues when&lt;/p>
+&lt;ul>
+&lt;li>the parent table is large&lt;/li>
+&lt;li>the parent has many foreign key constraints&lt;/li>
+&lt;li>the parent table or child tables are frequently updated&lt;/li>
+&lt;/ul>
+&lt;p>The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the foreign key constraint. Instead, the application code can handle the data integrity checks that the foreign key constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p>
+&lt;h2 id="bonus-database-gotchas">&lt;a href="#bonus-database-gotchas" class="header-anchor">&lt;/a>Bonus database gotchas
+&lt;/h2>&lt;p>Additional database gotchas that we have seen in production include:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >Prepared statements consuming too much memory&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock" >Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="3-database-gotchas-video">&lt;a href="#3-database-gotchas-video" class="header-anchor">&lt;/a>3 database gotchas video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/N-wzNq-sEwo"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add webpack and TypeScript to a Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</link><pubDate>Thu, 23 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-typescript-webpack.png" alt="Featured image of post Add webpack and TypeScript to a Chrome extension (2024)" />&lt;p>This article is part of a series on creating a production-ready Chrome extension. The previous article covered &lt;a class="link" href="../create-chrome-extension" >creating a basic Chrome extension without any tooling&lt;/a>.&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="#what-is-webpack" >Add webpack bundler&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#what-is-typescript" >Add TypeScript&lt;/a>&lt;/li>
@@ -453,7 +535,7 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of the issues we summarized was &lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
 &lt;li>In the past, we encountered a &lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="follow-along-with-the-mysql-master-slave-replication-on-video">&lt;a href="#follow-along-with-the-mysql-master-slave-replication-on-video" class="header-anchor">&lt;/a>Follow along with the MySQL master-slave replication on video
