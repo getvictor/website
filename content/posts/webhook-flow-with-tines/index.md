@@ -2,10 +2,10 @@
 title = 'Building a webhook flow with Tines'
 description = "Trigger an action from a webhook callback with Tines"
 image = "tines-fleet-webhook-workflow.png"
-date = 2024-03-29
+date = 2024-06-05
 categories = ["DevOps & Infrastructure"]
 tags = ["Webhook", "Tines", "MDM", "Fleet"]
-draft = true
+draft = false
 +++
 
 ## What is a webhook?
@@ -24,7 +24,7 @@ A webhook is a way for one application to send data to another application in re
 
 In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a webhook callback from Fleet. Tines will then send an MDM (Mobile Device Management) command to the device to update the device's OS version.
 
-Fleet will send a callback via its calendar integration feature. Fleet can put a "Downtime" event on the device user's calendar. This event warns the device owner that their computer will be restarted to remediate one or more failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate the failing policy. This article is an example of one such flow.
+Fleet will send a callback via its calendar integration feature. Fleet can put a "System Maintenance" event on the device user's calendar. This event warns the device owner that their computer will be restarted to remediate one or more failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate the failing policy. This article is an example of one such flow.
 
 ## Getting started -- webhook action
 
@@ -134,10 +134,12 @@ The MDM command will run on the device, downloading and installing the OS update
 
 ## Conclusion
 
-In this article, we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how Tines can automate workflows and tasks in IT environments.
+In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how Tines can automate workflows and tasks in IT environments.
 
 ## Building a webhook flow with Tines video
 
-{{< youtube TODO >}}
+{{< youtube GFqmvv4nHqk >}}
 
 *Note:* If you want to comment on this article, please do so on the YouTube video.
+
+_This article originally appeared in [Fleet's blog](https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines)._
