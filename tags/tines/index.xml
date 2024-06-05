@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tines on Victor on Software</title><link>https://victoronsoftware.com/tags/tines/</link><description>Recent content in Tines on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/tines/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a webhook flow with Tines</title><link>https://victoronsoftware.com/posts/webhook-flow-with-tines/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/webhook-flow-with-tines/</guid><description>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/tines-fleet-webhook-workflow.png" alt="Featured image of post Building a webhook flow with Tines" />&lt;h2 id="what-is-a-webhook">&lt;a href="#what-is-a-webhook" class="header-anchor">&lt;/a>What is a webhook?
+&lt;/h2>&lt;p>A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p>
+&lt;h2 id="what-is-tines">&lt;a href="#what-is-tines" class="header-anchor">&lt;/a>What is Tines?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.tines.io/" target="_blank" rel="noopener"
+>Tines&lt;/a> is a no-code automation platform that allows you to automate repetitive tasks. It is a powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p>
+&lt;h2 id="what-is-fleet">&lt;a href="#what-is-fleet" class="header-anchor">&lt;/a>What is Fleet?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
+>Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+>Osquery&lt;/a> agents run on these devices and report to the Fleet server.&lt;/p>
+&lt;h2 id="our-example-it-workflow">&lt;a href="#our-example-it-workflow" class="header-anchor">&lt;/a>Our example IT workflow
+&lt;/h2>&lt;p>In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a webhook callback from Fleet. Tines will then send an MDM (Mobile Device Management) command to the device to update the device&amp;rsquo;s OS version.&lt;/p>
+&lt;p>Fleet will send a callback via its calendar integration feature. Fleet can put a &amp;ldquo;System Maintenance&amp;rdquo; event on the device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate the failing policy. This article is an example of one such flow.&lt;/p>
+&lt;h2 id="getting-started----webhook-action">&lt;a href="#getting-started----webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
+&lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
+alt="Tines webhook action">&lt;figcaption>
+&lt;h4>Tines webhook action&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="handling-errors">&lt;a href="#handling-errors" class="header-anchor">&lt;/a>Handling errors
+&lt;/h2>&lt;p>Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
+alt="Tines trigger action checking for an error">&lt;figcaption>
+&lt;h4>Tines trigger action checking for an error&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or triggering other actions.&lt;/p>
+&lt;h2 id="checking-whether-webhook-indicates-an-outdated-os">&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor">&lt;/a>Checking whether webhook indicates an outdated OS
+&lt;/h2>&lt;p>At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous testing, we know that the webhook payload will look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;timestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-03-28T13:57:31.668954-05:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">11058&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_display_name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Victor&amp;#39;s Virtual Machine (2)&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_serial_number&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Z5C4L7GKY0&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;failing_policies&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">479&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;macOS - OS version up to date&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The payload contains:&lt;/p>
+&lt;ul>
+&lt;li>The device&amp;rsquo;s ID (host ID).&lt;/li>
+&lt;li>Display name.&lt;/li>
+&lt;li>Serial number.&lt;/li>
+&lt;li>A list of failing policies.&lt;/li>
+&lt;/ul>
+&lt;p>We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
+alt="Tines trigger action checking for an outdated OS">&lt;figcaption>
+&lt;h4>Tines trigger action checking for an outdated OS&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p>
+&lt;pre tabindex="0">&lt;code>IF(FIND(calendar_webhook.body.failing_policies, LAMBDA(item, item.name = &amp;#34;macOS - OS version up to date&amp;#34;)).id &amp;gt; 0, TRUE)
+&lt;/code>&lt;/pre>&lt;h2 id="getting-device-details-from-fleet">&lt;a href="#getting-device-details-from-fleet" class="header-anchor">&lt;/a>Getting device details from Fleet
+&lt;/h2>&lt;p>Next, we need to get more details about the device from Fleet. Devices are called hosts in Fleet. We add an &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
+alt="Tines HTTP Request action to get Fleet device details">&lt;figcaption>
+&lt;h4>Tines HTTP Request action to get Fleet device details&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
+alt="Add credential to Tines story">&lt;figcaption>
+&lt;h4>Add credential to Tines story&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="creating-mdm-command-payload-to-update-os-version">&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor">&lt;/a>Creating MDM command payload to update OS version
+&lt;/h2>&lt;p>We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS version. We use the &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
+>ScheduleOSUpdate&lt;/a> command from Apple&amp;rsquo;s MDM protocol.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Command&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>RequestType&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>ScheduleOSUpdate&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Updates&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>InstallAction&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>InstallASAP&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ProductVersion&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>14.4.1&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>CommandUUID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&amp;lt;&lt;/span>&lt;span style="color:#f92672">&amp;lt;UUID&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">()&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&amp;gt;&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the device. Note that the &lt;code>&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code> Tines function creates a unique UUID for this MDM command.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
+alt="Tines event to create ScheduleOSUpdate MDM command">&lt;figcaption>
+&lt;h4>Tines event to create ScheduleOSUpdate MDM command&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story to encode the XML payload. It uses the Tines &lt;code>BASE64_ENCODE&lt;/code> function.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
+alt="Tines Base64 Encode event">&lt;figcaption>
+&lt;h4>Tines Base64 Encode event&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="run-mdm-command-on-device">&lt;a href="#run-mdm-command-on-device" class="header-anchor">&lt;/a>Run MDM command on device
+&lt;/h2>&lt;p>Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a POST request to the Fleet API to send the MDM command to the device.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
+alt="Tines HTTP Request action to run MDM command on device">&lt;figcaption>
+&lt;h4>Tines HTTP Request action to run MDM command on device&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The MDM command will run on the device, downloading and installing the OS update.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
+alt="macOS restart notification after OS update">&lt;figcaption>
+&lt;h4>macOS restart notification after OS update&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how Tines can automate workflows and tasks in IT environments.&lt;/p>
+&lt;h2 id="building-a-webhook-flow-with-tines-video">&lt;a href="#building-a-webhook-flow-with-tines-video" class="header-anchor">&lt;/a>Building a webhook flow with Tines video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/GFqmvv4nHqk"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p>
+&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines" target="_blank" rel="noopener"
+>Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item></channel></rss>
