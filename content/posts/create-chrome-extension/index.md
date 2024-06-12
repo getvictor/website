@@ -366,6 +366,7 @@ At this point, our basic extension is complete. We can test the extension.
 
 In the next part of this series, we will [add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made](../add-webpack-and-typescript-to-chrome-extension).
 
+For a list of all articles in the series, see the [production-ready Chrome extension series overview](../chrome-extension).
 
 ## Other getting started guides
 

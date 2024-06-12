@@ -8,7 +8,7 @@ tags = ["Chrome Extension", "TypeScript", "webpack", "DevTools"]
 draft = false
 +++
 
-This article is part of a series on creating a production-ready Chrome extension. The previous article covered [creating a basic Chrome extension without any tooling](../create-chrome-extension).
+This article is part of a series on creating a production-ready Chrome extension. The previous article covered [creating a basic Chrome extension without any tooling](../create-chrome-extension). For a list of all articles in the series, see the [Chrome extension series overview](../chrome-extension).
 
 - [Add webpack bundler](#what-is-webpack)
 - [Add TypeScript](#what-is-typescript)
