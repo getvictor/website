@@ -491,7 +491,7 @@ The `popup.ts` file should exactly match the TypeScript code we wrote. You can s
 
 ## Next steps
 
-In the next part of this series, we will add message passing between the content script, the background script, and the popup script. This communication will allow us to make real-time changes across all parts of our Chrome extension.
+In the next part of this series, we will add [message passing between the content script, the background script, and the popup script](../message-passing-in-chrome-extension). This communication will allow us to make real-time changes across all parts of our Chrome extension.
 
 ## Chrome extension with webpack and TypeScript code on GitHub
 
