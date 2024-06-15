@@ -1,32 +1,61 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web Development on Victor on Software</title><link>https://victoronsoftware.com/tags/web-development/</link><description>Recent content in Web Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/web-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Message passing in Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/message-passing-in-chrome-extension/</link><pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/message-passing-in-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/message-passing-headline.png" alt="Featured image of post Message passing in Chrome extension (2024)" />&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a production-ready Chrome extension&lt;/a>.&lt;/p>
-&lt;p>In the previous article, we &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >set up our Chrome extension with TypeScript support and the webpack bundler&lt;/a>. This article will build on that code, dive into the new APIs, and cover message-passing communication between different parts of our Chrome extension.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web Development on Victor on Software</title><link>https://victoronsoftware.com/tags/web-development/</link><description>Recent content in Web Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/web-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Message passing in Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/message-passing-in-chrome-extension/</link><pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/message-passing-in-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/message-passing-headline.png" alt="Featured image of post Message passing in Chrome extension (2024)" />&lt;p>This article is part of a series on
+&lt;a class="link" href="../chrome-extension" >building a production-ready Chrome extension&lt;/a>.&lt;/p>
+&lt;p>In the previous article, we
+&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >set up our Chrome extension with TypeScript support and the webpack bundler&lt;/a>.
+This article will build on that code, dive into the new APIs, and cover
+message-passing communication between different parts of our Chrome extension.&lt;/p>
 &lt;h2 id="communication-between-parts-of-a-chrome-extension">&lt;a href="#communication-between-parts-of-a-chrome-extension" class="header-anchor">&lt;/a>Communication between parts of a Chrome extension
-&lt;/h2>&lt;p>As we covered in &lt;a class="link" href="../create-chrome-extension" >the first article&lt;/a>, a Chrome extension consists of three main parts:&lt;/p>
+&lt;/h2>&lt;p>As we covered in &lt;a class="link" href="../create-chrome-extension" >the first article&lt;/a>, a Chrome
+extension consists of three main parts:&lt;/p>
 &lt;ul>
 &lt;li>service worker (background script)&lt;/li>
 &lt;li>content script&lt;/li>
 &lt;li>popup&lt;/li>
 &lt;/ul>
-&lt;p>These parts need to communicate with each other. For example, a popup needs to send a message to a content script to change the appearance of a webpage. Or a background script needs to send a message to a popup to update the user interface based on the page that&amp;rsquo;s being visited.&lt;/p>
+&lt;p>These parts need to communicate with each other. For example, a popup needs to
+send a message to a content script to change the appearance of a webpage. Or a
+background script needs to send a message to a popup to update the user
+interface based on the page that&amp;rsquo;s being visited.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/message-passing.svg"
 alt="Communication in a Chrome extension">&lt;figcaption>
 &lt;h4>Communication in a Chrome extension&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>One way to communicate between these parts is to use the local storage via the &lt;code>chrome.storage&lt;/code> APIs. We do not recommend this method because it is slow and can cause performance issues. This method is slow because it is not synchronous &amp;ndash; the scripts need to check the storage for changes periodically. A better way to communicate between extension parts is to use message passing.&lt;/p>
+&lt;p>One way to communicate between these parts is to use the local storage via the
+&lt;code>chrome.storage&lt;/code> APIs. We do not recommend this method because it is slow and
+can cause performance issues. This method is slow because it is not synchronous
+&amp;ndash; the scripts need to check the storage for changes periodically. A better way
+to communicate between extension parts is to use message passing.&lt;/p>
 &lt;h2 id="what-is-message-passing">&lt;a href="#what-is-message-passing" class="header-anchor">&lt;/a>What is message passing?
-&lt;/h2>&lt;p>In computer science, message passing is a method for communicating between different processes or threads. A process or thread sends a message to another process or thread, which receives the message and acts on it. This method is often used in distributed systems, where processes run on different machines and need to communicate with each other. The sender sends a message, and the receiver decodes it and executes the appropriate code.&lt;/p>
+&lt;/h2>&lt;p>In computer science, message passing is a method for communicating between
+different processes or threads. A process or thread sends a message to another
+process or thread, which receives the message and acts on it. This method is
+often used in distributed systems, where processes run on different machines and
+need to communicate with each other. The sender sends a message, and the
+receiver decodes it and executes the appropriate code.&lt;/p>
 &lt;h2 id="message-passing-in-a-chrome-extension">&lt;a href="#message-passing-in-a-chrome-extension" class="header-anchor">&lt;/a>Message passing in a Chrome extension
-&lt;/h2>&lt;p>Message passing is a way to communicate between different parts of a Chrome extension. Its main advantage is that it&amp;rsquo;s fast and efficient. When a message is sent, the receiver gets it immediately and can respond to it right away.&lt;/p>
-&lt;p>Message passing is done in Chrome extensions using the &lt;code>chrome.runtime.sendMessage&lt;/code>, &lt;code>chrome.tabs.sendMessage&lt;/code> and &lt;code>chrome.runtime.onMessage&lt;/code> functions. Here&amp;rsquo;s how it works:&lt;/p>
+&lt;/h2>&lt;p>Message passing is a way to communicate between different parts of a Chrome
+extension. Its main advantage is that it&amp;rsquo;s fast and efficient. When a message is
+sent, the receiver gets it immediately and can respond to it right away.&lt;/p>
+&lt;p>Message passing is done in Chrome extensions using the
+&lt;code>chrome.runtime.sendMessage&lt;/code>, &lt;code>chrome.tabs.sendMessage&lt;/code> and
+&lt;code>chrome.runtime.onMessage&lt;/code> functions. Here&amp;rsquo;s how it works:&lt;/p>
 &lt;ol>
-&lt;li>The sender calls &lt;code>chrome.runtime.sendMessage&lt;/code> or &lt;code>chrome.tabs.sendMessage&lt;/code> with the message to send.&lt;/li>
-&lt;li>The receiver listens for messages using &lt;code>chrome.runtime.onMessage.addListener&lt;/code>&lt;/li>
-&lt;li>The receiver processes the incoming message and, optionally, responds to the message.&lt;/li>
+&lt;li>The sender calls &lt;code>chrome.runtime.sendMessage&lt;/code> or &lt;code>chrome.tabs.sendMessage&lt;/code>
+with the message to send.&lt;/li>
+&lt;li>The receiver listens for messages using
+&lt;code>chrome.runtime.onMessage.addListener&lt;/code>&lt;/li>
+&lt;li>The receiver processes the incoming message and, optionally, responds to the
+message.&lt;/li>
 &lt;/ol>
 &lt;h2 id="message-passing-from-a-popup-to-a-content-script">&lt;a href="#message-passing-from-a-popup-to-a-content-script" class="header-anchor">&lt;/a>Message passing from a popup to a content script
-&lt;/h2>&lt;p>Let&amp;rsquo;s see how we can use message passing to communicate between a popup and a content script. We will send a message when the user toggles the enable slider in the popup, which will enable or disable the content script&amp;rsquo;s processing. We will use the &lt;code>chrome.tabs.sendMessage&lt;/code> function to send a message to a specific tab ID.&lt;/p>
-&lt;p>In the popup script (&lt;code>popup.ts&lt;/code>), we send a message to all the tabs when we detect a change in the top slider:&lt;/p>
+&lt;/h2>&lt;p>Let&amp;rsquo;s see how we can use message passing to communicate between a popup and a
+content script. We will send a message when the user toggles the enable slider
+in the popup, which will enable or disable the content script&amp;rsquo;s processing. We
+will use the &lt;code>chrome.tabs.sendMessage&lt;/code> function to send a message to a specific
+tab ID.&lt;/p>
+&lt;p>In the popup script (&lt;code>popup.ts&lt;/code>), we send a message to all the tabs when we
+detect a change in the top slider:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Send message to content script in all tabs
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">tabs&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">await&lt;/span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">tabs&lt;/span>.&lt;span style="color:#a6e22e">query&lt;/span>({})
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> (&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">tab&lt;/span> &lt;span style="color:#66d9ef">of&lt;/span> &lt;span style="color:#a6e22e">tabs&lt;/span>) {
@@ -55,20 +84,27 @@ alt="Communication in a Chrome extension">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sendResponse&lt;/span>({&lt;span style="color:#a6e22e">title&lt;/span>: &lt;span style="color:#66d9ef">document.title&lt;/span>, &lt;span style="color:#a6e22e">url&lt;/span>: &lt;span style="color:#66d9ef">window.location.href&lt;/span>})
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When the user toggles the slider in the popup, the popup sends a message to all tabs. The receiving tab will print this message to the Chrome Developer Tools console.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When the user toggles the slider in the popup, the popup sends a message to all
+tabs. The receiving tab will print this message to the Chrome Developer Tools
+console.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/content-script-received.png"
 alt="Content script received message">&lt;figcaption>
 &lt;h4>Content script received message&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>Then, the popup will receive a response from the content script with the tab&amp;rsquo;s title and URL. This response prints to the &lt;code>Inspect Popup&lt;/code> console. System tabs like &lt;code>chrome://extensions/&lt;/code> will not respond to messages.&lt;/p>
+&lt;p>Then, the popup will receive a response from the content script with the tab&amp;rsquo;s
+title and URL. This response prints to the &lt;code>Inspect Popup&lt;/code> console. System tabs
+like &lt;code>chrome://extensions/&lt;/code> will not respond to messages.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/popup-response.png"
 alt="Popup received response">&lt;figcaption>
 &lt;h4>Popup received response&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="message-passing-from-a-popup-to-the-service-worker-background-script">&lt;a href="#message-passing-from-a-popup-to-the-service-worker-background-script" class="header-anchor">&lt;/a>Message passing from a popup to the service worker (background script)
-&lt;/h2>&lt;p>To send a message to the service worker, we must use the &lt;code>chrome.runtime.sendMessage&lt;/code> function instead of &lt;code>chrome.tabs.sendMessage&lt;/code>. The service worker does not have a tab ID, so we cannot use &lt;code>chrome.tabs.sendMessage&lt;/code>.&lt;/p>
+&lt;/h2>&lt;p>To send a message to the service worker, we must use the
+&lt;code>chrome.runtime.sendMessage&lt;/code> function instead of &lt;code>chrome.tabs.sendMessage&lt;/code>. The
+service worker does not have a tab ID, so we cannot use
+&lt;code>chrome.tabs.sendMessage&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">sendMessage&lt;/span>({&lt;span style="color:#a6e22e">enabled&lt;/span>: &lt;span style="color:#66d9ef">event.target.checked&lt;/span>})
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .&lt;span style="color:#a6e22e">then&lt;/span>((&lt;span style="color:#a6e22e">response&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Popup received response&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">response&lt;/span>)
@@ -76,7 +112,8 @@ alt="Popup received response">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .&lt;span style="color:#66d9ef">catch&lt;/span>((&lt;span style="color:#a6e22e">error&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">warn&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Popup could not send message&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">error&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the service worker script (&lt;code>background.ts&lt;/code>), we listen for the message and process it:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the service worker script (&lt;code>background.ts&lt;/code>), we listen for the message and
+process it:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">runtime&lt;/span>.&lt;span style="color:#a6e22e">onMessage&lt;/span>.&lt;span style="color:#a6e22e">addListener&lt;/span>((&lt;span style="color:#a6e22e">request&lt;/span>, &lt;span style="color:#a6e22e">sender&lt;/span>, &lt;span style="color:#a6e22e">sendResponse&lt;/span>) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> (&lt;span style="color:#a6e22e">request&lt;/span>.&lt;span style="color:#a6e22e">enabled&lt;/span> &lt;span style="color:#f92672">!==&lt;/span> &lt;span style="color:#66d9ef">undefined&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Service worker received message from sender %s&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">sender&lt;/span>.&lt;span style="color:#a6e22e">id&lt;/span>, &lt;span style="color:#a6e22e">request&lt;/span>)
@@ -84,14 +121,22 @@ alt="Popup received response">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="message-passing-from-a-content-script-to-the-popup-and-service-worker">&lt;a href="#message-passing-from-a-content-script-to-the-popup-and-service-worker" class="header-anchor">&lt;/a>Message passing from a content script to the popup and service worker
-&lt;/h2>&lt;p>To send a message from the content script, use the &lt;code>chrome.runtime.sendMessage&lt;/code> function. The popup and service worker can listen and receive this message.&lt;/p>
+&lt;/h2>&lt;p>To send a message from the content script, use the &lt;code>chrome.runtime.sendMessage&lt;/code>
+function. The popup and service worker can listen and receive this message.&lt;/p>
 &lt;h2 id="message-passing-from-the-service-worker-background-script-to-a-content-script-and-the-popup">&lt;a href="#message-passing-from-the-service-worker-background-script-to-a-content-script-and-the-popup" class="header-anchor">&lt;/a>Message passing from the service worker (background script) to a content script and the popup
-&lt;/h2>&lt;p>Use the &lt;code>chrome.tabs.sendMessage&lt;/code> function to send a message to the content script. Use the &lt;code>chrome.runtime.sendMessage&lt;/code> function to send a message to the popup.&lt;/p>
-&lt;p>The code for sending a message from the service worker is the same as the code for sending a message from the popup. The receiving code in the content and popup scripts is also the same.&lt;/p>
+&lt;/h2>&lt;p>Use the &lt;code>chrome.tabs.sendMessage&lt;/code> function to send a message to the content
+script. Use the &lt;code>chrome.runtime.sendMessage&lt;/code> function to send a message to the
+popup.&lt;/p>
+&lt;p>The code for sending a message from the service worker is the same as the code
+for sending a message from the popup. The receiving code in the content and
+popup scripts is also the same.&lt;/p>
 &lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will add linting and formatting tools to our Chrome extension. These tools increase the quality of our code and increase engineering velocity for projects with multiple developers.&lt;/p>
+&lt;/h2>&lt;p>In the next part of this series, we will add linting and formatting tools to our
+Chrome extension. These tools increase the quality of our code and increase
+engineering velocity for projects with multiple developers.&lt;/p>
 &lt;h2 id="chrome-extension-with-webpack-and-typescript-code-on-github">&lt;a href="#chrome-extension-with-webpack-and-typescript-code-on-github" class="header-anchor">&lt;/a>Chrome extension with webpack and TypeScript code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/3-message-passing" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>The complete code is available on GitHub at:
+&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/3-message-passing" target="_blank" rel="noopener"
 >https://github.com/getvictor/create-chrome-extension/tree/main/3-message-passing&lt;/a>&lt;/p>
 &lt;h2 id="message-passing-in-a-chrome-extension-video">&lt;a href="#message-passing-in-a-chrome-extension-video" class="header-anchor">&lt;/a>Message passing in a Chrome extension video
 &lt;/h2>&lt;div class="video-wrapper">
@@ -102,7 +147,8 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a software development team.&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube
+video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a software development team.&lt;/p>
 &lt;h3 id="create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
 &lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
 &lt;h3 id="add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
