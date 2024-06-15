@@ -1,8 +1,9 @@
-.DS_Store
-.hugo_build.lock
-.idea
+/.DS_Store
+/.hugo_build.lock
+/.idea
 
 # Build files
-assets/jsconfig.json
-public
-resources
+/assets/jsconfig.json
+/node_modules
+/public
+/resources
