@@ -1,10 +1,246 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TypeScript on Victor on Software</title><link>https://victoronsoftware.com/tags/typescript/</link><description>Recent content in TypeScript on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/typescript/index.xml" rel="self" type="application/rss+xml"/><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a software development team.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TypeScript on Victor on Software</title><link>https://victoronsoftware.com/tags/typescript/</link><description>Recent content in TypeScript on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/typescript/index.xml" rel="self" type="application/rss+xml"/><item><title>Linting and formatting TypeScript in Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</link><pubDate>Wed, 19 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</guid><description>&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/linting-and-formatting-headline.png" alt="Featured image of post Linting and formatting TypeScript in Chrome extension (2024)" />&lt;ul>
+&lt;li>&lt;a class="link" href="#setting-up-linting" >Setting up linting with ESLint and typescript-eslint&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#setting-up-formatting" >Setting up formatting with Prettier&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#adding-linting-and-formatting-to-ci" >Adding linting and formatting to CI&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a maintainable Chrome extension&lt;/a>.&lt;/p>
+&lt;p>In the previous article, we
+&lt;a class="link" href="../message-passing-in-chrome-extension" >added TypeScript code for communicating between parts of a Chrome extension&lt;/a>.
+This check-in will be our starting point for this article. This article will add linting and formatting to our
+TypeScript code, which will help us catch errors and enforce a consistent code style for larger teams.&lt;/p>
+&lt;h2 id="what-is-linting">&lt;a href="#what-is-linting" class="header-anchor">&lt;/a>What is linting?
+&lt;/h2>&lt;p>Linting is the process of running a static code analysis program to analyze code for potential errors. Linters can catch
+syntax errors, typos, and other common mistakes that can lead to bugs. They can also enforce coding standards, such as
+indentation, variable naming, and other style rules.&lt;/p>
+&lt;h2 id="what-is-formatting">&lt;a href="#what-is-formatting" class="header-anchor">&lt;/a>What is formatting?
+&lt;/h2>&lt;p>Formatting automatically changes the code&amp;rsquo;s appearance to match a specific style guide. Formatting tools can
+automatically add or remove whitespace, change indentation, and reformat code to make it more readable. Formatting tools
+can enforce a consistent code style across a project.&lt;/p>
+&lt;h2 id="why-use-linting-and-formatting-tools">&lt;a href="#why-use-linting-and-formatting-tools" class="header-anchor">&lt;/a>Why use linting and formatting tools?
+&lt;/h2>&lt;p>Linters and formatters work together to help developers write better code and accelerate the development process &amp;ndash;
+linters flag errors, while formatters automatically enforce a consistent code style.&lt;/p>
+&lt;p>Together, they can help prevent bugs, improve code quality, and make it easier for developers to read and understand the
+code. The result is cleaner, more maintainable code that uses many coding best practices and is easier to work with.&lt;/p>
+&lt;p>Linting can also teach developers about best practices and help them avoid common pitfalls. For example, a linter can
+flag misused promises, such as missing &lt;code>await&lt;/code> or uncaught errors.&lt;/p>
+&lt;h2 id="setting-up-linting">&lt;a href="#setting-up-linting" class="header-anchor">&lt;/a>Setting up linting with ESLint and typescript-eslint
+&lt;/h2>&lt;p>To set up linting for TypeScript code, we will use &lt;a class="link" href="https://eslint.org/" target="_blank" rel="noopener"
+>ESLint&lt;/a> with the
+&lt;a class="link" href="https://typescript-eslint.io/" target="_blank" rel="noopener"
+>typescript-eslint&lt;/a> plugin. ESLint is a popular linter that can analyze JavaScript and
+TypeScript code. The typescript-eslint plugin adds TypeScript-specific rules to ESLint.&lt;/p>
+&lt;p>To set up ESLint with typescript-eslint, we need to install the following packages:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev eslint @eslint/js @types/eslint__js typescript-eslint
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we need to create an ESLint configuration file. We will create an &lt;code>eslint.config.mjs&lt;/code> file at the root of our
+project:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// @ts-check
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">eslint&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;@eslint/js&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">tseslint&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;typescript-eslint&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">config&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">eslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">recommended&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">recommendedTypeChecked&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">stylisticTypeChecked&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ignores&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;dist/**/*&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">languageOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">parserOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">project&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tsconfigRootDir&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">import&lt;/span>.&lt;span style="color:#a6e22e">meta&lt;/span>.&lt;span style="color:#a6e22e">dirname&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code>dist&lt;/code>
+directory containing the webpack-generated bundles.&lt;/p>
+&lt;h3 id="why-use-the-mjs-extension-instead-of-js-for-the-configuration-file">&lt;a href="#why-use-the-mjs-extension-instead-of-js-for-the-configuration-file" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
+&lt;/h3>&lt;p>We are using &lt;code>.mjs&lt;/code> extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
+allows us to import and export modules using the &lt;code>import&lt;/code> and &lt;code>export&lt;/code> keywords. There are other ways to enable
+ECMAScript modules in JavaScript for our project, but this is the simplest way for just one JavaScript file. Our
+TypeScript files already use ECMAScript modules via these included recommended &lt;code>tsconfig.json&lt;/code> settings:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;compilerOptions&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;module&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;commonjs&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;esModuleInterop&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we used &lt;code>.js&lt;/code> extension for the configuration file, we would need to use &lt;code>require&lt;/code> and &lt;code>module.exports&lt;/code> syntax.
+Otherwise, we would get an error like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>/Users/victor/work/create-chrome-extension/4-linting-and-formatting/eslint.config.js:3
+import eslint from &amp;#39;@eslint/js&amp;#39;
+^^^^^^
+SyntaxError: Cannot use import statement outside a module
+at internalCompileFunction (node:internal/vm:77:18)
+at wrapSafe (node:internal/modules/cjs/loader:1288:20)
+at Module._compile (node:internal/modules/cjs/loader:1340:27)
+at Module._extensions..js (node:internal/modules/cjs/loader:1435:10)
+at Module.load (node:internal/modules/cjs/loader:1207:32)
+at Module._load (node:internal/modules/cjs/loader:1023:12)
+at cjsLoader (node:internal/modules/esm/translators:356:17)
+at ModuleWrap.&amp;lt;anonymous&amp;gt; (node:internal/modules/esm/translators:305:7)
+at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
+at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
+&lt;/code>&lt;/pre>&lt;h2 id="running-eslint">&lt;a href="#running-eslint" class="header-anchor">&lt;/a>Running ESLint
+&lt;/h2>&lt;p>We can run ESLint from the command line using the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./node_modules/.bin/eslint .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, we can use &lt;code>npx&lt;/code>, which is a package runner tool that comes with npm:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx eslint .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will run ESLint on all TypeScript files in the current directory and subdirectories. ESLint will output any
+errors or warnings it finds in the code, such as:&lt;/p>
+&lt;pre tabindex="0">&lt;code>/Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/background.ts
+14:17 error Unsafe member access .enabled on an `any` value @typescript-eslint/no-unsafe-member-access
+/Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/content.ts
+51:9 error Unsafe assignment of an `any` value @typescript-eslint/no-unsafe-assignment
+74:17 error Unsafe member access .enabled on an `any` value @typescript-eslint/no-unsafe-member-access
+76:9 error Unsafe assignment of an `any` value @typescript-eslint/no-unsafe-assignment
+76:27 error Unsafe member access .enabled on an `any` value @typescript-eslint/no-unsafe-member-access
+/Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/popup.ts
+9:23 error Unsafe argument of type `any` assigned to a parameter of type `boolean` @typescript-eslint/no-unsafe-argument
+11:37 error Promise returned in function argument where a void return was expected @typescript-eslint/no-misused-promises
+23:34 error Unsafe member access .title on an `any` value @typescript-eslint/no-unsafe-member-access
+23:50 error Unsafe member access .url on an `any` value @typescript-eslint/no-unsafe-member-access
+43:5 error Unsafe assignment of an `any` value @typescript-eslint/no-unsafe-assignment
+✖ 10 problems (10 errors, 0 warnings)
+&lt;/code>&lt;/pre>&lt;p>At this point, we should fix the errors and warnings that ESLint has found in our code.&lt;/p>
+&lt;p>We can also update the &lt;code>scripts&lt;/code> section of our &lt;code>package.json&lt;/code> file to run ESLint with &lt;code>npm run&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;lint&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;eslint .&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now we can run ESLint with the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm run lint
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="setting-up-formatting">&lt;a href="#setting-up-formatting" class="header-anchor">&lt;/a>Setting up formatting with Prettier
+&lt;/h2>&lt;p>To format TypeScript code, we will use &lt;a class="link" href="https://prettier.io/" target="_blank" rel="noopener"
+>Prettier&lt;/a>. Prettier is a popular code formatter that
+automatically formats code to match a specific style guide.&lt;/p>
+&lt;p>To set up Prettier, we need to install the following package:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev --save-exact prettier
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, create a &lt;code>.prettierignore&lt;/code> file in the root of our project to ignore the &lt;code>dist&lt;/code> directory:&lt;/p>
+&lt;pre tabindex="0">&lt;code>/dist
+&lt;/code>&lt;/pre>&lt;p>By default, Prettier ignores the &lt;code>node_modules&lt;/code> directory.&lt;/p>
+&lt;p>Next, create a &lt;code>.prettierrc&lt;/code> file in the root of our project to configure Prettier:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;semi&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We will use the default Prettier settings but turn off the &lt;code>semi&lt;/code> rule to remove semicolons from the end of TypeScript
+lines. Removing semicolons is a common style choice in modern JavaScript and TypeScript code.&lt;/p>
+&lt;h2 id="running-prettier">&lt;a href="#running-prettier" class="header-anchor">&lt;/a>Running Prettier
+&lt;/h2>&lt;p>We can run Prettier from the command line using the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx prettier --write .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will format all eligible files in the current directory and subdirectories.&lt;/p>
+&lt;p>We can also update the &lt;code>scripts&lt;/code> section of our &lt;code>package.json&lt;/code> file to run Prettier with the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;format&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;prettier --write .&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;format-check&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;prettier --check .&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>npm run format&lt;/code> will format all eligible files, while &lt;code>npm run format-check&lt;/code> will check if the files are formatted.&lt;/p>
+&lt;h2 id="adding-linting-and-formatting-to-ci">&lt;a href="#adding-linting-and-formatting-to-ci" class="header-anchor">&lt;/a>Adding linting and formatting to continuous integration (CI)
+&lt;/h2>&lt;p>We will use GitHub Actions to automate linting and formatting checks on every pull request and commit to our main
+branch. This will make sure all code changes are linted and formatted correctly on the main branch.&lt;/p>
+&lt;p>This automatic check means that all contributors can expect that the code they are working on uses a consistent style
+and meets a quality standard. Consistency is beneficial for open-source projects where contributors may not be familiar
+with the codebase.&lt;/p>
+&lt;p>To set up GitHub Actions, create a &lt;code>.github/workflows/lint-and-format.yml&lt;/code> file in the root of our git repository:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Lint check, format check, and build&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">branches&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">paths&lt;/span>: &lt;span style="color:#75715e"># We only run the workflow if the code in these files/directories changes&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span> &lt;span style="color:#75715e"># This file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span> &lt;span style="color:#75715e"># The working directory for this article&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">pull_request&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">paths&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This allows a subsequently queued workflow run to interrupt previous runs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">concurrency&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">group&lt;/span>: &lt;span style="color:#ae81ff">${{ github.workflow }}-${{ github.head_ref || github.run_id}}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cancel-in-progress&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">defaults&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">shell&lt;/span>: &lt;span style="color:#ae81ff">bash&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">working-directory&lt;/span>: &lt;span style="color:#ae81ff">./4-linting-and-formatting&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">permissions&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">contents&lt;/span>: &lt;span style="color:#ae81ff">read&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">lint-format-build&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Install dependencies&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm install --no-save&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Format check and lint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run format-check
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run lint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Build&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run build&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since our git repository is shared by multiple projects (from various articles), we use the &lt;code>paths&lt;/code> key to only run the
+workflow when the code in the &lt;code>4-linting-and-formatting&lt;/code> directory changes.&lt;/p>
+&lt;p>After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
+Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
+alt="GitHub Actions workflow results">&lt;figcaption>
+&lt;h4>GitHub Actions workflow results&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>For more details on GitHub Actions workflows, see our article on
+&lt;a class="link" href="../github-reusable-workflows-and-steps/" >reusing GitHub Actions workflows and steps&lt;/a>.&lt;/p>
+&lt;h2 id="adding-stricter-linting-rules-to-typescript-eslint">&lt;a href="#adding-stricter-linting-rules-to-typescript-eslint" class="header-anchor">&lt;/a>Adding stricter linting rules to typescript-eslint
+&lt;/h2>&lt;p>The &lt;code>recommended&lt;/code> ruleset is a good starting point for linting TypeScript code. However, we can add stricter rules to
+catch even more potential issues in our code. It is easiest to start with strict rules early in the project when fixing
+issues is relatively painless. Otherwise, it is a good idea to gradually add stricter rules to avoid overwhelming
+developers with too many errors and warnings.&lt;/p>
+&lt;p>To switch to a stricter, more opinionated ruleset, replace &lt;code>tseslint.configs.recommendedTypeChecked&lt;/code> with
+&lt;code>tseslint.configs.strictTypeChecked&lt;/code> in the &lt;code>eslint.config.mjs&lt;/code> file.&lt;/p>
+&lt;p>ESLint rules can be configured or disabled using configuration comments in the code or the ESLint configuration file.
+For more details, see the &lt;a class="link" href="https://eslint.org/docs/latest/use/configure/rules" target="_blank" rel="noopener"
+>ESLint configure rules&lt;/a>.&lt;/p>
+&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
+&lt;/h2>&lt;p>In the next part of this series, we will add an options page to our Chrome extension. This page will allow users to
+configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
+&lt;h2 id="linting-and-formatting-typescript-code-on-github">&lt;a href="#linting-and-formatting-typescript-code-on-github" class="header-anchor">&lt;/a>Linting and formatting TypeScript code on GitHub
+&lt;/h2>&lt;p>The complete code is available on GitHub at:
+&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/4-linting-and-formatting" target="_blank" rel="noopener"
+>https://github.com/getvictor/create-chrome-extension/tree/main/4-linting-and-formatting&lt;/a>&lt;/p>
+&lt;h2 id="linting-and-formatting-typescript-video">&lt;a href="#linting-and-formatting-typescript-video" class="header-anchor">&lt;/a>Linting and formatting TypeScript video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/DHtwTkF0DOE"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the
+basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy
+your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a
+software development team.&lt;/p>
 &lt;h3 id="create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
-&lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
+&lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the
+extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
 &lt;h3 id="add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
-&lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome extension.&lt;/p>
+&lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome
+extension.&lt;/p>
 &lt;h3 id="message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension">&lt;a href="#message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
-&lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
+&lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how
+to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
+&lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
+best practices.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
@@ -401,14 +637,20 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a React app from scratch: getting started (2024)</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch: getting started (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim to reduce tool usage and fully understand each step of the process.&lt;/p>
+&lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim
+to reduce tool usage and fully understand each step of the process.&lt;/p>
 &lt;h2 id="what-is-react">&lt;a href="#what-is-react" class="header-anchor">&lt;/a>What is React?
-&lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web applications.&lt;/p>
+&lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained
+by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web
+applications.&lt;/p>
 &lt;h2 id="prerequisites----nodejs-and-npm">&lt;a href="#prerequisites----nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
 &lt;/h2>&lt;p>&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
->Node.js and npm&lt;/a> are the most popular tools for working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential for modern web development.&lt;/p>
+>Node.js and npm&lt;/a> are the most popular tools for
+working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential
+for modern web development.&lt;/p>
 &lt;h2 id="packagejson">&lt;a href="#packagejson" class="header-anchor">&lt;/a>package.json
-&lt;/h2>&lt;p>We will start by creating a &lt;code>package.json&lt;/code> file. This file contains metadata about the project and its dependencies. You can use the &lt;code>npm init&lt;/code> command to create the &lt;code>package.json&lt;/code> file. Or create one yourself containing something like:&lt;/p>
+&lt;/h2>&lt;p>We will start by creating a &lt;code>package.json&lt;/code> file. This file contains metadata about the project and its dependencies. You
+can use the &lt;code>npm init&lt;/code> command to create the &lt;code>package.json&lt;/code> file. Or create one yourself containing something like:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-hello-world&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1.0.0&amp;#34;&lt;/span>,
@@ -419,8 +661,12 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="typescript">&lt;a href="#typescript" class="header-anchor">&lt;/a>TypeScript
 &lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
->TypeScript&lt;/a> to our project. TypeScript is a superset of JavaScript that adds static types to the language. It helps catch errors early in the development process and improves code quality.&lt;/p>
-&lt;p>Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the React community and provides many benefits. Modern IDEs, such as Visual Studio Code and WebStorm, support TypeScript, making development and learning easier.&lt;/p>
+>TypeScript&lt;/a> to our project. TypeScript is a superset of JavaScript
+that adds static types to the language. It helps catch errors early in the development process and improves code
+quality.&lt;/p>
+&lt;p>Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the
+React community and provides many benefits. Modern IDEs, such as Visual Studio Code and WebStorm, support TypeScript,
+making development and learning easier.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev typescript
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command updates the &lt;code>package.json&lt;/code> file with the TypeScript dependency.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
@@ -435,11 +681,15 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It also creates a &lt;code>node_modules&lt;/code> directory. This directory contains the packages installed by npm.&lt;/p>
-&lt;p>Finally, the command creates a &lt;code>package-lock.json&lt;/code> file. This file locks the dependencies to specific versions, ensuring that the project is built with the same versions of the dependencies across different machines.&lt;/p>
-&lt;p>The &lt;code>--save-dev&lt;/code> flag tells npm to save the package as a development dependency. Development dependencies are not required for the production build of the app.&lt;/p>
+&lt;p>Finally, the command creates a &lt;code>package-lock.json&lt;/code> file. This file locks the dependencies to specific versions, ensuring
+that the project is built with the same versions of the dependencies across different machines.&lt;/p>
+&lt;p>The &lt;code>--save-dev&lt;/code> flag tells npm to save the package as a development dependency. Development dependencies are not
+required for the production build of the app.&lt;/p>
 &lt;h3 id="tsconfigjson">&lt;a href="#tsconfigjson" class="header-anchor">&lt;/a>tsconfig.json
-&lt;/h3>&lt;p>We need to create a &lt;code>tsconfig.json&lt;/code> file to &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
->configure TypeScript&lt;/a>. This file specifies the root files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p>
+&lt;/h3>&lt;p>We need to create a &lt;code>tsconfig.json&lt;/code> file to
+&lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
+>configure TypeScript&lt;/a>. This file specifies the root
+files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p>
 &lt;p>Install the recommended configuration with the following:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @tsconfig/recommended
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, create a &lt;code>tsconfig.json&lt;/code> file with the following content:&lt;/p>
@@ -450,20 +700,27 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-jsx">&lt;a href="#what-is-jsx" class="header-anchor">&lt;/a>What is JSX?
-&lt;/h2>&lt;p>In our &lt;code>tsconfig.json&lt;/code> file, we set the &lt;code>jsx&lt;/code> option to &lt;code>react-jsx&lt;/code>. This option tells TypeScript to treat JSX as React JSX.&lt;/p>
+&lt;/h2>&lt;p>In our &lt;code>tsconfig.json&lt;/code> file, we set the &lt;code>jsx&lt;/code> option to &lt;code>react-jsx&lt;/code>. This option tells TypeScript to treat JSX as React
+JSX.&lt;/p>
 &lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/JSX_%28JavaScript%29" target="_blank" rel="noopener"
->JSX&lt;/a> is a syntax extension for JavaScript. It allows you to write HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript by the build tool.&lt;/p>
+>JSX&lt;/a> is a syntax extension for JavaScript. It allows you to write
+HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript
+by the build tool.&lt;/p>
 &lt;h2 id="react-and-reactdom">&lt;a href="#react-and-reactdom" class="header-anchor">&lt;/a>React and ReactDOM
 &lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://react.dev/" target="_blank" rel="noopener"
 >React&lt;/a> and &lt;a class="link" href="https://react.dev/reference/react-dom" target="_blank" rel="noopener"
->ReactDOM&lt;/a> to our project. React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p>
+>ReactDOM&lt;/a> to our project.
+React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install react react-dom
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since we are using TypeScript, we must also install &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
->type definitions&lt;/a> for React and ReactDOM. The TypeScript compiler uses these definitions for type checking.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since we are using TypeScript, we must also install
+&lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
+>type definitions&lt;/a> for React and ReactDOM. The
+TypeScript compiler uses these definitions for type checking.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @types/react @types/react-dom
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-webpack">&lt;a href="#what-is-webpack" class="header-anchor">&lt;/a>What is Webpack?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
->Webpack&lt;/a> is a module bundler for JavaScript. It takes modules with dependencies and generates static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p>
+>Webpack&lt;/a> is a module bundler for JavaScript. It takes modules with dependencies and generates
+static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p>
 &lt;p>We will install the Webpack packages:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin ts-loader
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
@@ -474,8 +731,10 @@ title="YouTube Video"
 &lt;li>&lt;code>ts-loader&lt;/code> is a TypeScript loader for Webpack. It allows Webpack to compile TypeScript files.&lt;/li>
 &lt;/ul>
 &lt;h3 id="webpackconfigts">&lt;a href="#webpackconfigts" class="header-anchor">&lt;/a>webpack.config.ts
-&lt;/h3>&lt;p>By default, Webpack does not need a configuration file. However, since we use TypeScript, we must create a &lt;code>webpack.config.ts&lt;/code> file to configure Webpack.&lt;/p>
-&lt;p>Note that we use the &lt;code>.ts&lt;/code> extension for the configuration file. The TypeScript compiler will compile this file. Using a &lt;code>.js&lt;/code> file is also possible, but we prefer TypeScript for type safety.&lt;/p>
+&lt;/h3>&lt;p>By default, Webpack does not need a configuration file. However, since we use TypeScript, we must create a
+&lt;code>webpack.config.ts&lt;/code> file to configure Webpack.&lt;/p>
+&lt;p>Note that we use the &lt;code>.ts&lt;/code> extension for the configuration file. The TypeScript compiler will compile this file. Using a
+&lt;code>.js&lt;/code> file is also possible, but we prefer TypeScript for type safety.&lt;/p>
 &lt;p>No additional type definitions are required for our Webpack configuration at this time.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">HtmlWebpackPlugin&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;html-webpack-plugin&amp;#39;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -495,7 +754,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We specify &lt;code>src/index.tsx&lt;/code> as our app&amp;rsquo;s top-level file. By default, the build&amp;rsquo;s output will go to the &lt;code>dist&lt;/code> directory.&lt;/p>
 &lt;p>We configure the TypeScript loader to compile &lt;code>.ts&lt;/code> and &lt;code>.tsx&lt;/code> files.&lt;/p>
 &lt;p>We also use the &lt;code>html-webpack-plugin&lt;/code> to generate an &lt;code>index.html&lt;/code> file. This file will load the Webpack bundle.&lt;/p>
-&lt;p>We need to add a TypeScript execution engine to the Node.js runtime so that it can understand the above TypeScript configuration file. We will use &lt;code>ts-node&lt;/code> for this purpose.&lt;/p>
+&lt;p>We need to add a TypeScript execution engine to the Node.js runtime so that it can understand the above TypeScript
+configuration file. We will use &lt;code>ts-node&lt;/code> for this purpose.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev ts-node
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="final-packagejson">&lt;a href="#final-packagejson" class="header-anchor">&lt;/a>Final package.json
 &lt;/h2>&lt;p>After all the installations, our &lt;code>package.json&lt;/code> file should look similar to this:&lt;/p>
@@ -525,7 +785,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="srcindextsx">&lt;a href="#srcindextsx" class="header-anchor">&lt;/a>src/index.tsx
 &lt;/h2>&lt;p>We are finally ready to write some React code. TSX files are TypeScript files that contain JSX.&lt;/p>
-&lt;p>We will create the &lt;code>src/index.tsx&lt;/code> file. It will render a simple React component. React components are the reusable building blocks of React apps.&lt;/p>
+&lt;p>We will create the &lt;code>src/index.tsx&lt;/code> file. It will render a simple React component. React components are the reusable
+building blocks of React apps.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">React&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react&amp;#34;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">createRoot&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react-dom/client&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -544,9 +805,11 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Render our HelloWorld component
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">render&lt;/span>(&amp;lt;&lt;span style="color:#f92672">HelloWorld&lt;/span>/&amp;gt;)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-app-on-the-webpack-development-server">&lt;a href="#running-the-app-on-the-webpack-development-server" class="header-anchor">&lt;/a>Running the app on the Webpack development server
-&lt;/h2>&lt;p>Now, we can run the app on the Webpack development server. This server will serve the app and automatically reload the page when the code changes.&lt;/p>
+&lt;/h2>&lt;p>Now, we can run the app on the Webpack development server. This server will serve the app and automatically reload the
+page when the code changes.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack serve --mode development --open
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--mode development&lt;/code> flag tells Webpack to build the app in development mode. The &lt;code>--open&lt;/code> flag tells Webpack to open the app in the default browser.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--mode development&lt;/code> flag tells Webpack to build the app in development mode. The &lt;code>--open&lt;/code> flag tells Webpack to
+open the app in the default browser.&lt;/p>
 &lt;p>The browser should show the following:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
 alt="React app served by Webpack dev server">&lt;figcaption>
@@ -554,7 +817,8 @@ alt="React app served by Webpack dev server">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h3 id="packagejson-scripts">&lt;a href="#packagejson-scripts" class="header-anchor">&lt;/a>package.json scripts
-&lt;/h3>&lt;p>Instead of remembering the above &lt;code>webpack&lt;/code> command, we can add a script to the &lt;code>package.json&lt;/code> file to run the Webpack development server.&lt;/p>
+&lt;/h3>&lt;p>Instead of remembering the above &lt;code>webpack&lt;/code> command, we can add a script to the &lt;code>package.json&lt;/code> file to run the Webpack
+development server.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;start&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;webpack serve --mode development --open&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -565,11 +829,20 @@ alt="React app served by Webpack dev server">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-app-for-production">&lt;a href="#building-the-app-for-production" class="header-anchor">&lt;/a>Building the app for production
 &lt;/h2>&lt;p>To build the app for production, we can run:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack --mode production
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will create a &lt;code>dist&lt;/code> directory with the app&amp;rsquo;s production build. The directory will contain the &lt;code>index.html&lt;/code> file and the &lt;code>main.js&lt;/code> JavaScript bundle. The production files are optimized for performance, and they are minified and compressed to reduce their size.&lt;/p>
-&lt;p>It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will create a &lt;code>dist&lt;/code> directory with the app&amp;rsquo;s production build. The directory will contain the &lt;code>index.html&lt;/code>
+file and the &lt;code>main.js&lt;/code> JavaScript bundle. The production files are optimized for performance, and they are minified and
+compressed to reduce their size.&lt;/p>
+&lt;p>It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud
+providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p>
 &lt;h2 id="other-getting-started-guides">&lt;a href="#other-getting-started-guides" class="header-anchor">&lt;/a>Other getting started guides
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../create-chrome-extension" >creating a Chrome extension from scratch &lt;strong>without&lt;/strong> any additional tooling&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about
+&lt;a class="link" href="../create-chrome-extension" >creating a Chrome extension from scratch &lt;strong>without&lt;/strong> any additional tooling&lt;/a>.
+&lt;ul>
+&lt;li>As part of that series, we covered
+&lt;a class="link" href="../linting-and-formatting-typescript" >adding linting and formatting tooling for TypeScript&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>We also have a guide on &lt;a class="link" href="../using-c-and-go-with-cgo-is-tricky" >using CGO in Go programming language&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub

@@ -110,7 +110,8 @@ function to send a message to the popup.&lt;/p>
 &lt;p>The code for sending a message from the service worker is the same as the code for sending a message from the popup. The
 receiving code in the content and popup scripts is also the same.&lt;/p>
 &lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will add linting and formatting tools to our Chrome extension. These tools increase
+&lt;/h2>&lt;p>In the next part of this series, we will
+&lt;a class="link" href="../linting-and-formatting-typescript/" >add linting and formatting tools to our Chrome extension&lt;/a>. These tools increase
 the quality of our code and increase engineering velocity for projects with multiple developers.&lt;/p>
 &lt;h2 id="chrome-extension-with-webpack-and-typescript-code-on-github">&lt;a href="#chrome-extension-with-webpack-and-typescript-code-on-github" class="header-anchor">&lt;/a>Chrome extension with webpack and TypeScript code on GitHub
 &lt;/h2>&lt;p>The complete code is available on GitHub at:
@@ -125,13 +126,22 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a software development team.&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the
+basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy
+your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a
+software development team.&lt;/p>
 &lt;h3 id="create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
-&lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
+&lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the
+extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
 &lt;h3 id="add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
-&lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome extension.&lt;/p>
+&lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome
+extension.&lt;/p>
 &lt;h3 id="message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension">&lt;a href="#message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
-&lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
+&lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how
+to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
+&lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
+best practices.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
@@ -464,14 +474,20 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a React app from scratch: getting started (2024)</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch: getting started (2024)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim to reduce tool usage and fully understand each step of the process.&lt;/p>
+&lt;/h2>&lt;p>In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim
+to reduce tool usage and fully understand each step of the process.&lt;/p>
 &lt;h2 id="what-is-react">&lt;a href="#what-is-react" class="header-anchor">&lt;/a>What is React?
-&lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web applications.&lt;/p>
+&lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained
+by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web
+applications.&lt;/p>
 &lt;h2 id="prerequisites----nodejs-and-npm">&lt;a href="#prerequisites----nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
 &lt;/h2>&lt;p>&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
->Node.js and npm&lt;/a> are the most popular tools for working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential for modern web development.&lt;/p>
+>Node.js and npm&lt;/a> are the most popular tools for
+working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential
+for modern web development.&lt;/p>
 &lt;h2 id="packagejson">&lt;a href="#packagejson" class="header-anchor">&lt;/a>package.json
-&lt;/h2>&lt;p>We will start by creating a &lt;code>package.json&lt;/code> file. This file contains metadata about the project and its dependencies. You can use the &lt;code>npm init&lt;/code> command to create the &lt;code>package.json&lt;/code> file. Or create one yourself containing something like:&lt;/p>
+&lt;/h2>&lt;p>We will start by creating a &lt;code>package.json&lt;/code> file. This file contains metadata about the project and its dependencies. You
+can use the &lt;code>npm init&lt;/code> command to create the &lt;code>package.json&lt;/code> file. Or create one yourself containing something like:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;react-hello-world&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;version&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;1.0.0&amp;#34;&lt;/span>,
@@ -482,8 +498,12 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="typescript">&lt;a href="#typescript" class="header-anchor">&lt;/a>TypeScript
 &lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
->TypeScript&lt;/a> to our project. TypeScript is a superset of JavaScript that adds static types to the language. It helps catch errors early in the development process and improves code quality.&lt;/p>
-&lt;p>Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the React community and provides many benefits. Modern IDEs, such as Visual Studio Code and WebStorm, support TypeScript, making development and learning easier.&lt;/p>
+>TypeScript&lt;/a> to our project. TypeScript is a superset of JavaScript
+that adds static types to the language. It helps catch errors early in the development process and improves code
+quality.&lt;/p>
+&lt;p>Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the
+React community and provides many benefits. Modern IDEs, such as Visual Studio Code and WebStorm, support TypeScript,
+making development and learning easier.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev typescript
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command updates the &lt;code>package.json&lt;/code> file with the TypeScript dependency.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
@@ -498,11 +518,15 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It also creates a &lt;code>node_modules&lt;/code> directory. This directory contains the packages installed by npm.&lt;/p>
-&lt;p>Finally, the command creates a &lt;code>package-lock.json&lt;/code> file. This file locks the dependencies to specific versions, ensuring that the project is built with the same versions of the dependencies across different machines.&lt;/p>
-&lt;p>The &lt;code>--save-dev&lt;/code> flag tells npm to save the package as a development dependency. Development dependencies are not required for the production build of the app.&lt;/p>
+&lt;p>Finally, the command creates a &lt;code>package-lock.json&lt;/code> file. This file locks the dependencies to specific versions, ensuring
+that the project is built with the same versions of the dependencies across different machines.&lt;/p>
+&lt;p>The &lt;code>--save-dev&lt;/code> flag tells npm to save the package as a development dependency. Development dependencies are not
+required for the production build of the app.&lt;/p>
 &lt;h3 id="tsconfigjson">&lt;a href="#tsconfigjson" class="header-anchor">&lt;/a>tsconfig.json
-&lt;/h3>&lt;p>We need to create a &lt;code>tsconfig.json&lt;/code> file to &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
->configure TypeScript&lt;/a>. This file specifies the root files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p>
+&lt;/h3>&lt;p>We need to create a &lt;code>tsconfig.json&lt;/code> file to
+&lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
+>configure TypeScript&lt;/a>. This file specifies the root
+files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p>
 &lt;p>Install the recommended configuration with the following:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @tsconfig/recommended
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, create a &lt;code>tsconfig.json&lt;/code> file with the following content:&lt;/p>
@@ -513,20 +537,27 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-jsx">&lt;a href="#what-is-jsx" class="header-anchor">&lt;/a>What is JSX?
-&lt;/h2>&lt;p>In our &lt;code>tsconfig.json&lt;/code> file, we set the &lt;code>jsx&lt;/code> option to &lt;code>react-jsx&lt;/code>. This option tells TypeScript to treat JSX as React JSX.&lt;/p>
+&lt;/h2>&lt;p>In our &lt;code>tsconfig.json&lt;/code> file, we set the &lt;code>jsx&lt;/code> option to &lt;code>react-jsx&lt;/code>. This option tells TypeScript to treat JSX as React
+JSX.&lt;/p>
 &lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/JSX_%28JavaScript%29" target="_blank" rel="noopener"
->JSX&lt;/a> is a syntax extension for JavaScript. It allows you to write HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript by the build tool.&lt;/p>
+>JSX&lt;/a> is a syntax extension for JavaScript. It allows you to write
+HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript
+by the build tool.&lt;/p>
 &lt;h2 id="react-and-reactdom">&lt;a href="#react-and-reactdom" class="header-anchor">&lt;/a>React and ReactDOM
 &lt;/h2>&lt;p>Next, we will add &lt;a class="link" href="https://react.dev/" target="_blank" rel="noopener"
 >React&lt;/a> and &lt;a class="link" href="https://react.dev/reference/react-dom" target="_blank" rel="noopener"
->ReactDOM&lt;/a> to our project. React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p>
+>ReactDOM&lt;/a> to our project.
+React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install react react-dom
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since we are using TypeScript, we must also install &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
->type definitions&lt;/a> for React and ReactDOM. The TypeScript compiler uses these definitions for type checking.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since we are using TypeScript, we must also install
+&lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
+>type definitions&lt;/a> for React and ReactDOM. The
+TypeScript compiler uses these definitions for type checking.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev @types/react @types/react-dom
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-webpack">&lt;a href="#what-is-webpack" class="header-anchor">&lt;/a>What is Webpack?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
->Webpack&lt;/a> is a module bundler for JavaScript. It takes modules with dependencies and generates static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p>
+>Webpack&lt;/a> is a module bundler for JavaScript. It takes modules with dependencies and generates
+static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p>
 &lt;p>We will install the Webpack packages:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin ts-loader
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
@@ -537,8 +568,10 @@ title="YouTube Video"
 &lt;li>&lt;code>ts-loader&lt;/code> is a TypeScript loader for Webpack. It allows Webpack to compile TypeScript files.&lt;/li>
 &lt;/ul>
 &lt;h3 id="webpackconfigts">&lt;a href="#webpackconfigts" class="header-anchor">&lt;/a>webpack.config.ts
-&lt;/h3>&lt;p>By default, Webpack does not need a configuration file. However, since we use TypeScript, we must create a &lt;code>webpack.config.ts&lt;/code> file to configure Webpack.&lt;/p>
-&lt;p>Note that we use the &lt;code>.ts&lt;/code> extension for the configuration file. The TypeScript compiler will compile this file. Using a &lt;code>.js&lt;/code> file is also possible, but we prefer TypeScript for type safety.&lt;/p>
+&lt;/h3>&lt;p>By default, Webpack does not need a configuration file. However, since we use TypeScript, we must create a
+&lt;code>webpack.config.ts&lt;/code> file to configure Webpack.&lt;/p>
+&lt;p>Note that we use the &lt;code>.ts&lt;/code> extension for the configuration file. The TypeScript compiler will compile this file. Using a
+&lt;code>.js&lt;/code> file is also possible, but we prefer TypeScript for type safety.&lt;/p>
 &lt;p>No additional type definitions are required for our Webpack configuration at this time.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">HtmlWebpackPlugin&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;html-webpack-plugin&amp;#39;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -558,7 +591,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We specify &lt;code>src/index.tsx&lt;/code> as our app&amp;rsquo;s top-level file. By default, the build&amp;rsquo;s output will go to the &lt;code>dist&lt;/code> directory.&lt;/p>
 &lt;p>We configure the TypeScript loader to compile &lt;code>.ts&lt;/code> and &lt;code>.tsx&lt;/code> files.&lt;/p>
 &lt;p>We also use the &lt;code>html-webpack-plugin&lt;/code> to generate an &lt;code>index.html&lt;/code> file. This file will load the Webpack bundle.&lt;/p>
-&lt;p>We need to add a TypeScript execution engine to the Node.js runtime so that it can understand the above TypeScript configuration file. We will use &lt;code>ts-node&lt;/code> for this purpose.&lt;/p>
+&lt;p>We need to add a TypeScript execution engine to the Node.js runtime so that it can understand the above TypeScript
+configuration file. We will use &lt;code>ts-node&lt;/code> for this purpose.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>npm install --save-dev ts-node
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="final-packagejson">&lt;a href="#final-packagejson" class="header-anchor">&lt;/a>Final package.json
 &lt;/h2>&lt;p>After all the installations, our &lt;code>package.json&lt;/code> file should look similar to this:&lt;/p>
@@ -588,7 +622,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="srcindextsx">&lt;a href="#srcindextsx" class="header-anchor">&lt;/a>src/index.tsx
 &lt;/h2>&lt;p>We are finally ready to write some React code. TSX files are TypeScript files that contain JSX.&lt;/p>
-&lt;p>We will create the &lt;code>src/index.tsx&lt;/code> file. It will render a simple React component. React components are the reusable building blocks of React apps.&lt;/p>
+&lt;p>We will create the &lt;code>src/index.tsx&lt;/code> file. It will render a simple React component. React components are the reusable
+building blocks of React apps.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-tsx" data-lang="tsx">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">React&lt;/span> &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react&amp;#34;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> {&lt;span style="color:#a6e22e">createRoot&lt;/span>} &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;react-dom/client&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -607,9 +642,11 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Render our HelloWorld component
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">app&lt;/span>.&lt;span style="color:#a6e22e">render&lt;/span>(&amp;lt;&lt;span style="color:#f92672">HelloWorld&lt;/span>/&amp;gt;)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="running-the-app-on-the-webpack-development-server">&lt;a href="#running-the-app-on-the-webpack-development-server" class="header-anchor">&lt;/a>Running the app on the Webpack development server
-&lt;/h2>&lt;p>Now, we can run the app on the Webpack development server. This server will serve the app and automatically reload the page when the code changes.&lt;/p>
+&lt;/h2>&lt;p>Now, we can run the app on the Webpack development server. This server will serve the app and automatically reload the
+page when the code changes.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack serve --mode development --open
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--mode development&lt;/code> flag tells Webpack to build the app in development mode. The &lt;code>--open&lt;/code> flag tells Webpack to open the app in the default browser.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--mode development&lt;/code> flag tells Webpack to build the app in development mode. The &lt;code>--open&lt;/code> flag tells Webpack to
+open the app in the default browser.&lt;/p>
 &lt;p>The browser should show the following:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
 alt="React app served by Webpack dev server">&lt;figcaption>
@@ -617,7 +654,8 @@ alt="React app served by Webpack dev server">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h3 id="packagejson-scripts">&lt;a href="#packagejson-scripts" class="header-anchor">&lt;/a>package.json scripts
-&lt;/h3>&lt;p>Instead of remembering the above &lt;code>webpack&lt;/code> command, we can add a script to the &lt;code>package.json&lt;/code> file to run the Webpack development server.&lt;/p>
+&lt;/h3>&lt;p>Instead of remembering the above &lt;code>webpack&lt;/code> command, we can add a script to the &lt;code>package.json&lt;/code> file to run the Webpack
+development server.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;start&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;webpack serve --mode development --open&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -628,11 +666,20 @@ alt="React app served by Webpack dev server">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-app-for-production">&lt;a href="#building-the-app-for-production" class="header-anchor">&lt;/a>Building the app for production
 &lt;/h2>&lt;p>To build the app for production, we can run:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>node_modules/.bin/webpack --mode production
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will create a &lt;code>dist&lt;/code> directory with the app&amp;rsquo;s production build. The directory will contain the &lt;code>index.html&lt;/code> file and the &lt;code>main.js&lt;/code> JavaScript bundle. The production files are optimized for performance, and they are minified and compressed to reduce their size.&lt;/p>
-&lt;p>It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will create a &lt;code>dist&lt;/code> directory with the app&amp;rsquo;s production build. The directory will contain the &lt;code>index.html&lt;/code>
+file and the &lt;code>main.js&lt;/code> JavaScript bundle. The production files are optimized for performance, and they are minified and
+compressed to reduce their size.&lt;/p>
+&lt;p>It is possible to host these production files on a local HTTP server like Apache or Nginx, or deploy the app to cloud
+providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p>
 &lt;h2 id="other-getting-started-guides">&lt;a href="#other-getting-started-guides" class="header-anchor">&lt;/a>Other getting started guides
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../create-chrome-extension" >creating a Chrome extension from scratch &lt;strong>without&lt;/strong> any additional tooling&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about
+&lt;a class="link" href="../create-chrome-extension" >creating a Chrome extension from scratch &lt;strong>without&lt;/strong> any additional tooling&lt;/a>.
+&lt;ul>
+&lt;li>As part of that series, we covered
+&lt;a class="link" href="../linting-and-formatting-typescript" >adding linting and formatting tooling for TypeScript&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;/li>
 &lt;li>We also have a guide on &lt;a class="link" href="../using-c-and-go-with-cgo-is-tricky" >using CGO in Go programming language&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
