@@ -148,7 +148,8 @@ receiving code in the content and popup scripts is also the same.
 
 ## Next steps
 
-In the next part of this series, we will add linting and formatting tools to our Chrome extension. These tools increase
+In the next part of this series, we will
+[add linting and formatting tools to our Chrome extension](../linting-and-formatting-typescript/). These tools increase
 the quality of our code and increase engineering velocity for projects with multiple developers.
 
 ## Chrome extension with webpack and TypeScript code on GitHub

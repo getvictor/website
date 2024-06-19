@@ -8,16 +8,30 @@ tags = ["Chrome Extension", "Web Development", "JavaScript", "TypeScript"]
 draft = false
 +++
 
-We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a software development team.
+We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the
+basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy
+your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a
+software development team.
 
 ### [Create a Chrome extension from scratch](../create-chrome-extension)
-Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the extension, `manifest.json`, and manually testing the extension in the Chrome browser.
+
+Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the
+extension, `manifest.json`, and manually testing the extension in the Chrome browser.
 
 ### [Add webpack and TypeScript to a Chrome extension](../add-webpack-and-typescript-to-chrome-extension)
-We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome extension.
+
+We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome
+extension.
 
 ### [Message passing in a Chrome extension](../message-passing-in-chrome-extension)
-We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how to communicate between the service worker (background script), content scripts, and the popup.
+
+We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how
+to communicate between the service worker (background script), content scripts, and the popup.
+
+### [Linting and formatting TypeScript in a Chrome extension](../linting-and-formatting-typescript)
+
+We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
+best practices.
 
 ### Build a production-ready Chrome extension video playlist
 
