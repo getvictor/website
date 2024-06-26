@@ -31,8 +31,8 @@ parent commits: one from the current branch and one from the merged branch.
 
 In the following example, we have a `branch` that we want to merge into the `main` branch:
 
-{{< figure src="git-merge-two-branches-1.svg" title="git merge of two branches before merge" alt="git merge of two branches before
-merge" >}}
+{{< figure src="git-merge-two-branches-1.svg" title="git merge of two branches before merge"
+alt="git merge of two branches before merge" >}}
 
 The `git log` of the `main` branch shows the commit history:
 
@@ -252,8 +252,8 @@ Date:   Sat Jun 22 21:25:39 2024 -0500
 
 The PR merge commit points to the previous merge commit and the last commit on `main`.
 
-{{< figure src="pull-request-commit-history.svg" title="Diagram of commit history after pull request" alt="Diagram of commit history after
-pull request" >}}
+{{< figure src="pull-request-commit-history.svg" title="Diagram of commit history after pull request"
+alt="Diagram of commit history after pull request" >}}
 
 ## Updating a protected feature branch {#update-protected-branch}
 
@@ -273,8 +273,8 @@ git push origin feature-update
 
 And create a pull request to merge `feature-update` into `feature`.
 
-{{< figure src="github-pull-request-branches.png" title="Create a PR to merge into feature branch" alt="Create a PR to merge into feature
-branch" >}}
+{{< figure src="github-pull-request-branches.png" title="Create a PR to merge into feature branch"
+alt="Create a PR to merge into feature branch" >}}
 
 This pull request shows all the commits from the `main` branch and the merge commit. This commit history is problematic
 because the PR may trigger a code review from the
@@ -285,8 +285,8 @@ of the files that were already reviewed in previous pull requests to the `main` 
 
 After the merge, the `feature` branch commit history looks like:
 
-{{< figure src="commit-history-of-feature-after-pr.png" title="Commit history of feature branch after PR" alt="Commit history of feature
-branch after PR" >}}
+{{< figure src="commit-history-of-feature-after-pr.png" title="Commit history of feature branch after PR"
+alt="Commit history of feature branch after PR" >}}
 
 Now, we create a pull request to merge the update `feature` branch into the `main` branch.
 
@@ -294,8 +294,8 @@ Now, we create a pull request to merge the update `feature` branch into the `mai
 
 After the merge, the `main` branch commit history looks like:
 
-{{< figure src="commit-history-of-main-after-feature-pr.png" title="Commit history of main after PR from feature branch" alt="Commit history
-of main after PR from feature branch" >}}
+{{< figure src="commit-history-of-main-after-feature-pr.png" title="Commit history of main after PR from feature branch"
+alt="Commit history of main after PR from feature branch" >}}
 
 The last three commits are merge commits.
 
@@ -326,15 +326,15 @@ Date:   Sun Jun 23 08:03:22 2024 -0500
     Merge branch 'main' into feature
 ```
 
-{{< figure src="pull-request-commit-history-2.svg" title="Diagram of commit history after two pull requests" alt="Diagram of commit history
-after two pull requests" >}}
+{{< figure src="pull-request-commit-history-2.svg" title="Diagram of commit history after two pull requests"
+alt="Diagram of commit history after two pull requests" >}}
 
 ### Merging a pull request with **Squash and merge**
 
 If the final pull request is merged with **Squash and merge**, the commit history will look like:
 
-{{< figure src="commit-history-after-squash-and-merge.png" title="Commit history of main after squash and merge" alt="Commit history of main
-after squash and merge" >}}
+{{< figure src="commit-history-after-squash-and-merge.png" title="Commit history of main after squash and merge"
+alt="Commit history of main after squash and merge" >}}
 
 The last commit is a single commit that combines all the changes from the `feature` branch. The merge commits and all
 other commits are eliminated.
