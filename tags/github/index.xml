@@ -1,4 +1,266 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" />&lt;p>This article covers how &lt;code>git merge&lt;/code> works with GitHub pull requests. We will focus on the use case where developers want
+to keep their feature branches updated with the main branch. After completing the feature work, developers create a pull
+request to merge their feature branch into the main branch.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#git-merge" >git merge&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#pull-request-after-merge" >Pull request after a merge&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#update-protected-branch" >Updating a protected feature branch with a pull request&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-a-merge-in-version-control">&lt;a href="#what-is-a-merge-in-version-control" class="header-anchor">&lt;/a>What is a merge in version control?
+&lt;/h2>&lt;p>Git is a distributed version control system that allows multiple developers to work on the same codebase. When
+developers work on different branches, they must merge their changes into the main branch. A merge is the process of
+combining changes from one branch into another branch, resulting in a single branch that contains the changes from both
+branches.&lt;/p>
+&lt;h2 id="git-merge">&lt;a href="#git-merge" class="header-anchor">&lt;/a>git merge
+&lt;/h2>&lt;p>The standard &lt;code>git merge&lt;/code> command takes each commit from one branch and applies it to another. The final commit has two
+parent commits: one from the current branch and one from the merged branch.&lt;/p>
+&lt;p>In the following example, we have a &lt;code>branch&lt;/code> that we want to merge into the &lt;code>main&lt;/code> branch:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
+alt="git merge of two branches before merge">&lt;figcaption>
+&lt;h4>git merge of two branches before merge&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The &lt;code>git log&lt;/code> of the &lt;code>main&lt;/code> branch shows the commit history:&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit e493ac8fea4e0efe125a561b9014313bec41a489 (HEAD -&amp;gt; main, origin/main)
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:31:12 2024 -0500
+m3
+commit b79e810cb86405061dc979ce4fc05fe36a724256
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:29:41 2024 -0500
+m2
+commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:26:55 2024 -0500
+m1
+commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:25:40 2024 -0500
+first commit
+&lt;/code>&lt;/pre>&lt;p>And the &lt;code>git log&lt;/code> of the &lt;code>branch&lt;/code> shows the commit history:&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit 2afb078875a84095327ab2ef7c83711534c5eef8 (HEAD -&amp;gt; branch, origin/branch)
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:30:20 2024 -0500
+b2
+commit 9fc53c2ca9a58637a5d433de4c6150b832d4d275
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:28:25 2024 -0500
+b1
+commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:26:55 2024 -0500
+m1
+commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:25:40 2024 -0500
+first commit
+&lt;/code>&lt;/pre>&lt;p>We merge the &lt;code>branch&lt;/code> into the &lt;code>main&lt;/code> branch:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout main
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge branch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
+to the two parent commits: &lt;code>e493ac8 2afb078&lt;/code>:&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit 09d569bd079162643462dde112246f4167f14889 (HEAD -&amp;gt; main)
+Merge: e493ac8 2afb078
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 21:03:01 2024 -0500
+Merge branch &amp;#39;branch&amp;#39;
+commit e493ac8fea4e0efe125a561b9014313bec41a489 (origin/main)
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:31:12 2024 -0500
+m3
+commit 2afb078875a84095327ab2ef7c83711534c5eef8 (origin/branch, branch)
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:30:20 2024 -0500
+b2
+commit b79e810cb86405061dc979ce4fc05fe36a724256
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:29:41 2024 -0500
+m2
+commit 9fc53c2ca9a58637a5d433de4c6150b832d4d275
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:28:25 2024 -0500
+b1
+commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:26:55 2024 -0500
+m1
+commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:25:40 2024 -0500
+first commit
+&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
+alt="git merge of two branches after merge">&lt;figcaption>
+&lt;h4>git merge of two branches after merge&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The result would be the same if &lt;strong>instead&lt;/strong> we merged the &lt;code>main&lt;/code> branch into the &lt;code>branch&lt;/code> branch:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout branch
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge main
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>except the final merge commit would be slightly different:&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&amp;gt; branch)
+Merge: 2afb078 e493ac8
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 17:32:01 2024 -0500
+Merge branch &amp;#39;main&amp;#39; into branch
+&lt;/code>&lt;/pre>&lt;p>The merged changes on &lt;code>branch&lt;/code> can be pushed to the remote repository without issues because the remote branch can be
+fast-forwarded to the new commit.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git push origin branch
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-a-fast-forward-merge">&lt;a href="#what-is-a-fast-forward-merge" class="header-anchor">&lt;/a>What is a fast-forward merge?
+&lt;/h2>&lt;p>A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
+target branch to the commit of the source branch. It is a fast-forward merge because the target branch is moved forward
+to the new commit.&lt;/p>
+&lt;p>A fast-forward merge does not lose any history &amp;ndash; it is always possible to undo a fast-forward merge.&lt;/p>
+&lt;p>&lt;code>git push&lt;/code> does not, by default, allow a merge that is not a fast-forward. Use the&amp;rsquo;- force&amp;rsquo; option to enable a merge
+that is not a fast-forward.&lt;/p>
+&lt;h2 id="undo-a-git-merge">&lt;a href="#undo-a-git-merge" class="header-anchor">&lt;/a>Undo a git merge
+&lt;/h2>&lt;p>The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
+of the merge commit.&lt;/p>
+&lt;p>This command resets the &lt;code>branch&lt;/code> to the commit before the merge:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="git-rebase">&lt;a href="#git-rebase" class="header-anchor">&lt;/a>git rebase
+&lt;/h2>&lt;p>Another way to combine changes from one branch into another is to use &lt;code>git rebase&lt;/code>. This command applies the changes
+from the source branch to the target branch by reapplying the commits from the source branch to the target branch.&lt;/p>
+&lt;p>The &lt;code>git rebase&lt;/code> command will modify the commit history of the source branch. In our pull request examples, we will use
+&lt;code>git merge&lt;/code> instead of &lt;code>git rebase&lt;/code> to preserve all the commit histories.&lt;/p>
+&lt;h2 id="pull-request-after-merge">&lt;a href="#pull-request-after-merge" class="header-anchor">&lt;/a>Pull request after a merge
+&lt;/h2>&lt;p>When working on a feature branch, developers often want to update their branch with the latest changes from the main to
+make sure their feature works with the newest code. We start this process with the above-described &lt;code>git merge&lt;/code> command,
+where we merge the &lt;code>main&lt;/code> branch into the &lt;code>branch&lt;/code> branch.&lt;/p>
+&lt;p>After the merge, the developer can create a GitHub pull request to merge the &lt;code>branch&lt;/code> into the &lt;code>main&lt;/code> branch.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
+alt="GitHub pull request after merge">&lt;figcaption>
+&lt;h4>GitHub pull request after merge&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Note that the commit history only shows the commits from the &lt;code>branch&lt;/code> and the merge commit. The &lt;code>main&lt;/code> commits are not
+shown in the pull request.&lt;/p>
+&lt;p>GitHub shows a few options for merging the pull request:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
+alt="Merge pull request">&lt;figcaption>
+&lt;h4>Merge pull request&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;ul>
+&lt;li>&lt;strong>Create a merge commit&lt;/strong>: This option creates a new merge commit combining the changes from the &lt;code>branch&lt;/code> and the
+&lt;code>main&lt;/code> branches. This is the default option.&lt;/li>
+&lt;li>&lt;strong>Squash and merge&lt;/strong>: This option combines all the commits from the &lt;code>branch&lt;/code> into a single commit and merges that
+commit into the &lt;code>main&lt;/code> branch.&lt;/li>
+&lt;li>&lt;strong>Rebase and merge&lt;/strong>: This option applies the changes from the &lt;code>branch&lt;/code> onto the &lt;code>main&lt;/code> branch by rebasing the commits
+from the &lt;code>branch&lt;/code> onto the &lt;code>main&lt;/code> branch.&lt;/li>
+&lt;/ul>
+&lt;p>Selecting &lt;strong>Create a merge commit&lt;/strong> results in the following commit history:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
+alt="Commit history after pull request">&lt;figcaption>
+&lt;h4>Commit history after pull request&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The last two commits are both merge commits.&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit 1eb0af8c0e9ad16a0267d8abd1ce667f125ab7e8 (HEAD -&amp;gt; main, origin/main)
+Merge: e493ac8 22d2107
+Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
+Date: Sun Jun 23 07:35:57 2024 -0500
+Merge pull request #1 from getvictor/branch
+My pull request
+commit 22d2107b49bca56e67b7d4e800d93f93378a0956 (origin/branch, branch)
+Merge: 2afb078 e493ac8
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sat Jun 22 21:25:39 2024 -0500
+Merge branch &amp;#39;main&amp;#39; into branch
+&lt;/code>&lt;/pre>&lt;p>The PR merge commit points to the previous merge commit and the last commit on &lt;code>main&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
+alt="Diagram of commit history after pull request">&lt;figcaption>
+&lt;h4>Diagram of commit history after pull request&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="update-protected-branch">&lt;a href="#update-protected-branch" class="header-anchor">&lt;/a>Updating a protected feature branch
+&lt;/h2>&lt;p>We have two branches in this example: &lt;code>main&lt;/code> and &lt;code>feature&lt;/code>. Both branches are protected, meaning that changes to them
+must be made through a pull request. We want to update the &lt;code>feature&lt;/code> branch with the latest changes from the &lt;code>main&lt;/code>
+branch.&lt;/p>
+&lt;p>We can do this by merging the &lt;code>main&lt;/code> branch into the &lt;code>feature&lt;/code> branch, creating a new branch, and creating a pull
+request.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout feature
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge main
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git checkout -b feature-update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git push origin feature-update
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And create a pull request to merge &lt;code>feature-update&lt;/code> into &lt;code>feature&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
+alt="Create a PR to merge into feature branch">&lt;figcaption>
+&lt;h4>Create a PR to merge into feature branch&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>This pull request shows all the commits from the &lt;code>main&lt;/code> branch and the merge commit. This commit history is problematic
+because the PR may trigger a code review from the
+&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+>code owners&lt;/a>
+of the files that were already reviewed in previous pull requests to the &lt;code>main&lt;/code> branch.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
+alt="Commits from feature-update branch">&lt;figcaption>
+&lt;h4>Commits from feature-update branch&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>After the merge, the &lt;code>feature&lt;/code> branch commit history looks like:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
+alt="Commit history of feature branch after PR">&lt;figcaption>
+&lt;h4>Commit history of feature branch after PR&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Now, we create a pull request to merge the update &lt;code>feature&lt;/code> branch into the &lt;code>main&lt;/code> branch.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
+alt="PR to merge feature branch into main">&lt;figcaption>
+&lt;h4>PR to merge feature branch into main&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>After the merge, the &lt;code>main&lt;/code> branch commit history looks like:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
+alt="Commit history of main after PR from feature branch">&lt;figcaption>
+&lt;h4>Commit history of main after PR from feature branch&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The last three commits are merge commits.&lt;/p>
+&lt;pre tabindex="0">&lt;code>commit 59caaf1cc5103099f850c32f1729c5ffe3525404 (HEAD -&amp;gt; main, origin/main)
+Merge: e493ac8 dcbc117
+Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
+Date: Sun Jun 23 08:56:53 2024 -0500
+Merge pull request #3 from getvictor/feature
+Feature
+commit dcbc117e5811e683f1074d947bc25da21b5fa5f6 (origin/feature)
+Merge: 2afb078 373dd82
+Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
+Date: Sun Jun 23 08:45:44 2024 -0500
+Merge pull request #2 from getvictor/feature-update
+Feature update
+commit 373dd82672a4879bfcf3b29c4feb97004359adfe (origin/feature-update, feature-update, feature)
+Merge: 2afb078 e493ac8
+Author: Victor on Software &amp;lt;&amp;gt;
+Date: Sun Jun 23 08:03:22 2024 -0500
+Merge branch &amp;#39;main&amp;#39; into feature
+&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
+alt="Diagram of commit history after two pull requests">&lt;figcaption>
+&lt;h4>Diagram of commit history after two pull requests&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="merging-a-pull-request-with-squash-and-merge">&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor">&lt;/a>Merging a pull request with &lt;strong>Squash and merge&lt;/strong>
+&lt;/h3>&lt;p>If the final pull request is merged with &lt;strong>Squash and merge&lt;/strong>, the commit history will look like:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
+alt="Commit history of main after squash and merge">&lt;figcaption>
+&lt;h4>Commit history of main after squash and merge&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The last commit is a single commit that combines all the changes from the &lt;code>feature&lt;/code> branch. The merge commits and all
+other commits are eliminated.&lt;/p>
+&lt;p>The downside of &lt;strong>Squash and merge&lt;/strong> is that the commit history is lost. The commit history is useful for debugging,
+understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
+branch.&lt;/p>
+&lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/Djpc7ymvuzU"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" />&lt;ul>
 &lt;li>&lt;a class="link" href="#reusable-workflows" >GitHub reusable workflows&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#reusable-steps-composite-action" >GitHub reusable steps (composite action)&lt;/a>&lt;/li>
 &lt;/ul>
@@ -173,6 +435,11 @@ alt="GitHub Actions composite action success">&lt;figcaption>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
+&lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;code>git merge&lt;/code> and GitHub pull requests explained&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
+&lt;/ul>
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video">&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor">&lt;/a>GitHub Actions reusable workflows and steps video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -182,18 +449,14 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;h2 id="other-articles-related-to-github-actions">&lt;a href="#other-articles-related-to-github-actions" class="header-anchor">&lt;/a>Other articles related to GitHub Actions
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
-&lt;/ul>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub actions?
-&lt;/h2>&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins, CircleCI,
-and TravisCI. However, GitHub actions are built into GitHub.&lt;/p>
-&lt;p>GitHub actions are not entirely free, but they have very high usage limits for open-source projects. For private repositories, you can
-run up to 2,000 minutes per month for free. After that, you will be charged.&lt;/p>
+&lt;/h2>&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins,
+CircleCI, and TravisCI. However, GitHub actions are built into GitHub.&lt;/p>
+&lt;p>GitHub actions are not entirely free, but they have very high usage limits for open-source projects. For private
+repositories, you can run up to 2,000 minutes per month for free. After that, you will be charged.&lt;/p>
 &lt;h2 id="github-actions-for-non-cicd-tasks">&lt;a href="#github-actions-for-non-cicd-tasks" class="header-anchor">&lt;/a>GitHub actions for non-CI/CD tasks
-&lt;/h2>&lt;p>However, GitHub actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can use them as an
-extension of your application to perform tasks such as:&lt;/p>
+&lt;/h2>&lt;p>However, GitHub actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can
+use them as an extension of your application to perform tasks such as:&lt;/p>
 &lt;ul>
 &lt;li>generating aggregate reports&lt;/li>
 &lt;li>updating a database&lt;/li>
@@ -205,21 +468,20 @@ extension of your application to perform tasks such as:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
 alt="GitHub action block diagram">
 &lt;/figure>
-&lt;p>You can use a GitHub action as a worker for your application. For example, you can use it to process data from a database and then
-send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p>
-&lt;p>Although GitHub actions in open-source repositories are public, they can still use secrets that are not accessible to the public.
-For example, secrets can be API keys and database access credentials.&lt;/p>
+&lt;p>You can use a GitHub action as a worker for your application. For example, you can use it to process data from a
+database and then send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p>
+&lt;p>Although GitHub actions in open-source repositories are public, they can still use secrets that are not accessible to
+the public. For example, secrets can be API keys and database access credentials.&lt;/p>
 &lt;h2 id="a-real-world-github-action-doing-data-processing">&lt;a href="#a-real-world-github-action-doing-data-processing" class="header-anchor">&lt;/a>A real-world GitHub action doing data processing
-&lt;/h2>&lt;p>Below is an example GitHub action that does general data processing. It uses API calls to download data from NVD (National Vulnerability
-Database), generates files from this data, and then creates a release. Subsequently, the application can download these files and use them
-directly without making the API calls or processing the data itself.&lt;/p>
-&lt;p>GitHub gist:
-&lt;script src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>
+&lt;/h2>&lt;p>Below is an example GitHub action that does general data processing. It uses API calls to download data from NVD
+(National Vulnerability Database), generates files from this data, and then creates a release. Subsequently, the
+application can download these files and use them directly without making the API calls or processing the data itself.&lt;/p>
+&lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>
 &lt;/p>
-&lt;p>The GitHub action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files. Then, it publishes
-the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
-&lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be careful with
-process-intensive actions.&lt;/p>
+&lt;p>The GitHub action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files.
+Then, it publishes the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
+&lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be
+careful with process-intensive actions.&lt;/p>
 &lt;h2 id="use-github-actions-for-general-purpose-tasks-video">&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor">&lt;/a>Use GitHub actions for general-purpose tasks video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -229,8 +491,9 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;h2 id="other-articles-related-to-github-actions">&lt;a href="#other-articles-related-to-github-actions" class="header-anchor">&lt;/a>Other articles related to GitHub Actions
+&lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps/" >How to reuse workflows and steps in GitHub Actions&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >What happens in a GitHub pull request after a &lt;code>git merge&lt;/code>&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
