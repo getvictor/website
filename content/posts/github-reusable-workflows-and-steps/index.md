@@ -22,6 +22,7 @@ The entry point for GitHub Actions is the `.github/workflows` directory in your 
 ## Why reuse?
 
 [Code reuse](https://en.wikipedia.org/wiki/Code_reuse) is a fundamental principle of software development. Reusing GitHub Actions code allows you to:
+
 - Improve maintainability by keeping common code in one place and reducing the amount of code
 - Increase consistency since multiple workflows can use the same code
 - Promote best practices
@@ -29,6 +30,7 @@ The entry point for GitHub Actions is the `.github/workflows` directory in your 
 - Reduce errors
 
 Examples of reusable GitHub Actions code include:
+
 - Code signing
 - Uploading artifacts to cloud services
 - Security checks
@@ -199,12 +201,13 @@ For larger units of work, a reusable workflow should be used. A composite action
 
 The example code is available on GitHub at: https://github.com/getvictor/github-reusable-workflows-and-steps
 
+## Other articles related to GitHub
+
+- [`git merge` and GitHub pull requests explained](../git-merges-and-pull-requests/)
+- [Use GitHub actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/)
+
 ## GitHub Actions reusable workflows and steps video
 
 {{< youtube ciHJzV6TZB8 >}}
 
-## Other articles related to GitHub Actions
-
-- [Use GitHub actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/)
-
-*Note:* If you want to comment on this article, please do so on the YouTube video.
+_Note:_ If you want to comment on this article, please do so on the YouTube video.
