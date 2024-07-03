@@ -1,6 +1,6 @@
 +++
 title = 'Adding options page to Chrome extension (2024)'
-description = "Enable users to configure you Chrome extension's behavior and settings with a dedicated options page"
+description = "Enable users to configure your Chrome extension's behavior and settings with a dedicated options page"
 authors = ["Victor Lyuboslavsky"]
 image = "chrome-extension-options-headline.png"
 date = 2024-07-03
