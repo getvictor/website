@@ -142,13 +142,18 @@ to communicate between the service worker (background script), content scripts, 
 &lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.&lt;/p>
+&lt;h3 id="adding-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#adding-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-options-to-chrome-extension" >Adding options page to Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We add an advanced options page to our Chrome extension. This page allows users to configure the extension&amp;rsquo;s behavior
+and settings.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
 &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklS2CS7jEA_W6U5e96dN2kWa" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
-&lt;/div></description></item><item><title>Create a Chrome extension from scratch step-by-step (2024)</title><link>https://victoronsoftware.com/posts/create-chrome-extension/</link><pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-headline.png" alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" />&lt;p>In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then add more features.&lt;/p>
+&lt;/div></description></item><item><title>Create a Chrome extension from scratch step-by-step (2024)</title><link>https://victoronsoftware.com/posts/create-chrome-extension/</link><pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-headline.png" alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" />&lt;p>In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then
+add more features.&lt;/p>
 &lt;h2 id="what-is-a-chrome-extension">&lt;a href="#what-is-a-chrome-extension" class="header-anchor">&lt;/a>What is a Chrome extension?
-&lt;/h2>&lt;p>A Chrome extension is a small software program that customizes the browsing experience. It can modify and enhance the functionality of the Chrome browser. Extensions are written using web technologies such as HTML, CSS, and JavaScript.&lt;/p>
+&lt;/h2>&lt;p>A Chrome extension is a small software program that customizes the browsing experience. It can modify and enhance the
+functionality of the Chrome browser. Extensions are written using web technologies such as HTML, CSS, and JavaScript.&lt;/p>
 &lt;h2 id="why-build-a-chrome-extension">&lt;a href="#why-build-a-chrome-extension" class="header-anchor">&lt;/a>Why build a Chrome extension?
 &lt;/h2>&lt;p>Users can utilize Chrome extensions to:&lt;/p>
 &lt;ul>
@@ -159,24 +164,33 @@ best practices.&lt;/p>
 &lt;li>And much more&lt;/li>
 &lt;/ul>
 &lt;h2 id="prerequisites">&lt;a href="#prerequisites" class="header-anchor">&lt;/a>Prerequisites
-&lt;/h2>&lt;p>For this tutorial, no additional tools are required. We will create the extension using a text editor and the Chrome browser.&lt;/p>
-&lt;h2 id="three-parts-of-a-chrome-extension">&lt;a href="#three-parts-of-a-chrome-extension" class="header-anchor">&lt;/a>Three parts of a Chrome extension
-&lt;/h2>&lt;p>The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are optional.&lt;/p>
+&lt;/h2>&lt;p>For this tutorial, no additional tools are required. We will create the extension using a text editor and the Chrome
+browser.&lt;/p>
+&lt;h2 id="parts-of-chrome-extension">&lt;a href="#parts-of-chrome-extension" class="header-anchor">&lt;/a>Three parts of a Chrome extension
+&lt;/h2>&lt;p>The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are
+optional.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-parts.svg"
 alt="Parts of a Chrome extension">&lt;figcaption>
 &lt;h4>Parts of a Chrome extension&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;ol>
-&lt;li>&lt;a class="link" href="#create-background-script" >background script&lt;/a>: Also known as a &lt;strong>service worker&lt;/strong>, this is a long-running script that runs in the background. It can listen for events and perform tasks.&lt;/li>
-&lt;li>&lt;a class="link" href="#create-content-script" >content script(s)&lt;/a>: This script runs in the context of a web page. It can interact with the DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically inject it by the background script or the popup.&lt;/li>
-&lt;li>&lt;a class="link" href="#create-popup" >popup&lt;/a>: This small HTML page appears when a user clicks the extension icon. It can contain buttons, forms, and other UI elements. This is the extension&amp;rsquo;s user interface.&lt;/li>
+&lt;li>&lt;a class="link" href="#create-background-script" >background script&lt;/a>: Also known as a &lt;strong>service worker&lt;/strong>, this is a long-running script
+that runs in the background. It can listen for events and perform tasks.&lt;/li>
+&lt;li>&lt;a class="link" href="#create-content-script" >content script(s)&lt;/a>: This script runs in the context of a web page. It can interact with the
+DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically
+inject it by the background script or the popup.&lt;/li>
+&lt;li>&lt;a class="link" href="#create-popup" >popup&lt;/a>: This small HTML page appears when a user clicks the extension icon. It can contain buttons,
+forms, and other UI elements. This is the extension&amp;rsquo;s user interface.&lt;/li>
 &lt;/ol>
-&lt;p>These three parts of the extension run independently but can communicate with each other using message passing, events, and storage.&lt;/p>
-&lt;p>Our first extension will have a popup with a turn-on/off switch and an input field. The extension will blur the page elements containing the text in the input field.&lt;/p>
+&lt;p>These three parts of the extension run independently but can communicate with each other using message passing, events,
+and storage.&lt;/p>
+&lt;p>Our first extension will have a popup with a turn-on/off switch and an input field. The extension will blur the page
+elements containing the text in the input field.&lt;/p>
 &lt;h2 id="manifestjson-configuration-file">&lt;a href="#manifestjson-configuration-file" class="header-anchor">&lt;/a>&lt;code>manifest.json&lt;/code> configuration file
 &lt;/h2>&lt;p>Create a &lt;code>src&lt;/code> directory for the extension. This directory will contain all the extension files.&lt;/p>
-&lt;p>The &lt;code>manifest.json&lt;/code> file is the configuration file of a Chrome extension. It contains metadata about the extension, such as its name, version, permissions, and scripts.&lt;/p>
+&lt;p>The &lt;code>manifest.json&lt;/code> file is the configuration file of a Chrome extension. It contains metadata about the extension, such
+as its name, version, permissions, and scripts.&lt;/p>
 &lt;h2 id="create-popup">&lt;a href="#create-popup" class="header-anchor">&lt;/a>Creating the popup
 &lt;/h2>&lt;p>Add a &lt;code>manifest.json&lt;/code> file with the following content:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
@@ -191,7 +205,8 @@ alt="Parts of a Chrome extension">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;storage&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>permissions&lt;/code> specify the permissions required by the extension. In this case, we need the &lt;code>storage&lt;/code> permission to store data in the Chrome storage so that the extension can remember the state of its configuration.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>permissions&lt;/code> specify the permissions required by the extension. In this case, we need the &lt;code>storage&lt;/code> permission to
+store data in the Chrome storage so that the extension can remember the state of its configuration.&lt;/p>
 &lt;p>Create &lt;code>popup.html&lt;/code> with the content below.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
@@ -240,7 +255,8 @@ alt="Parts of a Chrome extension">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">void&lt;/span> &lt;span style="color:#a6e22e">chrome&lt;/span>.&lt;span style="color:#a6e22e">storage&lt;/span>.&lt;span style="color:#a6e22e">sync&lt;/span>.&lt;span style="color:#a6e22e">set&lt;/span>({&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">event&lt;/span>.&lt;span style="color:#a6e22e">target&lt;/span>.&lt;span style="color:#a6e22e">value&lt;/span>})
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for changes in the switch and the input field. It saves the switch&amp;rsquo;s state and the input field&amp;rsquo;s value in Chrome storage.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for changes in the switch and the input field. It saves the switch&amp;rsquo;s state and the input field&amp;rsquo;s
+value in Chrome storage.&lt;/p>
 &lt;p>Create &lt;code>popup.css&lt;/code> with the following content to style the switch and the input field:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/* The switch - the box around the slider */&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.&lt;span style="color:#a6e22e">switch&lt;/span> {
@@ -309,7 +325,8 @@ alt="Parts of a Chrome extension">&lt;figcaption>
 &lt;li>Select the &lt;code>src&lt;/code> directory containing the extension files.&lt;/li>
 &lt;li>Click &lt;strong>Select Folder&lt;/strong>.&lt;/li>
 &lt;li>The extension will be loaded.&lt;/li>
-&lt;li>Pin the extension to the toolbar by clicking the pin button in the extension dropdown. This pin will make it easier to test the extension.&lt;/li>
+&lt;li>Pin the extension to the toolbar by clicking the pin button in the extension dropdown. This pin will make it easier
+to test the extension.&lt;/li>
 &lt;li>The popup page will appear when you click the &lt;code>M&lt;/code> extension icon.&lt;/li>
 &lt;/ol>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-popup.png"
@@ -319,9 +336,11 @@ alt="Chrome extension popup">&lt;figcaption>
 &lt;/figure>
 &lt;p>We can now do some basic testing:&lt;/p>
 &lt;ol>
-&lt;li>Test the switch and the input field. The state of the switch and the value of the input field should be saved in the Chrome storage. The values should persist even after restarting the browser.&lt;/li>
+&lt;li>Test the switch and the input field. The state of the switch and the value of the input field should be saved in the
+Chrome storage. The values should persist even after restarting the browser.&lt;/li>
 &lt;li>The badge text of the extension icon should change to &amp;ldquo;ON&amp;rdquo; or &amp;ldquo;OFF&amp;rdquo; based on the state of the switch.&lt;/li>
-&lt;li>To inspect the extension, right-click the extension icon and select &lt;strong>Inspect popup&lt;/strong>. You should see a &amp;ldquo;Hello, world&amp;rdquo; message in the &lt;strong>Console&lt;/strong> tab.&lt;/li>
+&lt;li>To inspect the extension, right-click the extension icon and select &lt;strong>Inspect popup&lt;/strong>. You should see a &amp;ldquo;Hello,
+world&amp;rdquo; message in the &lt;strong>Console&lt;/strong> tab.&lt;/li>
 &lt;/ol>
 &lt;h2 id="create-content-script">&lt;a href="#create-content-script" class="header-anchor">&lt;/a>Creating the content script
 &lt;/h2>&lt;p>Update the &lt;code>manifest.json&lt;/code> file to include the &lt;code>content_scripts&lt;/code> section. The entire file should look like this:&lt;/p>
@@ -408,8 +427,10 @@ alt="Chrome extension popup">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">processNode&lt;/span>(document)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for changes in the DOM and blurs elements that contain the text specified in the input field of the popup.&lt;/p>
-&lt;p>At this point, we can test the extension by entering text in the input field and enabling it. After reloading the page, the extension should blur elements that contain the text.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for changes in the DOM and blurs elements that contain the text specified in the input field of the
+popup.&lt;/p>
+&lt;p>At this point, we can test the extension by entering text in the input field and enabling it. After reloading the page,
+the extension should blur elements that contain the text.&lt;/p>
 &lt;h2 id="create-background-script">&lt;a href="#create-background-script" class="header-anchor">&lt;/a>Creating the background script
 &lt;/h2>&lt;p>Our background script will update the badge text of the extension icon on startup.&lt;/p>
 &lt;p>Update the &lt;code>manifest.json&lt;/code> file to include the &lt;code>background&lt;/code> section. The complete file should look like this:&lt;/p>
@@ -454,15 +475,19 @@ alt="Chrome extension popup">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The script listens for the startup and installation events and sets the badge text based on the extension&amp;rsquo;s saved state.&lt;/p>
 &lt;p>At this point, our basic extension is complete. We can test the extension.&lt;/p>
 &lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made&lt;/a>.&lt;/p>
-&lt;p>For a list of all articles in the series, see the &lt;a class="link" href="../chrome-extension" >production-ready Chrome extension series overview&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>In the next part of this series, we will
+&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made&lt;/a>.&lt;/p>
+&lt;p>For a list of all articles in the series, see the
+&lt;a class="link" href="../chrome-extension" >production-ready Chrome extension series overview&lt;/a>.&lt;/p>
 &lt;h2 id="other-getting-started-guides">&lt;a href="#other-getting-started-guides" class="header-anchor">&lt;/a>Other getting started guides
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../react-hello-world" >creating a React application from scratch while minimizing the amount of tools used&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about
+&lt;a class="link" href="../react-hello-world" >creating a React application from scratch while minimizing the amount of tools used&lt;/a>.&lt;/li>
 &lt;li>We also have a guide on &lt;a class="link" href="../using-c-and-go-with-cgo-is-tricky" >getting started with CGO in Go&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="basic-extension-code-on-github">&lt;a href="#basic-extension-code-on-github" class="header-anchor">&lt;/a>Basic extension code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>The complete code is available on GitHub at:
+&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension" target="_blank" rel="noopener"
 >https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension&lt;/a>&lt;/p>
 &lt;h2 id="create-a-chrome-extension-from-scratch-step-by-step-video">&lt;a href="#create-a-chrome-extension-from-scratch-step-by-step-video" class="header-anchor">&lt;/a>Create a Chrome extension from scratch step-by-step video
 &lt;/h2>&lt;div class="video-wrapper">

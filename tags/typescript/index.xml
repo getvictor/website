@@ -210,7 +210,8 @@ developers with too many errors and warnings.&lt;/p>
 For more details, see the &lt;a class="link" href="https://eslint.org/docs/latest/use/configure/rules" target="_blank" rel="noopener"
 >ESLint configure rules&lt;/a>.&lt;/p>
 &lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will add an options page to our Chrome extension. This page will allow users to
+&lt;/h2>&lt;p>In the next part of this series, we will
+&lt;a class="link" href="../add-options-to-chrome-extension" >add an options page to our Chrome extension&lt;/a>. This page will allow users to
 configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
 &lt;h2 id="linting-and-formatting-typescript-code-on-github">&lt;a href="#linting-and-formatting-typescript-code-on-github" class="header-anchor">&lt;/a>Linting and formatting TypeScript code on GitHub
 &lt;/h2>&lt;p>The complete code is available on GitHub at:
@@ -241,6 +242,9 @@ to communicate between the service worker (background script), content scripts, 
 &lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.&lt;/p>
+&lt;h3 id="adding-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#adding-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-options-to-chrome-extension" >Adding options page to Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We add an advanced options page to our Chrome extension. This page allows users to configure the extension&amp;rsquo;s behavior
+and settings.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
