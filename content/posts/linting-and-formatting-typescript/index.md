@@ -312,7 +312,8 @@ For more details, see the [ESLint configure rules](https://eslint.org/docs/lates
 
 ## Next steps
 
-In the next part of this series, we will add an options page to our Chrome extension. This page will allow users to
+In the next part of this series, we will
+[add an options page to our Chrome extension](../add-options-to-chrome-extension). This page will allow users to
 configure the extension's behavior and settings.
 
 ## Linting and formatting TypeScript code on GitHub

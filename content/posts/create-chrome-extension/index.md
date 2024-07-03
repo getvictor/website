@@ -1,6 +1,7 @@
 +++
 title = 'Create a Chrome extension from scratch step-by-step (2024)'
 description = "Build a basic Chrome extension without any additional tooling"
+authors = ["Victor Lyuboslavsky"]
 image = "chrome-extension-headline.png"
 date = 2024-05-15
 categories = ["Software Development"]
@@ -8,15 +9,18 @@ tags = ["Chrome Extension", "JavaScript", "Web Development", "Hello World"]
 draft = false
 +++
 
-In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then add more features.
+In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then
+add more features.
 
 ## What is a Chrome extension?
 
-A Chrome extension is a small software program that customizes the browsing experience. It can modify and enhance the functionality of the Chrome browser. Extensions are written using web technologies such as HTML, CSS, and JavaScript.
+A Chrome extension is a small software program that customizes the browsing experience. It can modify and enhance the
+functionality of the Chrome browser. Extensions are written using web technologies such as HTML, CSS, and JavaScript.
 
 ## Why build a Chrome extension?
 
 Users can utilize Chrome extensions to:
+
 - Modify web pages
 - Automate tasks
 - Integrate with third-party services
@@ -25,27 +29,36 @@ Users can utilize Chrome extensions to:
 
 ## Prerequisites
 
-For this tutorial, no additional tools are required. We will create the extension using a text editor and the Chrome browser.
+For this tutorial, no additional tools are required. We will create the extension using a text editor and the Chrome
+browser.
 
-## Three parts of a Chrome extension
+## Three parts of a Chrome extension {#parts-of-chrome-extension}
 
-The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are optional.
+The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are
+optional.
 
 {{< figure src="chrome-extension-parts.svg" title="Parts of a Chrome extension" alt="Parts of a Chrome extension" >}}
 
-1. [background script](#create-background-script): Also known as a **service worker**, this is a long-running script that runs in the background. It can listen for events and perform tasks.
-2. [content script(s)](#create-content-script): This script runs in the context of a web page. It can interact with the DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically inject it by the background script or the popup.
-3. [popup](#create-popup): This small HTML page appears when a user clicks the extension icon. It can contain buttons, forms, and other UI elements. This is the extension's user interface.
+1. [background script](#create-background-script): Also known as a **service worker**, this is a long-running script
+   that runs in the background. It can listen for events and perform tasks.
+2. [content script(s)](#create-content-script): This script runs in the context of a web page. It can interact with the
+   DOM and modify the page, including adding UI elements. The extension can statically inject this script or dynamically
+   inject it by the background script or the popup.
+3. [popup](#create-popup): This small HTML page appears when a user clicks the extension icon. It can contain buttons,
+   forms, and other UI elements. This is the extension's user interface.
 
-These three parts of the extension run independently but can communicate with each other using message passing, events, and storage.
+These three parts of the extension run independently but can communicate with each other using message passing, events,
+and storage.
 
-Our first extension will have a popup with a turn-on/off switch and an input field. The extension will blur the page elements containing the text in the input field.
+Our first extension will have a popup with a turn-on/off switch and an input field. The extension will blur the page
+elements containing the text in the input field.
 
 ## `manifest.json` configuration file
 
 Create a `src` directory for the extension. This directory will contain all the extension files.
 
-The `manifest.json` file is the configuration file of a Chrome extension. It contains metadata about the extension, such as its name, version, permissions, and scripts.
+The `manifest.json` file is the configuration file of a Chrome extension. It contains metadata about the extension, such
+as its name, version, permissions, and scripts.
 
 ## Creating the popup {#create-popup}
 
@@ -66,7 +79,8 @@ Add a `manifest.json` file with the following content:
 }
 ```
 
-The `permissions` specify the permissions required by the extension. In this case, we need the `storage` permission to store data in the Chrome storage so that the extension can remember the state of its configuration.
+The `permissions` specify the permissions required by the extension. In this case, we need the `storage` permission to
+store data in the Chrome storage so that the extension can remember the state of its configuration.
 
 Create `popup.html` with the content below.
 
@@ -124,7 +138,8 @@ input.addEventListener("change", (event) => {
 })
 ```
 
-The script listens for changes in the switch and the input field. It saves the switch's state and the input field's value in Chrome storage.
+The script listens for changes in the switch and the input field. It saves the switch's state and the input field's
+value in Chrome storage.
 
 Create `popup.css` with the following content to style the switch and the input field:
 
@@ -199,15 +214,19 @@ Even though we have not added the background script and content script, we can l
 5. Select the `src` directory containing the extension files.
 6. Click **Select Folder**.
 7. The extension will be loaded.
-8. Pin the extension to the toolbar by clicking the pin button in the extension dropdown. This pin will make it easier to test the extension.
+8. Pin the extension to the toolbar by clicking the pin button in the extension dropdown. This pin will make it easier
+   to test the extension.
 9. The popup page will appear when you click the `M` extension icon.
 
 {{< figure src="chrome-extension-popup.png" title="Chrome extension popup" alt="Chrome extension popup" >}}
 
 We can now do some basic testing:
-1. Test the switch and the input field. The state of the switch and the value of the input field should be saved in the Chrome storage. The values should persist even after restarting the browser.
+
+1. Test the switch and the input field. The state of the switch and the value of the input field should be saved in the
+   Chrome storage. The values should persist even after restarting the browser.
 2. The badge text of the extension icon should change to "ON" or "OFF" based on the state of the switch.
-3. To inspect the extension, right-click the extension icon and select **Inspect popup**. You should see a "Hello, world" message in the **Console** tab.
+3. To inspect the extension, right-click the extension icon and select **Inspect popup**. You should see a "Hello,
+   world" message in the **Console** tab.
 
 ## Creating the content script {#create-content-script}
 
@@ -250,7 +269,7 @@ function processNode(node) {
     if (node.nodeType === Node.TEXT_NODE &&
         node.textContent !== null && node.textContent.trim().length > 0) {
         const parent = node.parentElement
-        if (parent !== null && 
+        if (parent !== null &&
             (parent.tagName === 'SCRIPT' || parent.style.filter === blurFilter)) {
             // Already blurred
             return
@@ -303,9 +322,11 @@ chrome.storage.sync.get(keys, (data) => {
 })
 ```
 
-The script listens for changes in the DOM and blurs elements that contain the text specified in the input field of the popup.
+The script listens for changes in the DOM and blurs elements that contain the text specified in the input field of the
+popup.
 
-At this point, we can test the extension by entering text in the input field and enabling it. After reloading the page, the extension should blur elements that contain the text.
+At this point, we can test the extension by entering text in the input field and enabling it. After reloading the page,
+the extension should blur elements that contain the text.
 
 ## Creating the background script {#create-background-script}
 
@@ -364,21 +385,25 @@ At this point, our basic extension is complete. We can test the extension.
 
 ## Next steps
 
-In the next part of this series, we will [add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made](../add-webpack-and-typescript-to-chrome-extension).
+In the next part of this series, we will
+[add development tooling to the Chrome extension, such as TypeScript support, a bundling tool called webpack, and a development mode that will reload the extension automatically when changes are made](../add-webpack-and-typescript-to-chrome-extension).
 
-For a list of all articles in the series, see the [production-ready Chrome extension series overview](../chrome-extension).
+For a list of all articles in the series, see the
+[production-ready Chrome extension series overview](../chrome-extension).
 
 ## Other getting started guides
 
-- Recently, we wrote about [creating a React application from scratch while minimizing the amount of tools used](../react-hello-world).
+- Recently, we wrote about
+  [creating a React application from scratch while minimizing the amount of tools used](../react-hello-world).
 - We also have a guide on [getting started with CGO in Go](../using-c-and-go-with-cgo-is-tricky).
 
 ## Basic extension code on GitHub
 
-The complete code is available on GitHub at: https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension
+The complete code is available on GitHub at:
+https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension
 
 ## Create a Chrome extension from scratch step-by-step video
 
 {{< youtube 2dQJYDAAU4I >}}
 
-*Note:* If you want to comment on this article, please do so on the YouTube video.
+_Note:_ If you want to comment on this article, please do so on the YouTube video.
