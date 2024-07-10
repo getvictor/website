@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Configuration on Victor on Software</title><link>https://victoronsoftware.com/tags/configuration/</link><description>Recent content in Configuration on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/configuration/index.xml" rel="self" type="application/rss+xml"/><item><title>Adding options page to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</link><pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-options-headline.png" alt="Featured image of post Adding options page to Chrome extension (2024)" />&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a complete production-ready Chrome extension&lt;/a>.&lt;/p>
-&lt;p>In the first article of the series, we introduced
-&lt;a class="link" href="../create-chrome-extension/#parts-of-a-chrome-extension" >the main parts of a Chrome extension&lt;/a> &amp;ndash; the service worker
-(background script), content script, and popup. This article will add a fourth part to our Chrome extension &amp;ndash; an
-options page. This page will allow users to configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
+&lt;p>In the first article of the series, we introduced &lt;a class="link" href="../create-chrome-extension/#parts-of-a-chrome-extension" >the main parts of a Chrome extension&lt;/a> &amp;ndash; the service worker (background script), content script, and popup. This article will add a fourth part to our Chrome extension &amp;ndash; an options page. This page will allow users to configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
 &lt;h2 id="why-add-an-options-page">&lt;a href="#why-add-an-options-page" class="header-anchor">&lt;/a>Why add an options page?
-&lt;/h2>&lt;p>An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few
-checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome
-extension&amp;rsquo;s popup or the Chrome extension&amp;rsquo;s context menu.&lt;/p>
+&lt;/h2>&lt;p>An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome extension&amp;rsquo;s popup or the Chrome extension&amp;rsquo;s context menu.&lt;/p>
 &lt;h2 id="adding-an-options-page">&lt;a href="#adding-an-options-page" class="header-anchor">&lt;/a>Adding an options page
-&lt;/h2>&lt;p>To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension&amp;rsquo;s
-manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.&lt;/p>
-&lt;p>Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension&amp;rsquo;s
-functionality. The extension will store the excluded host in the extension&amp;rsquo;s local storage.&lt;/p>
+&lt;/h2>&lt;p>To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension&amp;rsquo;s manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.&lt;/p>
+&lt;p>Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension&amp;rsquo;s functionality. The extension will store the excluded host in the extension&amp;rsquo;s local storage.&lt;/p>
 &lt;p>We will add several new files, update the extension&amp;rsquo;s configuration, and update the existing files.&lt;/p>
 &lt;p>Add a new file &lt;code>options.html&lt;/code> to the &lt;code>static&lt;/code> folder:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
@@ -80,16 +73,13 @@ functionality. The extension will store the excluded host in the extension&amp;r
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">item?&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">excludeHost?&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The content script &lt;code>src/content.ts&lt;/code> needs to be updated to handle the new &lt;code>excludeHost&lt;/code> setting. See the updated file
-&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The content script &lt;code>src/content.ts&lt;/code> needs to be updated to handle the new &lt;code>excludeHost&lt;/code> setting. See the updated file &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts" target="_blank" rel="noopener"
 >here&lt;/a>.&lt;/p>
-&lt;p>We need to update the extension&amp;rsquo;s manifest to include the new options page. Add the following to the &lt;code>manifest.json&lt;/code>
-file:&lt;/p>
+&lt;p>We need to update the extension&amp;rsquo;s manifest to include the new options page. Add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;options_page&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;static/options.html&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition, we need to tell webpack to compile the new &lt;code>options.ts&lt;/code> file. Update the &lt;code>webpack.common.ts&lt;/code> file to
-include the new entry point:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition, we need to tell webpack to compile the new &lt;code>options.ts&lt;/code> file. Update the &lt;code>webpack.common.ts&lt;/code> file to include the new entry point:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">background&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/background.ts&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/content.ts&amp;#34;&lt;/span>,
@@ -97,16 +87,14 @@ include the new entry point:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">options&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/options.ts&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="testing-the-options-page">&lt;a href="#testing-the-options-page" class="header-anchor">&lt;/a>Testing the options page
-&lt;/h2>&lt;p>To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code>Options&lt;/code> item.
-Clicking on this item will open the options page.&lt;/p>
+&lt;/h2>&lt;p>To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code>Options&lt;/code> item. Clicking on this item will open the options page.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-dropdown.png"
 alt="New Options selection">&lt;figcaption>
 &lt;h4>New Options selection&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="adding-a-link-to-the-options-page">&lt;a href="#adding-a-link-to-the-options-page" class="header-anchor">&lt;/a>Adding a link to the options page
-&lt;/h2>&lt;p>We can add a link to the popup to make it easier for users to access the options page. Update the &lt;code>popup.html&lt;/code> file to
-include a link to the options page:&lt;/p>
+&lt;/h2>&lt;p>We can add a link to the popup to make it easier for users to access the options page. Update the &lt;code>popup.html&lt;/code> file to include a link to the options page:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">button&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;go-to-options&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;button-link&amp;#34;&lt;/span>&amp;gt;Advanced options&amp;lt;/&lt;span style="color:#f92672">button&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Add the CSS for the link:&lt;/p>
@@ -145,9 +133,7 @@ alt="Popup with Advanced options link">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="embedded-options-page">&lt;a href="#embedded-options-page" class="header-anchor">&lt;/a>Embedded options page
-&lt;/h2>&lt;p>Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing
-and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated
-options page. To try an embedded options page, add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
+&lt;/h2>&lt;p>Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated options page. To try an embedded options page, add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;options_ui&amp;#34;&lt;/span>: {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;page&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;options.html&amp;#34;&lt;/span>,
@@ -155,11 +141,9 @@ options page. To try an embedded options page, add the following to the &lt;code
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will focus on the look of our popup and options page. We will add CSS to make it
-visually appealing and user-friendly.&lt;/p>
+&lt;/h2>&lt;p>In the next part of this series, we will focus on the look of our popup and options page. We will &lt;a class="link" href="../add-css-framework-to-chrome-extension" >add CSS to make Chrome extension pages visually appealing and user-friendly&lt;/a>.&lt;/p>
 &lt;h2 id="options-page-code-on-github">&lt;a href="#options-page-code-on-github" class="header-anchor">&lt;/a>Options page code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at:
-&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page" target="_blank" rel="noopener"
 >https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page&lt;/a>&lt;/p>
 &lt;h2 id="options-page-video">&lt;a href="#options-page-video" class="header-anchor">&lt;/a>Options page video
 &lt;/h2>&lt;div class="video-wrapper">

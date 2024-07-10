@@ -1,17 +1,190 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chrome Extension on Victor on Software</title><link>https://victoronsoftware.com/tags/chrome-extension/</link><description>Recent content in Chrome Extension on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/chrome-extension/index.xml" rel="self" type="application/rss+xml"/><item><title>Adding options page to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</link><pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-options-headline.png" alt="Featured image of post Adding options page to Chrome extension (2024)" />&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a complete production-ready Chrome extension&lt;/a>.&lt;/p>
-&lt;p>In the first article of the series, we introduced
-&lt;a class="link" href="../create-chrome-extension/#parts-of-a-chrome-extension" >the main parts of a Chrome extension&lt;/a> &amp;ndash; the service worker
-(background script), content script, and popup. This article will add a fourth part to our Chrome extension &amp;ndash; an
-options page. This page will allow users to configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chrome Extension on Victor on Software</title><link>https://victoronsoftware.com/tags/chrome-extension/</link><description>Recent content in Chrome Extension on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 10 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/chrome-extension/index.xml" rel="self" type="application/rss+xml"/><item><title>Add CSS framework to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/chrome-tailwind-headline.png" alt="Featured image of post Add CSS framework to Chrome extension (2024)" />&lt;ul>
+&lt;li>&lt;a class="link" href="#add-css-to-webpack-bundle" >Add CSS to the webpack bundle&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#add-tailwind-css" >Add Tailwind CSS&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#use-tailwind-css" >Use Tailwind CSS utility classes&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>This article is part of our &lt;a class="link" href="../chrome-extension" >complete guide to building a Chrome extension&lt;/a>.&lt;/p>
+&lt;p>In the previous articles on &lt;a class="link" href="../create-chrome-extension" >creating a Chrome extension&lt;/a> and
+&lt;a class="link" href="../add-options-to-chrome-extension" >adding an options page to a Chrome extension&lt;/a>, we built two user interface pages &amp;ndash;
+the popup and the options page. In this article, we will improve the look and maintainability of our extension by adding
+a CSS framework.&lt;/p>
+&lt;h2 id="why-add-a-css-framework">&lt;a href="#why-add-a-css-framework" class="header-anchor">&lt;/a>Why add a CSS framework?
+&lt;/h2>&lt;p>Using a CSS framework like Tailwind CSS or Bootstrap can help you:&lt;/p>
+&lt;ul>
+&lt;li>Quickly style your extension&lt;/li>
+&lt;li>Make your extension look professional&lt;/li>
+&lt;li>Save time on writing custom CSS&lt;/li>
+&lt;li>Improve the maintainability of your code&lt;/li>
+&lt;li>Use pre-built and optimized components&lt;/li>
+&lt;/ul>
+&lt;h2 id="add-css-to-webpack-bundle">&lt;a href="#add-css-to-webpack-bundle" class="header-anchor">&lt;/a>Add CSS to the webpack bundle
+&lt;/h2>&lt;p>Before we can use a CSS framework, we need to add CSS integration to our webpack bundle. In
+&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >adding webpack to a Chrome extension&lt;/a>, we set up webpack with a
+static CSS file. We will include the CSS file as part of our JavaScript bundle. Although the CSS files can be kept
+separate, we will include them in the JavaScript bundle since this is currently the best practice in web development.&lt;/p>
+&lt;p>We will use &lt;a class="link" href="https://www.npmjs.com/package/style-loader" target="_blank" rel="noopener"
+>&lt;code>style-loader&lt;/code>&lt;/a> to inject CSS into our JavaScript and
+&lt;a class="link" href="https://www.npmjs.com/package/css-loader" target="_blank" rel="noopener"
+>&lt;code>css-loader&lt;/code>&lt;/a> to convert our CSS file to a string. First, install the
+packages:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev style-loader css-loader
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, update the &lt;code>webpack.common.ts&lt;/code> to include the rule for CSS files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/\.css$/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">use&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;style-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;css-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>},
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Move the CSS files from the &lt;code>static&lt;/code> folder to the &lt;code>src&lt;/code> folder, and update the &lt;code>popup.ts&lt;/code> and &lt;code>options.ts&lt;/code> to import
+the CSS files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./popup.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;!-- raw HTML omitted -->&lt;!-- raw HTML omitted -->&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./options.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And remove the &lt;code>link&lt;/code> CSS references from the &lt;code>static/popup.html&lt;/code> and &lt;code>static/options.html&lt;/code> HTML files.&lt;/p>
+&lt;p>When you run &lt;code>npm run build&lt;/code>, the CSS file content will be included in the JavaScript bundle. You can verify this by
+inspecting the &lt;code>dist&lt;/code> folder and looking at the &lt;code>popup.js&lt;/code> and &lt;code>options.js&lt;/code> files.&lt;/p>
+&lt;h2 id="add-tailwind-css">&lt;a href="#add-tailwind-css" class="header-anchor">&lt;/a>Add Tailwind CSS
+&lt;/h2>&lt;p>We will use Tailwind CSS for our extension. It is a popular CSS framework focused on providing CSS utility classes.
+First, install these packages and generate the TypeScript config file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev tailwindcss postcss-loader
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>npx tailwindcss init --ts
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a class="link" href="https://www.npmjs.com/package/postcss-loader" target="_blank" rel="noopener"
+>&lt;code>postcss-loader&lt;/code>&lt;/a> is a webpack loader that processes CSS with PostCSS.
+PostCSS is a plugin-based CSS transformer recommended for integrating Tailwind CSS with the webpack build flow.&lt;/p>
+&lt;p>Update the &lt;code>webpack.common.ts&lt;/code> CSS rule to include the loader for PostCSS with the &lt;code>tailwindcss&lt;/code> plugin:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">/\.css$/&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">use&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;style-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;css-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">loader&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;postcss-loader&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">options&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">postcssOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;postcss-import&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;tailwindcss&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>},
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;a class="link" href="https://www.npmjs.com/package/postcss-import" target="_blank" rel="noopener"
+>&lt;code>postcss-import&lt;/code>&lt;/a> plugin processes &lt;code>@import&lt;/code> statements in CSS files,
+which we will use in the next step.&lt;/p>
+&lt;p>Update the generated &lt;code>tailwind.config.ts&lt;/code> file to point to our HTML files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#66d9ef">type&lt;/span> { &lt;span style="color:#a6e22e">Config&lt;/span> } &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;tailwindcss&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;./static/*.html&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">theme&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">extend&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">plugins&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#a6e22e">satisfies&lt;/span> &lt;span style="color:#a6e22e">Config&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="use-tailwind-css">&lt;a href="#use-tailwind-css" class="header-anchor">&lt;/a>Use Tailwind CSS utility classes in the HTML and CSS files
+&lt;/h2>&lt;p>This section will update our CSS to use Tailwind CSS utility classes. Using Tailwind CSS utility classes is a slightly
+different approach to writing CSS. Instead of writing custom CSS classes, we use pre-built utility classes to style our
+elements. It is a small step above writing raw CSS, but it is more maintainable and easier to read. Utility classes are
+documented in the &lt;a class="link" href="https://tailwindcss.com/docs/width" target="_blank" rel="noopener"
+>Tailwind CSS documentation&lt;/a>.&lt;/p>
+&lt;p>First, we create a new CSS file, &lt;code>src/common.css&lt;/code> to contain styles shared by both pages:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>@&lt;span style="color:#66d9ef">tailwind&lt;/span> &lt;span style="color:#f92672">base&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>@&lt;span style="color:#66d9ef">tailwind&lt;/span> &lt;span style="color:#f92672">components&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>@&lt;span style="color:#66d9ef">tailwind&lt;/span> &lt;span style="color:#f92672">utilities&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.&lt;span style="color:#a6e22e">my-input&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">@apply&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">block&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">m-1.5&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">p-2&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">bg-gray-50&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">border&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">border-gray-300&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">text-gray-900&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">text-sm&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">rounded-lg&lt;/span> focus:ring-blue-500 focus&lt;span style="color:#f92672">:&lt;/span>&lt;span style="color:#66d9ef">border&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">blue&lt;/span>&lt;span style="color:#ae81ff">-500&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>@apply&lt;/code> directive is a Tailwind CSS feature that allows us to create a custom CSS class using Tailwind CSS utility
+classes.&lt;/p>
+&lt;p>Then, update the &lt;code>popup.css&lt;/code> and &lt;code>options.css&lt;/code> files to use the Tailwind CSS classes. &lt;code>popup.css&lt;/code> will use Tailwind CSS
+utility classes:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>@&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./common.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.&lt;span style="color:#a6e22e">my-center&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">@apply&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">w-full&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">inline-flex&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">items-center&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">justify-center&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>.&lt;span style="color:#a6e22e">my-button-link&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#960050;background-color:#1e0010">@apply&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">text-indigo-400&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">m-1.5&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">px-3&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">py-1&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">text-xs&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">outline-none&lt;/span> focus:&lt;span style="color:#66d9ef">outline&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">none&lt;/span> &lt;span style="color:#66d9ef">ease&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">linear&lt;/span> &lt;span style="color:#66d9ef">transition&lt;/span>&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">all&lt;/span> duration-150;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>options.css&lt;/code> will only use our common CSS file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-css" data-lang="css">&lt;span style="display:flex;">&lt;span>@&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./common.css&amp;#34;&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we update &lt;code>static/popup.html&lt;/code> to use our new CSS classes as well as other Tailwind CSS classes:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;My popup&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">label&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;my-center cursor-pointer&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">input&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;enabled&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;checkbox&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;sr-only peer&amp;#34;&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">span&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;m-1.5 relative w-16 h-8 bg-gray-200 rounded-full after:content-[&amp;#39;&amp;#39;] after:absolute after:top-0.5
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-7 after:w-7
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> after:transition-all peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> peer-checked:bg-blue-600&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;gt;&amp;lt;/&lt;span style="color:#f92672">span&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">label&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">label&lt;/span> &lt;span style="color:#a6e22e">for&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;invisible&amp;#34;&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">label&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">input&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;my-input w-52&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;item&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;text&amp;#34;&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">div&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;my-center&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">button&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;go-to-options&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;my-button-link&amp;#34;&lt;/span>&amp;gt;Advanced options&amp;lt;/&lt;span style="color:#f92672">button&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">div&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">script&lt;/span> &lt;span style="color:#a6e22e">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;popup.js&amp;#34;&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">script&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We built a custom checkbox using Tailwind CSS utility classes. The &lt;code>peer&lt;/code> class styles the checkbox and the label
+together.&lt;/p>
+&lt;p>And &lt;code>static/options.html&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">html&lt;/span> &lt;span style="color:#a6e22e">lang&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;en&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">title&lt;/span>&amp;gt;Advanced options&amp;lt;/&lt;span style="color:#f92672">title&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#f92672">head&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">body&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;m-1.5&amp;#34;&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">h2&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;text-3xl m-1.5 font-extrabold&amp;#34;&lt;/span>&amp;gt;Advanced options&amp;lt;/&lt;span style="color:#f92672">h2&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">br&lt;/span> /&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">h3&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;text-xl m-1.5 font-bold&amp;#34;&lt;/span>&amp;gt;Web host to exclude&amp;lt;/&lt;span style="color:#f92672">h3&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">label&lt;/span> &lt;span style="color:#a6e22e">for&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;exclude_host&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;invisible&amp;#34;&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">label&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">input&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;exclude_host&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;my-input w-96&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;text&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">placeholder&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;example.com&amp;#34;&lt;/span>/&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;&lt;span style="color:#f92672">script&lt;/span> &lt;span style="color:#a6e22e">src&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;options.js&amp;#34;&lt;/span>&amp;gt;&amp;lt;/&lt;span style="color:#f92672">script&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &amp;lt;/&lt;span style="color:#f92672">body&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;/&lt;span style="color:#f92672">html&lt;/span>&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Testing the extension, we should see a nicer-looking popup page:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/popup.png"
+alt="Popup with Tailwind CSS classes">&lt;figcaption>
+&lt;h4>Popup with Tailwind CSS classes&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>And a nicer-looking options page:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/advanced-options.png"
+alt="Options with Tailwind CSS classes">&lt;figcaption>
+&lt;h4>Options with Tailwind CSS classes&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
+&lt;/h2>&lt;p>In the next part of this series, we will add unit tests to our Chrome extension. Unit tests help us catch bugs early,
+ensure our extension continues to work as expected in different scenarios and make it easier to refactor our code.&lt;/p>
+&lt;h2 id="css-framework-code-on-github">&lt;a href="#css-framework-code-on-github" class="header-anchor">&lt;/a>CSS framework code on GitHub
+&lt;/h2>&lt;p>The complete code is available on GitHub at:
+&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework" target="_blank" rel="noopener"
+>https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework&lt;/a>&lt;/p>
+&lt;h2 id="css-framework-video">&lt;a href="#css-framework-video" class="header-anchor">&lt;/a>CSS framework video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/TODO"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Adding options page to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</link><pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-options-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-options-headline.png" alt="Featured image of post Adding options page to Chrome extension (2024)" />&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a complete production-ready Chrome extension&lt;/a>.&lt;/p>
+&lt;p>In the first article of the series, we introduced &lt;a class="link" href="../create-chrome-extension/#parts-of-a-chrome-extension" >the main parts of a Chrome extension&lt;/a> &amp;ndash; the service worker (background script), content script, and popup. This article will add a fourth part to our Chrome extension &amp;ndash; an options page. This page will allow users to configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
 &lt;h2 id="why-add-an-options-page">&lt;a href="#why-add-an-options-page" class="header-anchor">&lt;/a>Why add an options page?
-&lt;/h2>&lt;p>An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few
-checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome
-extension&amp;rsquo;s popup or the Chrome extension&amp;rsquo;s context menu.&lt;/p>
+&lt;/h2>&lt;p>An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome extension&amp;rsquo;s popup or the Chrome extension&amp;rsquo;s context menu.&lt;/p>
 &lt;h2 id="adding-an-options-page">&lt;a href="#adding-an-options-page" class="header-anchor">&lt;/a>Adding an options page
-&lt;/h2>&lt;p>To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension&amp;rsquo;s
-manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.&lt;/p>
-&lt;p>Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension&amp;rsquo;s
-functionality. The extension will store the excluded host in the extension&amp;rsquo;s local storage.&lt;/p>
+&lt;/h2>&lt;p>To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension&amp;rsquo;s manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.&lt;/p>
+&lt;p>Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension&amp;rsquo;s functionality. The extension will store the excluded host in the extension&amp;rsquo;s local storage.&lt;/p>
 &lt;p>We will add several new files, update the extension&amp;rsquo;s configuration, and update the existing files.&lt;/p>
 &lt;p>Add a new file &lt;code>options.html&lt;/code> to the &lt;code>static&lt;/code> folder:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!doctype html&amp;gt;&lt;/span>
@@ -80,16 +253,13 @@ functionality. The extension will store the excluded host in the extension&amp;r
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">item?&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">excludeHost?&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The content script &lt;code>src/content.ts&lt;/code> needs to be updated to handle the new &lt;code>excludeHost&lt;/code> setting. See the updated file
-&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The content script &lt;code>src/content.ts&lt;/code> needs to be updated to handle the new &lt;code>excludeHost&lt;/code> setting. See the updated file &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts" target="_blank" rel="noopener"
 >here&lt;/a>.&lt;/p>
-&lt;p>We need to update the extension&amp;rsquo;s manifest to include the new options page. Add the following to the &lt;code>manifest.json&lt;/code>
-file:&lt;/p>
+&lt;p>We need to update the extension&amp;rsquo;s manifest to include the new options page. Add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;options_page&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;static/options.html&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition, we need to tell webpack to compile the new &lt;code>options.ts&lt;/code> file. Update the &lt;code>webpack.common.ts&lt;/code> file to
-include the new entry point:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition, we need to tell webpack to compile the new &lt;code>options.ts&lt;/code> file. Update the &lt;code>webpack.common.ts&lt;/code> file to include the new entry point:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">entry&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">background&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/background.ts&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/content.ts&amp;#34;&lt;/span>,
@@ -97,16 +267,14 @@ include the new entry point:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">options&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./src/options.ts&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="testing-the-options-page">&lt;a href="#testing-the-options-page" class="header-anchor">&lt;/a>Testing the options page
-&lt;/h2>&lt;p>To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code>Options&lt;/code> item.
-Clicking on this item will open the options page.&lt;/p>
+&lt;/h2>&lt;p>To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code>Options&lt;/code> item. Clicking on this item will open the options page.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-dropdown.png"
 alt="New Options selection">&lt;figcaption>
 &lt;h4>New Options selection&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="adding-a-link-to-the-options-page">&lt;a href="#adding-a-link-to-the-options-page" class="header-anchor">&lt;/a>Adding a link to the options page
-&lt;/h2>&lt;p>We can add a link to the popup to make it easier for users to access the options page. Update the &lt;code>popup.html&lt;/code> file to
-include a link to the options page:&lt;/p>
+&lt;/h2>&lt;p>We can add a link to the popup to make it easier for users to access the options page. Update the &lt;code>popup.html&lt;/code> file to include a link to the options page:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-html" data-lang="html">&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&amp;lt;&lt;span style="color:#f92672">button&lt;/span> &lt;span style="color:#a6e22e">id&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;go-to-options&amp;#34;&lt;/span> &lt;span style="color:#a6e22e">class&lt;/span>&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;button-link&amp;#34;&lt;/span>&amp;gt;Advanced options&amp;lt;/&lt;span style="color:#f92672">button&lt;/span>&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Add the CSS for the link:&lt;/p>
@@ -145,9 +313,7 @@ alt="Popup with Advanced options link">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="embedded-options-page">&lt;a href="#embedded-options-page" class="header-anchor">&lt;/a>Embedded options page
-&lt;/h2>&lt;p>Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing
-and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated
-options page. To try an embedded options page, add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
+&lt;/h2>&lt;p>Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated options page. To try an embedded options page, add the following to the &lt;code>manifest.json&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;options_ui&amp;#34;&lt;/span>: {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;page&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;options.html&amp;#34;&lt;/span>,
@@ -155,11 +321,9 @@ options page. To try an embedded options page, add the following to the &lt;code
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will focus on the look of our popup and options page. We will add CSS to make it
-visually appealing and user-friendly.&lt;/p>
+&lt;/h2>&lt;p>In the next part of this series, we will focus on the look of our popup and options page. We will &lt;a class="link" href="../add-css-framework-to-chrome-extension" >add CSS to make Chrome extension pages visually appealing and user-friendly&lt;/a>.&lt;/p>
 &lt;h2 id="options-page-code-on-github">&lt;a href="#options-page-code-on-github" class="header-anchor">&lt;/a>Options page code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at:
-&lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page" target="_blank" rel="noopener"
 >https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page&lt;/a>&lt;/p>
 &lt;h2 id="options-page-video">&lt;a href="#options-page-video" class="header-anchor">&lt;/a>Options page video
 &lt;/h2>&lt;div class="video-wrapper">
@@ -542,9 +706,12 @@ to communicate between the service worker (background script), content scripts, 
 &lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.&lt;/p>
-&lt;h3 id="adding-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#adding-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-options-to-chrome-extension" >Adding options page to Chrome extension&lt;/a>
+&lt;h3 id="add-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#add-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-options-to-chrome-extension" >Add options page to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We add an advanced options page to our Chrome extension. This page allows users to configure the extension&amp;rsquo;s behavior
 and settings.&lt;/p>
+&lt;h3 id="add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension">&lt;a href="#add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-css-framework-to-chrome-extension" >Add CSS framework to Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We improve the look and maintainability of our extension by adding a CSS framework. We use Tailwind CSS to quickly style
+our extension and make it look professional.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
