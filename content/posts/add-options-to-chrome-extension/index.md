@@ -11,24 +11,17 @@ draft = false
 
 This article is part of a series on [building a complete production-ready Chrome extension](../chrome-extension).
 
-In the first article of the series, we introduced
-[the main parts of a Chrome extension](../create-chrome-extension/#parts-of-a-chrome-extension) -- the service worker
-(background script), content script, and popup. This article will add a fourth part to our Chrome extension -- an
-options page. This page will allow users to configure the extension's behavior and settings.
+In the first article of the series, we introduced [the main parts of a Chrome extension](../create-chrome-extension/#parts-of-a-chrome-extension) -- the service worker (background script), content script, and popup. This article will add a fourth part to our Chrome extension -- an options page. This page will allow users to configure the extension's behavior and settings.
 
 ## Why add an options page?
 
-An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few
-checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome
-extension's popup or the Chrome extension's context menu.
+An options page is a user-friendly way for users to customize the extension to their needs. It can be as simple as a few checkboxes or as complex as a full settings page with multiple tabs. Users can access the options page from the Chrome extension's popup or the Chrome extension's context menu.
 
 ## Adding an options page
 
-To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension's
-manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.
+To add an options page to our Chrome extension, we need to create a new HTML file and add it to the extension's manifest. Our options page will be a simple HTML file with some JavaScript to handle user interactions.
 
-Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension's
-functionality. The extension will store the excluded host in the extension's local storage.
+Our example options page will allow a user to exclude a web host, like victoronsoftware.com, from the extension's functionality. The extension will store the excluded host in the extension's local storage.
 
 We will add several new files, update the extension's configuration, and update the existing files.
 
@@ -116,11 +109,9 @@ export interface StoredConfig {
 }
 ```
 
-The content script `src/content.ts` needs to be updated to handle the new `excludeHost` setting. See the updated file
-[here](https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts).
+The content script `src/content.ts` needs to be updated to handle the new `excludeHost` setting. See the updated file [here](https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts).
 
-We need to update the extension's manifest to include the new options page. Add the following to the `manifest.json`
-file:
+We need to update the extension's manifest to include the new options page. Add the following to the `manifest.json` file:
 
 ```json
 {
@@ -128,8 +119,7 @@ file:
 }
 ```
 
-In addition, we need to tell webpack to compile the new `options.ts` file. Update the `webpack.common.ts` file to
-include the new entry point:
+In addition, we need to tell webpack to compile the new `options.ts` file. Update the `webpack.common.ts` file to include the new entry point:
 
 ```typescript
   entry: {
@@ -142,15 +132,13 @@ include the new entry point:
 
 ## Testing the options page
 
-To test the options page, load the extension in Chrome and right-click on its icon. You should see a new `Options` item.
-Clicking on this item will open the options page.
+To test the options page, load the extension in Chrome and right-click on its icon. You should see a new `Options` item. Clicking on this item will open the options page.
 
 {{< figure src="chrome-extension-dropdown.png" title="New Options selection" alt="New Options selection" >}}
 
 ## Adding a link to the options page
 
-We can add a link to the popup to make it easier for users to access the options page. Update the `popup.html` file to
-include a link to the options page:
+We can add a link to the popup to make it easier for users to access the options page. Update the `popup.html` file to include a link to the options page:
 
 ```html
 
@@ -200,9 +188,7 @@ We will now see the `Advanced options` link in the popup. Clicking on the link w
 
 ## Embedded options page
 
-Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing
-and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated
-options page. To try an embedded options page, add the following to the `manifest.json` file:
+Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated options page. To try an embedded options page, add the following to the `manifest.json` file:
 
 ```json
 {
@@ -215,13 +201,11 @@ options page. To try an embedded options page, add the following to the `manifes
 
 ## Next steps
 
-In the next part of this series, we will focus on the look of our popup and options page. We will add CSS to make it
-visually appealing and user-friendly.
+In the next part of this series, we will focus on the look of our popup and options page. We will [add CSS to make Chrome extension pages visually appealing and user-friendly](../add-css-framework-to-chrome-extension).
 
 ## Options page code on GitHub
 
-The complete code is available on GitHub at:
-https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page
+The complete code is available on GitHub at: https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page
 
 ## Options page video
 

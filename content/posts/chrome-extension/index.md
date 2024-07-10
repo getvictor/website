@@ -33,10 +33,15 @@ to communicate between the service worker (background script), content scripts, 
 We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.
 
-### [Adding options page to Chrome extension](../add-options-to-chrome-extension)
+### [Add options page to Chrome extension](../add-options-to-chrome-extension)
 
 We add an advanced options page to our Chrome extension. This page allows users to configure the extension's behavior
 and settings.
+
+### [Add CSS framework to Chrome extension](../add-css-framework-to-chrome-extension)
+
+We improve the look and maintainability of our extension by adding a CSS framework. We use Tailwind CSS to quickly style
+our extension and make it look professional.
 
 ### Build a production-ready Chrome extension video playlist
 
