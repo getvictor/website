@@ -1,4 +1,87 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 10 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Add CSS framework to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/chrome-tailwind-headline.png" alt="Featured image of post Add CSS framework to Chrome extension (2024)" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 18 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Using a distributed lock in production distributed systems</title><link>https://victoronsoftware.com/posts/distributed-lock/</link><pubDate>Thu, 18 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/distributed-lock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-lock-headline.png" alt="Featured image of post Using a distributed lock in production distributed systems" />&lt;p>This article will present a problem we encountered in our production distributed system and how we solved it using a
+distributed lock.&lt;/p>
+&lt;h2 id="the-problem----data-inconsistency">&lt;a href="#the-problem----data-inconsistency" class="header-anchor">&lt;/a>The problem &amp;ndash; data inconsistency
+&lt;/h2>&lt;p>Recently, we started using the Google Calendar API to monitor calendar changes. However, we noticed that it is possible
+to receive a second callback while processing the first one. This second callback can lead to data inconsistency, race
+conditions, and deadlocks.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/distributed-lock/data-consistency-problem.svg"
+alt="Sequence diagram demonstrating data inconsistency issue without a distributed lock">&lt;figcaption>
+&lt;h4>Data inconsistency&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In the above diagram, two servers, A and B, are processing calendar events. Server B receives a callback from Google
+Calendar API stating that something has changed in the calendar. Google does not provide information about what event
+changed, so server B must fetch the event of interest from the calendar. While server B is fetching the event, server A
+also receives a callback. Server A also fetches the event from the calendar. Both servers now have the same event but
+are unaware of each other&amp;rsquo;s actions. Server B updates the event with new information. Server A also updates the event
+with different details, potentially overwriting or duplicating Server B&amp;rsquo;s changes. The calendar event is now in an
+inconsistent state, as is the data in our database.&lt;/p>
+&lt;h2 id="what-is-a-distributed-lock">&lt;a href="#what-is-a-distributed-lock" class="header-anchor">&lt;/a>What is a distributed lock?
+&lt;/h2>&lt;p>A distributed lock is a mechanism that allows multiple servers to coordinate access to a shared resource. This mechanism
+is widely used across the software industry to ensure data consistency in distributed systems.&lt;/p>
+&lt;p>In our case, we need to make sure that only one server is processing a calendar event at a time. The distributed lock
+will prevent the second server from processing the event until the first server completes.&lt;/p>
+&lt;h2 id="implementation-of-distributed-lock">&lt;a href="#implementation-of-distributed-lock" class="header-anchor">&lt;/a>Implementation of distributed lock
+&lt;/h2>&lt;p>We implemented a distributed lock using Redis. Redis is an in-memory data structure store that can be used as a
+database, cache, and message broker. To acquire the lock, our server sets a key in Redis with a unique value using the
+&lt;a class="link" href="https://redis.io/docs/latest/commands/set/" target="_blank" rel="noopener"
+>Redis SET command&lt;/a>.&lt;/p>
+&lt;pre tabindex="0">&lt;code>SET mykey &amp;#34;myvalue&amp;#34; NX PX 60000
+&lt;/code>&lt;/pre>&lt;p>The &lt;code>NX&lt;/code> option only sets the key if it does not exist. The &lt;code>PX 60000&lt;/code> option sets the key&amp;rsquo;s expiration time to 60
+seconds. This ensures that the lock is released if the server crashes or does not release it in a timely manner.&lt;/p>
+&lt;p>To release the lock, we &lt;code>EVAL&lt;/code> a Lua script that checks if the key&amp;rsquo;s value matches the unique value set by the server.
+If the values match, the script deletes the key using the
+&lt;a class="link" href="https://redis.io/docs/latest/commands/del/" target="_blank" rel="noopener"
+>Redis DEL command&lt;/a>.&lt;/p>
+&lt;pre tabindex="0">&lt;code>if redis.call(&amp;#34;get&amp;#34;, KEYS[1]) == ARGV[1] then
+return redis.call(&amp;#34;del&amp;#34;, KEYS[1])
+else
+return 0
+end
+&lt;/code>&lt;/pre>&lt;p>We only release the lock if the value matches, ensuring that the server that acquired the lock releases it.&lt;/p>
+&lt;h2 id="distributed-lock-solution">&lt;a href="#distributed-lock-solution" class="header-anchor">&lt;/a>Distributed lock solution
+&lt;/h2>&lt;p>With the distributed lock in place, we can make sure that only one server is processing a calendar event at a time.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-lock-solution.svg"
+alt="Sequence diagram demonstrating using distributed lock and a processing queue to solve data consistency issue">&lt;figcaption>
+&lt;h4>Using distributed lock with a processing queue&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In the above diagram, server B receives a calendar callback and acquires a lock from Redis. Server A also gets a
+callback but cannot acquire the lock since it has already been taken by Server B. Instead of waiting, Server A puts the
+event in a processing queue. Once Server B finishes processing the event, it releases the lock. Server B then checks the
+queue. Finding an event in the queue, the server starts a new worker process to process the events. The worker processes
+all outstanding events in the queue and exits on completion.&lt;/p>
+&lt;h2 id="waiting-to-acquire-the-lock">&lt;a href="#waiting-to-acquire-the-lock" class="header-anchor">&lt;/a>Waiting to acquire the lock
+&lt;/h2>&lt;p>One issue we encountered was that another system process needed to acquire the lock. The process could keep trying to
+obtain the lock, but there was no guarantee that it would be successful in a reasonable amount of time because it could
+compete with other servers.&lt;/p>
+&lt;h2 id="fairness-in-acquiring-the-lock">&lt;a href="#fairness-in-acquiring-the-lock" class="header-anchor">&lt;/a>Fairness in acquiring the lock
+&lt;/h2>&lt;p>We implemented a fairness mechanism to ensure a priority process could acquire the lock.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-fair-lock.svg"
+alt="Sequence diagram demonstrating using a fairness mechanism to acquire a distributed lock">&lt;figcaption>
+&lt;h4>Cron job is guaranteed to acquire the lock&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>In the above diagram, the worker process has acquired the lock. Another process, a cron job, also needs to acquire the
+lock. The cron job is a priority process that needs to run at a specific time. The cron job tries to acquire the lock
+but fails because the worker process has it. The cron job sets a key in Redis that indicates that it wants to acquire
+the lock next. This action tells the other servers not to acquire the lock. The cron job then retries acquiring the lock
+until it is successful.&lt;/p>
+&lt;h2 id="distributed-lock-code-on-github">&lt;a href="#distributed-lock-code-on-github" class="header-anchor">&lt;/a>Distributed lock code on GitHub
+&lt;/h2>&lt;p>We implemented the distributed lock logic in Go. The crucial part of the code is in the
+&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/7ae1fe95272fbbda7efe1e320552539768498839/server/service/redis_lock/redis_lock.go" target="_blank" rel="noopener"
+>redis_lock.go&lt;/a>
+file.&lt;/p>
+&lt;h2 id="distributed-lock-video">&lt;a href="#distributed-lock-video" class="header-anchor">&lt;/a>Distributed lock video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/833TqEPfF18"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add CSS framework to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/chrome-tailwind-headline.png" alt="Featured image of post Add CSS framework to Chrome extension (2024)" />&lt;ul>
 &lt;li>&lt;a class="link" href="#add-css-to-webpack-bundle" >Add CSS to the webpack bundle&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#add-tailwind-css" >Add Tailwind CSS&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#use-tailwind-css" >Use Tailwind CSS utility classes&lt;/a>&lt;/li>
@@ -1115,8 +1198,12 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#read-after-write-consistency" >Read-after-write consistency&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#index-limitations" >Index limitations&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>When building an application, the database is often an afterthought. The database used in a development environment often contains limited data with little traffic. However, when the application is deployed to production, real-world traffic can expose issues that were not caught in development or testing.&lt;/p>
-&lt;p>In this article, we cover issues we ran into with our customers. We assume the production application is deployed with one master and one or more read replicas. See this article on &lt;a class="link" href="../mysql-master-slave-replication" >creating a MySQL slave replica in dev environment&lt;/a>.&lt;/p>
+&lt;p>When building an application, the database is often an afterthought. The database used in a development environment
+often contains limited data with little traffic. However, when the application is deployed to production, real-world
+traffic can expose issues that were not caught in development or testing.&lt;/p>
+&lt;p>In this article, we cover issues we ran into with our customers. We assume the production application is deployed with
+one master and one or more read replicas. See this article on
+&lt;a class="link" href="../mysql-master-slave-replication" >creating a MySQL slave replica in dev environment&lt;/a>.&lt;/p>
 &lt;h2 id="excessive-database-locks">&lt;a href="#excessive-database-locks" class="header-anchor">&lt;/a>Excessive database locks
 &lt;/h2>&lt;p>One write query can bring your database to its knees if it locks too many rows.&lt;/p>
 &lt;p>Consider this simplified INSERT with a subquery transaction:&lt;/p>
@@ -1128,61 +1215,94 @@ alt="Simplified INSERT with a subquery">&lt;figcaption>
 &lt;h4>Simplified INSERT with a subquery&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>The above query scans the entire &lt;code>host_software&lt;/code> table index to create a count. While the database is doing the scan and the INSERT, it locks the &lt;code>host_software&lt;/code> table, preventing other transactions from writing to that table. If the table and insert are large, the query can hold the lock for a long time. In production, we saw a lock time of over 30 seconds, creating a bottleneck and spiking DB resource usage.&lt;/p>
+&lt;p>The above query scans the entire &lt;code>host_software&lt;/code> table index to create a count. While the database is doing the scan and
+the INSERT, it locks the &lt;code>host_software&lt;/code> table, preventing other transactions from writing to that table. If the table
+and insert are large, the query can hold the lock for a long time. In production, we saw a lock time of over 30 seconds,
+creating a bottleneck and spiking DB resource usage.&lt;/p>
 &lt;p>Pay special attention to the following queries, as they can cause performance issues:&lt;/p>
 &lt;ul>
 &lt;li>&lt;code>COUNT(*)&lt;/code>&lt;/li>
 &lt;li>Using a non-indexed column, like &lt;code>WHERE non_indexed_column = value&lt;/code>&lt;/li>
 &lt;li>Returning a large number of rows, like &lt;code>SELECT * FROM table&lt;/code>&lt;/li>
 &lt;/ul>
-&lt;p>One way to solve the above performance issue is to separate the &lt;code>SELECT&lt;/code> and &lt;code>INSERT&lt;/code> queries. First, run the &lt;code>SELECT&lt;/code> query on the replica to get the data, then run the &lt;code>INSERT&lt;/code> query on the master to insert the data. We completely eliminate the lock since the read is done on the replica. This article goes through &lt;a class="link" href=".../mysql-query-performance-insert-subqueries" >a specific example of optimizing an INSERT with subqueries&lt;/a>.&lt;/p>
-&lt;p>As general advice, avoid running &lt;code>SELECT&lt;/code> queries and subqueries on the master, especially if they scan the entire table.&lt;/p>
+&lt;p>One way to solve the above performance issue is to separate the &lt;code>SELECT&lt;/code> and &lt;code>INSERT&lt;/code> queries. First, run the &lt;code>SELECT&lt;/code>
+query on the replica to get the data, then run the &lt;code>INSERT&lt;/code> query on the master to insert the data. We completely
+eliminate the lock since the read is done on the replica. This article goes through
+&lt;a class="link" href=".../mysql-query-performance-insert-subqueries" >a specific example of optimizing an INSERT with subqueries&lt;/a>.&lt;/p>
+&lt;p>As general advice, avoid running &lt;code>SELECT&lt;/code> queries and subqueries on the master, especially if they scan the entire
+table.&lt;/p>
 &lt;h2 id="read-after-write-consistency">&lt;a href="#read-after-write-consistency" class="header-anchor">&lt;/a>Read-after-write consistency
-&lt;/h2>&lt;p>When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p>
+&lt;/h2>&lt;p>When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
+with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
 alt="Read-after-write database issue">&lt;figcaption>
 &lt;h4>Read-after-write database issue&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>These issues are typically not caught in development since dev environments usually have one database instance. Unit or integration tests might not even see these issues if they run on a single database instance. Even in testing or small production environments, you might only see these issues if the replica sync time is high. Customers with large deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p>
-&lt;p>One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data you just wrote. In &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/b7aac2cfabf17fcb5142808fb80352113710ec5c/server/contexts/ctxdb/ctxdb.go#L17" target="_blank" rel="noopener"
->our Go backend&lt;/a>, forcing reads from the master can be done by updating the &lt;code>Context&lt;/code>:&lt;/p>
+&lt;p>These issues are typically not caught in development since dev environments usually have one database instance. Unit or
+integration tests might not even see these issues if they run on a single database instance. Even in testing or small
+production environments, you might only see these issues if the replica sync time is high. Customers with large
+deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p>
+&lt;p>One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data
+you just wrote. In
+&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/b7aac2cfabf17fcb5142808fb80352113710ec5c/server/contexts/ctxdb/ctxdb.go#L17" target="_blank" rel="noopener"
+>our Go backend&lt;/a>,
+forcing reads from the master can be done by updating the &lt;code>Context&lt;/code>:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ctxUsePrimary&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">ctxdb&lt;/span>.&lt;span style="color:#a6e22e">RequirePrimary&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#66d9ef">true&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, additional master reads increase the load on the master, defeating the purpose of having a replica for read scaling.&lt;/p>
-&lt;p>In addition, what about expensive read queries, like &lt;code>COUNT(*)&lt;/code> and calculations, which we don&amp;rsquo;t want to run on the master? In this case, we can wait for the replica to catch up with the master.&lt;/p>
-&lt;p>One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if the data is not found. The app could check the &lt;code>updated_at&lt;/code> column to see if the data is recent. If the data is not found, the app can sleep for a few milliseconds and retry the read. This approach is imperfect but a good compromise between read consistency and performance.&lt;/p>
-&lt;p>Note: &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-type-syntax.html#:~:text=default%20precision%20is%200." target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, additional master reads increase the load on the master, defeating the purpose of having a replica for read
+scaling.&lt;/p>
+&lt;p>In addition, what about expensive read queries, like &lt;code>COUNT(*)&lt;/code> and calculations, which we don&amp;rsquo;t want to run on the
+master? In this case, we can wait for the replica to catch up with the master.&lt;/p>
+&lt;p>One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if
+the data is not found. The app could check the &lt;code>updated_at&lt;/code> column to see if the data is recent. If the data is not
+found, the app can sleep for a few milliseconds and retry the read. This approach is imperfect but a good compromise
+between read consistency and performance.&lt;/p>
+&lt;p>Note:
+&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-type-syntax.html#:~:text=default%20precision%20is%200." target="_blank" rel="noopener"
 >The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a>.&lt;/p>
 &lt;h2 id="index-limitations">&lt;a href="#index-limitations" class="header-anchor">&lt;/a>Index limitations
 &lt;/h2>&lt;h3 id="what-are-sql-indexes">&lt;a href="#what-are-sql-indexes" class="header-anchor">&lt;/a>What are SQL indexes?
-&lt;/h3>&lt;p>Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes and storage space to maintain the index data structure. Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p>
+&lt;/h3>&lt;p>Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval
+operations on a database table at the cost of additional writes and storage space to maintain the index data structure.
+Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data
+structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
 alt="Database index">&lt;figcaption>
 &lt;h4>Database index&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be large and take up a lot of disk space.&lt;/p>
+&lt;p>Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be
+large and take up a lot of disk space.&lt;/p>
 &lt;h3 id="index-size-is-limited">&lt;a href="#index-size-is-limited" class="header-anchor">&lt;/a>Index size is limited
-&lt;/h3>&lt;p>As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new columns need to be part of a unique index. However, the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html" target="_blank" rel="noopener"
->maximum index size in MySQL is 3072 bytes&lt;/a>. This limit can be quickly reached if columns are of type &lt;code>VARCHAR&lt;/code> or &lt;code>TEXT&lt;/code>.&lt;/p>
+&lt;/h3>&lt;p>As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new
+columns need to be part of a unique index. However, the
+&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html" target="_blank" rel="noopener"
+>maximum index size in MySQL is 3072 bytes&lt;/a>. This limit can
+be quickly reached if columns are of type &lt;code>VARCHAR&lt;/code> or &lt;code>TEXT&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> &lt;span style="color:#f92672">`&lt;/span>activities&lt;span style="color:#f92672">`&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>user_name&lt;span style="color:#f92672">`&lt;/span> VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>) &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other relevant column(s), and use that as the unique index. For example, in our backend &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6f008b40f24bcd000c1450d7438be99d30c518c5/server/datastore/mysql/schema.sql#L1450" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other
+relevant column(s), and use that as the unique index. For example, in our backend
+&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6f008b40f24bcd000c1450d7438be99d30c518c5/server/datastore/mysql/schema.sql#L1450" target="_blank" rel="noopener"
 >we use a &lt;code>checksum&lt;/code> column in the &lt;code>software&lt;/code> table to create a unique index for a software item&lt;/a>.&lt;/p>
 &lt;h3 id="foreign-keys-may-cause-performance-issues">&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor">&lt;/a>Foreign keys may cause performance issues
-&lt;/h3>&lt;p>If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the corresponding row in the parent table. This locking can lead to performance issues when&lt;/p>
+&lt;/h3>&lt;p>If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the
+corresponding row in the parent table. This locking can lead to performance issues when&lt;/p>
 &lt;ul>
 &lt;li>the parent table is large&lt;/li>
 &lt;li>the parent has many foreign key constraints&lt;/li>
 &lt;li>the parent table or child tables are frequently updated&lt;/li>
 &lt;/ul>
-&lt;p>The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the foreign key constraint. Instead, the application code can handle the data integrity checks that the foreign key constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p>
+&lt;p>The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the
+foreign key constraint. Instead, the application code can handle the data integrity checks that the foreign key
+constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p>
 &lt;h2 id="bonus-database-gotchas">&lt;a href="#bonus-database-gotchas" class="header-anchor">&lt;/a>Bonus database gotchas
 &lt;/h2>&lt;p>Additional database gotchas that we have seen in production include:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >Prepared statements consuming too much memory&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../mysql-upsert-deadlock" >Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
 &lt;/ul>
+&lt;p>Also, we recently &lt;a class="link" href="../distributed-lock" >solved a problem in production with distributed lock&lt;/a>.&lt;/p>
 &lt;h2 id="3-database-gotchas-video">&lt;a href="#3-database-gotchas-video" class="header-anchor">&lt;/a>3 database gotchas video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
