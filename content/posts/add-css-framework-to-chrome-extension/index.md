@@ -237,6 +237,6 @@ https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework
 
 ## CSS framework video
 
-{{< youtube TODO >}}
+{{< youtube V4MolRPhmqY >}}
 
 _Note:_ If you want to comment on this article, please do so on the YouTube video.
