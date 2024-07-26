@@ -227,7 +227,8 @@ And a nicer-looking options page:
 
 ## Next steps
 
-In the next part of this series, we will add unit tests to our Chrome extension. Unit tests help us catch bugs early,
+In the next part of this series, we will
+[add unit tests to our Chrome extension](../add-unit-tests-to-chrome-extension). Unit tests help us catch bugs early,
 ensure our extension continues to work as expected in different scenarios and make it easier to refactor our code.
 
 ## CSS framework code on GitHub
