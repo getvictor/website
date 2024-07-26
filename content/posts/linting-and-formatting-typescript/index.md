@@ -87,7 +87,7 @@ export default config
 This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our `dist`
 directory containing the webpack-generated bundles.
 
-### Why use the `.mjs` extension instead of `.js` for the configuration file?
+### Why use the `.mjs` extension instead of `.js` for the configuration file? {#why-use-the-mjs-instead-of-js}
 
 We are using `.mjs` extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
 allows us to import and export modules using the `import` and `export` keywords. There are other ways to enable
