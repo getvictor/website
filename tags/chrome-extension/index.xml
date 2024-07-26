@@ -1,4 +1,187 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chrome Extension on Victor on Software</title><link>https://victoronsoftware.com/tags/chrome-extension/</link><description>Recent content in Chrome Extension on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 10 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/chrome-extension/index.xml" rel="self" type="application/rss+xml"/><item><title>Add CSS framework to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/chrome-tailwind-headline.png" alt="Featured image of post Add CSS framework to Chrome extension (2024)" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Chrome Extension on Victor on Software</title><link>https://victoronsoftware.com/tags/chrome-extension/</link><description>Recent content in Chrome Extension on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 26 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/chrome-extension/index.xml" rel="self" type="application/rss+xml"/><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
+&lt;li>&lt;a class="link" href="#add-jest-to-the-project" >Add Jest testing framework&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#write-a-unit-test" >Write a unit test&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#review-unit-test-coverage" >Review unit test coverage&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>This article is part of our &lt;a class="link" href="../chrome-extension" >series on building a Chrome extension&lt;/a>.&lt;/p>
+&lt;h2 id="why-add-unit-tests">&lt;a href="#why-add-unit-tests" class="header-anchor">&lt;/a>Why add unit tests?
+&lt;/h2>&lt;p>Unit tests help us catch bugs early, ensure our extension continues to work as expected in different scenarios, and make
+it easier to refactor our code. In this article, we will add unit tests to our Chrome extension.&lt;/p>
+&lt;h2 id="add-jest-to-the-project">&lt;a href="#add-jest-to-the-project" class="header-anchor">&lt;/a>Add Jest to the project
+&lt;/h2>&lt;p>&lt;a class="link" href="https://jestjs.io/" target="_blank" rel="noopener"
+>Jest&lt;/a> is a popular JavaScript testing framework. We will use Jest to write and run unit tests for
+our Chrome extension.&lt;/p>
+&lt;p>To install Jest, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev jest jest-environment-jsdom ts-jest @types/jest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/jest" target="_blank" rel="noopener"
+>jest&lt;/a> is the testing framework&lt;/li>
+&lt;li>&lt;code>jest-environment-jsdom&lt;/code> simulates a browser environment for Jest tests&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/ts-jest" target="_blank" rel="noopener"
+>ts-jest&lt;/a> allows Jest to work with TypeScript&lt;/li>
+&lt;li>&lt;code>@types/jest&lt;/code> provides TypeScript definitions for Jest&lt;/li>
+&lt;/ul>
+&lt;h2 id="configure-jest">&lt;a href="#configure-jest" class="header-anchor">&lt;/a>Configure Jest
+&lt;/h2>&lt;p>Create a &lt;code>jest.config.ts&lt;/code> file in the root of the project with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#66d9ef">type&lt;/span> { &lt;span style="color:#a6e22e">JestConfigWithTsJest&lt;/span> } &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ts-jest&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>: &lt;span style="color:#66d9ef">JestConfigWithTsJest&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">setupFiles&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;./__mocks__/chrome.ts&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">testEnvironment&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;jsdom&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">transform&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;^.+.ts$&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;ts-jest&amp;#34;&lt;/span>, {}],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>setupFiles&lt;/code> option loads a mock for the Chrome API. In the next step, we will create this mock.&lt;/p>
+&lt;p>The &lt;code>testEnvironment&lt;/code> option sets a browser testing environment by default. We can override the environment at the top
+of each test file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * @jest-environment jsdom
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>transform&lt;/code> option specifies to process TypeScript test files with &lt;code>ts-jest&lt;/code>.&lt;/p>
+&lt;h2 id="create-a-mock-for-the-chrome-api">&lt;a href="#create-a-mock-for-the-chrome-api" class="header-anchor">&lt;/a>Create a mock for the Chrome API
+&lt;/h2>&lt;p>Our extension code relies on the Chrome API, which is unavailable in our unit test environment. We will create a mock
+for the Chrome API to simulate its behavior in our tests.&lt;/p>
+&lt;p>A mock is a fake implementation of a function or object that allows us to test our code in isolation. Mocks are helpful
+for testing code that depends on external services or APIs.&lt;/p>
+&lt;p>Create a &lt;code>__mocks__&lt;/code> folder in the root of the project. The &lt;code>__mocks__&lt;/code> name is a Jest convention for mock files. In
+that folder, add a &lt;code>chrome.ts&lt;/code> file with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- disable ESLint check for the next line
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// @ts-nocheck -- this TS comment turns off TypeScript type checking for this file because we do not
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// mock the entire Chrome API, but only the parts we need
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">global&lt;/span>.&lt;span style="color:#a6e22e">chrome&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">runtime&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onInstalled&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onMessage&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onStartup&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sendMessage&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">storage&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sync&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">get&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">jest&lt;/span>.&lt;span style="color:#a6e22e">fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">set&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">jest&lt;/span>.&lt;span style="color:#a6e22e">fn&lt;/span>(),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The empty &lt;code>jest.fn()&lt;/code> implementations can be replaced during testing with custom behavior using Jest&amp;rsquo;s mocking functions
+using &lt;a class="link" href="https://jestjs.io/docs/jest-object#jestspyonobject-methodname" target="_blank" rel="noopener"
+>jest.spyOn&lt;/a>.&lt;/p>
+&lt;h2 id="write-a-unit-test">&lt;a href="#write-a-unit-test" class="header-anchor">&lt;/a>Write a unit test
+&lt;/h2>&lt;p>We will test the &lt;code>content.ts&lt;/code> file in our first unit test. This file contains the logic for the content script that runs
+on web pages when the extension is active. The content script blurs a page element that contains a user-defined keyword.&lt;/p>
+&lt;p>Create a &lt;code>content.test.ts&lt;/code> file in the &lt;code>src&lt;/code> folder with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> { &lt;span style="color:#a6e22e">blurFilter&lt;/span>, &lt;span style="color:#a6e22e">observe&lt;/span>, &lt;span style="color:#a6e22e">config&lt;/span> } &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./content&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;blur&amp;#34;&lt;/span>, () &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;blur a secret&amp;#34;&lt;/span>, () &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Define the document (web page) that we will test against
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> document.&lt;span style="color:#a6e22e">body&lt;/span>.&lt;span style="color:#a6e22e">innerHTML&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">`
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;lt;div id=&amp;#34;testDiv&amp;#34;&amp;gt;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;My secret&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;lt;/div&amp;gt;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Set value to blur
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>.&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;secret&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Start observing the document.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">observe&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make sure the element is blurred as expected
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">testDiv&lt;/span> &lt;span style="color:#f92672">=&lt;/span> document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testDiv&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">expect&lt;/span>(&lt;span style="color:#a6e22e">testDiv&lt;/span>).&lt;span style="color:#a6e22e">toBeDefined&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">expect&lt;/span>(&lt;span style="color:#a6e22e">testDiv&lt;/span>.&lt;span style="color:#a6e22e">style&lt;/span>.&lt;span style="color:#a6e22e">filter&lt;/span>).&lt;span style="color:#a6e22e">toBe&lt;/span>(&lt;span style="color:#a6e22e">blurFilter&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the above test, the Jest functions &lt;code>describe&lt;/code> and &lt;code>test&lt;/code> define a test suite and a test case, respectively. The
+&lt;code>expect&lt;/code> function checks whether the test results match the expected values.&lt;/p>
+&lt;h2 id="run-the-unit-tests">&lt;a href="#run-the-unit-tests" class="header-anchor">&lt;/a>Run the unit tests
+&lt;/h2>&lt;p>The Jest unit test can be run using the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx jest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result of the test should look like:&lt;/p>
+&lt;pre tabindex="0">&lt;code> console.debug
+blurred id:testDiv class: tag:DIV text:
+&amp;#34;My secret&amp;#34;
+at blurElement (src/content.ts:36:11)
+at Array.forEach (&amp;lt;anonymous&amp;gt;)
+at Array.forEach (&amp;lt;anonymous&amp;gt;)
+at Array.forEach (&amp;lt;anonymous&amp;gt;)
+at Array.forEach (&amp;lt;anonymous&amp;gt;)
+PASS src/content.test.ts
+blur
+✓ blur a secret (15 ms)
+Test Suites: 1 passed, 1 total
+Tests: 1 passed, 1 total
+Snapshots: 0 total
+Time: 1.149 s
+Ran all test suites.
+&lt;/code>&lt;/pre>&lt;p>Add the following script to the &lt;code>package.json&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;jest&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now you can run the tests using the &lt;code>npm test&lt;/code> or &lt;code>npm run test&lt;/code>.&lt;/p>
+&lt;h2 id="review-unit-test-coverage">&lt;a href="#review-unit-test-coverage" class="header-anchor">&lt;/a>Review unit test coverage
+&lt;/h2>&lt;p>Code coverage measures how much of the code is tested by the unit tests. A high percentage indicates that most of the
+code is tested and less likely to contain bugs. Code coverage is an important metric for assessing the quality of the
+code. A common target for code coverage is 80% or higher.&lt;/p>
+&lt;p>Jest can generate a code coverage report to show which parts of the code are covered by the unit tests. To create a
+coverage report, add the &lt;code>--coverage&lt;/code> flag to the Jest command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx jest --coverage
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The terminal output will include the code coverage summary:&lt;/p>
+&lt;pre tabindex="0">&lt;code>------------|---------|----------|---------|---------|--------------------------
+File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+------------|---------|----------|---------|---------|--------------------------
+All files | 45.23 | 48.57 | 42.85 | 45.23 |
+content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
+------------|---------|----------|---------|---------|--------------------------
+&lt;/code>&lt;/pre>&lt;p>The full report is available in the &lt;code>coverage&lt;/code> folder. Open the &lt;code>coverage/lcov-report/index.html&lt;/code> file in a browser to
+view the detailed coverage report.&lt;/p>
+&lt;p>Note that the code coverage report only includes the files in the test run. If you want to include all files in the
+coverage report, we can add the &lt;code>collectCoverageFrom&lt;/code> option to the &lt;code>jest.config.ts&lt;/code> Jest configuration file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">collectCoverageFrom&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;src/**/*.ts&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, the report shows a complete picture:&lt;/p>
+&lt;pre tabindex="0">&lt;code>---------------|---------|----------|---------|---------|--------------------------
+File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+---------------|---------|----------|---------|---------|--------------------------
+All files | 16.96 | 30.9 | 10.71 | 16.96 |
+background.ts | 0 | 0 | 0 | 0 | 1-21
+common.ts | 0 | 0 | 0 | 0 | 17-19
+content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
+options.ts | 0 | 0 | 0 | 0 | 2-31
+popup.ts | 0 | 0 | 0 | 0 | 1-86
+---------------|---------|----------|---------|---------|--------------------------
+&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
+alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files">&lt;figcaption>
+&lt;h4>HTML coverage report&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="adding-unit-tests-to-github-actions">&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor">&lt;/a>Adding unit tests to GitHub Actions
+&lt;/h2>&lt;p>To make sure that our unit tests are run automatically on every push to the repository, we can add them to a GitHub
+Actions workflow. In the &lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript&lt;/a> article, we added
+ESLint to GitHub Actions. We can add a step to run the Jest tests in the same workflow.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Test&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run test&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="unit-test-code-on-github">&lt;a href="#unit-test-code-on-github" class="header-anchor">&lt;/a>Unit test code on GitHub
+&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests" target="_blank" rel="noopener"
+>https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests&lt;/a>&lt;/p>
+&lt;h2 id="other-articles-on-unit-testing">&lt;a href="#other-articles-on-unit-testing" class="header-anchor">&lt;/a>Other articles on Unit Testing
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../fuzz-testing-with-go" >Explore fuzz testing with Go&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-we-set-up-unit-testing-for-our-chrome-extension">&lt;a href="#watch-how-we-set-up-unit-testing-for-our-chrome-extension" class="header-anchor">&lt;/a>Watch how we set up unit testing for our Chrome extension
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/EA11fnr8x8g"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add CSS framework to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</link><pubDate>Wed, 10 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/chrome-tailwind-headline.png" alt="Featured image of post Add CSS framework to Chrome extension (2024)" />&lt;ul>
 &lt;li>&lt;a class="link" href="#add-css-to-webpack-bundle" >Add CSS to the webpack bundle&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#add-tailwind-css" >Add Tailwind CSS&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#use-tailwind-css" >Use Tailwind CSS utility classes&lt;/a>&lt;/li>
@@ -394,7 +577,7 @@ project:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code>dist&lt;/code>
 directory containing the webpack-generated bundles.&lt;/p>
-&lt;h3 id="why-use-the-mjs-extension-instead-of-js-for-the-configuration-file">&lt;a href="#why-use-the-mjs-extension-instead-of-js-for-the-configuration-file" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
+&lt;h3 id="why-use-the-mjs-instead-of-js">&lt;a href="#why-use-the-mjs-instead-of-js" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
 &lt;/h3>&lt;p>We are using &lt;code>.mjs&lt;/code> extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
 allows us to import and export modules using the &lt;code>import&lt;/code> and &lt;code>export&lt;/code> keywords. There are other ways to enable
 ECMAScript modules in JavaScript for our project, but this is the simplest way for just one JavaScript file. Our
@@ -690,28 +873,31 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Build a production-ready Chrome extension in 7 steps</title><link>https://victoronsoftware.com/posts/chrome-extension/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/chrome-extension/chrome-extension-headline.png" alt="Featured image of post Build a production-ready Chrome extension in 7 steps" />&lt;p>We are creating a series of articles on building a production-ready Chrome extension. In this series, we cover the
 basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy
 your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a
 software development team.&lt;/p>
-&lt;h3 id="create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
+&lt;h3 id="1-create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#1-create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>1. &lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
 &lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the
 extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
-&lt;h3 id="add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
+&lt;h3 id="2-add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#2-add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>2. &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome
 extension.&lt;/p>
-&lt;h3 id="message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension">&lt;a href="#message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
+&lt;h3 id="3-message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension">&lt;a href="#3-message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension" class="header-anchor">&lt;/a>3. &lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how
 to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
-&lt;h3 id="linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>&lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
+&lt;h3 id="4-linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#4-linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>4. &lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.&lt;/p>
-&lt;h3 id="add-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#add-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-options-to-chrome-extension" >Add options page to Chrome extension&lt;/a>
+&lt;h3 id="5-add-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#5-add-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>5. &lt;a class="link" href="../add-options-to-chrome-extension" >Add options page to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We add an advanced options page to our Chrome extension. This page allows users to configure the extension&amp;rsquo;s behavior
 and settings.&lt;/p>
-&lt;h3 id="add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension">&lt;a href="#add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension" class="header-anchor">&lt;/a>&lt;a class="link" href="../add-css-framework-to-chrome-extension" >Add CSS framework to Chrome extension&lt;/a>
+&lt;h3 id="6-add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension">&lt;a href="#6-add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension" class="header-anchor">&lt;/a>6. &lt;a class="link" href="../add-css-framework-to-chrome-extension" >Add CSS framework to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We improve the look and maintainability of our extension by adding a CSS framework. We use Tailwind CSS to quickly style
 our extension and make it look professional.&lt;/p>
+&lt;h3 id="7-add-unit-tests-to-chrome-extensionadd-unit-tests-to-chrome-extension">&lt;a href="#7-add-unit-tests-to-chrome-extensionadd-unit-tests-to-chrome-extension" class="header-anchor">&lt;/a>7. &lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Add unit tests to Chrome extension&lt;/a>
+&lt;/h3>&lt;p>We write and run unit tests for our Chrome extension using the Jest testing framework. Unit tests help us catch bugs
+early, ensure our extension continues to work as expected, and make improve our code quality.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">

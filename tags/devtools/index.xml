@@ -58,7 +58,7 @@ project:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code>dist&lt;/code>
 directory containing the webpack-generated bundles.&lt;/p>
-&lt;h3 id="why-use-the-mjs-extension-instead-of-js-for-the-configuration-file">&lt;a href="#why-use-the-mjs-extension-instead-of-js-for-the-configuration-file" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
+&lt;h3 id="why-use-the-mjs-instead-of-js">&lt;a href="#why-use-the-mjs-instead-of-js" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
 &lt;/h3>&lt;p>We are using &lt;code>.mjs&lt;/code> extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
 allows us to import and export modules using the &lt;code>import&lt;/code> and &lt;code>export&lt;/code> keywords. There are other ways to enable
 ECMAScript modules in JavaScript for our project, but this is the simplest way for just one JavaScript file. Our
