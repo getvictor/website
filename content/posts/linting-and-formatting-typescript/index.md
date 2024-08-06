@@ -69,7 +69,7 @@ const config = tseslint.config(
     ...tseslint.configs.recommendedTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     {
-        ignores: ["dist/**/*"],
+        ignores: ["dist/**/*", "eslint.config.mjs"],
     },
     {
         languageOptions: {
@@ -85,7 +85,8 @@ export default config
 ```
 
 This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our `dist`
-directory containing the webpack-generated bundles.
+directory containing the webpack-generated bundles. We also ignore the config file because we do not want to apply
+TypeScript linting to it.
 
 ### Why use the `.mjs` extension instead of `.js` for the configuration file? {#why-use-the-mjs-instead-of-js}
 

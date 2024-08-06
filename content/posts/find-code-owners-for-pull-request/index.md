@@ -3,10 +3,10 @@ title = 'Find required code owner approvers for a PR in 3 steps'
 description = "How to find the minimum required reviewers who need to approve a GitHub pull request"
 authors = ["Victor Lyuboslavsky"]
 image = "codeowners-headline.png"
-date = 2024-07-31
+date = 2024-08-06
 categories = ["Software Development"]
 tags = ["Pull Request", "GitHub"]
-draft = true
+draft = false
 +++
 
 - [Find code owners from the command line](#find-code-owners-from-command-line)

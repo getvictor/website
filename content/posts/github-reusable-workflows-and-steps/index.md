@@ -13,15 +13,20 @@ draft = false
 
 ## Introduction
 
-[GitHub Actions](https://github.com/features/actions) is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.
+[GitHub Actions](https://github.com/features/actions) is a way to automate your software development workflows. The
+approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.
 
 {{< figure src="GitHub Actions workflow.svg" alt="High level diagram of GitHub Actions" title="High level diagram of GitHub Actions" >}}
 
-The entry point for GitHub Actions is the `.github/workflows` directory in your repository. This directory contains one or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a separate command.
+The entry point for GitHub Actions is the `.github/workflows` directory in your repository. This directory contains one
+or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
+runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
+separate command.
 
 ## Why reuse?
 
-[Code reuse](https://en.wikipedia.org/wiki/Code_reuse) is a fundamental principle of software development. Reusing GitHub Actions code allows you to:
+[Code reuse](https://en.wikipedia.org/wiki/Code_reuse) is a fundamental principle of software development. Reusing
+GitHub Actions code allows you to:
 
 - Improve maintainability by keeping common code in one place and reducing the amount of code
 - Increase consistency since multiple workflows can use the same code
@@ -46,7 +51,9 @@ A reusable workflow replaces a job in the main workflow.
 
 A reusable workflow may be shared across repositories and run on a different platform than the main workflow.
 
-For file sharing, 'build artifacts' must be used to share files with the main workflow. The reusable workflow does not inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to pass data back to the main workflow.
+For file sharing, 'build artifacts' must be used to share files with the main workflow. The reusable workflow does not
+inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
+pass data back to the main workflow.
 
 Here is an example of a reusable workflow. It uses the same schema as a regular workflow.
 
@@ -104,7 +111,9 @@ jobs:
           path: ${{ inputs.filename }}
 ```
 
-The reusable workflow is triggered `on: workflow_call`. It accepts an input called `reusable_input` and generates an output called `reusable_output`. It also downloads an artifact called `input_file`, processes a file, and uploads an artifact called `output_file`.
+The reusable workflow is triggered `on: workflow_call`. It accepts an input called `reusable_input` and generates an
+output called `reusable_output`. It also downloads an artifact called `input_file`, processes a file, and uploads an
+artifact called `output_file`.
 
 The main workflow calls the reusable workflow using the `uses` keyword.
 
@@ -131,11 +140,15 @@ Reusable steps replace a regular step in a job. We will use a `composite action`
 
 {{< figure src="GitHub Actions reusable steps.svg" alt="GitHub Actions reusable steps (composite action)" title="GitHub Actions reusable steps (composite action)" >}}
 
-Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use outputs to pass data back to the main workflow.
+Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
+outputs to pass data back to the main workflow.
 
-Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets. Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use 'build artifacts' to share files since the reusable steps run on the same runner and in the same work area as the main job.
+Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
+Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use 'build artifacts' to
+share files since the reusable steps run on the same runner and in the same work area as the main job.
 
-Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named `action.yml` or similar.
+Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named
+`action.yml` or similar.
 
 ```yaml
 name: Reusable steps (AKA composite action)
@@ -172,7 +185,8 @@ runs:
         echo "file processed" >> ${{ inputs.filename }}
 ```
 
-The composite action is called via the `uses` setting on a step. Our action accepts an input called `reusable_input` and generates an output called `reusable_output`. It also processes a file called `filename`.
+The composite action is called via the `uses` setting on a step. Our action accepts an input called `reusable_input` and
+generates an output called `reusable_output`. It also processes a file called `filename`.
 
 The following code snippet shows how to use the composite action in a job.
 
@@ -193,9 +207,12 @@ A successful run of the main workflow with reusable steps looks like this on Git
 
 ## Conclusion
 
-Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.
+Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your
+GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a
+great way to reduce errors and increase productivity.
 
-For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of work that may run on the same runner and share the same work area.
+For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of
+work that may run on the same runner and share the same work area.
 
 ## Example code on GitHub
 
@@ -203,7 +220,8 @@ The example code is available on GitHub at: https://github.com/getvictor/github-
 
 ## Other articles related to GitHub
 
-- [`git merge` and GitHub pull requests explained](../git-merges-and-pull-requests/)
+- [_git merge_ and GitHub pull requests explained](../git-merges-and-pull-requests/)
+- [Finding the minimum required code owner approvers for pull request](../find-code-owners-for-pull-request)
 - [Use GitHub actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/)
 
 ## GitHub Actions reusable workflows and steps video

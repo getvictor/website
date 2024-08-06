@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "git-merges-and-pull-requests-feature.png"
 date = 2024-06-26
 categories = ["Software Development"]
-tags = ["git", "GitHub"]
+tags = ["git", "GitHub", "Pull Request"]
 draft = false
 +++
 
@@ -342,6 +342,11 @@ other commits are eliminated.
 The downside of **Squash and merge** is that the commit history is lost. The commit history is useful for debugging,
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.
+
+## Further reading
+
+Recently, we explained
+[how to find the minimum required code owner approvers for a pull request](../find-code-owners-for-pull-request).
 
 ## Watch how git merge works with GitHub pull requests
 
