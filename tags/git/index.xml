@@ -251,6 +251,9 @@ other commits are eliminated.&lt;/p>
 &lt;p>The downside of &lt;strong>Squash and merge&lt;/strong> is that the commit history is lost. The commit history is useful for debugging,
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we explained
+&lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"

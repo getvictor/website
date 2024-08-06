@@ -1,4 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" />&lt;p>This article covers how &lt;code>git merge&lt;/code> works with GitHub pull requests. We will focus on the use case where developers want
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" />&lt;ul>
+&lt;li>&lt;a class="link" href="#find-code-owners-from-command-line" >Find code owners from the command line&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-are-github-code-owners">&lt;a href="#what-are-github-code-owners" class="header-anchor">&lt;/a>What are GitHub code owners?
+&lt;/h2>&lt;p>GitHub
+&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+>CODEOWNERS&lt;/a>
+is a file that defines the individuals or teams responsible for code in a repository. When a user creates a pull
+request, GitHub uses the &lt;code>CODEOWNERS&lt;/code> file to suggest the appropriate reviewers for the pull request. This process helps
+ensure that the right people review the code changes.&lt;/p>
+&lt;p>Repository owners can enable branch protection rules that require the code owner of each changed file to approve the
+pull request.&lt;/p>
+&lt;h2 id="the-problem-too-many-files-and-too-many-code-owners">&lt;a href="#the-problem-too-many-files-and-too-many-code-owners" class="header-anchor">&lt;/a>The problem: too many files and too many code owners
+&lt;/h2>&lt;p>It can be challenging to determine who needs to review a pull request in a large repository with many files and many
+code owners. This challenge is especially true when the pull request touches many files.&lt;/p>
+&lt;p>Many times, I&amp;rsquo;ve asked another engineer to approve my PR, and they approved it, but GitHub said that the PR still needed
+approval from another code owner. I needed another approval because my PR changed another file with another code owner,
+and I didn&amp;rsquo;t know about it.&lt;/p>
+&lt;h2 id="steps-to-find-the-minimum-required-code-owners">&lt;a href="#steps-to-find-the-minimum-required-code-owners" class="header-anchor">&lt;/a>Steps to find the minimum required code owners
+&lt;/h2>&lt;p>To find the minimum required code owners for a pull request, we can use these steps:&lt;/p>
+&lt;ol>
+&lt;li>Get the list of changed files in the pull request.&lt;/li>
+&lt;li>For each changed file, get the list of code owners.&lt;/li>
+&lt;li>Find the minimum set of code owners that covers all the above lists.&lt;/li>
+&lt;/ol>
+&lt;h2 id="finding-the-code-owners-manually">&lt;a href="#finding-the-code-owners-manually" class="header-anchor">&lt;/a>Finding the code owners manually
+&lt;/h2>&lt;p>The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
+for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
+alt="List of files, with code owners showing when hovering over the blue icon next to the file">&lt;figcaption>
+&lt;h4>See the code owners on hover&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="find-code-owners-from-command-line">&lt;a href="#find-code-owners-from-command-line" class="header-anchor">&lt;/a>Finding the code owners from the command line
+&lt;/h2>&lt;p>To automate the above steps, we will need the following prerequisites:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://cli.github.com/" target="_blank" rel="noopener"
+>GitHub CLI&lt;/a> installed and logged in&lt;/li>
+&lt;li>Command-line JSON processor &lt;a class="link" href="https://jqlang.github.io/jq/download/" target="_blank" rel="noopener"
+>jq&lt;/a> installed&lt;/li>
+&lt;li>A CODEOWNERS parser installed, such as &lt;a class="link" href="https://github.com/hmarr/codeowners" target="_blank" rel="noopener"
+>https://github.com/hmarr/codeowners&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>From the top directory containing your git repository, run the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74">&amp;#39;.files[] .path&amp;#39;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>| xargs codeowners | tr -s &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | cut -f2- -d &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | sort -u
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>$MY_PR_NUMBER&lt;/code> is the number of your pull request.&lt;/p>
+&lt;p>The first part of the command, &lt;code>gh pr view $MY_PR_NUMBER --json files&lt;/code>, gets the list of changed files in the pull
+request in JSON format. The second part, &lt;code>jq -r '.files[] .path'&lt;/code>, extracts the file paths from the JSON. The third
+part, &lt;code>xargs codeowners&lt;/code>, runs the &lt;code>codeowners&lt;/code> command for each file. The fourth optional part, &lt;code>tr -s ' '&lt;/code>, removes
+extra spaces. The fifth part, &lt;code>cut -f2- -d ' '&lt;/code>, removes the first column. The last part, &lt;code>sort -u&lt;/code>, sorts and removes
+duplicates.&lt;/p>
+&lt;p>The output will be the list of code owners for the changed files in the pull request. For example:&lt;/p>
+&lt;pre tabindex="0">&lt;code>(unowned)
+@fleetdm/go
+@getvictor @lucasmrod @roperzh @mostlikelee
+@lucasmrod @getvictor @jacobshandling
+@roperzh @gillespi314 @lucasmrod @getvictor
+&lt;/code>&lt;/pre>&lt;p>At this point, we can do additional processing, such as excluding some code owners.&lt;/p>
+&lt;p>By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
+&lt;p>Previously, we explained
+&lt;a class="link" href="../github-reusable-workflows-and-steps" >how to create reusable workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
+&lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request">&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor">&lt;/a>Watch how to find the minimum required code owners for a pull request
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/RHW-ZELnuSg"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" />&lt;p>This article covers how &lt;code>git merge&lt;/code> works with GitHub pull requests. We will focus on the use case where developers want
 to keep their feature branches updated with the main branch. After completing the feature work, developers create a pull
 request to merge their feature branch into the main branch.&lt;/p>
 &lt;ul>
@@ -251,6 +324,9 @@ other commits are eliminated.&lt;/p>
 &lt;p>The downside of &lt;strong>Squash and merge&lt;/strong> is that the commit history is lost. The commit history is useful for debugging,
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we explained
+&lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -266,16 +342,21 @@ title="YouTube Video"
 &lt;/ul>
 &lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
->GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
+>GitHub Actions&lt;/a> is a way to automate your software development workflows. The
+approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
 alt="High level diagram of GitHub Actions">&lt;figcaption>
 &lt;h4>High level diagram of GitHub Actions&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a separate command.&lt;/p>
+&lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one
+or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
+runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
+separate command.&lt;/p>
 &lt;h2 id="why-reuse">&lt;a href="#why-reuse" class="header-anchor">&lt;/a>Why reuse?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
->Code reuse&lt;/a> is a fundamental principle of software development. Reusing GitHub Actions code allows you to:&lt;/p>
+>Code reuse&lt;/a> is a fundamental principle of software development. Reusing
+GitHub Actions code allows you to:&lt;/p>
 &lt;ul>
 &lt;li>Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li>
 &lt;li>Increase consistency since multiple workflows can use the same code&lt;/li>
@@ -300,7 +381,9 @@ alt="GitHub Actions reusable workflow">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p>
-&lt;p>For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not
+inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
+pass data back to the main workflow.&lt;/p>
 &lt;p>Here is an example of a reusable workflow. It uses the same schema as a regular workflow.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable workflow&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -353,7 +436,9 @@ alt="GitHub Actions reusable workflow">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">output_file&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">path&lt;/span>: &lt;span style="color:#ae81ff">${{ inputs.filename }}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The reusable workflow is triggered &lt;code>on: workflow_call&lt;/code>. It accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also downloads an artifact called &lt;code>input_file&lt;/code>, processes a file, and uploads an artifact called &lt;code>output_file&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The reusable workflow is triggered &lt;code>on: workflow_call&lt;/code>. It accepts an input called &lt;code>reusable_input&lt;/code> and generates an
+output called &lt;code>reusable_output&lt;/code>. It also downloads an artifact called &lt;code>input_file&lt;/code>, processes a file, and uploads an
+artifact called &lt;code>output_file&lt;/code>.&lt;/p>
 &lt;p>The main workflow calls the reusable workflow using the &lt;code>uses&lt;/code> keyword.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">job-2&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">needs&lt;/span>: &lt;span style="color:#ae81ff">job-1&lt;/span>
@@ -378,9 +463,13 @@ alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
 &lt;h4>GitHub Actions reusable steps (composite action)&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use outputs to pass data back to the main workflow.&lt;/p>
-&lt;p>Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets. Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use &amp;lsquo;build artifacts&amp;rsquo; to share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p>
-&lt;p>Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named &lt;code>action.yml&lt;/code> or similar.&lt;/p>
+&lt;p>Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
+outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
+Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use &amp;lsquo;build artifacts&amp;rsquo; to
+share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p>
+&lt;p>Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named
+&lt;code>action.yml&lt;/code> or similar.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable steps (AKA composite action)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#ae81ff">Demonstrate how to use reusable steps in a workflow&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Schema: https://json.schemastore.org/github-action.json&lt;/span>
@@ -413,7 +502,8 @@ alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;Processing file: ${{ inputs.filename }}&amp;#34;
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;file processed&amp;#34; &amp;gt;&amp;gt; ${{ inputs.filename }}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The composite action is called via the &lt;code>uses&lt;/code> setting on a step. Our action accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also processes a file called &lt;code>filename&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The composite action is called via the &lt;code>uses&lt;/code> setting on a step. Our action accepts an input called &lt;code>reusable_input&lt;/code> and
+generates an output called &lt;code>reusable_output&lt;/code>. It also processes a file called &lt;code>filename&lt;/code>.&lt;/p>
 &lt;p>The following code snippet shows how to use the composite action in a job.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Use reusable steps&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">reusable-steps&lt;/span>
@@ -430,14 +520,18 @@ alt="GitHub Actions composite action success">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.&lt;/p>
-&lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of work that may run on the same runner and share the same work area.&lt;/p>
+&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your
+GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a
+great way to reduce errors and increase productivity.&lt;/p>
+&lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of
+work that may run on the same runner and share the same work area.&lt;/p>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
 &lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
 &lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;code>git merge&lt;/code> and GitHub pull requests explained&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;em>git merge&lt;/em> and GitHub pull requests explained&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../find-code-owners-for-pull-request" >Finding the minimum required code owner approvers for pull request&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video">&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor">&lt;/a>GitHub Actions reusable workflows and steps video
@@ -449,13 +543,13 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use GitHub actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub actions for general-purpose tasks" />&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub actions?
-&lt;/h2>&lt;p>GitHub actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins,
-CircleCI, and TravisCI. However, GitHub actions are built into GitHub.&lt;/p>
-&lt;p>GitHub actions are not entirely free, but they have very high usage limits for open-source projects. For private
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use GitHub Actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub Actions for general-purpose tasks" />&lt;h2 id="what-are-github-actions">&lt;a href="#what-are-github-actions" class="header-anchor">&lt;/a>What are GitHub Actions?
+&lt;/h2>&lt;p>GitHub Actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins,
+CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
+&lt;p>GitHub Actions are not entirely free, but they have very high usage limits for open-source projects. For private
 repositories, you can run up to 2,000 minutes per month for free. After that, you will be charged.&lt;/p>
-&lt;h2 id="github-actions-for-non-cicd-tasks">&lt;a href="#github-actions-for-non-cicd-tasks" class="header-anchor">&lt;/a>GitHub actions for non-CI/CD tasks
-&lt;/h2>&lt;p>However, GitHub actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can
+&lt;h2 id="github-actions-for-non-cicd-tasks">&lt;a href="#github-actions-for-non-cicd-tasks" class="header-anchor">&lt;/a>GitHub Actions for non-CI/CD tasks
+&lt;/h2>&lt;p>However, GitHub Actions are not just for CI/CD. You can use them for many general-purpose tasks. For example, you can
 use them as an extension of your application to perform tasks such as:&lt;/p>
 &lt;ul>
 &lt;li>generating aggregate reports&lt;/li>
@@ -464,25 +558,25 @@ use them as an extension of your application to perform tasks such as:&lt;/p>
 &lt;li>general data processing&lt;/li>
 &lt;li>and many others&lt;/li>
 &lt;/ul>
-&lt;p>A GitHub action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p>
+&lt;p>A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
-alt="GitHub action block diagram">
+alt="GitHub Action block diagram">
 &lt;/figure>
-&lt;p>You can use a GitHub action as a worker for your application. For example, you can use it to process data from a
+&lt;p>You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a
 database and then send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p>
-&lt;p>Although GitHub actions in open-source repositories are public, they can still use secrets that are not accessible to
+&lt;p>Although GitHub Actions in open-source repositories are public, they can still use secrets that are not accessible to
 the public. For example, secrets can be API keys and database access credentials.&lt;/p>
-&lt;h2 id="a-real-world-github-action-doing-data-processing">&lt;a href="#a-real-world-github-action-doing-data-processing" class="header-anchor">&lt;/a>A real-world GitHub action doing data processing
-&lt;/h2>&lt;p>Below is an example GitHub action that does general data processing. It uses API calls to download data from NVD
+&lt;h2 id="a-real-world-github-action-doing-data-processing">&lt;a href="#a-real-world-github-action-doing-data-processing" class="header-anchor">&lt;/a>A real-world GitHub Action doing data processing
+&lt;/h2>&lt;p>Below is an example GitHub Action that does general data processing. It uses API calls to download data from NVD
 (National Vulnerability Database), generates files from this data, and then creates a release. Subsequently, the
 application can download these files and use them directly without making the API calls or processing the data itself.&lt;/p>
 &lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>
 &lt;/p>
-&lt;p>The GitHub action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files.
+&lt;p>The GitHub Action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files.
 Then, it publishes the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
 &lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be
 careful with process-intensive actions.&lt;/p>
-&lt;h2 id="use-github-actions-for-general-purpose-tasks-video">&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor">&lt;/a>Use GitHub actions for general-purpose tasks video
+&lt;h2 id="use-github-actions-for-general-purpose-tasks-video">&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor">&lt;/a>Use GitHub Actions for general-purpose tasks video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/y4Jct7eWLmY"

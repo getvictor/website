@@ -4,16 +4,21 @@
 &lt;/ul>
 &lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
->GitHub Actions&lt;/a> is a way to automate your software development workflows. The approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
+>GitHub Actions&lt;/a> is a way to automate your software development workflows. The
+approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
 alt="High level diagram of GitHub Actions">&lt;figcaption>
 &lt;h4>High level diagram of GitHub Actions&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a separate command.&lt;/p>
+&lt;p>The entry point for GitHub Actions is the &lt;code>.github/workflows&lt;/code> directory in your repository. This directory contains one
+or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
+runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
+separate command.&lt;/p>
 &lt;h2 id="why-reuse">&lt;a href="#why-reuse" class="header-anchor">&lt;/a>Why reuse?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
->Code reuse&lt;/a> is a fundamental principle of software development. Reusing GitHub Actions code allows you to:&lt;/p>
+>Code reuse&lt;/a> is a fundamental principle of software development. Reusing
+GitHub Actions code allows you to:&lt;/p>
 &lt;ul>
 &lt;li>Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li>
 &lt;li>Increase consistency since multiple workflows can use the same code&lt;/li>
@@ -38,7 +43,9 @@ alt="GitHub Actions reusable workflow">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;p>A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p>
-&lt;p>For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not
+inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
+pass data back to the main workflow.&lt;/p>
 &lt;p>Here is an example of a reusable workflow. It uses the same schema as a regular workflow.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable workflow&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -91,7 +98,9 @@ alt="GitHub Actions reusable workflow">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">output_file&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">path&lt;/span>: &lt;span style="color:#ae81ff">${{ inputs.filename }}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The reusable workflow is triggered &lt;code>on: workflow_call&lt;/code>. It accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also downloads an artifact called &lt;code>input_file&lt;/code>, processes a file, and uploads an artifact called &lt;code>output_file&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The reusable workflow is triggered &lt;code>on: workflow_call&lt;/code>. It accepts an input called &lt;code>reusable_input&lt;/code> and generates an
+output called &lt;code>reusable_output&lt;/code>. It also downloads an artifact called &lt;code>input_file&lt;/code>, processes a file, and uploads an
+artifact called &lt;code>output_file&lt;/code>.&lt;/p>
 &lt;p>The main workflow calls the reusable workflow using the &lt;code>uses&lt;/code> keyword.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">job-2&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">needs&lt;/span>: &lt;span style="color:#ae81ff">job-1&lt;/span>
@@ -116,9 +125,13 @@ alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
 &lt;h4>GitHub Actions reusable steps (composite action)&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use outputs to pass data back to the main workflow.&lt;/p>
-&lt;p>Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets. Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use &amp;lsquo;build artifacts&amp;rsquo; to share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p>
-&lt;p>Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named &lt;code>action.yml&lt;/code> or similar.&lt;/p>
+&lt;p>Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
+outputs to pass data back to the main workflow.&lt;/p>
+&lt;p>Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
+Secrets must be passed explicitly as inputs or environment variables. Also, there is no need to use &amp;lsquo;build artifacts&amp;rsquo; to
+share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p>
+&lt;p>Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named
+&lt;code>action.yml&lt;/code> or similar.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Reusable steps (AKA composite action)&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">description&lt;/span>: &lt;span style="color:#ae81ff">Demonstrate how to use reusable steps in a workflow&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Schema: https://json.schemastore.org/github-action.json&lt;/span>
@@ -151,7 +164,8 @@ alt="GitHub Actions reusable steps (composite action)">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;Processing file: ${{ inputs.filename }}&amp;#34;
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#34;file processed&amp;#34; &amp;gt;&amp;gt; ${{ inputs.filename }}&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The composite action is called via the &lt;code>uses&lt;/code> setting on a step. Our action accepts an input called &lt;code>reusable_input&lt;/code> and generates an output called &lt;code>reusable_output&lt;/code>. It also processes a file called &lt;code>filename&lt;/code>.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The composite action is called via the &lt;code>uses&lt;/code> setting on a step. Our action accepts an input called &lt;code>reusable_input&lt;/code> and
+generates an output called &lt;code>reusable_output&lt;/code>. It also processes a file called &lt;code>filename&lt;/code>.&lt;/p>
 &lt;p>The following code snippet shows how to use the composite action in a job.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Use reusable steps&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">id&lt;/span>: &lt;span style="color:#ae81ff">reusable-steps&lt;/span>
@@ -168,14 +182,18 @@ alt="GitHub Actions composite action success">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a great way to reduce errors and increase productivity.&lt;/p>
-&lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of work that may run on the same runner and share the same work area.&lt;/p>
+&lt;/h2>&lt;p>Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your
+GitHub Actions. They allow you to reuse code across repositories and workflows and promote best practices. They are a
+great way to reduce errors and increase productivity.&lt;/p>
+&lt;p>For larger units of work, a reusable workflow should be used. A composite action should be used for smaller units of
+work that may run on the same runner and share the same work area.&lt;/p>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
 &lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
 &lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;code>git merge&lt;/code> and GitHub pull requests explained&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;em>git merge&lt;/em> and GitHub pull requests explained&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../find-code-owners-for-pull-request" >Finding the minimum required code owner approvers for pull request&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video">&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor">&lt;/a>GitHub Actions reusable workflows and steps video

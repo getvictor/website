@@ -1,4 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 26 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" />&lt;ul>
+&lt;li>&lt;a class="link" href="#find-code-owners-from-command-line" >Find code owners from the command line&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-are-github-code-owners">&lt;a href="#what-are-github-code-owners" class="header-anchor">&lt;/a>What are GitHub code owners?
+&lt;/h2>&lt;p>GitHub
+&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+>CODEOWNERS&lt;/a>
+is a file that defines the individuals or teams responsible for code in a repository. When a user creates a pull
+request, GitHub uses the &lt;code>CODEOWNERS&lt;/code> file to suggest the appropriate reviewers for the pull request. This process helps
+ensure that the right people review the code changes.&lt;/p>
+&lt;p>Repository owners can enable branch protection rules that require the code owner of each changed file to approve the
+pull request.&lt;/p>
+&lt;h2 id="the-problem-too-many-files-and-too-many-code-owners">&lt;a href="#the-problem-too-many-files-and-too-many-code-owners" class="header-anchor">&lt;/a>The problem: too many files and too many code owners
+&lt;/h2>&lt;p>It can be challenging to determine who needs to review a pull request in a large repository with many files and many
+code owners. This challenge is especially true when the pull request touches many files.&lt;/p>
+&lt;p>Many times, I&amp;rsquo;ve asked another engineer to approve my PR, and they approved it, but GitHub said that the PR still needed
+approval from another code owner. I needed another approval because my PR changed another file with another code owner,
+and I didn&amp;rsquo;t know about it.&lt;/p>
+&lt;h2 id="steps-to-find-the-minimum-required-code-owners">&lt;a href="#steps-to-find-the-minimum-required-code-owners" class="header-anchor">&lt;/a>Steps to find the minimum required code owners
+&lt;/h2>&lt;p>To find the minimum required code owners for a pull request, we can use these steps:&lt;/p>
+&lt;ol>
+&lt;li>Get the list of changed files in the pull request.&lt;/li>
+&lt;li>For each changed file, get the list of code owners.&lt;/li>
+&lt;li>Find the minimum set of code owners that covers all the above lists.&lt;/li>
+&lt;/ol>
+&lt;h2 id="finding-the-code-owners-manually">&lt;a href="#finding-the-code-owners-manually" class="header-anchor">&lt;/a>Finding the code owners manually
+&lt;/h2>&lt;p>The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
+for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
+alt="List of files, with code owners showing when hovering over the blue icon next to the file">&lt;figcaption>
+&lt;h4>See the code owners on hover&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="find-code-owners-from-command-line">&lt;a href="#find-code-owners-from-command-line" class="header-anchor">&lt;/a>Finding the code owners from the command line
+&lt;/h2>&lt;p>To automate the above steps, we will need the following prerequisites:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://cli.github.com/" target="_blank" rel="noopener"
+>GitHub CLI&lt;/a> installed and logged in&lt;/li>
+&lt;li>Command-line JSON processor &lt;a class="link" href="https://jqlang.github.io/jq/download/" target="_blank" rel="noopener"
+>jq&lt;/a> installed&lt;/li>
+&lt;li>A CODEOWNERS parser installed, such as &lt;a class="link" href="https://github.com/hmarr/codeowners" target="_blank" rel="noopener"
+>https://github.com/hmarr/codeowners&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>From the top directory containing your git repository, run the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74">&amp;#39;.files[] .path&amp;#39;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>| xargs codeowners | tr -s &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | cut -f2- -d &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | sort -u
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>$MY_PR_NUMBER&lt;/code> is the number of your pull request.&lt;/p>
+&lt;p>The first part of the command, &lt;code>gh pr view $MY_PR_NUMBER --json files&lt;/code>, gets the list of changed files in the pull
+request in JSON format. The second part, &lt;code>jq -r '.files[] .path'&lt;/code>, extracts the file paths from the JSON. The third
+part, &lt;code>xargs codeowners&lt;/code>, runs the &lt;code>codeowners&lt;/code> command for each file. The fourth optional part, &lt;code>tr -s ' '&lt;/code>, removes
+extra spaces. The fifth part, &lt;code>cut -f2- -d ' '&lt;/code>, removes the first column. The last part, &lt;code>sort -u&lt;/code>, sorts and removes
+duplicates.&lt;/p>
+&lt;p>The output will be the list of code owners for the changed files in the pull request. For example:&lt;/p>
+&lt;pre tabindex="0">&lt;code>(unowned)
+@fleetdm/go
+@getvictor @lucasmrod @roperzh @mostlikelee
+@lucasmrod @getvictor @jacobshandling
+@roperzh @gillespi314 @lucasmrod @getvictor
+&lt;/code>&lt;/pre>&lt;p>At this point, we can do additional processing, such as excluding some code owners.&lt;/p>
+&lt;p>By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
+&lt;p>Previously, we explained
+&lt;a class="link" href="../github-reusable-workflows-and-steps" >how to create reusable workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
+&lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request">&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor">&lt;/a>Watch how to find the minimum required code owners for a pull request
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/RHW-ZELnuSg"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
 &lt;li>&lt;a class="link" href="#add-jest-to-the-project" >Add Jest testing framework&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#write-a-unit-test" >Write a unit test&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#review-unit-test-coverage" >Review unit test coverage&lt;/a>&lt;/li>
@@ -854,6 +927,9 @@ other commits are eliminated.&lt;/p>
 &lt;p>The downside of &lt;strong>Squash and merge&lt;/strong> is that the commit history is lost. The commit history is useful for debugging,
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we explained
+&lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -908,7 +984,7 @@ project:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">recommendedTypeChecked&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">stylisticTypeChecked&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ignores&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;dist/**/*&amp;#34;&lt;/span>],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ignores&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;dist/**/*&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;eslint.config.mjs&amp;#34;&lt;/span>],
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">languageOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
@@ -922,7 +998,8 @@ project:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code>dist&lt;/code>
-directory containing the webpack-generated bundles.&lt;/p>
+directory containing the webpack-generated bundles. We also ignore the config file because we do not want to apply
+TypeScript linting to it.&lt;/p>
 &lt;h3 id="why-use-the-mjs-instead-of-js">&lt;a href="#why-use-the-mjs-instead-of-js" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
 &lt;/h3>&lt;p>We are using &lt;code>.mjs&lt;/code> extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
 allows us to import and export modules using the &lt;code>import&lt;/code> and &lt;code>export&lt;/code> keywords. There are other ways to enable
