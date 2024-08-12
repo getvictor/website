@@ -12,9 +12,20 @@ secrets such as personal emails, public IP addresses, and more.
 
 {{< figure src="openblur-screenshot.png" title="OpenBlur screenshot" alt="OpenBlur screenshot" >}}
 
-OpenBlur is an open source project. It is in early BETA and under active development. Contributions and feedback are
-welcome.
+OpenBlur is an open source project. It is under active development. Contributions and feedback are welcome.
 
-GitHub repo for feedback or contributions: https://github.com/getvictor/openblur
+GitHub repo: https://github.com/getvictor/openblur
 
-Install OpenBlur from the Chrome Web Store: https://chromewebstore.google.com/detail/dlnglldcaegkgmhmmhhdknblccppichf
+## Installation
+
+### Option 1. Install from Chrome Web Store
+
+[OpenBlur on Chrome Web Store](https://chromewebstore.google.com/detail/openblur/dlnglldcaegkgmhmmhhdknblccppichf)
+
+### Option 2. Install from release as an unpacked extension
+
+See [OpenBlur GitHub repo for details](https://github.com/getvictor/openblur)
+
+### Option 3. Build from source
+
+See [OpenBlur GitHub repo for details](https://github.com/getvictor/openblur)
