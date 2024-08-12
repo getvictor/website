@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "stdin-headline.png"
 date = 2024-08-12
 categories = ["Software Development", "Security"]
-tags = ["Golang"]
+tags = ["Golang", "Application Security"]
 draft = false
 +++
 
