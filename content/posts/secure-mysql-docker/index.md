@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "mysql-docker-headline.png"
 date = 2024-08-20
 categories = ["DevOps & Infrastructure", "Database Administration"]
-tags = ["MySQL", "Docker"]
+tags = ["MySQL", "Docker", "ZeroTrust"]
 draft = false
 +++
 
