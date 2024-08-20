@@ -1,4 +1,123 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 15 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" />&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments">&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor">&lt;/a>STDIN is more secure than environment variables or command-line arguments
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 20 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to secure MySQL Docker container for Zero Trust</title><link>https://victoronsoftware.com/posts/secure-mysql-docker/</link><pubDate>Tue, 20 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/secure-mysql-docker/</guid><description>&lt;img src="https://victoronsoftware.com/posts/secure-mysql-docker/mysql-docker-headline.png" alt="Featured image of post How to secure MySQL Docker container for Zero Trust" />&lt;ul>
+&lt;li>&lt;a class="link" href="#securing-database-secrets-with-docker-secrets" >Securing database secrets with Docker secrets&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#securing-database-secrets-with-sql-commands" >Securing database secrets with SQL commands&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-a-zero-trust-development-environment">&lt;a href="#what-is-a-zero-trust-development-environment" class="header-anchor">&lt;/a>What is a Zero Trust development environment?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust-security/" target="_blank" rel="noopener"
+>Zero Trust&lt;/a> is a security model
+that assumes no trust, even inside the network. Every request is authenticated, authorized, and encrypted in a Zero
+Trust environment. This approach helps protect against data breaches and insider threats.&lt;/p>
+&lt;p>In our example use case, we create a development environment in a cloud instance, which includes a MySQL database
+running in a Docker container. We need to be able to access the MySQL database from our local machine for development
+purposes. However, the database may contain sensitive data, such as API keys or user passwords. We want to secure the
+MySQL database to prevent unauthorized access.&lt;/p>
+&lt;p>We want to make sure that the MySQL database is not easily accessible from the internet. In addition, we want to limit
+the exposure of database credentials.&lt;/p>
+&lt;h2 id="launching-mysql-docker-container">&lt;a href="#launching-mysql-docker-container" class="header-anchor">&lt;/a>Launching MySQL Docker container
+&lt;/h2>&lt;p>We can run a MySQL database in a Docker container using the
+&lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
+>official MySQL Docker image&lt;/a>. We create &lt;code>docker-compose.yml&lt;/code> like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;mysqld&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--datadir=/tmp/mysqldata&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ROOT_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">toor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_DATABASE&lt;/span>: &lt;span style="color:#ae81ff">fleet&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_USER&lt;/span>: &lt;span style="color:#ae81ff">fleet&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">insecure&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;3306:3306&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And we run &lt;code>docker-compose up&lt;/code> to start the MySQL database.&lt;/p>
+&lt;p>We can access the MySQL database by using the MySQL client:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql -h 127.0.0.1 -P &lt;span style="color:#ae81ff">3306&lt;/span> -uroot -ptoor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As we can see, the passwords are stored in plain text in the &lt;code>docker-compose.yml&lt;/code> file. We want to avoid storing
+sensitive data in plain text.&lt;/p>
+&lt;h2 id="securing-database-secrets-with-docker-secrets">&lt;a href="#securing-database-secrets-with-docker-secrets" class="header-anchor">&lt;/a>Securing database secrets with Docker secrets
+&lt;/h2>&lt;p>&lt;a class="link" href="https://docs.docker.com/compose/use-secrets/" target="_blank" rel="noopener"
+>Docker secrets&lt;/a> allow us to store sensitive data, such as passwords,
+securely. We can create secrets and use them in the &lt;code>docker-compose.yml&lt;/code> file.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">secrets&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql_root_password&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">file&lt;/span>: &lt;span style="color:#ae81ff">./mysql_root_password.txt&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql_password&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>: &lt;span style="color:#ae81ff">MYSQL_PASSWORD&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;mysqld&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--datadir=/tmp/mysqldata&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">secrets&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">mysql_root_password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">mysql_password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ROOT_PASSWORD_FILE&lt;/span>: &lt;span style="color:#ae81ff">/run/secrets/mysql_root_password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_DATABASE&lt;/span>: &lt;span style="color:#ae81ff">fleet&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_USER&lt;/span>: &lt;span style="color:#ae81ff">fleet&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_PASSWORD_FILE&lt;/span>: &lt;span style="color:#ae81ff">/run/secrets/mysql_password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;3306:3306&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We create a &lt;code>mysql_root_password.txt&lt;/code> file and run &lt;code>MYSQL_PASSWORD=insecure docker-compose up&lt;/code> to start the MySQL
+database.&lt;/p>
+&lt;p>The above example shows that the MySQL root password is stored in a file, and the MySQL password is passed as an
+environment variable. Although this approach may be an improvement, it is not secure for a Zero Trust environment. A
+user with access to the file system can read the secrets, and environment variables can be read by anyone who can run
+the &lt;code>ps&lt;/code> command, like: &lt;code>ps eww &amp;lt;docker compose process ID&amp;gt;&lt;/code>.&lt;/p>
+&lt;p>In addition, a user can dump the secrets from the Docker container by running:&lt;/p>
+&lt;pre tabindex="0">&lt;code>docker exec &amp;lt;container ID&amp;gt; cat /run/secrets/mysql_root_password
+&lt;/code>&lt;/pre>&lt;h2 id="securing-database-secrets-with-sql-commands">&lt;a href="#securing-database-secrets-with-sql-commands" class="header-anchor">&lt;/a>Securing database secrets with SQL commands
+&lt;/h2>&lt;p>To secure the MySQL database without exposing the secrets on the server, we can use MySQL commands to set the passwords.
+We spin up MySQL with the following &lt;code>docker-compose.yml&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;mysqld&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--datadir=/tmp/mysqldata&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ROOT_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">toor&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ONETIME_PASSWORD&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;3306:3306&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We set the root password and marked the root user as expired with &lt;code>MYSQL_ONETIME_PASSWORD: true&lt;/code>.&lt;/p>
+&lt;p>Now, as the second step, we can run the following commands to set the passwords:&lt;/p>
+&lt;pre tabindex="0">&lt;code>echo \
+&amp;#34;ALTER USER root IDENTIFIED BY &amp;#39;$(op read op://employee/DEMO_SERVER/MYSQL_ROOT_PASSWORD)&amp;#39;;&amp;#34; \
+&amp;#34;CREATE DATABASE fleet;&amp;#34; \
+&amp;#34;CREATE USER &amp;#39;fleet&amp;#39;@&amp;#39;%&amp;#39; IDENTIFIED BY &amp;#39;$(op read op://employee/DEMO_SERVER/MYSQL_PASSWORD)&amp;#39;;&amp;#34; \
+&amp;#34;GRANT ALL PRIVILEGES ON fleet.* TO &amp;#39;fleet&amp;#39;@&amp;#39;%&amp;#39;;&amp;#34; \
+&amp;#34;FLUSH PRIVILEGES;&amp;#34; \
+| mysql -h 127.0.0.1 -P 3306 -uroot -ptoor --connect-expired-password
+&lt;/code>&lt;/pre>&lt;p>In the above command, we use &lt;a class="link" href="https://support.1password.com/command-line/" target="_blank" rel="noopener"
+>1Password&lt;/a> as our secrets manager. We read
+the secrets from 1Password and pass them to the MySQL client to set the passwords.&lt;/p>
+&lt;h2 id="additional-security-considerations">&lt;a href="#additional-security-considerations" class="header-anchor">&lt;/a>Additional security considerations
+&lt;/h2>&lt;p>This article focused on securing the MySQL passwords. However, there are additional security considerations when running
+MySQL in a Zero Trust environment:&lt;/p>
+&lt;ul>
+&lt;li>Encrypting sensitive data &amp;ndash; all sensitive data should be encrypted when stored in the database&lt;/li>
+&lt;li>Limiting access to specific IPs &amp;ndash; we can add a server firewall to restrict access to the MySQL port&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../get-args-from-stdin" >how to use STDIN to read your program arguments&lt;/a>.&lt;/p>
+&lt;p>We&amp;rsquo;ve previously written about &lt;a class="link" href="../mysql-master-slave-replication" >MySQL master-slave replication&lt;/a>. You can use MySQL
+replication to create a high-availability setup for your MySQL databases.&lt;/p>
+&lt;h2 id="watch-how-to-secure-a-mysql-docker-container-for-zero-trust">&lt;a href="#watch-how-to-secure-a-mysql-docker-container-for-zero-trust" class="header-anchor">&lt;/a>Watch how to secure a MySQL Docker container for Zero Trust
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/GgEPIvFbnT0"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" />&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments">&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor">&lt;/a>STDIN is more secure than environment variables or command-line arguments
 &lt;/h2>&lt;p>When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code>ps&lt;/code> command. Allowing
 others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p>
 &lt;p>Environment variables are also visible to anyone who can run the &lt;code>ps&lt;/code> command. They are also globally visible to the
@@ -2004,7 +2123,8 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Create a MySQL slave replica in 4 short steps</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL slave replica in 4 short steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
+&lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using
+MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
 &lt;p>The steps we will follow are:&lt;/p>
 &lt;ol>
 &lt;li>&lt;a class="link" href="#create-mysql-master-and-slave-databases" >Spin up MySQL master and slave databases&lt;/a>&lt;/li>
@@ -2013,21 +2133,27 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#configure-slave-and-start-replication" >Configure slave and start replication&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="what-is-database-replication">&lt;a href="#what-is-database-replication" class="header-anchor">&lt;/a>What is database replication?
-&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the master) to be copied to one or more database servers (the slaves or replicas). Replication is asynchronous, meaning that the slave does not need to be connected to the master constantly. The replica can catch up with the master when it is available.&lt;/p>
+&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the master) to be copied to one or more
+database servers (the slaves or replicas). Replication is asynchronous, meaning that the slave does not need to be
+connected to the master constantly. The replica can catch up with the master when it is available.&lt;/p>
 &lt;p>Database replicas are used for:&lt;/p>
 &lt;ul>
 &lt;li>Scaling read operations&lt;/li>
 &lt;li>High availability&lt;/li>
 &lt;li>Disaster recovery&lt;/li>
 &lt;/ul>
-&lt;p>MySQL implements replication using the binary log. The master server writes changes to the binary log, and the slave server reads the binary log and applies the changes to its database.&lt;/p>
+&lt;p>MySQL implements replication using the binary log. The master server writes changes to the binary log, and the slave
+server reads the binary log and applies the changes to its database.&lt;/p>
 &lt;h2 id="create-mysql-master-and-slave-databases">&lt;a href="#create-mysql-master-and-slave-databases" class="header-anchor">&lt;/a>Create MySQL master and slave databases
-&lt;/h2>&lt;p>We will use Docker to create the MySQL master and slave databases. We will use the &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
->official MySQL Docker image&lt;/a>. The master database will run on port 3308, and the slave database will run on port 3309.&lt;/p>
+&lt;/h2>&lt;p>We will use Docker to create the MySQL master and slave databases. We will use the
+&lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
+>official MySQL Docker image&lt;/a>. The master database will run on port 3308, and the slave
+database will run on port 3309.&lt;/p>
 &lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
 &lt;script src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
 &lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
-&lt;/h2>&lt;p>Replication in MySQL requires a user with the &lt;code>REPLICATION SLAVE&lt;/code> privilege. We will create a user named &lt;code>replicator&lt;/code> with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
+&lt;/h2>&lt;p>Replication in MySQL requires a user with the &lt;code>REPLICATION SLAVE&lt;/code> privilege. We will create a user named &lt;code>replicator&lt;/code>
+with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
 &lt;p>Connect to the master database using the MySQL client:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3308&lt;/span> -uroot -ptoor
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the &lt;code>replicator&lt;/code> user and grant the &lt;code>REPLICATION SLAVE&lt;/code> privilege:&lt;/p>
@@ -2035,7 +2161,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GRANT&lt;/span> REPLICATION SLAVE &lt;span style="color:#66d9ef">ON&lt;/span> &lt;span style="color:#f92672">*&lt;/span>.&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLUSH &lt;span style="color:#66d9ef">PRIVILEGES&lt;/span>;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="retrieve-master-binary-log-coordinates">&lt;a href="#retrieve-master-binary-log-coordinates" class="header-anchor">&lt;/a>Retrieve master binary log coordinates
-&lt;/h2>&lt;p>For the slave to start replication, it needs to know the master&amp;rsquo;s binary log file and position. We can obtain this information using the MySQL client which we opened in the previous step.&lt;/p>
+&lt;/h2>&lt;p>For the slave to start replication, it needs to know the master&amp;rsquo;s binary log file and position. We can obtain this
+information using the MySQL client which we opened in the previous step.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> MASTER STATUS;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will look like this:&lt;/p>
 &lt;pre tabindex="0">&lt;code>+------------+----------+--------------+------------------+-------------------+
@@ -2048,7 +2175,8 @@ title="YouTube Video"
 &lt;h2 id="configure-slave-and-start-replication">&lt;a href="#configure-slave-and-start-replication" class="header-anchor">&lt;/a>Configure slave and start replication
 &lt;/h2>&lt;p>Now, we will connect to the slave database and configure it to replicate from the master database.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3309&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE MASTER TO&lt;/code> command to configure the slave to replicate from the master. Replace &lt;code>MASTER_LOG_FILE&lt;/code> and &lt;code>MASTER_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE MASTER TO&lt;/code> command to configure the slave to replicate from the master. Replace &lt;code>MASTER_LOG_FILE&lt;/code> and
+&lt;code>MASTER_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>CHANGE MASTER &lt;span style="color:#66d9ef">TO&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_HOST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;mysql_master&amp;#39;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_PORT&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3306&lt;/span>,
@@ -2057,18 +2185,24 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_FILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;bin.000003&amp;#39;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_POS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">861&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GET_MASTER_PUBLIC_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MASTER_HOST&lt;/code> is the hostname of the master, which matches the docker service name. The &lt;code>GET_MASTER_PUBLIC_KEY&lt;/code> option is needed for MySQL 8.0 &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MASTER_HOST&lt;/code> is the hostname of the master, which matches the docker service name. The &lt;code>GET_MASTER_PUBLIC_KEY&lt;/code> option
+is needed for MySQL 8.0 &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
 &lt;p>Finally, start the slave:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> SLAVE;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The slave will now start replicating data from the master database. You can check the replication status using the &lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The slave will now start replicating data from the master database. You can check the replication status using the
+&lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
 &lt;p>We can create a table with data on the master database and check if it is replicated to the slave database:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>USE test;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> users (id INT &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span>, name VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of the issues we summarized was &lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
-&lt;li>In the past, we encountered a &lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of
+the issues we summarized was
+&lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
+&lt;li>In the past, we encountered a
+&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../secure-mysql-docker" >securing your MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="follow-along-with-the-mysql-master-slave-replication-on-video">&lt;a href="#follow-along-with-the-mysql-master-slave-replication-on-video" class="header-anchor">&lt;/a>Follow along with the MySQL master-slave replication on video
 &lt;/h2>&lt;div class="video-wrapper">

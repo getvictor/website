@@ -118,7 +118,8 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Create a MySQL slave replica in 4 short steps</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL slave replica in 4 short steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
+&lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using
+MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
 &lt;p>The steps we will follow are:&lt;/p>
 &lt;ol>
 &lt;li>&lt;a class="link" href="#create-mysql-master-and-slave-databases" >Spin up MySQL master and slave databases&lt;/a>&lt;/li>
@@ -127,21 +128,27 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#configure-slave-and-start-replication" >Configure slave and start replication&lt;/a>&lt;/li>
 &lt;/ol>
 &lt;h2 id="what-is-database-replication">&lt;a href="#what-is-database-replication" class="header-anchor">&lt;/a>What is database replication?
-&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the master) to be copied to one or more database servers (the slaves or replicas). Replication is asynchronous, meaning that the slave does not need to be connected to the master constantly. The replica can catch up with the master when it is available.&lt;/p>
+&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the master) to be copied to one or more
+database servers (the slaves or replicas). Replication is asynchronous, meaning that the slave does not need to be
+connected to the master constantly. The replica can catch up with the master when it is available.&lt;/p>
 &lt;p>Database replicas are used for:&lt;/p>
 &lt;ul>
 &lt;li>Scaling read operations&lt;/li>
 &lt;li>High availability&lt;/li>
 &lt;li>Disaster recovery&lt;/li>
 &lt;/ul>
-&lt;p>MySQL implements replication using the binary log. The master server writes changes to the binary log, and the slave server reads the binary log and applies the changes to its database.&lt;/p>
+&lt;p>MySQL implements replication using the binary log. The master server writes changes to the binary log, and the slave
+server reads the binary log and applies the changes to its database.&lt;/p>
 &lt;h2 id="create-mysql-master-and-slave-databases">&lt;a href="#create-mysql-master-and-slave-databases" class="header-anchor">&lt;/a>Create MySQL master and slave databases
-&lt;/h2>&lt;p>We will use Docker to create the MySQL master and slave databases. We will use the &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
->official MySQL Docker image&lt;/a>. The master database will run on port 3308, and the slave database will run on port 3309.&lt;/p>
+&lt;/h2>&lt;p>We will use Docker to create the MySQL master and slave databases. We will use the
+&lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
+>official MySQL Docker image&lt;/a>. The master database will run on port 3308, and the slave
+database will run on port 3309.&lt;/p>
 &lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
 &lt;script src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
 &lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
-&lt;/h2>&lt;p>Replication in MySQL requires a user with the &lt;code>REPLICATION SLAVE&lt;/code> privilege. We will create a user named &lt;code>replicator&lt;/code> with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
+&lt;/h2>&lt;p>Replication in MySQL requires a user with the &lt;code>REPLICATION SLAVE&lt;/code> privilege. We will create a user named &lt;code>replicator&lt;/code>
+with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
 &lt;p>Connect to the master database using the MySQL client:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3308&lt;/span> -uroot -ptoor
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the &lt;code>replicator&lt;/code> user and grant the &lt;code>REPLICATION SLAVE&lt;/code> privilege:&lt;/p>
@@ -149,7 +156,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GRANT&lt;/span> REPLICATION SLAVE &lt;span style="color:#66d9ef">ON&lt;/span> &lt;span style="color:#f92672">*&lt;/span>.&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span>;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLUSH &lt;span style="color:#66d9ef">PRIVILEGES&lt;/span>;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="retrieve-master-binary-log-coordinates">&lt;a href="#retrieve-master-binary-log-coordinates" class="header-anchor">&lt;/a>Retrieve master binary log coordinates
-&lt;/h2>&lt;p>For the slave to start replication, it needs to know the master&amp;rsquo;s binary log file and position. We can obtain this information using the MySQL client which we opened in the previous step.&lt;/p>
+&lt;/h2>&lt;p>For the slave to start replication, it needs to know the master&amp;rsquo;s binary log file and position. We can obtain this
+information using the MySQL client which we opened in the previous step.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> MASTER STATUS;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will look like this:&lt;/p>
 &lt;pre tabindex="0">&lt;code>+------------+----------+--------------+------------------+-------------------+
@@ -162,7 +170,8 @@ title="YouTube Video"
 &lt;h2 id="configure-slave-and-start-replication">&lt;a href="#configure-slave-and-start-replication" class="header-anchor">&lt;/a>Configure slave and start replication
 &lt;/h2>&lt;p>Now, we will connect to the slave database and configure it to replicate from the master database.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3309&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE MASTER TO&lt;/code> command to configure the slave to replicate from the master. Replace &lt;code>MASTER_LOG_FILE&lt;/code> and &lt;code>MASTER_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE MASTER TO&lt;/code> command to configure the slave to replicate from the master. Replace &lt;code>MASTER_LOG_FILE&lt;/code> and
+&lt;code>MASTER_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>CHANGE MASTER &lt;span style="color:#66d9ef">TO&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_HOST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;mysql_master&amp;#39;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_PORT&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3306&lt;/span>,
@@ -171,18 +180,24 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_FILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;bin.000003&amp;#39;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_POS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">861&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GET_MASTER_PUBLIC_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MASTER_HOST&lt;/code> is the hostname of the master, which matches the docker service name. The &lt;code>GET_MASTER_PUBLIC_KEY&lt;/code> option is needed for MySQL 8.0 &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MASTER_HOST&lt;/code> is the hostname of the master, which matches the docker service name. The &lt;code>GET_MASTER_PUBLIC_KEY&lt;/code> option
+is needed for MySQL 8.0 &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
 &lt;p>Finally, start the slave:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> SLAVE;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The slave will now start replicating data from the master database. You can check the replication status using the &lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The slave will now start replicating data from the master database. You can check the replication status using the
+&lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
 &lt;p>We can create a table with data on the master database and check if it is replicated to the slave database:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>USE test;
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> users (id INT &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span>, name VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>));
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of the issues we summarized was &lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
-&lt;li>In the past, we encountered a &lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of
+the issues we summarized was
+&lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
+&lt;li>In the past, we encountered a
+&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../secure-mysql-docker" >securing your MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="follow-along-with-the-mysql-master-slave-replication-on-video">&lt;a href="#follow-along-with-the-mysql-master-slave-replication-on-video" class="header-anchor">&lt;/a>Follow along with the MySQL master-slave replication on video
 &lt;/h2>&lt;div class="video-wrapper">
