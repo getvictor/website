@@ -3,10 +3,10 @@ title = 'How to secure MySQL Docker container for Zero Trust'
 description = "Increase the security of your MySQL Docker containers when running in a Zero Trust dev environment"
 authors = ["Victor Lyuboslavsky"]
 image = "mysql-docker-headline.png"
-date = 2024-08-15
+date = 2024-08-20
 categories = ["DevOps & Infrastructure", "Database Administration"]
 tags = ["MySQL", "Docker"]
-draft = true
+draft = false
 +++
 
 - [Securing database secrets with Docker secrets](#securing-database-secrets-with-docker-secrets)
