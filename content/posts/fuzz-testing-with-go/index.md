@@ -138,8 +138,9 @@ such as database accesses. I will report my findings in a future post.
 
 GitHub gist: {{< gist getvictor 24baadcc9cf08e7d7a6028ad54ff2aba >}}
 
-## Other articles on Unit Testing
+## Further reading
 
+- [Benchmarking performance with Go](../optimizing-performance-of-go-app)
 - [Unit testing a Chrome Extension](../add-unit-tests-to-chrome-extension)
 
 ## Go fuzz testing video
