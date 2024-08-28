@@ -1,4 +1,137 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Golang on Victor on Software</title><link>https://victoronsoftware.com/tags/golang/</link><description>Recent content in Golang on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 12 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" />&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments">&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor">&lt;/a>STDIN is more secure than environment variables or command-line arguments
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Golang on Victor on Software</title><link>https://victoronsoftware.com/tags/golang/</link><description>Recent content in Golang on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 28 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" />&lt;ul>
+&lt;li>&lt;a class="link" href="#creating-go-benchmark" >Creating a Go benchmark&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#running-go-benchmarks" >Running Go benchmarks&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-benchmarking">&lt;a href="#what-is-benchmarking" class="header-anchor">&lt;/a>What is benchmarking?
+&lt;/h2>&lt;p>Performance optimization is a critical part of software development. Once your application has been released and is
+being used by real users, you may need to optimize its performance. One way to do this is to benchmark your code to
+identify bottlenecks and improve its performance. Benchmarking provides you with data to make informed decisions about
+what parts of your code can be sped up and by how much.&lt;/p>
+&lt;p>Benchmarking is the process of measuring your code&amp;rsquo;s performance. It involves running your code multiple times and
+measuring how long it takes to execute. By running your code multiple times, you can get an average execution time,
+which is more reliable than a one-off report.&lt;/p>
+&lt;h2 id="identifying-the-bottlenecks">&lt;a href="#identifying-the-bottlenecks" class="header-anchor">&lt;/a>Identifying the bottlenecks
+&lt;/h2>&lt;p>In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
+was taking a long time for some of our users. First, we used
+&lt;a class="link" href="https://github.com/google/pprof/blob/main/doc/README.md" target="_blank" rel="noopener"
+>Go pprof&lt;/a> to enable profiling and generated a flame graph to
+identify the bottlenecks in our code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
+alt="Flame graph showing the execution time of different parts of the Go app">&lt;figcaption>
+&lt;h4>Go pprof flame graph&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
+libraries to find the fastest one for our use case.&lt;/p>
+&lt;h2 id="creating-go-benchmark">&lt;a href="#creating-go-benchmark" class="header-anchor">&lt;/a>Creating a Go benchmark
+&lt;/h2>&lt;p>In Go, you can write benchmarks using the built-in testing package. Benchmarks are written similarly to unit tests but
+with the &lt;strong>Benchmark&lt;/strong> prefix instead of the &lt;strong>Test&lt;/strong> prefix.&lt;/p>
+&lt;p>Before creating and running the benchmark, we generated 1000 test JSON files in the &lt;code>testdata&lt;/code> directory.&lt;/p>
+&lt;p>To benchmark JSON decoding, we created the following benchmark.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;encoding/json&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;os&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;testing&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkJSONImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Starting the function name with &lt;code>Benchmark&lt;/code> indicates to &lt;code>go test&lt;/code> that this is a benchmark.&lt;/p>
+&lt;p>The testing package adjusts the number of iterations through the &lt;code>for i := 0; i &amp;lt; b.N; i++&lt;/code> loop until the function
+lasts long enough to be timed reliably.&lt;/p>
+&lt;p>The &lt;code>b.StopTimer()&lt;/code> and &lt;code>b.StartTimer()&lt;/code> calls exclude part of the code from the benchmark.&lt;/p>
+&lt;h2 id="running-go-benchmarks">&lt;a href="#running-go-benchmarks" class="header-anchor">&lt;/a>Running Go benchmarks
+&lt;/h2>&lt;p>To run all benchmarks, add &lt;code>-bench=.&lt;/code> flag to &lt;code>go test&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test -bench&lt;span style="color:#f92672">=&lt;/span>.
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result will look like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>goos: darwin
+goarch: arm64
+pkg: serializer
+cpu: Apple M2 Pro
+BenchmarkJSONImport-12 357 3324997 ns/op
+PASS
+ok serializer 1.868s
+&lt;/code>&lt;/pre>&lt;p>It tells us that unmarshalling a single file with &lt;code>json.Decode&lt;/code> takes an average of 3.3 milliseconds. The benchmark ran
+the loop 357 times.&lt;/p>
+&lt;h2 id="benchmarking-encodinggob">&lt;a href="#benchmarking-encodinggob" class="header-anchor">&lt;/a>Benchmarking encoding/gob
+&lt;/h2>&lt;p>Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
+>encoding/gob&lt;/a> library.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkGobImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// decode gob
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">gob&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Running the two benchmarks gives us:&lt;/p>
+&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3279579 ns/op
+BenchmarkGobImport-12 2262 475469 ns/op
+&lt;/code>&lt;/pre>&lt;p>The benchmark data shows that decoding with &lt;code>encoding/gob&lt;/code> takes almost 7 times faster than using &lt;code>encoding/json&lt;/code>. This
+gives sufficient data to present to our management and argue for switching from JSON. In addition, we can benchmark
+other serialization libraries to see if any of them are even faster.&lt;/p>
+&lt;p>For additional data, we included reading the file in our benchmark numbers for a complete picture of the expected
+speedup:&lt;/p>
+&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3374064 ns/op
+BenchmarkGobImport-12 2710 481935 ns/op
+BenchmarkJSONImportFile-12 306 3746758 ns/op
+BenchmarkGobImportFile-12 2176 554254 ns/op
+&lt;/code>&lt;/pre>&lt;h2 id="go-benchmark-code-on-github">&lt;a href="#go-benchmark-code-on-github" class="header-anchor">&lt;/a>Go benchmark code on GitHub
+&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
+>https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>See our previous article on &lt;a class="link" href="../fuzz-testing-with-go" >creating fuzz tests in Go&lt;/a>.&lt;/p>
+&lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/c0drQ2JUYmo"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" />&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments">&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor">&lt;/a>STDIN is more secure than environment variables or command-line arguments
 &lt;/h2>&lt;p>When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code>ps&lt;/code> command. Allowing
 others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p>
 &lt;p>Environment variables are also visible to anyone who can run the &lt;code>ps&lt;/code> command. They are also globally visible to the
@@ -1091,8 +1224,9 @@ have a clear idea why.&lt;/p>
 such as database accesses. I will report my findings in a future post.&lt;/p>
 &lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>
 &lt;/p>
-&lt;h2 id="other-articles-on-unit-testing">&lt;a href="#other-articles-on-unit-testing" class="header-anchor">&lt;/a>Other articles on Unit Testing
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Unit testing a Chrome Extension&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="go-fuzz-testing-video">&lt;a href="#go-fuzz-testing-video" class="header-anchor">&lt;/a>Go fuzz testing video
