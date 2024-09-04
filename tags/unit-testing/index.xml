@@ -1,4 +1,191 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Testing on Victor on Software</title><link>https://victoronsoftware.com/tags/unit-testing/</link><description>Recent content in Unit Testing on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 26 Jul 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/unit-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Testing on Victor on Software</title><link>https://victoronsoftware.com/tags/unit-testing/</link><description>Recent content in Unit Testing on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/unit-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
+&lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
+&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster
+feedback, which leads to quicker iterations and better code quality.&lt;/p>
+&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test
+suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve
+their performance.&lt;/p>
+&lt;h2 id="problems-with-current-measurement-tools">&lt;a href="#problems-with-current-measurement-tools" class="header-anchor">&lt;/a>Problems with current measurement tools
+&lt;/h2>&lt;p>We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p>
+&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the
+&lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
+>gotestsum&lt;/a> tool gave us the following output for our test suite:&lt;/p>
+&lt;pre tabindex="0">&lt;code>github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestPolicies 3m31s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestActivity 2m16.67s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMWindows 2m14.85s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMShared 2m10.27s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestVulnerabilities 2m7.98s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestPacks 1m59.2s
+github.com/fleetdm/fleet/v4/server/worker TestAppleMDM 1m55.11s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestTeams 1m47.82s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestAppConfig 1m42.81s
+github.com/fleetdm/fleet/v4/server/datastore/mysql TestHosts 1m41.79s
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709183940 1m36.43s
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642 1m36.34s
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240725182118 1m35.95s
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504 1m35.73s
+github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/recent_vulns 1m34.87s
+...
+&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times
+in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
+&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests.
+We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
+&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if
+our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the
+test suite.&lt;/p>
+&lt;h2 id="understanding-parallelism-in-go-tests">&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor">&lt;/a>Understanding parallelism in Go tests
+&lt;/h2>&lt;p>Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
+alt="Sequence diagram of a go test run with two packages, two tests, and two subtests.">
+&lt;/figure>
+&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in
+parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults
+to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
+&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However,
+you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is
+controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test
+suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package
+concurrently, for a total of 64 tests running concurrently.&lt;/p>
+&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially
+by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
+&lt;h2 id="accurately-measuring-test-execution-time">&lt;a href="#accurately-measuring-test-execution-time" class="header-anchor">&lt;/a>Accurately measuring test execution time
+&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs
+test results in JSON format, which we can parse and analyze.&lt;/p>
+&lt;p>The &lt;code>Action&lt;/code> field in the JSON output shows the start and end times of each test and subtest.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969606869Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.96984165Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969928132Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pause&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969983777Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.970052987Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pause&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.970090377Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cont&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.973464469Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cont&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015505184Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0.04&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015523238Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0.04&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015527907Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution
+time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to
+the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
+&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the
+test or subtest is running in parallel.&lt;/p>
+&lt;p>We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+>goteststats&lt;/a> that does these calculations.&lt;/p>
+&lt;h2 id="accurate-test-execution-time-measurement-in-practice">&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor">&lt;/a>Accurate test execution time measurement in practice
+&lt;/h2>&lt;p>By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+>goteststats&lt;/a> parser on the JSON output of our test suite, we
+gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
+&lt;pre tabindex="0">&lt;code>WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
+github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
+github.com/fleetdm/fleet/v4/server/cron TestEventForDifferentHost: 7.853s (total: 36.158s parallel: 4)
+github.com/fleetdm/fleet/v4/cmd/fleet TestCronVulnerabilitiesCreatesDatabasesPath: 6.878s (total: 30.232s parallel: 4)
+github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/find_vulns_on_cpes: 6.849s (total: 1m34.89s parallel: 13)
+github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/recent_vulns: 6.849s (total: 1m34.89s parallel: 13)
+github.com/fleetdm/fleet/v4/server/vulnerabilities/oval TestOvalAnalyzer/#load/invalid_vuln_path: 5.844s (total: 1m25.152s parallel: 14)
+github.com/fleetdm/fleet/v4/server/vulnerabilities/oval TestOvalAnalyzer/analyzing_RHEL_software: 5.844s (total: 1m25.152s parallel: 14)
+github.com/fleetdm/fleet/v4/server/vulnerabilities/oval TestOvalAnalyzer/analyzing_Ubuntu_software: 5.844s (total: 1m25.151s parallel: 14)
+github.com/fleetdm/fleet/v4/cmd/fleet TestAutomationsSchedule: 5.699s (total: 14.213s parallel: 2)
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240725182118: 5.623s (total: 1m37.577s parallel: 17)
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709183940: 5.588s (total: 1m36.771s parallel: 17)
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709124958: 5.52s (total: 1m35.622s parallel: 17)
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504: 5.517s (total: 1m35.74s parallel: 17)
+github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240726100517: 5.418s (total: 1m33.987s parallel: 17)
+...
+&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently
+with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this
+test from the suite.&lt;/p>
+&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the
+times in the report add up to around 14 minutes.&lt;/p>
+&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for
+identifying slow tests and improving their performance.&lt;/p>
+&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running
+concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that
+this test is a bottleneck and should parallelized.&lt;/p>
+&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if
+the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing
+package. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:23:17.8084601Z&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;output&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/fleetctl&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestGenerateMDMApple/CSR_API_call_fails&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Output&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;requesting APNs CSR: GET /api/latest/fleet/mdm/apple/request_csr received status 502 Bad Gateway: FleetDM CSR request failed: bad request=== RUN TestGenerateMDMApple/successful_run\n&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="goteststats-on-github">&lt;a href="#goteststats-on-github" class="header-anchor">&lt;/a>&lt;code>goteststats&lt;/code> on GitHub
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+>goteststats&lt;/a> is available on GitHub. You can use it to get detailed
+performance data for your Go test suite.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>&lt;/li>
+&lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately">&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor">&lt;/a>Watch how to measure the execution time of Go tests accurately
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/caTDvS5vCjA"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
 &lt;li>&lt;a class="link" href="#add-jest-to-the-project" >Add Jest testing framework&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#write-a-unit-test" >Write a unit test&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#review-unit-test-coverage" >Review unit test coverage&lt;/a>&lt;/li>
@@ -271,6 +458,7 @@ such as database accesses. I will report my findings in a future post.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../go-test-execution-time" >Measure Go test execution time&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Unit testing a Chrome Extension&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="go-fuzz-testing-video">&lt;a href="#go-fuzz-testing-video" class="header-anchor">&lt;/a>Go fuzz testing video

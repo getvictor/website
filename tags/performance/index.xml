@@ -121,7 +121,10 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
 >https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>See our previous article on &lt;a class="link" href="../fuzz-testing-with-go" >creating fuzz tests in Go&lt;/a>.&lt;/p>
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../go-test-execution-time" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
+&lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go" >creating fuzz tests in Go&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
