@@ -168,7 +168,8 @@ The complete code is available on GitHub at: https://github.com/getvictor/go-ben
 
 ## Further reading
 
-See our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go).
+- Recently, we wrote about [accurately measuring Go test execution time](../go-test-execution-time).
+- Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go).
 
 ## Watch how to benchmark Go serializers
 
