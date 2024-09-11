@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>How to create an EXE installer for your program</title><link>https://victoronsoftware.com/posts/exe-installer/</link><pubDate>Wed, 11 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/exe-installer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/exe-installer/exe-installer-headline.png" alt="Featured image of post How to create an EXE installer for your program" />&lt;h2 id="msi-versus-exe-installers">&lt;a href="#msi-versus-exe-installers" class="header-anchor">&lt;/a>MSI versus EXE installers
+&lt;/h2>&lt;p>When distributing software for Windows, you have two main options for installers: MSI and EXE. An MSI installer is a
+Windows Installer package that contains installation information and files. It uses the Windows Installer service. On
+the other hand, an EXE installer is a self-extracting executable file containing the installation files and an
+installation program. EXE installers are more customizable and do not depend on the built-in Windows Installer
+technology.&lt;/p>
+&lt;p>This article will show how to create an EXE installer for a program using the Inno Setup tool.&lt;/p>
+&lt;h2 id="build-your-program">&lt;a href="#build-your-program" class="header-anchor">&lt;/a>Build your program
+&lt;/h2>&lt;p>We will create a simple Hello World program using the Go programming language for this example.&lt;/p>
+&lt;p>With Go installed, we can build our program using the &lt;code>go build&lt;/code> command. For example, given the source code in
+&lt;code>main.go&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello world&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can build the program for Windows using:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>GOOS&lt;span style="color:#f92672">=&lt;/span>windows GOARCH&lt;span style="color:#f92672">=&lt;/span>amd64 go build -o hello-world.exe main.go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="download-and-install-inno-setup">&lt;a href="#download-and-install-inno-setup" class="header-anchor">&lt;/a>Download and install Inno Setup
+&lt;/h2>&lt;p>We will need to use a Windows machine to create an EXE installer.&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.jrsoftware.org/isinfo.php" target="_blank" rel="noopener"
+>Inno Setup&lt;/a> is a free installer for Windows programs. You can download it from
+the &lt;a class="link" href="https://www.jrsoftware.org/isdl.php" target="_blank" rel="noopener"
+>official website&lt;/a>. Once you have downloaded the installer, run it and follow
+the installation instructions.&lt;/p>
+&lt;h2 id="create-an-exe-installer">&lt;a href="#create-an-exe-installer" class="header-anchor">&lt;/a>Create an EXE installer
+&lt;/h2>&lt;p>Launch the &lt;code>Inno Setup Compiler&lt;/code> application. The main window will appear, with a toolbar and a script editor.&lt;/p>
+&lt;p>On the Welcome modal, choose &lt;code>Create a new script file using the Script Wizard&lt;/code> and click &lt;code>OK&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-welcome.png"
+alt="Untitled Inno Setup Compile with Welcome modal open.">
+&lt;/figure>
+&lt;p>Follow the instructions on several subsequent screens.&lt;/p>
+&lt;p>On the &lt;code>Application Files&lt;/code> screen, add your program executable file and any other files, such as a README.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-application-files.png"
+alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified.">
+&lt;/figure>
+&lt;p>Continue following the instructions.&lt;/p>
+&lt;p>On the &lt;code>Compiler Settings&lt;/code> screen, select the file name for your installer.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-compiler-settings.png"
+alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name.">
+&lt;/figure>
+&lt;p>Finally, click&amp;rsquo; Finish&amp;rsquo; after a couple more screens to generate the script.&lt;/p>
+&lt;p>Click &lt;code>Yes&lt;/code> to compile the script.&lt;/p>
+&lt;p>Click &lt;code>No&lt;/code> to save the script before compiling. If needed, it can be saved later.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-save-script.png"
+alt="Inno Setup modal asking: Would you like to save the script before compiling?">
+&lt;/figure>
+&lt;p>The Inno Setup Compiler will create an EXE installer for your program and put it in the &lt;code>Documents/Output&lt;/code> folder.&lt;/p>
+&lt;p>You can try running the installer to make sure it works as expected.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows" >how to code sign a Windows application&lt;/a>&lt;/li>
+&lt;li>Recently, we explained
+&lt;a class="link" href="../go-test-execution-time" >how to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
+&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >Go benchmarks&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-create-an-exe-installer">&lt;a href="#watch-how-to-create-an-exe-installer" class="header-anchor">&lt;/a>Watch how to create an EXE installer
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/1YeRYIhWqtA"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
 &lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
@@ -175,6 +242,7 @@ performance data for your Go test suite.&lt;/p>
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>&lt;/li>
+&lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately">&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor">&lt;/a>Watch how to measure the execution time of Go tests accurately
 &lt;/h2>&lt;div class="video-wrapper">

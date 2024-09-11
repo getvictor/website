@@ -1,4 +1,71 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to create an EXE installer for your program</title><link>https://victoronsoftware.com/posts/exe-installer/</link><pubDate>Wed, 11 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/exe-installer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/exe-installer/exe-installer-headline.png" alt="Featured image of post How to create an EXE installer for your program" />&lt;h2 id="msi-versus-exe-installers">&lt;a href="#msi-versus-exe-installers" class="header-anchor">&lt;/a>MSI versus EXE installers
+&lt;/h2>&lt;p>When distributing software for Windows, you have two main options for installers: MSI and EXE. An MSI installer is a
+Windows Installer package that contains installation information and files. It uses the Windows Installer service. On
+the other hand, an EXE installer is a self-extracting executable file containing the installation files and an
+installation program. EXE installers are more customizable and do not depend on the built-in Windows Installer
+technology.&lt;/p>
+&lt;p>This article will show how to create an EXE installer for a program using the Inno Setup tool.&lt;/p>
+&lt;h2 id="build-your-program">&lt;a href="#build-your-program" class="header-anchor">&lt;/a>Build your program
+&lt;/h2>&lt;p>We will create a simple Hello World program using the Go programming language for this example.&lt;/p>
+&lt;p>With Go installed, we can build our program using the &lt;code>go build&lt;/code> command. For example, given the source code in
+&lt;code>main.go&lt;/code>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;hello world&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can build the program for Windows using:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>GOOS&lt;span style="color:#f92672">=&lt;/span>windows GOARCH&lt;span style="color:#f92672">=&lt;/span>amd64 go build -o hello-world.exe main.go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="download-and-install-inno-setup">&lt;a href="#download-and-install-inno-setup" class="header-anchor">&lt;/a>Download and install Inno Setup
+&lt;/h2>&lt;p>We will need to use a Windows machine to create an EXE installer.&lt;/p>
+&lt;p>&lt;a class="link" href="https://www.jrsoftware.org/isinfo.php" target="_blank" rel="noopener"
+>Inno Setup&lt;/a> is a free installer for Windows programs. You can download it from
+the &lt;a class="link" href="https://www.jrsoftware.org/isdl.php" target="_blank" rel="noopener"
+>official website&lt;/a>. Once you have downloaded the installer, run it and follow
+the installation instructions.&lt;/p>
+&lt;h2 id="create-an-exe-installer">&lt;a href="#create-an-exe-installer" class="header-anchor">&lt;/a>Create an EXE installer
+&lt;/h2>&lt;p>Launch the &lt;code>Inno Setup Compiler&lt;/code> application. The main window will appear, with a toolbar and a script editor.&lt;/p>
+&lt;p>On the Welcome modal, choose &lt;code>Create a new script file using the Script Wizard&lt;/code> and click &lt;code>OK&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-welcome.png"
+alt="Untitled Inno Setup Compile with Welcome modal open.">
+&lt;/figure>
+&lt;p>Follow the instructions on several subsequent screens.&lt;/p>
+&lt;p>On the &lt;code>Application Files&lt;/code> screen, add your program executable file and any other files, such as a README.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-application-files.png"
+alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified.">
+&lt;/figure>
+&lt;p>Continue following the instructions.&lt;/p>
+&lt;p>On the &lt;code>Compiler Settings&lt;/code> screen, select the file name for your installer.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-compiler-settings.png"
+alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name.">
+&lt;/figure>
+&lt;p>Finally, click&amp;rsquo; Finish&amp;rsquo; after a couple more screens to generate the script.&lt;/p>
+&lt;p>Click &lt;code>Yes&lt;/code> to compile the script.&lt;/p>
+&lt;p>Click &lt;code>No&lt;/code> to save the script before compiling. If needed, it can be saved later.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-save-script.png"
+alt="Inno Setup modal asking: Would you like to save the script before compiling?">
+&lt;/figure>
+&lt;p>The Inno Setup Compiler will create an EXE installer for your program and put it in the &lt;code>Documents/Output&lt;/code> folder.&lt;/p>
+&lt;p>You can try running the installer to make sure it works as expected.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows" >how to code sign a Windows application&lt;/a>&lt;/li>
+&lt;li>Recently, we explained
+&lt;a class="link" href="../go-test-execution-time" >how to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
+&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >Go benchmarks&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-create-an-exe-installer">&lt;a href="#watch-how-to-create-an-exe-installer" class="header-anchor">&lt;/a>Watch how to create an EXE installer
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/1YeRYIhWqtA"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
 &lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
@@ -175,6 +242,7 @@ performance data for your Go test suite.&lt;/p>
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>&lt;/li>
+&lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately">&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor">&lt;/a>Watch how to measure the execution time of Go tests accurately
 &lt;/h2>&lt;div class="video-wrapper">
@@ -3726,7 +3794,9 @@ title="YouTube Video"
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
 &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
 &lt;/div></description></item><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" />&lt;h2 id="what-is-code-signing">&lt;a href="#what-is-code-signing" class="header-anchor">&lt;/a>What is code signing?
-&lt;/h2>&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate the authenticity and integrity of the code.&lt;/p>
+&lt;/h2>&lt;p>Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee
+that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate
+the authenticity and integrity of the code.&lt;/p>
 &lt;h2 id="the-benefits-of-code-signing">&lt;a href="#the-benefits-of-code-signing" class="header-anchor">&lt;/a>The benefits of code signing
 &lt;/h2>&lt;p>Code signing provides several benefits:&lt;/p>
 &lt;ul>
@@ -3739,17 +3809,22 @@ title="YouTube Video"
 &lt;h2 id="code-signing-process-for-windows">&lt;a href="#code-signing-process-for-windows" class="header-anchor">&lt;/a>Code signing process for Windows
 &lt;/h2>&lt;p>The code signing process for Windows involves the following steps:&lt;/p>
 &lt;ul>
-&lt;li>&lt;strong>Obtain a code signing certificate&lt;/strong>: Purchase a code signing certificate from a trusted certificate authority (CA) or use a self-signed certificate.&lt;/li>
+&lt;li>&lt;strong>Obtain a code signing certificate&lt;/strong>: Purchase a code signing certificate from a trusted certificate authority (CA)
+or use a self-signed certificate.&lt;/li>
 &lt;li>&lt;strong>Sign the code&lt;/strong>: Use a code signing tool to sign the code with the code signing certificate.&lt;/li>
-&lt;li>&lt;strong>Timestamp the signature&lt;/strong>: Timestamp the signature to make sure that the signature remains valid even after the certificate expires.&lt;/li>
+&lt;li>&lt;strong>Timestamp the signature&lt;/strong>: Timestamp the signature to make sure that the signature remains valid even after the
+certificate expires.&lt;/li>
 &lt;li>&lt;strong>Distribute the signed code&lt;/strong>: Distribute the signed code to users.&lt;/li>
 &lt;li>&lt;strong>Verify the signature&lt;/strong>: Users can verify the signature to confirm the software&amp;rsquo;s authenticity.&lt;/li>
 &lt;/ul>
 &lt;h2 id="obtaining-a-code-signing-certificate">&lt;a href="#obtaining-a-code-signing-certificate" class="header-anchor">&lt;/a>Obtaining a code signing certificate
-&lt;/h2>&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
+&lt;/h2>&lt;p>In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For
+public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p>
 &lt;p>We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
->OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular open-source library for TLS and SSL protocols.&lt;/p>
-&lt;p>The following script generates the certificate and key needed for code signing. It also generates a certificate authority (CA) and signs the code signing certificate with the CA.&lt;/p>
+>OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular
+open-source library for TLS and SSL protocols.&lt;/p>
+&lt;p>The following script generates the certificate and key needed for code signing. It also generates a certificate
+authority (CA) and signs the code signing certificate with the CA.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># -e: Immediately exit if any command has a non-zero exit status.&lt;/span>
@@ -3773,14 +3848,17 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/sign.req
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="building-the-application">&lt;a href="#building-the-application" class="header-anchor">&lt;/a>Building the application
-&lt;/h2>&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile the application with:&lt;/p>
+&lt;/h2>&lt;p>We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile
+the application with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>export GOOS&lt;span style="color:#f92672">=&lt;/span>windows
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export GOARCH&lt;span style="color:#f92672">=&lt;/span>amd64
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go build ./hello-world.go
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The Go build process generates the &lt;code>hello-world.exe&lt;/code> Windows executable.&lt;/p>
 &lt;h2 id="signing-and-timestamping-the-code">&lt;a href="#signing-and-timestamping-the-code" class="header-anchor">&lt;/a>Signing and timestamping the code
 &lt;/h2>&lt;p>To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
->osslsigncode&lt;/a>, an open-source code signing tool that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code>signtool,&lt;/code> &lt;code>osslsigncode&lt;/code> is cross-platform and can be used on Linux and macOS.&lt;/p>
+>osslsigncode&lt;/a>, an open-source code signing tool
+that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code>signtool,&lt;/code> &lt;code>osslsigncode&lt;/code> is cross-platform and can
+be used on Linux and macOS.&lt;/p>
 &lt;p>To sign the code, we use the following script:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
@@ -3818,33 +3896,47 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>osslsigncode sign -certs &lt;span style="color:#e6db74">&amp;#34;./certs/sign.crt&amp;#34;&lt;/span> -key &lt;span style="color:#e6db74">&amp;#34;./certs/sign.key&amp;#34;&lt;/span> -n &lt;span style="color:#e6db74">&amp;#34;Hello Windows code signing&amp;#34;&lt;/span> -i &lt;span style="color:#e6db74">&amp;#34;https://victoronsoftware.com/&amp;#34;&lt;/span> -t &lt;span style="color:#e6db74">&amp;#34;http://timestamp.comodoca.com/authenticode&amp;#34;&lt;/span> -in &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$orig_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span> -out &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$input_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$orig_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition to signing the code, we timestamp the signature using the Comodo server. Timestamping makes sure the signature remains valid even after the certificate expires or is invalidated.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In addition to signing the code, we timestamp the signature using the Comodo server. Timestamping makes sure the
+signature remains valid even after the certificate expires or is invalidated.&lt;/p>
 &lt;p>We can use &lt;code>osslsigncode&lt;/code> to verify the signature:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/usr/bin/env bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>input_file&lt;span style="color:#f92672">=&lt;/span>$1
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>osslsigncode verify -CAfile ./certs/ca.crt &lt;span style="color:#e6db74">&amp;#34;&lt;/span>$input_file&lt;span style="color:#e6db74">&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="distributing-and-manually-verifying-the-signed-code">&lt;a href="#distributing-and-manually-verifying-the-signed-code" class="header-anchor">&lt;/a>Distributing and manually verifying the signed code
-&lt;/h2>&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then view the certificate details and verify that the signature is valid.&lt;/p>
-&lt;p>However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted. Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root certificate store.&lt;/p>
+&lt;/h2>&lt;p>After signing the code, we can distribute the signed executable to users. Users can manually verify the signature by
+right-clicking the executable, selecting &amp;ldquo;Properties,&amp;rdquo; and navigating to the &amp;ldquo;Digital Signatures&amp;rdquo; tab. The user can then
+view the certificate details and verify that the signature is valid.&lt;/p>
+&lt;p>However, since we are using the self-signed certificate, users will see a warning that the certificate is not trusted.
+Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
+certificate store.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
 alt="Certificate in code signature cannot be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature cannot be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>We can add the certificate authority to the Windows trusted root certificate store with the following Powershell command:&lt;/p>
+&lt;p>We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
+command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-powershell" data-lang="powershell">&lt;span style="display:flex;">&lt;span>Import-Certificate -FilePath &lt;span style="color:#e6db74">&amp;#34;certs\ca.crt&amp;#34;&lt;/span> -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span>\LocalMachine\Root
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After adding the certificate authority to the trusted root certificate store, users will see that the certificate is trusted and the signature is valid.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
+trusted and the signature is valid.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
 alt="Certificate in code signature is be verified">&lt;figcaption>
 &lt;h4>Certificate in code signature is be verified&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca">&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor">&lt;/a>Code signing using a certificate from a public CA
-&lt;/h2>&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud HSM vendor or a private pipeline runner with an HSM.&lt;/p>
+&lt;/h2>&lt;p>To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards
+require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent
+unauthorized access. This security requirement means certificates for code signing in CI/CD pipelines must use a cloud
+HSM vendor or a private pipeline runner with an HSM.&lt;/p>
 &lt;p>In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
 >https://github.com/getvictor/code-sign-windows&lt;/a>&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../exe-installer" >how to create an EXE installer&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="code-signing-a-windows-application-video">&lt;a href="#code-signing-a-windows-application-video" class="header-anchor">&lt;/a>Code signing a Windows application video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
