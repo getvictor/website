@@ -59,7 +59,8 @@ duplicates.&lt;/p>
 &lt;/code>&lt;/pre>&lt;p>At this point, we can do additional processing, such as excluding some code owners.&lt;/p>
 &lt;p>By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >top 3 issues with GitHub code review process&lt;/a>.&lt;/p>
+&lt;p>We also wrote about &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
 &lt;p>Previously, we explained
 &lt;a class="link" href="../github-reusable-workflows-and-steps" >how to create reusable workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request">&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor">&lt;/a>Watch how to find the minimum required code owners for a pull request
@@ -325,7 +326,8 @@ other commits are eliminated.&lt;/p>
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we explained
+&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >why GitHub code review process is broken for our organization&lt;/a>.&lt;/p>
+&lt;p>Previously, we explained
 &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
 &lt;/h2>&lt;div class="video-wrapper">

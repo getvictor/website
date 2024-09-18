@@ -1,4 +1,106 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitHub on Victor on Software</title><link>https://victoronsoftware.com/tags/github/</link><description>Recent content in GitHub on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 15 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/github/index.xml" rel="self" type="application/rss+xml"/><item><title>Top 3 issues with GitHub code review process</title><link>https://victoronsoftware.com/posts/github-code-review-issues/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-code-review-issues/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/developer-on-tightrope-headline.png" alt="Featured image of post Top 3 issues with GitHub code review process" />&lt;ul>
+&lt;li>&lt;a class="link" href="#issue-1-codeowners-is-not-scalable" >CODEOWNERS is not scalable&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#issue-2-re-approvals-for-every-push" >Re-approvals for every push&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#issue-3-impractical-to-maintain-a-protected-feature-branch" >Impractical for protected feature branches&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Our team has been using GitHub to review the code for our open-source product. We have encountered several issues with
+GitHub code reviews. The default GitHub code review process is not scalable and provides a poor developer experience.&lt;/p>
+&lt;h2 id="how-to-set-up-a-github-code-review-process">&lt;a href="#how-to-set-up-a-github-code-review-process" class="header-anchor">&lt;/a>How to set up a GitHub code review process
+&lt;/h2>&lt;p>GitHub admins can create a
+&lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
+>branch protection rule&lt;/a>
+that requires a code review before merging the code to the main branch.&lt;/p>
+&lt;p>Here&amp;rsquo;s a representative branch protection rule:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
+alt="Branch protection rule requiring code review before merging">&lt;figcaption>
+&lt;h4>PR branch protection rule&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
+&lt;code>CODEOWNERS&lt;/code> file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p>
+&lt;p>In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the required code owners for a PR&lt;/a>.
+This is another issue, but we will not discuss it in this article.&lt;/p>
+&lt;h2 id="issue-1-codeowners-is-not-scalable">&lt;a href="#issue-1-codeowners-is-not-scalable" class="header-anchor">&lt;/a>Issue 1: CODEOWNERS is not scalable
+&lt;/h2>&lt;p>GitHub uses a
+&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+>&lt;code>CODEOWNERS&lt;/code> file to define individuals or teams responsible for each file in the repository&lt;/a>.&lt;/p>
+&lt;p>The &lt;code>CODEOWNERS&lt;/code> file format favors fine-grained code ownership, where the last matching pattern takes precedence over
+previous patterns. Here is an example from the GitHub documentation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span># In this example, @octocat owns any file in the `/apps`
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># directory in the root of your repository except for the `/apps/github`
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># subdirectory, as this subdirectory has its own owner @doctocat
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/ @octocat
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @doctocat
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CODEOWNERS&lt;/code> file is not scalable for medium-to-large and even small organizations. As the number of code owners
+grows, each pull request is likely to require approval from more code owners. Each code owner may request changes,
+potentially leading to cycles and cycles of re-approvals.&lt;/p>
+&lt;p>Tracking down multiple people to approve and re-approve a PR can be time-consuming and frustrating for developers. This
+results in longer PR turnaround times, slower development velocity, and missed commitments.&lt;/p>
+&lt;p>From a developer experience perspective, we want to make the code review process as smooth and efficient as possible,
+which means one reviewer for one PR. This approach is feasible by manually inverting the
+&lt;code>last matching pattern takes precedence&lt;/code> rule in the &lt;code>CODEOWNERS&lt;/code> file by always including the owner(s) from the
+previous pattern. For example, we would rewrite the above owners as:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>/apps/ @octocat
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @octocat @doctocat
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Keeping the &lt;code>CODEOWNERS&lt;/code> file in this format may be cumbersome to do manually, but it can be done with a script.&lt;/p>
+&lt;h2 id="issue-2-re-approvals-for-every-push">&lt;a href="#issue-2-re-approvals-for-every-push" class="header-anchor">&lt;/a>Issue 2: Re-approvals for every push
+&lt;/h2>&lt;p>When a developer makes a new push to a PR, all the code owners need to re-approve it. This is a poor developer
+experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p>
+&lt;p>The issue stems from the lack of fine-grained control over the following option:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
+alt="Dismiss stale pull request approvals when new commits are pushed">
+&lt;/figure>
+&lt;p>With multiple code owners, every code owner must re-approve every change.&lt;/p>
+&lt;p>A code owner should not need to re-review code that didn&amp;rsquo;t change &amp;ndash; this is a waste of time and effort.&lt;/p>
+&lt;p>With a single code owner, the reviewer must re-approve trivial or irrelevant changes, such as:&lt;/p>
+&lt;ul>
+&lt;li>fixing a typo in a comment&lt;/li>
+&lt;li>fully accepting a suggestion from the reviewer&lt;/li>
+&lt;li>re-generating an auto-generated file, such as documentation&lt;/li>
+&lt;/ul>
+&lt;p>The required re-approvals can be frustrating and time-consuming for developers and code owners. They make developers
+feel untrusted and inefficient.&lt;/p>
+&lt;p>The main argument for requiring re-approvals is security—we don&amp;rsquo;t want to merge potentially malicious code. If that&amp;rsquo;s
+the case, we should have a security review process in place, not a code review process. A security review can be done by
+a separate individual and improved by automated tools.&lt;/p>
+&lt;p>In addition, we should be able to completely exclude some files/directories from the code review process. For example,
+generated files, such as documentation based on code changes, should not require code review. Other generated files,
+such as testing mocks, may have CI/CD checks that ensure they are generated correctly, and they should not require code
+review either.&lt;/p>
+&lt;h2 id="issue-3-impractical-to-maintain-a-protected-feature-branch">&lt;a href="#issue-3-impractical-to-maintain-a-protected-feature-branch" class="header-anchor">&lt;/a>Issue 3: Impractical to maintain a protected feature branch
+&lt;/h2>&lt;p>A protected feature branch requires code reviews before merging. Since all the commits on the feature branch have
+already been reviewed and approved, it is considered safe to merge into the main branch.&lt;/p>
+&lt;p>The main issue is that the developer cannot simply update this feature branch with the latest changes on the main
+branch. They need PR approval from all the code owners who have already approved the same changes on the main branch.
+This busy work is another example of a waste of time and effort.&lt;/p>
+&lt;p>In addition, a feature branch may be long-lived and introduce changes across multiple areas of the code base. This means
+that it may require approval from many code owners, which can be time-consuming and frustrating.&lt;/p>
+&lt;h2 id="solution-custom-github-action-to-manage-code-reviews">&lt;a href="#solution-custom-github-action-to-manage-code-reviews" class="header-anchor">&lt;/a>Solution: Custom GitHub Action to manage code reviews
+&lt;/h2>&lt;p>Instead of relying on the default GitHub code review process, we can create a custom GitHub Action to manage code
+reviews. The custom GitHub Action can:&lt;/p>
+&lt;ul>
+&lt;li>automatically identify a single reviewer for a PR (or identify a small group of reviewers, each of whom can approve
+the PR)&lt;/li>
+&lt;li>automatically exclude specific files/directories from the code review process&lt;/li>
+&lt;li>automatically maintain the approval state of the PR when new commits meeting explicit criteria are pushed&lt;/li>
+&lt;li>enable a usable and practical protected feature branch&lt;/li>
+&lt;/ul>
+&lt;p>In a future article, we will explore how to create a custom GitHub Action to manage code reviews.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../git-merges-and-pull-requests" >How git merge works with PRs&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps" >How to reuse GitHub workflows and steps&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-the-top-3-issues-with-github-code-reviews">&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor">&lt;/a>Watch the top 3 issues with GitHub code reviews
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/RWnJ84vTK48"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" />&lt;ul>
 &lt;li>&lt;a class="link" href="#find-code-owners-from-command-line" >Find code owners from the command line&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-are-github-code-owners">&lt;a href="#what-are-github-code-owners" class="header-anchor">&lt;/a>What are GitHub code owners?
@@ -59,7 +161,8 @@ duplicates.&lt;/p>
 &lt;/code>&lt;/pre>&lt;p>At this point, we can do additional processing, such as excluding some code owners.&lt;/p>
 &lt;p>By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >top 3 issues with GitHub code review process&lt;/a>.&lt;/p>
+&lt;p>We also wrote about &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
 &lt;p>Previously, we explained
 &lt;a class="link" href="../github-reusable-workflows-and-steps" >how to create reusable workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request">&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor">&lt;/a>Watch how to find the minimum required code owners for a pull request
@@ -325,7 +428,8 @@ other commits are eliminated.&lt;/p>
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
 branch.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we explained
+&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >why GitHub code review process is broken for our organization&lt;/a>.&lt;/p>
+&lt;p>Previously, we explained
 &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
 &lt;/h2>&lt;div class="video-wrapper">
@@ -530,6 +634,7 @@ work that may run on the same runner and share the same work area.&lt;/p>
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
 &lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
 &lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../github-code-review-issues" >Is GitHub code review process broken in your company?&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;em>git merge&lt;/em> and GitHub pull requests explained&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../find-code-owners-for-pull-request" >Finding the minimum required code owner approvers for pull request&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >Use GitHub actions for general-purpose tasks&lt;/a>&lt;/li>
