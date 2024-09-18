@@ -345,7 +345,9 @@ branch.
 
 ## Further reading
 
-Recently, we explained
+Recently, we covered [why GitHub code review process is broken for our organization](../github-code-review-issues).
+
+Previously, we explained
 [how to find the minimum required code owner approvers for a pull request](../find-code-owners-for-pull-request).
 
 ## Watch how git merge works with GitHub pull requests

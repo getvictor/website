@@ -220,6 +220,7 @@ The example code is available on GitHub at: https://github.com/getvictor/github-
 
 ## Other articles related to GitHub
 
+- [Is GitHub code review process broken in your company?](../github-code-review-issues)
 - [_git merge_ and GitHub pull requests explained](../git-merges-and-pull-requests/)
 - [Finding the minimum required code owner approvers for pull request](../find-code-owners-for-pull-request)
 - [Use GitHub actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/)

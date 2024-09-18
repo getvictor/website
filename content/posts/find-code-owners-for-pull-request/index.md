@@ -85,7 +85,9 @@ By visually inspecting the output, we can determine the minimum set of code owne
 
 ## Further reading
 
-Recently, we wrote [how merges work with GitHub pull requests](../git-merges-and-pull-requests).
+Recently, we covered [top 3 issues with GitHub code review process](../github-code-review-issues).
+
+We also wrote about [how merges work with GitHub pull requests](../git-merges-and-pull-requests).
 
 Previously, we explained
 [how to create reusable workflows and steps in GitHub Actions](../github-reusable-workflows-and-steps).
