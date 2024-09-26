@@ -127,6 +127,7 @@ In a future article, we will explore how to create a custom GitHub Action to man
 
 - [How git merge works with PRs](../git-merges-and-pull-requests)
 - [How to reuse GitHub workflows and steps](../github-reusable-workflows-and-steps)
+- [Set up a remote dev environment](../remote-development-environment)
 
 ## Watch the top 3 issues with GitHub code reviews
 

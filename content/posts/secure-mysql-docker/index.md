@@ -150,7 +150,9 @@ MySQL in a Zero Trust environment:
 
 ## Further reading
 
-Recently, we wrote [how to use STDIN to read your program arguments](../get-args-from-stdin).
+Recently, we wrote about [setting up a remote development environment](../remote-development-environment).
+
+We also explained [how to use STDIN to read your program arguments](../get-args-from-stdin).
 
 We've previously written about [MySQL master-slave replication](../mysql-master-slave-replication). You can use MySQL
 replication to create a high-availability setup for your MySQL databases.
