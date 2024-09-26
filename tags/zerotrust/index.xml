@@ -105,7 +105,8 @@ MySQL in a Zero Trust environment:&lt;/p>
 &lt;li>Limiting access to specific IPs &amp;ndash; we can add a server firewall to restrict access to the MySQL port&lt;/li>
 &lt;/ul>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../get-args-from-stdin" >how to use STDIN to read your program arguments&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we wrote about &lt;a class="link" href="../remote-development-environment" >setting up a remote development environment&lt;/a>.&lt;/p>
+&lt;p>We also explained &lt;a class="link" href="../get-args-from-stdin" >how to use STDIN to read your program arguments&lt;/a>.&lt;/p>
 &lt;p>We&amp;rsquo;ve previously written about &lt;a class="link" href="../mysql-master-slave-replication" >MySQL master-slave replication&lt;/a>. You can use MySQL
 replication to create a high-availability setup for your MySQL databases.&lt;/p>
 &lt;h2 id="watch-how-to-secure-a-mysql-docker-container-for-zero-trust">&lt;a href="#watch-how-to-secure-a-mysql-docker-container-for-zero-trust" class="header-anchor">&lt;/a>Watch how to secure a MySQL Docker container for Zero Trust

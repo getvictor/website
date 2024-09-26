@@ -1,4 +1,126 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 15 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Top 3 issues with GitHub code review process</title><link>https://victoronsoftware.com/posts/github-code-review-issues/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-code-review-issues/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/developer-on-tightrope-headline.png" alt="Featured image of post Top 3 issues with GitHub code review process" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 22 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to set up a remote development environment</title><link>https://victoronsoftware.com/posts/remote-development-environment/</link><pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/remote-development-environment/</guid><description>&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/remote-dev-environment-headline.png" alt="Featured image of post How to set up a remote development environment" />&lt;h1 id="why-set-up-a-remote-development-environment">&lt;a href="#why-set-up-a-remote-development-environment" class="header-anchor">&lt;/a>Why set up a remote development environment?
+&lt;/h1>&lt;p>A remote development environment can be beneficial for several reasons:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Offload processing power&lt;/strong>: Your local machine may not have enough processing power to run resource-intensive tasks.
+By using a remote development environment, you can use more powerful hardware.&lt;/li>
+&lt;li>&lt;strong>Consistent environment&lt;/strong>: A remote development environment ensures all team members can work in the same
+environment, reducing configuration issues and ensuring consistent behavior across different machines. For example,
+developers may be using a mix of macOS, Windows, and Linux machines, which can lead to differences in behavior due to
+operating system-specific issues.&lt;/li>
+&lt;li>&lt;strong>Multiple environments&lt;/strong>: You can set up multiple environments for different projects or tasks without cluttering
+your local machine.&lt;/li>
+&lt;li>&lt;strong>Access from anywhere&lt;/strong>: A remote development environment allows you to access your work from any device with an
+internet connection.&lt;/li>
+&lt;li>&lt;strong>Collaboration&lt;/strong>: You can easily collaborate with team members by sharing the same development environment. For
+example, after coding a feature, the developer can hand off the environment to another engineer for review or QA.&lt;/li>
+&lt;li>&lt;strong>Security&lt;/strong>: Keeping your code and development environment on a remote server reduces the risk of data loss in case
+of local hardware failure or theft.&lt;/li>
+&lt;li>&lt;strong>Scalability&lt;/strong>: You can quickly scale your development environment up or down based on your needs without affecting
+your local machine.&lt;/li>
+&lt;li>&lt;strong>Cost-effective&lt;/strong>: A remote development environment can be more cost-effective than purchasing and maintaining
+high-end hardware for your local machine.&lt;/li>
+&lt;/ul>
+&lt;h1 id="setting-up-a-remote-development-environment">&lt;a href="#setting-up-a-remote-development-environment" class="header-anchor">&lt;/a>Setting up a remote development environment
+&lt;/h1>&lt;p>For our development example, we will use a standalone server application connected to a database and a Redis cache. The
+application uses a monolith repo with a frontend and a backend codebase.&lt;/p>
+&lt;h2 id="choose-a-cloud-provider">&lt;a href="#choose-a-cloud-provider" class="header-anchor">&lt;/a>Choose a cloud provider
+&lt;/h2>&lt;p>We used a &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
+>Digital Ocean&lt;/a> VM with 8GB of RAM, 4 CPUs, and a 160 GB disk, running Ubuntu
+24.04 LTS for our remote development environment. We found that Digital Ocean provides VMs that are generally cheaper
+than other cloud providers.&lt;/p>
+&lt;p>Any other cloud provider, such as AWS, Google Cloud, or Azure, can also be used. Your choice of provider depends on your
+specific requirements, budget, and familiarity with the platform.&lt;/p>
+&lt;p>After spinning up the VM, we SSH&amp;rsquo;ed into the server, installed the necessary software for our application, and launched
+the server.&lt;/p>
+&lt;p>Since our server required multiple running processes, we used &lt;a class="link" href="https://github.com/tmux/tmux" target="_blank" rel="noopener"
+>tmux&lt;/a> to manage multiple
+terminal sessions. Tmux allowed us to create numerous panes and windows within a single terminal session, making it
+easier to manage the server processes. We could disconnect from the server, and the tmux processes ran in the
+background. When reconnected to the server, we could easily reattach to the tmux session and resume work. Additionally,
+we used &lt;a class="link" href="https://iterm2.com/documentation-tmux-integration.html" target="_blank" rel="noopener"
+>iTerm2 tmux integration&lt;/a> to enhance our terminal
+experience.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/tmux-on-remote-server.png"
+alt="4 open windows with running processes">&lt;figcaption>
+&lt;h4>tmux running on remote dev server&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="connect-your-ide-to-the-remote-development-environment">&lt;a href="#connect-your-ide-to-the-remote-development-environment" class="header-anchor">&lt;/a>Connect your IDE to the remote development environment
+&lt;/h2>&lt;p>We used &lt;a class="link" href="https://www.jetbrains.com/" target="_blank" rel="noopener"
+>JetBrains IDE&lt;/a> for development work and
+&lt;a class="link" href="https://www.jetbrains.com/remote-development/gateway/" target="_blank" rel="noopener"
+>JetBrains Gateway&lt;/a> to connect to our remote development server
+using SSH. JetBrains Gateway automatically installed the IDE backend on the remote server and brought up a local client
+of the IDE.&lt;/p>
+&lt;p>In our case, we wanted to use one IDE for backend development (GoLand) and another IDE for frontend development
+(WebStorm).&lt;/p>
+&lt;p>We had trouble starting them up and could not run both IDEs simultaneously. Either one or both of them would disconnect
+from the remote development server without an obvious way to fix the issue. We suspect the issue was due to insufficient
+memory on the machine &amp;ndash; try to plan for around 4 GB of memory per IDE.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/jetbrains-disconnect.png"
+alt="No Connection message in GoLand IDE">
+&lt;/figure>
+&lt;p>However, we could use one of the IDEs at a time, which was sufficient for most of our needs.&lt;/p>
+&lt;h1 id="using-a-remote-development-environment">&lt;a href="#using-a-remote-development-environment" class="header-anchor">&lt;/a>Using a remote development environment
+&lt;/h1>&lt;p>After setting up the remote development environment, we reviewed common development use cases to ensure that everything
+was working as expected.&lt;/p>
+&lt;h2 id="make-a-code-change-and-restart-the-application-server">&lt;a href="#make-a-code-change-and-restart-the-application-server" class="header-anchor">&lt;/a>Make a code change and restart the application server
+&lt;/h2>&lt;p>We made a simple code change in the backend service, saved the file, and restarted the application server. We verified
+that the change was reflected in the application.&lt;/p>
+&lt;p>The compile time was slower than on our local machine, likely due to the remote server&amp;rsquo;s lower CPU count and total RAM
+compared to our local machine.&lt;/p>
+&lt;h2 id="run-unit-tests">&lt;a href="#run-unit-tests" class="header-anchor">&lt;/a>Run unit tests
+&lt;/h2>&lt;p>We ran the unit tests for the backend service. The tests passed successfully.&lt;/p>
+&lt;h2 id="connect-to-the-database-and-redis-cache">&lt;a href="#connect-to-the-database-and-redis-cache" class="header-anchor">&lt;/a>Connect to the database and Redis cache
+&lt;/h2>&lt;p>From our local development machine, we connected to the development server&amp;rsquo;s database and Redis cache to verify that the
+services were running correctly.&lt;/p>
+&lt;h2 id="reconnecting-to-remote-development-environment">&lt;a href="#reconnecting-to-remote-development-environment" class="header-anchor">&lt;/a>Reconnecting to remote development environment
+&lt;/h2>&lt;p>After opening up our local computer the next day, we found that the JetBrains Gateway and the IDE has disconnected from
+the remote server. Refreshing the Gateway re-established the connection, and the IDE also showed as connected within 60
+seconds or so.&lt;/p>
+&lt;h1 id="security-considerations">&lt;a href="#security-considerations" class="header-anchor">&lt;/a>Security considerations
+&lt;/h1>&lt;p>When setting up a remote development environment, consider the following security best practices:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>SSH key authentication&lt;/strong>: For secure access to the remote server, use SSH key authentication instead of passwords.&lt;/li>
+&lt;li>&lt;strong>Firewall rules&lt;/strong>: Configure firewall rules to restrict access to the server to only necessary IP addresses.&lt;/li>
+&lt;li>&lt;strong>Secure connections&lt;/strong>: Use HTTPS for web applications and encrypted connections for database access.&lt;/li>
+&lt;li>&lt;strong>Data encryption&lt;/strong>: Encrypt sensitive data at rest and in transit. Always encrypt sensitive data in the database.&lt;/li>
+&lt;/ul>
+&lt;h2 id="docker-firewall-rules">&lt;a href="#docker-firewall-rules" class="header-anchor">&lt;/a>Docker firewall rules
+&lt;/h2>&lt;p>Docker containers use &lt;code>iptables&lt;/code> rules to open ports for incoming traffic. We can
+&lt;a class="link" href="https://docs.docker.com/engine/network/packet-filtering-firewalls/#restrict-external-connections-to-containers" target="_blank" rel="noopener"
+>restrict external connections to containers&lt;/a>
+by adding rules to the &lt;code>DOCKER-USER&lt;/code> chain, such as:&lt;/p>
+&lt;pre tabindex="0">&lt;code>iptables -I DOCKER-USER -i eth0 ! -s &amp;lt;your local IP&amp;gt; -j DROP
+&lt;/code>&lt;/pre>&lt;p>Where &lt;code>eth0&lt;/code> is the network interface connected to the internet and &lt;code>&amp;lt;your local IP&amp;gt;&lt;/code> is the IP address of your local
+machine. This rule blocks all incoming traffic to Docker from the internet except for your local IP.&lt;/p>
+&lt;p>After setting up and testing your rules, you can persist them across restarts with the &lt;code>iptables-persistent&lt;/code> package or
+other methods.&lt;/p>
+&lt;h1 id="overall-impressions">&lt;a href="#overall-impressions" class="header-anchor">&lt;/a>Overall impressions
+&lt;/h1>&lt;p>After using the remote development environment for a few days, we found it usable but not as smooth as working on a
+local machine. For our use case, it is an excellent option for a secondary development environment or for working on a
+resource-intensive feature.&lt;/p>
+&lt;p>Some issues we encountered included:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Latency&lt;/strong>: Occasionally, clicking on an element or using a keyboard shortcut had a noticeable delay.&lt;/li>
+&lt;li>&lt;strong>Missing features&lt;/strong>: Some features, such as only searching inside text strings, were not available in the remote
+development environment.&lt;/li>
+&lt;li>&lt;strong>Issues with plugins&lt;/strong>: GitHub Copilot did not work out of the box; it did not provide suggestions in the editor. We
+did not drill down to the issue, but a potential workaround is to use JetBrains&amp;rsquo;s code assistant plugin.&lt;/li>
+&lt;/ul>
+&lt;h1 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h1>&lt;p>We recently explained &lt;a class="link" href="../secure-mysql-docker" >how to secure a MySQL Docker container for Zero Trust&lt;/a>.&lt;/p>
+&lt;p>We also discussed &lt;a class="link" href="../github-code-review-issues" >the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/p>
+&lt;h1 id="watch-how-to-set-up-a-remote-development-environment">&lt;a href="#watch-how-to-set-up-a-remote-development-environment" class="header-anchor">&lt;/a>Watch how to set up a remote development environment
+&lt;/h1>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/_VDtA9Tq-1E"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Top 3 issues with GitHub code review process</title><link>https://victoronsoftware.com/posts/github-code-review-issues/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-code-review-issues/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/developer-on-tightrope-headline.png" alt="Featured image of post Top 3 issues with GitHub code review process" />&lt;ul>
 &lt;li>&lt;a class="link" href="#issue-1-codeowners-is-not-scalable" >CODEOWNERS is not scalable&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#issue-2-re-approvals-for-every-push" >Re-approvals for every push&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#issue-3-impractical-to-maintain-a-protected-feature-branch" >Impractical for protected feature branches&lt;/a>&lt;/li>
@@ -90,6 +212,7 @@ the PR)&lt;/li>
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests" >How git merge works with PRs&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps" >How to reuse GitHub workflows and steps&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../remote-development-environment" >Set up a remote dev environment&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-the-top-3-issues-with-github-code-reviews">&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor">&lt;/a>Watch the top 3 issues with GitHub code reviews
 &lt;/h2>&lt;div class="video-wrapper">
@@ -598,7 +721,8 @@ MySQL in a Zero Trust environment:&lt;/p>
 &lt;li>Limiting access to specific IPs &amp;ndash; we can add a server firewall to restrict access to the MySQL port&lt;/li>
 &lt;/ul>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we wrote &lt;a class="link" href="../get-args-from-stdin" >how to use STDIN to read your program arguments&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we wrote about &lt;a class="link" href="../remote-development-environment" >setting up a remote development environment&lt;/a>.&lt;/p>
+&lt;p>We also explained &lt;a class="link" href="../get-args-from-stdin" >how to use STDIN to read your program arguments&lt;/a>.&lt;/p>
 &lt;p>We&amp;rsquo;ve previously written about &lt;a class="link" href="../mysql-master-slave-replication" >MySQL master-slave replication&lt;/a>. You can use MySQL
 replication to create a high-availability setup for your MySQL databases.&lt;/p>
 &lt;h2 id="watch-how-to-secure-a-mysql-docker-container-for-zero-trust">&lt;a href="#watch-how-to-secure-a-mysql-docker-container-for-zero-trust" class="header-anchor">&lt;/a>Watch how to secure a MySQL Docker container for Zero Trust
