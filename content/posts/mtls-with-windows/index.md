@@ -9,6 +9,7 @@ draft = false
 +++
 
 _This article is part of a series on [mTLS](../mtls). Check out the previous articles:_
+
 - [mTLS Hello World](../mtls-hello-world)
 - [mTLS with macOS keychain](../mtls-with-apple-keychain)
 - [mTLS Go client](../mtls-go-client)
@@ -22,6 +23,7 @@ In our previous articles, we introduced mTLS and demonstrated how to use mTLS cl
 The Windows certificate store is a secure location to store certificates and keys. Many applications, such as Edge and Powershell use it. The Windows certificate store is an excellent place to store mTLS client certificates and keys.
 
 The Windows certificate stores have two types:
+
 - User certificate store: Certificates and keys are stored for the current user, local to a user account.
 - Local machine certificate store: Certificates and keys are stored for all users on the computer.
 
@@ -70,6 +72,7 @@ DNS.2 = myhost
 We can access the server using either `localhost` or `myhost` names.
 
 The above script generates the following files:
+
 - `certs/server-ca.crt`: Server CA certificate
 - `certs/server-ca.key`: Server CA private key
 - `certs/client-ca.crt`: Client CA certificate
@@ -128,6 +131,7 @@ Get-ChildItem -Path Cert:\CurrentUser\My | Where-Object{$_.Subject -match 'testC
 ## Running the mTLS server
 
 We will use the same `docker-compose.yml` file from the [mTLS Hello World](../mtls-hello-world) article. The `docker-compose.yml` file starts two nginx servers:
+
 - https://<your_host>:8888 for TLS
 - https://<your_host>:8889 for mTLS
 
@@ -146,6 +150,7 @@ Invoke-WebRequest -Uri https://myhost:8888/hello-world.txt
 ```
 
 Result:
+
 ```plaintext
 StatusCode        : 200
 StatusDescription : OK
@@ -175,6 +180,7 @@ Invoke-WebRequest -Uri https://myhost:8889/hello-world.txt
 ```
 
 The client attempted the TLS handshake, but the server rejected the connection because the client did not provide a certificate. Result:
+
 ```plaintext
 Invoke-WebRequest : 400 Bad Request
 No required SSL certificate was sent
@@ -193,6 +199,7 @@ Invoke-WebRequest -Uri https://myhost:8889/hello-world.txt -CertificateThumbprin
 ```
 
 Result:
+
 ```plaintext
 StatusCode        : 200
 StatusDescription : OK
@@ -237,8 +244,12 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 In the following article, we will [create a custom Windows mTLS client using the Windows certificate store](../mtls-go-client-windows-certificate-store).
 
+## Further reading
+
+Recently, we wrote an article on [testing a Windows NDES SCEP server](../test-ndes-scep-server).
+
 ## mTLS with Windows certificate store video
 
 {{< youtube GuubP7vir1g >}}
 
-*Note:* If you want to comment on this article, please do so on the YouTube video.
+_Note:_ If you want to comment on this article, please do so on the YouTube video.

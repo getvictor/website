@@ -182,7 +182,9 @@ The example code is available on GitHub at https://github.com/getvictor/code-sig
 
 ## Further reading
 
-- Recently, we explained [how to create an EXE installer](../exe-installer).
+Recently, we explained [how to create an EXE installer](../exe-installer).
+
+We also discussed [how to test a Windows NDES SCEP server](../test-ndes-scep-server).
 
 ## Code signing a Windows application video
 
