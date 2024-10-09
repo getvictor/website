@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "race-cars-headline.png"
 date = 2024-08-28
 categories = ["Software Development"]
-tags = ["Golang", "Performance"]
+tags = ["Golang", "Performance", "JSON"]
 draft = false
 +++
 
@@ -168,8 +168,10 @@ The complete code is available on GitHub at: https://github.com/getvictor/go-ben
 
 ## Further reading
 
-- Recently, we wrote about [accurately measuring Go test execution time](../go-test-execution-time).
-- Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go).
+- Recently, we wrote about [accurately measuring Go test execution time](../go-test-execution-time/).
+- In addition, we discussed how to
+  [use Go to accurately unmashal JSON payloads with null, set, and missing fields](../go-json-unmarshal/).
+- Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go/).
 
 ## Watch how to benchmark Go serializers
 
