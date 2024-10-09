@@ -1,4 +1,210 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Golang on Victor on Software</title><link>https://victoronsoftware.com/tags/golang/</link><description>Recent content in Golang on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Golang on Victor on Software</title><link>https://victoronsoftware.com/tags/golang/</link><description>Recent content in Golang on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/golang/index.xml" rel="self" type="application/rss+xml"/><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" />&lt;h2 id="json-unmarshalling-use-cases">&lt;a href="#json-unmarshalling-use-cases" class="header-anchor">&lt;/a>JSON unmarshalling use cases
+&lt;/h2>&lt;p>When passing a JSON payload to a Go application, you may encounter situations where you must tell the difference between
+set, missing, or null fields.&lt;/p>
+&lt;p>For example, consider the following JSON payload:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Alice&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;age&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">30&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;address&amp;#34;&lt;/span>: {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;street&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;123 Main St&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;city&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Springfield&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can unmarshal this JSON payload using JSON tags and the following Go structs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Street&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;street&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">City&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;city&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we will not be able to tell the difference between these two JSON payloads:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: null }&lt;/code>&lt;/li>
+&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: &amp;quot;&amp;quot; }&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>Go&amp;rsquo;s zero values are not distinguishable from missing fields when unmarshalling JSON.&lt;/p>
+&lt;p>We can change the above struct to use pointers to identify null fields:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we will still not be able to tell the difference between these two JSON payloads:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: null }&lt;/code>&lt;/li>
+&lt;li>&lt;code>{ }&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>Both of these payloads will unmarshal into a &lt;code>Person&lt;/code> struct with all fields set to &lt;code>nil&lt;/code>, and we cannot distinguish
+between a missing field and a field set to &lt;code>null&lt;/code>.&lt;/p>
+&lt;p>One reason to distinguish between missing and null fields is to avoid overwriting existing values with &lt;code>null&lt;/code> values.
+For example, when &lt;code>name&lt;/code> is not specified in the JSON payload, we may want to keep the existing name value in the
+&lt;code>Person&lt;/code> struct. But we may want to clear the name when &lt;code>name&lt;/code> is defined as &lt;code>null&lt;/code>.&lt;/p>
+&lt;h2 id="detecting-null-set-and-missing-json-fields-with-go">&lt;a href="#detecting-null-set-and-missing-json-fields-with-go" class="header-anchor">&lt;/a>Detecting null, set, and missing JSON fields with Go
+&lt;/h2>&lt;p>We can use custom unmarshalling logic by implementing the &lt;a class="link" href="https://pkg.go.dev/encoding/json#Unmarshaler" target="_blank" rel="noopener"
+>Unmarshaler&lt;/a>
+interface to detect the difference between null and missing fields. The &lt;code>UnmarshalJSON&lt;/code> method allows us to inspect the
+JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that &lt;code>UnmarshalJSON&lt;/code> is only
+called when the field is present in the JSON payload. So, we can mark a &lt;code>Set&lt;/code> flag as &lt;code>true&lt;/code> when the field is present
+and &lt;code>false&lt;/code> when it is not.&lt;/p>
+&lt;p>Here is an example implementation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span> &lt;span style="color:#a6e22e">any&lt;/span>] &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Set&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Valid&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Value&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// MarshalJSON implements the json.Marshaler interface.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Only Value is marshaled, and only if Valid is true.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">MarshalJSON&lt;/span>() ([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>), &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Marshal&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// UnmarshalJSON implements the json.Unmarshaler interface.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Set is always set to true, even if the JSON data was set to null.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Valid is set if the JSON data is not set to null.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">UnmarshalJSON&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Set&lt;/span> = &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> = &lt;span style="color:#66d9ef">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Equal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>)) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key was set to null, set value to zero/default value
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">zero&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span> = &lt;span style="color:#a6e22e">zero&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key isn&amp;#39;t set to null
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">v&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">v&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span> = &lt;span style="color:#a6e22e">v&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> = &lt;span style="color:#66d9ef">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We used a generic type &lt;code>T&lt;/code> to allow &lt;code>Any&lt;/code> to work with any type. The &lt;code>Valid&lt;/code> flag distinguishes between &lt;code>nil&lt;/code> and
+&lt;code>non-nil&lt;/code> values. The &lt;code>Set&lt;/code> flag is set to &lt;code>true&lt;/code> only when the field is present in the JSON payload.&lt;/p>
+&lt;p>Here is how we can use the &lt;code>Any&lt;/code> type in a &lt;code>Person&lt;/code> struct:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">string&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">int&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">Address&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="testing-the-custom-unmarshalling-logic">&lt;a href="#testing-the-custom-unmarshalling-logic" class="header-anchor">&lt;/a>Testing the custom unmarshalling logic
+&lt;/h2>&lt;p>The following example demonstrates how the &lt;code>Any&lt;/code> type works:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Form&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Config&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Form&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">Form&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;form&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Member&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">bool&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;member&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tests&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">description&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">JSON&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Nothing set&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set all fields&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only member field, and leave form fields unchanged&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;member&amp;#34;: true}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only the form field, and leave the member field unchanged&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Leave all fields unchanged&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Clear all fields&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only form field&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">c&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">Config&lt;/span>{}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">tests&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;\nTest: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">description&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>([]byte(&lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">JSON&lt;/span>), &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">c&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Input: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">JSON&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%+v\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">c&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Marshal&lt;/span>(&lt;span style="color:#a6e22e">c&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Output: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">data&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The test output will show how the &lt;code>Any&lt;/code> type behaves when unmarshalling JSON payloads with different fields set,
+missing, or set to &lt;code>null&lt;/code>.&lt;/p>
+&lt;pre tabindex="0">&lt;code>Test: Nothing set
+Input: {}
+{Form:{Set:false Valid:false Value:{Name: Age:0}} Member:{Set:false Valid:false Value:false}}
+Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+Test: Set all fields
+Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}
+{Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:false}}
+Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:false}
+Test: Set only member field, and leave form fields unchanged
+Input: {&amp;#34;member&amp;#34;: true}
+{Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:true}}
+Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:true}
+Test: Set only the form field, and leave the member field unchanged
+Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}
+{Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
+Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+Test: Leave all fields unchanged
+Input: {}
+{Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
+Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+Test: Clear all fields
+Input: {&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}
+{Form:{Set:true Valid:false Value:{Name: Age:0}} Member:{Set:true Valid:false Value:false}}
+Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+Test: Set only form field
+Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}
+{Form:{Set:true Valid:true Value:{Name:Chris Age:35}} Member:{Set:true Valid:false Value:false}}
+Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,&amp;#34;age&amp;#34;:35},&amp;#34;member&amp;#34;:null}
+&lt;/code>&lt;/pre>&lt;h2 id="complete-code-on-go-playground">&lt;a href="#complete-code-on-go-playground" class="header-anchor">&lt;/a>Complete code on Go Playground
+&lt;/h2>&lt;p>The complete &lt;a class="link" href="https://go.dev/play/p/AXxgO20M0kI" target="_blank" rel="noopener"
+>Go code for unmarshalling JSON null, set, and missing fields&lt;/a> is
+available on the Go Playground.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we published an article on
+&lt;a class="link" href="../optimizing-performance-of-go-app/" >how to optimize the performance of a Go application&lt;/a>. We benchmarked JSON
+decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
+>gob&lt;/a> decoding in that article.&lt;/p>
+&lt;p>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is more
+secure than using environment variables or command-line arguments.&lt;/p>
+&lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately">&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor">&lt;/a>Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/yHhk5wGNxk4"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
 &lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
@@ -310,8 +516,10 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 >https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../go-test-execution-time" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
-&lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go" >creating fuzz tests in Go&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
+&lt;li>In addition, we discussed how to
+&lt;a class="link" href="../go-json-unmarshal/" >use Go to accurately unmashal JSON payloads with null, set, and missing fields&lt;/a>.&lt;/li>
+&lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go/" >creating fuzz tests in Go&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
 &lt;/h2>&lt;div class="video-wrapper">
@@ -323,32 +531,24 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" />&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments">&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor">&lt;/a>STDIN is more secure than environment variables or command-line arguments
-&lt;/h2>&lt;p>When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code>ps&lt;/code> command. Allowing
-others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p>
-&lt;p>Environment variables are also visible to anyone who can run the &lt;code>ps&lt;/code> command. They are also globally visible to the
-program, so any arbitrary code in your application can extract the environment variables.&lt;/p>
+&lt;/h2>&lt;p>When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code>ps&lt;/code> command. Allowing others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p>
+&lt;p>Environment variables are also visible to anyone who can run the &lt;code>ps&lt;/code> command. They are also globally visible to the program, so any arbitrary code in your application can extract the environment variables.&lt;/p>
 &lt;p>To get the environment variables of a process, run &lt;code>ps eww &amp;lt;PID&amp;gt;&lt;/code>. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>$ ps eww &lt;span style="color:#ae81ff">1710&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> PID TTY STAT TIME COMMAND
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">1710&lt;/span> pts/0 Ss+ 0:00 bash SYSTEMD_EXEC_PID&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1209&lt;/span> SSH_AUTH_SOCK&lt;span style="color:#f92672">=&lt;/span>/run/user/1000/keyring/ssh SESSION_MANAGER&lt;span style="color:#f92672">=&lt;/span>local/victor-ubuntu:@/tmp/.ICE-unix/1176,unix/victor-ubuntu:/tmp/.ICE-unix/1176 GNOME_TERMINAL_SCREEN&lt;span style="color:#f92672">=&lt;/span>/org/gnome/Terminal/screen/ab0b9d6a_a699_4bc5_bb53_628be016afa5 LANG&lt;span style="color:#f92672">=&lt;/span>en_US.UTF-8 XDG_CURRENT_DESKTOP&lt;span style="color:#f92672">=&lt;/span>ubuntu:GNOME PWD&lt;span style="color:#f92672">=&lt;/span>/home/victor WAYLAND_DISPLAY&lt;span style="color:#f92672">=&lt;/span>wayland-0 DISPLAY&lt;span style="color:#f92672">=&lt;/span>:0 QT_IM_MODULE&lt;span style="color:#f92672">=&lt;/span>ibus USER&lt;span style="color:#f92672">=&lt;/span>victor DESKTOP_SESSION&lt;span style="color:#f92672">=&lt;/span>ubuntu XDG_MENU_PREFIX&lt;span style="color:#f92672">=&lt;/span>gnome- HOME&lt;span style="color:#f92672">=&lt;/span>/home/victor DBUS_SESSION_BUS_ADDRESS&lt;span style="color:#f92672">=&lt;/span>unix:path&lt;span style="color:#f92672">=&lt;/span>/run/user/1000/bus SSH_AGENT_LAUNCHER&lt;span style="color:#f92672">=&lt;/span>gnome-keyring _&lt;span style="color:#f92672">=&lt;/span>/usr/bin/gnome-session XDG_CONFIG_DIRS&lt;span style="color:#f92672">=&lt;/span>/etc/xdg/xdg-ubuntu:/etc/xdg VTE_VERSION&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">6800&lt;/span> XDG_SESSION_DESKTOP&lt;span style="color:#f92672">=&lt;/span>ubuntu QT_ACCESSIBILITY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span> GNOME_DESKTOP_SESSION_ID&lt;span style="color:#f92672">=&lt;/span>this-is-deprecated GNOME_SETUP_DISPLAY&lt;span style="color:#f92672">=&lt;/span>:1 GTK_MODULES&lt;span style="color:#f92672">=&lt;/span>gail:atk-bridge LOGNAME&lt;span style="color:#f92672">=&lt;/span>victor GNOME_TERMINAL_SERVICE&lt;span style="color:#f92672">=&lt;/span>:1.83 GNOME_SHELL_SESSION_MODE&lt;span style="color:#f92672">=&lt;/span>ubuntu XDG_RUNTIME_DIR&lt;span style="color:#f92672">=&lt;/span>/run/user/1000 XMODIFIERS&lt;span style="color:#f92672">=&lt;/span>@im&lt;span style="color:#f92672">=&lt;/span>ibus SHELL&lt;span style="color:#f92672">=&lt;/span>/bin/bash XDG_SESSION_TYPE&lt;span style="color:#f92672">=&lt;/span>wayland PATH&lt;span style="color:#f92672">=&lt;/span>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin USERNAME&lt;span style="color:#f92672">=&lt;/span>victor COLORTERM&lt;span style="color:#f92672">=&lt;/span>truecolor XAUTHORITY&lt;span style="color:#f92672">=&lt;/span>/run/user/1000/.mutter-Xwaylandauth.R816R2 XDG_DATA_DIRS&lt;span style="color:#f92672">=&lt;/span>/usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop IM_CONFIG_PHASE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span> TERM&lt;span style="color:#f92672">=&lt;/span>xterm-256color GDMSESSION&lt;span style="color:#f92672">=&lt;/span>ubuntu XDG_SESSION_CLASS&lt;span style="color:#f92672">=&lt;/span>user
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>STDIN is more secure because it is not visible to the &lt;code>ps&lt;/code> command and is not globally visible to the program. Thus,
-only the parts of the program that explicitly read from STDIN can access this data.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>STDIN is more secure because it is not visible to the &lt;code>ps&lt;/code> command and is not globally visible to the program. Thus, only the parts of the program that explicitly read from STDIN can access this data.&lt;/p>
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go">&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor">&lt;/a>How to read program arguments from STDIN with Go
-&lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to
-read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the
-&lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
->github.com/kballard/go-shellquote&lt;/a> library and append it to any existing
-command-line arguments.&lt;/p>
+&lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
+>github.com/kballard/go-shellquote&lt;/a> library and append it to any existing command-line arguments.&lt;/p>
 &lt;script src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
 &lt;h2 id="how-to-integrate-with-a-secret-manager">&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor">&lt;/a>How to integrate with a secret manager
-&lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like
-&lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
->1Password&lt;/a>. Then, you can read the secret from the secret
-manager and pass it to the program via STDIN. For example:&lt;/p>
+&lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
+>1Password&lt;/a>. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p>
 &lt;pre tabindex="0">&lt;code>echo --secret $(op read op://employee/example_server/secret) | go run read-args-from-stdin.go
 &lt;/code>&lt;/pre>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Previously, we wrote
-&lt;a class="link" href="../catch-missed-authorization-checks-during-software-development" >how we catch missed authorization checks in our Go application&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we discussed how to &lt;a class="link" href="../go-json-unmarshal/" >unmarshal JSON payloads with null, set, and missing keys using Go&lt;/a>.&lt;/p>
+&lt;p>Previously, we wrote &lt;a class="link" href="../catch-missed-authorization-checks-during-software-development" >how we catch missed authorization checks in our Go application&lt;/a>.&lt;/p>
 &lt;h2 id="watch-how-to-read-program-arguments-from-stdin">&lt;a href="#watch-how-to-read-program-arguments-from-stdin" class="header-anchor">&lt;/a>Watch how to read program arguments from STDIN
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
