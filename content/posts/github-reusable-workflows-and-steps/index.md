@@ -205,6 +205,9 @@ A successful run of the main workflow with reusable steps looks like this on Git
 
 {{< figure src="GitHub Actions composite action success.png" alt="GitHub Actions composite action success" title="GitHub Actions composite action success" >}}
 
+For a reusable TypeScript action example, see the
+[How to create a custom GitHub Action using TypeScript](../typescript-github-action/) article.
+
 ## Conclusion
 
 Reusable workflows and steps are powerful tools for improving the maintainability, consistency, and productivity of your

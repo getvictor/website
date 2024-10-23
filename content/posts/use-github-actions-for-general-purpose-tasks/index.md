@@ -59,5 +59,6 @@ careful with process-intensive actions.
 
 - [How to reuse workflows and steps in GitHub Actions](../github-reusable-workflows-and-steps/)
 - [What happens in a GitHub pull request after a `git merge`](../git-merges-and-pull-requests/)
+- [How to create a custom GitHub Action using TypeScript](../typescript-github-action/)
 
 _Note:_ If you want to comment on this article, please do so on the YouTube video.

@@ -121,7 +121,7 @@ reviews. The custom GitHub Action can:
 - automatically maintain the approval state of the PR when new commits meeting explicit criteria are pushed
 - enable a usable and practical protected feature branch
 
-In a future article, we will explore how to create a custom GitHub Action to manage code reviews.
+Here is an example [GitHub Action to replace GitHub's pull request review process](../typescript-github-action/).
 
 ## Further reading
 
