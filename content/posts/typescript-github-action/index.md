@@ -18,7 +18,7 @@ We will create a simple GitHub Action to replace
 [GitHub's broken Pull Request review process](../github-code-review-issues/). This custom GitHub Action will
 automatically approve Pull Requests that meet specific criteria.
 
-# Start with GitHub's Action template
+## Start with GitHub's Action template
 
 GitHub provides a
 [template for creating a new GitHub Action using TypeScript](https://github.com/actions/typescript-action). You can use
@@ -46,7 +46,7 @@ node --version
 **Note:** Our example is based on
 [this commit of the template repository](https://github.com/actions/typescript-action/tree/0467e124e81b527a246cabdaef9c3b433febf9a8).
 
-# Implement your custom GitHub Action
+## Implement your custom GitHub Action
 
 Install the template's dependencies with `npm install`. In addition, install the `@actions/github` package with
 `npm install @actions/github`.
@@ -140,7 +140,7 @@ export async function run(): Promise<void> {
 We read the `REVIEWERS` file to get the required reviewer for the PR. We then retrieve all the reviews for the pull
 request and check if the needed reviewer has approved the PR. If the reviewer has not approved the PR, we fail the run.
 
-# Build your custom GitHub Action
+## Build your custom GitHub Action
 
 To build your action, run `npm run bundle`. This will compile the TypeScript code in the `src/` directory and output the
 JavaScript code in the `dist/` directory. The exact command for `bundle` is defined in the `package.json` file.
@@ -158,9 +158,9 @@ Now, commit your changes and push them to your repository.
 **Note:** We will not cover testing in this article, but you should add tests to the `__tests__/` directory for your
 source code. For this example, we must refactor the code to make it more testable.
 
-# Test your custom GitHub Action in another repository
+## Test your custom GitHub Action in another repository
 
-## Add workflows and REVIEWERS file
+### Add workflows and REVIEWERS file
 
 You can use the `uses` keyword in a workflow file to try your action in another repository. Create a new workflow file
 in the repository's `.github/workflows/` directory where you want to test your action. For example:
@@ -221,14 +221,14 @@ jobs:
           check-names: 'Code review'
 ```
 
-## Configure a GitHub rule to require code review
+### Configure a GitHub rule to require code review
 
 Create a branch protection rule in the repository settings that requires the above `Code review` workflow to pass in a
 PR before merging to your default branch.
 
 {{< figure src="github-code-review-rule.png" alt="Require a pull request before merging. Require the Code review status check to pass." >}}
 
-## Create a pull request
+### Create a pull request
 
 Commit your changes to a new branch and create a pull request. The `Code review` workflow should run automatically and
 show the Failed status.
@@ -236,7 +236,7 @@ show the Failed status.
 Once the required reviewer approves the PR, the `Rerun checks after review` workflow will run and trigger the
 `Code review` workflow. The rerun should pass, and you should be able to merge the PR.
 
-# Clean up your custom GitHub Action repo
+## Clean up your custom GitHub Action repo
 
 As an optional step, you can clean up your custom GitHub Action repository:
 
@@ -244,7 +244,7 @@ As an optional step, you can clean up your custom GitHub Action repository:
 - Remove the `src/wait.ts` file and associated tests
 - Update workflows in the `.github/workflows/` directory
 
-# Further reading
+## Further reading
 
 In a previous article, we described
 [what happens in a GitHub pull request after a `git merge`](../git-merges-and-pull-requests/).
@@ -252,11 +252,11 @@ In a previous article, we described
 In another article, we covered
 [how to use GitHub Actions for general-purpose tasks](../use-github-actions-for-general-purpose-tasks/).
 
-# Example code on GitHub
+## Example code on GitHub
 
 The code for our simple GitHub Action is available on GitHub: https://github.com/getvictor/code-review-demo
 
-# Watch how to create a custom GitHub Action using TypeScript
+## Watch how to create a custom GitHub Action using TypeScript
 
 {{< youtube NFIwPxz5La8 >}}
 
