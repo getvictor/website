@@ -5,8 +5,8 @@ to suit your specific needs.&lt;/p>
 &lt;p>We will create a simple GitHub Action to replace
 &lt;a class="link" href="../github-code-review-issues/" >GitHub&amp;rsquo;s broken Pull Request review process&lt;/a>. This custom GitHub Action will
 automatically approve Pull Requests that meet specific criteria.&lt;/p>
-&lt;h1 id="start-with-githubs-action-template">&lt;a href="#start-with-githubs-action-template" class="header-anchor">&lt;/a>Start with GitHub&amp;rsquo;s Action template
-&lt;/h1>&lt;p>GitHub provides a
+&lt;h2 id="start-with-githubs-action-template">&lt;a href="#start-with-githubs-action-template" class="header-anchor">&lt;/a>Start with GitHub&amp;rsquo;s Action template
+&lt;/h2>&lt;p>GitHub provides a
 &lt;a class="link" href="https://github.com/actions/typescript-action" target="_blank" rel="noopener"
 >template for creating a new GitHub Action using TypeScript&lt;/a>. You can use
 this template to get started quickly. The template includes the necessary files and structure to create a new GitHub
@@ -29,8 +29,8 @@ you can run:&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Note:&lt;/strong> Our example is based on
 &lt;a class="link" href="https://github.com/actions/typescript-action/tree/0467e124e81b527a246cabdaef9c3b433febf9a8" target="_blank" rel="noopener"
 >this commit of the template repository&lt;/a>.&lt;/p>
-&lt;h1 id="implement-your-custom-github-action">&lt;a href="#implement-your-custom-github-action" class="header-anchor">&lt;/a>Implement your custom GitHub Action
-&lt;/h1>&lt;p>Install the template&amp;rsquo;s dependencies with &lt;code>npm install&lt;/code>. In addition, install the &lt;code>@actions/github&lt;/code> package with
+&lt;h2 id="implement-your-custom-github-action">&lt;a href="#implement-your-custom-github-action" class="header-anchor">&lt;/a>Implement your custom GitHub Action
+&lt;/h2>&lt;p>Install the template&amp;rsquo;s dependencies with &lt;code>npm install&lt;/code>. In addition, install the &lt;code>@actions/github&lt;/code> package with
 &lt;code>npm install @actions/github&lt;/code>.&lt;/p>
 &lt;p>The template provides a basic structure for your GitHub Action. Update the &lt;code>action.yml&lt;/code> file with your action&amp;rsquo;s name,
 description, author, and updated inputs/outputs.&lt;/p>
@@ -111,8 +111,8 @@ description, author, and updated inputs/outputs.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We read the &lt;code>REVIEWERS&lt;/code> file to get the required reviewer for the PR. We then retrieve all the reviews for the pull
 request and check if the needed reviewer has approved the PR. If the reviewer has not approved the PR, we fail the run.&lt;/p>
-&lt;h1 id="build-your-custom-github-action">&lt;a href="#build-your-custom-github-action" class="header-anchor">&lt;/a>Build your custom GitHub Action
-&lt;/h1>&lt;p>To build your action, run &lt;code>npm run bundle&lt;/code>. This will compile the TypeScript code in the &lt;code>src/&lt;/code> directory and output the
+&lt;h2 id="build-your-custom-github-action">&lt;a href="#build-your-custom-github-action" class="header-anchor">&lt;/a>Build your custom GitHub Action
+&lt;/h2>&lt;p>To build your action, run &lt;code>npm run bundle&lt;/code>. This will compile the TypeScript code in the &lt;code>src/&lt;/code> directory and output the
 JavaScript code in the &lt;code>dist/&lt;/code> directory. The exact command for &lt;code>bundle&lt;/code> is defined in the &lt;code>package.json&lt;/code> file.&lt;/p>
 &lt;p>The &lt;code>bundle&lt;/code> step is required before you can test your action locally or use it in a workflow because the &lt;code>action.yml&lt;/code>
 file points at the &lt;code>dist/index.js&lt;/code> bundled version of your code.&lt;/p>
@@ -124,9 +124,9 @@ up-to-date, or rely on the &lt;code>Check Transpiled Javascript&lt;/code> workfl
 &lt;p>Now, commit your changes and push them to your repository.&lt;/p>
 &lt;p>&lt;strong>Note:&lt;/strong> We will not cover testing in this article, but you should add tests to the &lt;code>__tests__/&lt;/code> directory for your
 source code. For this example, we must refactor the code to make it more testable.&lt;/p>
-&lt;h1 id="test-your-custom-github-action-in-another-repository">&lt;a href="#test-your-custom-github-action-in-another-repository" class="header-anchor">&lt;/a>Test your custom GitHub Action in another repository
-&lt;/h1>&lt;h2 id="add-workflows-and-reviewers-file">&lt;a href="#add-workflows-and-reviewers-file" class="header-anchor">&lt;/a>Add workflows and REVIEWERS file
-&lt;/h2>&lt;p>You can use the &lt;code>uses&lt;/code> keyword in a workflow file to try your action in another repository. Create a new workflow file
+&lt;h2 id="test-your-custom-github-action-in-another-repository">&lt;a href="#test-your-custom-github-action-in-another-repository" class="header-anchor">&lt;/a>Test your custom GitHub Action in another repository
+&lt;/h2>&lt;h3 id="add-workflows-and-reviewers-file">&lt;a href="#add-workflows-and-reviewers-file" class="header-anchor">&lt;/a>Add workflows and REVIEWERS file
+&lt;/h3>&lt;p>You can use the &lt;code>uses&lt;/code> keyword in a workflow file to try your action in another repository. Create a new workflow file
 in the repository&amp;rsquo;s &lt;code>.github/workflows/&lt;/code> directory where you want to test your action. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Code review&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -175,34 +175,34 @@ workflow run to fix this.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">github-token&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">check-names&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;Code review&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="configure-a-github-rule-to-require-code-review">&lt;a href="#configure-a-github-rule-to-require-code-review" class="header-anchor">&lt;/a>Configure a GitHub rule to require code review
-&lt;/h2>&lt;p>Create a branch protection rule in the repository settings that requires the above &lt;code>Code review&lt;/code> workflow to pass in a
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="configure-a-github-rule-to-require-code-review">&lt;a href="#configure-a-github-rule-to-require-code-review" class="header-anchor">&lt;/a>Configure a GitHub rule to require code review
+&lt;/h3>&lt;p>Create a branch protection rule in the repository settings that requires the above &lt;code>Code review&lt;/code> workflow to pass in a
 PR before merging to your default branch.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
 alt="Require a pull request before merging. Require the Code review status check to pass.">
 &lt;/figure>
-&lt;h2 id="create-a-pull-request">&lt;a href="#create-a-pull-request" class="header-anchor">&lt;/a>Create a pull request
-&lt;/h2>&lt;p>Commit your changes to a new branch and create a pull request. The &lt;code>Code review&lt;/code> workflow should run automatically and
+&lt;h3 id="create-a-pull-request">&lt;a href="#create-a-pull-request" class="header-anchor">&lt;/a>Create a pull request
+&lt;/h3>&lt;p>Commit your changes to a new branch and create a pull request. The &lt;code>Code review&lt;/code> workflow should run automatically and
 show the Failed status.&lt;/p>
 &lt;p>Once the required reviewer approves the PR, the &lt;code>Rerun checks after review&lt;/code> workflow will run and trigger the
 &lt;code>Code review&lt;/code> workflow. The rerun should pass, and you should be able to merge the PR.&lt;/p>
-&lt;h1 id="clean-up-your-custom-github-action-repo">&lt;a href="#clean-up-your-custom-github-action-repo" class="header-anchor">&lt;/a>Clean up your custom GitHub Action repo
-&lt;/h1>&lt;p>As an optional step, you can clean up your custom GitHub Action repository:&lt;/p>
+&lt;h2 id="clean-up-your-custom-github-action-repo">&lt;a href="#clean-up-your-custom-github-action-repo" class="header-anchor">&lt;/a>Clean up your custom GitHub Action repo
+&lt;/h2>&lt;p>As an optional step, you can clean up your custom GitHub Action repository:&lt;/p>
 &lt;ul>
 &lt;li>Update README.md with instructions on how to use your new action&lt;/li>
 &lt;li>Remove the &lt;code>src/wait.ts&lt;/code> file and associated tests&lt;/li>
 &lt;li>Update workflows in the &lt;code>.github/workflows/&lt;/code> directory&lt;/li>
 &lt;/ul>
-&lt;h1 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h1>&lt;p>In a previous article, we described
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>In a previous article, we described
 &lt;a class="link" href="../git-merges-and-pull-requests/" >what happens in a GitHub pull request after a &lt;code>git merge&lt;/code>&lt;/a>.&lt;/p>
 &lt;p>In another article, we covered
 &lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" >how to use GitHub Actions for general-purpose tasks&lt;/a>.&lt;/p>
-&lt;h1 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
-&lt;/h1>&lt;p>The code for our simple GitHub Action is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/code-review-demo" target="_blank" rel="noopener"
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>The code for our simple GitHub Action is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/code-review-demo" target="_blank" rel="noopener"
 >https://github.com/getvictor/code-review-demo&lt;/a>&lt;/p>
-&lt;h1 id="watch-how-to-create-a-custom-github-action-using-typescript">&lt;a href="#watch-how-to-create-a-custom-github-action-using-typescript" class="header-anchor">&lt;/a>Watch how to create a custom GitHub Action using TypeScript
-&lt;/h1>&lt;div class="video-wrapper">
+&lt;h2 id="watch-how-to-create-a-custom-github-action-using-typescript">&lt;a href="#watch-how-to-create-a-custom-github-action-using-typescript" class="header-anchor">&lt;/a>Watch how to create a custom GitHub Action using TypeScript
+&lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/NFIwPxz5La8"
 allowfullscreen
