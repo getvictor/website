@@ -168,8 +168,13 @@ The complete code is available on GitHub at: https://github.com/getvictor/go-ben
 
 ## Further reading
 
+Beyond benchmarking, you can step up your performance game with
+[OpenTelemetry and Jaeger](../opentelemetry-with-jaeger/).
+
+In addition:
+
 - Recently, we wrote about [accurately measuring Go test execution time](../go-test-execution-time/).
-- In addition, we discussed how to
+- We discussed how to
   [use Go to accurately unmashal JSON payloads with null, set, and missing fields](../go-json-unmarshal/).
 - Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go/).
 
