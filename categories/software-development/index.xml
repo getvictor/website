@@ -1,4 +1,165 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" />&lt;h2 id="json-unmarshalling-use-cases">&lt;a href="#json-unmarshalling-use-cases" class="header-anchor">&lt;/a>JSON unmarshalling use cases
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 30 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Is OpenTelemetry userful for the average software developer?</title><link>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/opentelemetry-with-jaeger-headline.png" alt="Featured image of post Is OpenTelemetry userful for the average software developer?" />&lt;p>This article discusses our first impressions of using OpenTelemetry with Jaeger.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#use-cases-for-opentelemetry-and-jaeger" >Use cases for OpenTelemetry and Jaeger&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#problems-with-opentelemetry-and-jaeger" >Problems with OpenTelemetry and Jaeger&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-opentelemetry">&lt;a href="#what-is-opentelemetry" class="header-anchor">&lt;/a>What is OpenTelemetry?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
+>OpenTelemetry&lt;/a> is a set of APIs, libraries, agents, and instrumentation for collecting
+distributed traces and metrics from your applications. It provides a standardized way to instrument your code and
+collect telemetry data. OpenTelemetry supports programming languages like Java, Python, Go, JavaScript, etc.&lt;/p>
+&lt;p>Tracing is a method of monitoring and profiling your application to understand how requests flow through your system.
+For example, you can view the associated database calls and requests to other services for a single API request. Tracing
+allows you to identify bottlenecks, latency issues, and other performance problems.&lt;/p>
+&lt;h2 id="what-is-jaeger">&lt;a href="#what-is-jaeger" class="header-anchor">&lt;/a>What is Jaeger?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.jaegertracing.io/" target="_blank" rel="noopener"
+>Jaeger&lt;/a> is an open-source, end-to-end distributed tracing system. Jaeger is popular for
+tracing applications because of its scalability, ease of use, and integration with other tools. Jaeger provides a
+web-based UI for viewing traces and analyzing performance data.&lt;/p>
+&lt;h2 id="add-opentelemetry-instrumentation-to-your-application">&lt;a href="#add-opentelemetry-instrumentation-to-your-application" class="header-anchor">&lt;/a>Add OpenTelemetry instrumentation to your application
+&lt;/h2>&lt;p>To start with OpenTelemetry and Jaeger, you must instrument your application with OpenTelemetry libraries.&lt;/p>
+&lt;p>In our case, we used the OpenTelemetry Go SDK to instrument our Go application. We added the necessary dependencies to
+our project.&lt;/p>
+&lt;pre tabindex="0">&lt;code>go get go.opentelemetry.io/otel@v1.31.0
+go get go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.31.0
+go get go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc@v1.31.0
+go get go.opentelemetry.io/otel/sdk@v1.31.0
+go get go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux@v0.56.0
+go get github.com/XSAM/otelsql@v0.35.0
+&lt;/code>&lt;/pre>&lt;p>The &lt;code>go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux&lt;/code> package is needed to instrument our
+&lt;code>gorilla/mux&lt;/code> HTTP router.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">mux&lt;/span>.&lt;span style="color:#a6e22e">NewRouter&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">Use&lt;/span>(&lt;span style="color:#a6e22e">otelmux&lt;/span>.&lt;span style="color:#a6e22e">Middleware&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;fleet&amp;#34;&lt;/span>))
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>github.com/XSAM/otelsql&lt;/code> package is needed to instrument our SQL database queries.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#a6e22e">semconv&lt;/span> &lt;span style="color:#e6db74">&amp;#34;go.opentelemetry.io/otel/semconv/v1.26.0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">init&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Register&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;mysql&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(&lt;span style="color:#a6e22e">semconv&lt;/span>.&lt;span style="color:#a6e22e">DBSystemMySQL&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanOptions&lt;/span>(&lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">SpanOptions&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// DisableErrSkip ignores driver.ErrSkip errors, which are frequently returned by the MySQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// driver when certain optional methods or paths are not implemented/taken.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// For example, interpolateParams=false (the secure default) will not do a parametrized
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// sql.conn.query directly without preparing it first, causing driver.ErrSkip
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">DisableErrSkip&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.conn.reset_session since it takes ~1us and doesn&amp;#39;t provide useful
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// information
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">OmitConnResetSession&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.rows since it is very quick and typically doesn&amp;#39;t provide useful
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// information beyond what&amp;#39;s already reported by prepare/exec/query
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">OmitRows&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// WithSpanNameFormatter allows us to customize the span name, which is especially useful for SQL
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// queries run outside an HTTPS transaction, which do not belong to a parent span, show up as their
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// own trace, and would otherwise be named &amp;#34;sql.conn.query&amp;#34; or &amp;#34;sql.conn.exec&amp;#34;.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanNameFormatter&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>, &lt;span style="color:#a6e22e">method&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Method&lt;/span>, &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> string(&lt;span style="color:#a6e22e">method&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Append query with extra whitespaces removed
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Join&lt;/span>(&lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Fields&lt;/span>(&lt;span style="color:#a6e22e">query&lt;/span>), &lt;span style="color:#e6db74">&amp;#34; &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">query&lt;/span>) &amp;gt; &lt;span style="color:#ae81ff">100&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">query&lt;/span>[:&lt;span style="color:#ae81ff">100&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> string(&lt;span style="color:#a6e22e">method&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> panic(&lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, use &lt;code>otelTracedDriverName&lt;/code> to open a connection to your database.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">db&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">sql&lt;/span>.&lt;span style="color:#a6e22e">Open&lt;/span>(&lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;user:password@tcp(localhost:3306)/database&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When starting your application, you must create an OpenTelemetry exporter and a trace provider.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">otlptracegrpc&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otlpTraceExporter&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">otlptrace&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#a6e22e">client&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> panic(&lt;span style="color:#e6db74">&amp;#34;Failed to initialize tracing&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">batchSpanProcessor&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">NewBatchSpanProcessor&lt;/span>(&lt;span style="color:#a6e22e">otlpTraceExporter&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tracerProvider&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">NewTracerProvider&lt;/span>(&lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithSpanProcessor&lt;/span>(&lt;span style="color:#a6e22e">batchSpanProcessor&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otel&lt;/span>.&lt;span style="color:#a6e22e">SetTracerProvider&lt;/span>(&lt;span style="color:#a6e22e">tracerProvider&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="launch-jaeger">&lt;a href="#launch-jaeger" class="header-anchor">&lt;/a>Launch Jaeger
+&lt;/h2>&lt;p>To view traces, you need to launch Jaeger. You can run Jaeger locally using Docker. Based on the
+&lt;a class="link" href="https://www.jaegertracing.io/docs/1.62/getting-started/" target="_blank" rel="noopener"
+>Jaeger 1.62 Getting Started guide&lt;/a>, you can run the following
+command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --rm --name jaeger &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -p 16686:16686 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -p 4317:4317 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>jaegertracing/all-in-one:1.62.0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we are only exposing two ports:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>4317&lt;/code> for the Jaeger collector, which receives trace data using OpenTelemetry Protocol (OTLP) over gRPC&lt;/li>
+&lt;li>&lt;code>16686&lt;/code> for the Jaeger UI&lt;/li>
+&lt;/ul>
+&lt;h2 id="launch-your-application">&lt;a href="#launch-your-application" class="header-anchor">&lt;/a>Launch your application
+&lt;/h2>&lt;p>Before starting your application, you must set the OpenTelemetry endpoint to send traces to Jaeger. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>export OTEL_SERVICE_NAME&lt;span style="color:#f92672">=&lt;/span>fleet
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export OTEL_EXPORTER_OTLP_ENDPOINT&lt;span style="color:#f92672">=&lt;/span>http://localhost:4317
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you can start your application.&lt;/p>
+&lt;h2 id="view-traces-in-jaeger">&lt;a href="#view-traces-in-jaeger" class="header-anchor">&lt;/a>View traces in Jaeger
+&lt;/h2>&lt;p>Open your browser and navigate to &lt;a class="link" href="http://localhost:16686" target="_blank" rel="noopener"
+>http://localhost:16686&lt;/a> to view traces in the Jaeger UI.
+Select your &lt;strong>Service&lt;/strong> name and click &lt;strong>Find Traces&lt;/strong>.&lt;/p>
+&lt;p>You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
+example below shows the HTTP request details and multiple SQL queries.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
+alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables.">
+&lt;/figure>
+&lt;h2 id="use-cases-for-opentelemetry-and-jaeger">&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor">&lt;/a>Use cases for OpenTelemetry and Jaeger
+&lt;/h2>&lt;p>In a local software development environment, OpenTelemetry and Jaeger can be used to:&lt;/p>
+&lt;ul>
+&lt;li>Fix bottlenecks and latency issues&lt;/li>
+&lt;li>Understand how requests flow through your system&lt;/li>
+&lt;/ul>
+&lt;p>If a bottleneck is known or suspected, Jaeger can help you identify the root cause. For example, you can see which
+database queries are taking the most time and optimize them.&lt;/p>
+&lt;p>When developing new features, Jaeger can help you understand how requests flow through your system. This telemetry data
+provides a quick check to ensure your new feature works as expected.&lt;/p>
+&lt;p>In a production environment, OpenTelemetry and Jaeger can be used to:&lt;/p>
+&lt;ul>
+&lt;li>Monitor and profile your applications&lt;/li>
+&lt;li>Troubleshoot performance issues&lt;/li>
+&lt;li>Optimize your applications and improve user experience&lt;/li>
+&lt;li>Ensure your applications meet service level objectives (SLOs)&lt;/li>
+&lt;/ul>
+&lt;h2 id="problems-with-opentelemetry-and-jaeger">&lt;a href="#problems-with-opentelemetry-and-jaeger" class="header-anchor">&lt;/a>Problems with OpenTelemetry and Jaeger
+&lt;/h2>&lt;p>OpenTelemetry and Jaeger are powerful tools, yet their development use seems limited to fixing performance bottlenecks.
+They cannot be used for general debugging out of the box since they don&amp;rsquo;t provide enough detail for each specific
+request, such as the request body.&lt;/p>
+&lt;p>In addition, missing spans can be a problem. If your application is not instrumented correctly, you may not see all the
+spans you expect or know about in Jaeger. Our application lacks spans for some API endpoints, Redis transactions,
+outbound HTTP requests, and asynchronous processes. Adding all of these spans requires additional development and QA
+efforts.&lt;/p>
+&lt;p>The Jaeger UI itself is basic and lacks some features. For example, regex search is missing out of the box, unless
+Elasticsearch/OpenSearch storage is added.&lt;/p>
+&lt;p>Our chosen SQL instrumentation library, &lt;a class="link" href="https://github.com/XSAM/otelsql" target="_blank" rel="noopener"
+>github.com/XSAM/otelsql&lt;/a>, could be better. It
+does not provide a way to trace the transaction lifecycle, and it creates many spans at the root level, clogging the
+Jaeger UI.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >benchmarking the performance of your Go code&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
+>Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a>&lt;/p>
+&lt;h2 id="watch-opentelemetry-with-jaeger-video">&lt;a href="#watch-opentelemetry-with-jaeger-video" class="header-anchor">&lt;/a>Watch OpenTelemetry with Jaeger video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/eQhdvU2gsmQ"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" />&lt;h2 id="json-unmarshalling-use-cases">&lt;a href="#json-unmarshalling-use-cases" class="header-anchor">&lt;/a>JSON unmarshalling use cases
 &lt;/h2>&lt;p>When passing a JSON payload to a Go application, you may encounter situations where you must tell the difference between
 set, missing, or null fields.&lt;/p>
 &lt;p>For example, consider the following JSON payload:&lt;/p>
@@ -807,9 +968,12 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
 >https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
+&lt;/h2>&lt;p>Beyond benchmarking, you can step up your performance game with
+&lt;a class="link" href="../opentelemetry-with-jaeger/" >OpenTelemetry and Jaeger&lt;/a>.&lt;/p>
+&lt;p>In addition:&lt;/p>
+&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
-&lt;li>In addition, we discussed how to
+&lt;li>We discussed how to
 &lt;a class="link" href="../go-json-unmarshal/" >use Go to accurately unmashal JSON payloads with null, set, and missing fields&lt;/a>.&lt;/li>
 &lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go/" >creating fuzz tests in Go&lt;/a>.&lt;/li>
 &lt;/ul>
