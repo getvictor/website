@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "linting-and-formatting-headline.png"
 date = 2024-06-19
 categories = ["Software Development"]
-tags = ["Chrome Extension", "TypeScript", "DevTools"]
+tags = ["Chrome Extension", "TypeScript", "DevTools", "Linting"]
 draft = false
 +++
 
@@ -316,6 +316,10 @@ For more details, see the [ESLint configure rules](https://eslint.org/docs/lates
 In the next part of this series, we will
 [add an options page to our Chrome extension](../add-options-to-chrome-extension). This page will allow users to
 configure the extension's behavior and settings.
+
+## Further reading
+
+- We recently wrote about [enabling staticcheck linter in a large Go project](../staticcheck-go-linter/)
 
 ## Linting and formatting TypeScript code on GitHub
 
