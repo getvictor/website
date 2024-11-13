@@ -775,10 +775,13 @@ alt="Inno Setup modal asking: Would you like to save the script before compiling
 &lt;p>You can try running the installer to make sure it works as expected.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows" >how to code sign a Windows application&lt;/a>&lt;/li>
-&lt;li>Recently, we explained
-&lt;a class="link" href="../go-test-execution-time" >how to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
-&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >Go benchmarks&lt;/a>&lt;/li>
+&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows/" >how to code sign a Windows application&lt;/a>&lt;/li>
+&lt;li>Recently, we explained &lt;a class="link" href="../script-only-macos-install-package/" >how to create a script-only macOS install package&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="related-go-articles">&lt;a href="#related-go-articles" class="header-anchor">&lt;/a>Related Go articles
+&lt;/h3>&lt;ul>
+&lt;li>&lt;a class="link" href="../go-test-execution-time/" >How to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app/" >Go benchmarks&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-create-an-exe-installer">&lt;a href="#watch-how-to-create-an-exe-installer" class="header-anchor">&lt;/a>Watch how to create an EXE installer
 &lt;/h2>&lt;div class="video-wrapper">

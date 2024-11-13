@@ -1,4 +1,110 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Installer on Victor on Software</title><link>https://victoronsoftware.com/tags/installer/</link><description>Recent content in Installer on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Sep 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/installer/index.xml" rel="self" type="application/rss+xml"/><item><title>How to create an EXE installer for your program</title><link>https://victoronsoftware.com/posts/exe-installer/</link><pubDate>Wed, 11 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/exe-installer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/exe-installer/exe-installer-headline.png" alt="Featured image of post How to create an EXE installer for your program" />&lt;h2 id="msi-versus-exe-installers">&lt;a href="#msi-versus-exe-installers" class="header-anchor">&lt;/a>MSI versus EXE installers
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Installer on Victor on Software</title><link>https://victoronsoftware.com/tags/installer/</link><description>Recent content in Installer on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 13 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/installer/index.xml" rel="self" type="application/rss+xml"/><item><title>2 ways to turn a script into a macOS install package</title><link>https://victoronsoftware.com/posts/script-only-macos-install-package/</link><pubDate>Wed, 13 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/script-only-macos-install-package/</guid><description>&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/script-package-headline.png" alt="Featured image of post 2 ways to turn a script into a macOS install package" />&lt;ul>
+&lt;li>&lt;a class="link" href="#create-a-script-only-install-package-using-the-pkgbuild-command" >Create a script-only install package using the &lt;code>pkgbuild&lt;/code> command&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#create-a-script-only-install-package-using-the-packages-app" >Create a script-only install package using the Packages app&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-a-macos-install-package">&lt;a href="#what-is-a-macos-install-package" class="header-anchor">&lt;/a>What is a macOS install package?
+&lt;/h2>&lt;p>A macOS install package is a file that contains the files and scripts needed to install an application on a macOS
+system. It is commonly used to distribute software to macOS users and can contain multiple files, scripts, and metadata.&lt;/p>
+&lt;h2 id="why-create-a-macos-install-package-that-only-runs-a-script">&lt;a href="#why-create-a-macos-install-package-that-only-runs-a-script" class="header-anchor">&lt;/a>Why create a macOS install package that only runs a script?
+&lt;/h2>&lt;p>Sometimes, you must distribute a script that performs a specific task on a macOS system, such as fixing a known issue.
+You can create a macOS install package that contains the script and any other files needed to run that script. This
+workflow allows you to distribute the script as an install package that users can easily install on their macOS systems.&lt;/p>
+&lt;p>Another reason to create a macOS install package that only runs a script is to use a third-party installer instead of
+the built-in macOS installer. This custom installer can provide additional features and customization options.&lt;/p>
+&lt;h2 id="create-a-script-only-install-package-using-the-pkgbuild-command">&lt;a href="#create-a-script-only-install-package-using-the-pkgbuild-command" class="header-anchor">&lt;/a>Create a script-only install package using the &lt;code>pkgbuild&lt;/code> command
+&lt;/h2>&lt;p>The &lt;code>pkgbuild&lt;/code> command is a command-line tool included with macOS. It allows you to create macOS install packages from
+the command line.&lt;/p>
+&lt;p>First, create a directory for your script files:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mkdir Scripts
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create a script file in the above directory called &lt;code>postinstall&lt;/code> that contains the script you want to run. Below is an
+example script for testing:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># installer script variables:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $0 = path to the script&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $1 = path to the package&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $2 = target location, i.e., /Applications&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $3 = target volume, i.e., /Volumes/Macintosh HD&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># $4 = &amp;#34;/&amp;#34; if this is the startup disk&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir -p /opt/hello
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>target&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;/opt/hello/hello.txt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$0=&lt;/span>$0&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$1=&lt;/span>$1&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$2=&lt;/span>$2&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$3=&lt;/span>$3&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$4=&lt;/span>$4&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$INSTALL_PKG_SESSION_ID=&lt;/span>$INSTALL_PKG_SESSION_ID&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$USER=&lt;/span>$USER&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;\$HOME=&lt;/span>$HOME&lt;span style="color:#e6db74">&amp;#34;&lt;/span> &amp;gt;&amp;gt; $target
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Always succeed&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>exit &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above script creates a directory &lt;code>/opt/hello&lt;/code> and writes various script variables to a file &lt;code>/opt/hello/hello.txt&lt;/code>.&lt;/p>
+&lt;p>Make sure the script is executable:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>chmod +x Scripts/postinstall
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the installation package using the &lt;code>pkgbuild&lt;/code> command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pkgbuild --nopayload --scripts Scripts --identifier com.victoronsoftware.pkgbuild-demo --version 1.0 PkgbuildDemo.pkg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above command creates an install package &lt;code>PkgbuildDemo.pkg&lt;/code>.&lt;/p>
+&lt;p>The &lt;code>--nopayload&lt;/code> flag tells &lt;code>pkgbuild&lt;/code> that there are no application files to include in the package. The &lt;code>--scripts&lt;/code>
+flag specifies the directory containing the scripts to run during the installation. The scripts directory may also
+contain additional files needed by the script.&lt;/p>
+&lt;p>At this point, you can try installing the package on a test macOS system:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo installer -pkg PkgbuildDemo.pkg -target /
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-a-script-only-install-package-using-the-packages-app">&lt;a href="#create-a-script-only-install-package-using-the-packages-app" class="header-anchor">&lt;/a>Create a script-only install package using the Packages app
+&lt;/h2>&lt;p>One popular GUI tool for creating macOS installer packages is the
+&lt;a class="link" href="http://s.sudre.free.fr/Software/Packages/about.html" target="_blank" rel="noopener"
+>Packages app&lt;/a>.&lt;/p>
+&lt;p>Download and install the Packages app.&lt;/p>
+&lt;p>Create a new project in the Packages app using the Raw Package template.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-new-project.png"
+alt="Choose a template for your project. A Raw Package project lets you install files at specific locations.">
+&lt;/figure>
+&lt;p>Choose the name and location of your project.&lt;/p>
+&lt;p>In the Scripts tab, choose a Post-installation script. Add additional script resource files if needed for the script.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-add-script.png"
+alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file.">
+&lt;/figure>
+&lt;p>Save your project with &lt;strong>File &amp;gt; Save&lt;/strong> and build the package with &lt;strong>Build &amp;gt; Build&lt;/strong>.&lt;/p>
+&lt;p>The tool will save the new PKG file to your project directory.&lt;/p>
+&lt;h2 id="analyze-the-install-package">&lt;a href="#analyze-the-install-package" class="header-anchor">&lt;/a>Analyze the install package
+&lt;/h2>&lt;p>To analyze the install package, you can use a tool like
+&lt;a class="link" href="https://www.mothersruin.com/software/SuspiciousPackage/get.html" target="_blank" rel="noopener"
+>Suspicious Package&lt;/a>&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/suspicious-package.png"
+alt="Suspicious Package app showing the contents of the postinstall script.">
+&lt;/figure>
+&lt;h2 id="sign-and-notarize-the-install-package">&lt;a href="#sign-and-notarize-the-install-package" class="header-anchor">&lt;/a>Sign and notarize the install package
+&lt;/h2>&lt;p>Before distributing the package to users, you may need to sign and notarize it.&lt;/p>
+&lt;p>To sign the package, you need a Developer ID Installer certificate. The Apple Developer Program currently costs 99 USD
+per membership year. To sign your package, place the certificate and corresponding private key (together called an
+&amp;ldquo;identity&amp;rdquo;) into your keychain. Then, you can sign the package using the &lt;code>productsign&lt;/code> command-line utility:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>productsign --sign &lt;span style="color:#e6db74">&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span> ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can notarize your package with Apple using the &lt;code>notarytool&lt;/code> command-line utility. For more information, see
+&lt;a class="link" href="https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution?language=objc" target="_blank" rel="noopener"
+>Notarizing macOS software before distribution&lt;/a>.&lt;/p>
+&lt;h2 id="distribute-the-install-package">&lt;a href="#distribute-the-install-package" class="header-anchor">&lt;/a>Distribute the install package
+&lt;/h2>&lt;p>You can distribute the package by posting a download link on your website, through a package manager, or using your MDM
+tool.&lt;/p>
+&lt;p>If you&amp;rsquo;re using a macOS MDM platform such as &lt;a class="link" href="https://fleetdm.com/device-management" target="_blank" rel="noopener"
+>Fleet&lt;/a>, you can upload the package
+to the MDM and deploy it to your managed devices.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>In the past, we showed &lt;a class="link" href="../exe-installer/" >how to create an EXE installer for Windows&lt;/a> and
+&lt;a class="link" href="../code-signing-windows/" >code sign a Windows application&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../mtls-with-apple-keychain/" >using Mutual TLS (mTLS) with macOS keychain&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-create-a-script-only-macos-install-package">&lt;a href="#watch-how-to-create-a-script-only-macos-install-package" class="header-anchor">&lt;/a>Watch how to create a script-only macOS install package
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/_NWQS0Eu74k"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to create an EXE installer for your program</title><link>https://victoronsoftware.com/posts/exe-installer/</link><pubDate>Wed, 11 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/exe-installer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/exe-installer/exe-installer-headline.png" alt="Featured image of post How to create an EXE installer for your program" />&lt;h2 id="msi-versus-exe-installers">&lt;a href="#msi-versus-exe-installers" class="header-anchor">&lt;/a>MSI versus EXE installers
 &lt;/h2>&lt;p>When distributing software for Windows, you have two main options for installers: MSI and EXE. An MSI installer is a
 Windows Installer package that contains installation information and files. It uses the Windows Installer service. On
 the other hand, an EXE installer is a self-extracting executable file containing the installation files and an
@@ -51,10 +157,13 @@ alt="Inno Setup modal asking: Would you like to save the script before compiling
 &lt;p>You can try running the installer to make sure it works as expected.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows" >how to code sign a Windows application&lt;/a>&lt;/li>
-&lt;li>Recently, we explained
-&lt;a class="link" href="../go-test-execution-time" >how to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
-&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >Go benchmarks&lt;/a>&lt;/li>
+&lt;li>In the past, we demonstrated &lt;a class="link" href="../code-signing-windows/" >how to code sign a Windows application&lt;/a>&lt;/li>
+&lt;li>Recently, we explained &lt;a class="link" href="../script-only-macos-install-package/" >how to create a script-only macOS install package&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="related-go-articles">&lt;a href="#related-go-articles" class="header-anchor">&lt;/a>Related Go articles
+&lt;/h3>&lt;ul>
+&lt;li>&lt;a class="link" href="../go-test-execution-time/" >How to measure Go test execution time and derive actionable insights&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app/" >Go benchmarks&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-create-an-exe-installer">&lt;a href="#watch-how-to-create-an-exe-installer" class="header-anchor">&lt;/a>Watch how to create an EXE installer
 &lt;/h2>&lt;div class="video-wrapper">
