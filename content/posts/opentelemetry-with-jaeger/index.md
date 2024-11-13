@@ -1,5 +1,5 @@
 +++
-title = "Is OpenTelemetry userful for the average software developer?"
+title = "Is OpenTelemetry useful for the average software developer?"
 description = "First impressions of OpenTelemetry with Jaeger and use cases for software developers"
 authors = ["Victor Lyuboslavsky"]
 image = "opentelemetry-with-jaeger-headline.png"
