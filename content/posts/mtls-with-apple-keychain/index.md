@@ -13,6 +13,7 @@ _This article is part of a series on [mTLS](../mtls). Check out the previous art
 ## Securing mTLS certificates and keys
 
 In the [mTLS Hello World](../mtls-hello-world) article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:
+
 - server CA: `certs/server-ca.crt`
 - server CA private key: `certs/server-ca.key`
 - TLS certificate for localhost server: `certs/server.crt`
@@ -26,7 +27,7 @@ In a real-world scenario, we would need to secure these files. The server CA pri
 
 The server will need access to the client CA, the server TLS certificate, and the server TLS certificate private key. The server TLS certificate private key is the most important to secure out of these three files.
 
-The client will need access to the server CA, the client TLS certificate, and the client TLS certificate private key. We can use the macOS keychain  to secure these files. In a future article, we will show how to secure these on Windows with certificate stores.
+The client will need access to the server CA, the client TLS certificate, and the client TLS certificate private key. We can use the macOS keychain to secure these files. In a future article, we will show how to secure these on Windows with certificate stores.
 
 ## Apple's macOS keychain
 
@@ -131,6 +132,7 @@ macOS can validate the identity because we also imported the client CA into the 
 ## Running the mTLS server
 
 As in the [mTLS Hello World](../mtls-hello-world) article, we will use `docker compose up` to start two nginx servers:
+
 - https://localhost:8888 for TLS
 - https://localhost:8889 for mTLS
 
@@ -229,6 +231,10 @@ In the following article, we will [create our own mTLS client with the Go progra
 
 Later, we will [use mTLS with the Windows certificate store](../mtls-with-windows) and [create an mTLS client integrated with the Windows certificate store](../mtls-go-client-windows-certificate-store).
 
+## Further reading
+
+Recently, we showed [how to convert a script into a macOS install package](../script-only-macos-install-package/).
+
 ## Example code on GitHub
 
 The example code is available on GitHub at https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain
@@ -237,4 +243,4 @@ The example code is available on GitHub at https://github.com/getvictor/mtls/tre
 
 {{< youtube Y0y6-cCzz8w >}}
 
-*Note:* If you want to comment on this article, please do so on the YouTube video.
+_Note:_ If you want to comment on this article, please do so on the YouTube video.

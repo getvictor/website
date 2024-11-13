@@ -84,10 +84,13 @@ You can try running the installer to make sure it works as expected.
 
 ## Further reading
 
-- In the past, we demonstrated [how to code sign a Windows application](../code-signing-windows)
-- Recently, we explained
-  [how to measure Go test execution time and derive actionable insights](../go-test-execution-time)
-- Previously, we wrote about [Go benchmarks](../optimizing-performance-of-go-app)
+- In the past, we demonstrated [how to code sign a Windows application](../code-signing-windows/)
+- Recently, we explained [how to create a script-only macOS install package](../script-only-macos-install-package/)
+
+### Related Go articles
+
+- [How to measure Go test execution time and derive actionable insights](../go-test-execution-time/)
+- [Go benchmarks](../optimizing-performance-of-go-app/)
 
 ## Watch how to create an EXE installer
 
