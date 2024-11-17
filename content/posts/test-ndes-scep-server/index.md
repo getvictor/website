@@ -188,7 +188,9 @@ with a signed certificate, which the device saves to the keychain.
 
 # Further reading
 
-We wrote a series of articles on
+Recently, we covered [how to connect to a remote Active Directory server](../connect-to-remote-active-directory/).
+
+We also wrote a series of articles on
 [building a mutual TLS client which uses a system keystore, such as a Windows certificate store](../mtls/).
 
 In addition, we presented an example of [code signing a Windows application](../code-signing-windows/).
