@@ -142,7 +142,8 @@ NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP pa
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the device receives the payload, it immediately requests a certificate from the NDES server. The server responds
 with a signed certificate, which the device saves to the keychain.&lt;/p>
 &lt;h1 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h1>&lt;p>We wrote a series of articles on
+&lt;/h1>&lt;p>Recently, we covered &lt;a class="link" href="../connect-to-remote-active-directory/" >how to connect to a remote Active Directory server&lt;/a>.&lt;/p>
+&lt;p>We also wrote a series of articles on
 &lt;a class="link" href="../mtls/" >building a mutual TLS client which uses a system keystore, such as a Windows certificate store&lt;/a>.&lt;/p>
 &lt;p>In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" >code signing a Windows application&lt;/a>.&lt;/p>
 &lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server">&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor">&lt;/a>Watch how to test a Windows NDES SCEP server
