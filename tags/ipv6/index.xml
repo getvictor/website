@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IPv6 on Victor on Software</title><link>https://victoronsoftware.com/tags/ipv6/</link><description>Recent content in IPv6 on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 08 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/ipv6/index.xml" rel="self" type="application/rss+xml"/><item><title>Create an IPv6-only Linux server in 3 easy steps</title><link>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</link><pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/ipv6-only.png" alt="Featured image of post Create an IPv6-only Linux server in 3 easy steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p>
-&lt;p>In addition, IPv6 is more secure than IPv4. It has built-in security features like IPsec, which is optional in IPv4. IPv6 also has a simplified header, which makes it faster than IPv4.&lt;/p>
-&lt;p>Many corporations use IPv6 internally, and some have even disabled IPv4. This tutorial will create a Linux VM using IPv6, with IPv4 disabled.&lt;/p>
+&lt;/h2>&lt;p>IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out
+of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p>
+&lt;p>In addition, IPv6 is more secure than IPv4. It has built-in security features like IPsec, which is optional in IPv4.
+IPv6 also has a simplified header, which makes it faster than IPv4.&lt;/p>
+&lt;p>Many corporations use IPv6 internally, and some have even disabled IPv4. This tutorial will create a Linux VM using
+IPv6, with IPv4 disabled.&lt;/p>
 &lt;p>The steps are:&lt;/p>
 &lt;ol>
 &lt;li>&lt;a class="link" href="#create-linux-server-with-ipv6-enabled" >Create droplets with IPv6 enabled&lt;/a>&lt;/li>
@@ -10,12 +13,17 @@
 &lt;/ol>
 &lt;h2 id="prerequisites">&lt;a href="#prerequisites" class="header-anchor">&lt;/a>Prerequisites
 &lt;/h2>&lt;p>We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
->Digital Ocean&lt;/a> as our cloud provider. Their IPv6 documentation is available at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
+>Digital Ocean&lt;/a> as our cloud provider. Their IPv6 documentation is available
+at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
 >https://docs.digitalocean.com/products/networking/ipv6/&lt;/a>.&lt;/p>
-&lt;p>Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various sizes. We will create a new droplet with IPv6.&lt;/p>
+&lt;p>Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
+sizes. We will create a new droplet with IPv6.&lt;/p>
 &lt;h2 id="create-linux-server-with-ipv6-enabled">&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor">&lt;/a>Step 1: Create droplets with IPv6 enabled
-&lt;/h2>&lt;p>We will create two Digital Ocean droplets. The first droplet will have only IPv6 enabled, and the second droplet will have both IPv4 and IPv6 enabled. We only need the second droplet to SSH into the first droplet because our client machine uses IPv4 only.&lt;/p>
-&lt;p>Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6 enabled in Advanced Options.&lt;/p>
+&lt;/h2>&lt;p>We will create two Digital Ocean droplets. The first droplet will have only IPv6 enabled, and the second droplet will
+have both IPv4 and IPv6 enabled. We only need the second droplet to SSH into the first droplet because our client
+machine uses IPv4 only.&lt;/p>
+&lt;p>Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
+enabled in Advanced Options.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
 alt="Enable IPv6 checkbox">
 &lt;/figure>
@@ -37,7 +45,8 @@ alt="Droplet details">
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt update
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install net-tools
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="disable-ipv4-on-linux-server">&lt;a href="#disable-ipv4-on-linux-server" class="header-anchor">&lt;/a>Step 3: Disable IPv4 on the Linux server
-&lt;/h2>&lt;p>To disable IPv4 on the first droplet, edit the &lt;code>/etc/netplan/50-cloud-init.yaml&lt;/code> network configuration file by removing all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown below.&lt;/p>
+&lt;/h2>&lt;p>To disable IPv4 on the first droplet, edit the &lt;code>/etc/netplan/50-cloud-init.yaml&lt;/code> network configuration file by removing
+all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown below.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">network&lt;/span>:
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ethernets&lt;/span>:
@@ -83,14 +92,21 @@ RX packets 233 bytes 22136 (22.1 KB)
 RX errors 0 dropped 0 overruns 0 frame 0
 TX packets 233 bytes 22136 (22.1 KB)
 TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
-&lt;/code>&lt;/pre>&lt;p>You can see that the &lt;code>eth0&lt;/code> interface has an IPv6 address but no IPv4 address. The &lt;code>eth1&lt;/code> interface also has an IPv6 address. The &lt;code>lo&lt;/code> interface is the loopback interface and still uses the IPv4 &lt;code>127.0.0.1&lt;/code> address. We will not disable IPv4 on the loopback interface at this point since many tools may break.&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>You can see that the &lt;code>eth0&lt;/code> interface has an IPv6 address but no IPv4 address. The &lt;code>eth1&lt;/code> interface also has an IPv6
+address. The &lt;code>lo&lt;/code> interface is the loopback interface and still uses the IPv4 &lt;code>127.0.0.1&lt;/code> address. We will not disable
+IPv4 on the loopback interface at this point since many tools may break.&lt;/p>
 &lt;h2 id="transfer-files-between-ipv4-and-ipv6-only-servers">&lt;a href="#transfer-files-between-ipv4-and-ipv6-only-servers" class="header-anchor">&lt;/a>Transfer files between IPv4 and IPv6-only servers
-&lt;/h2>&lt;p>To transfer files between the IPv4 and IPv6-only servers, you can use the &lt;code>scp&lt;/code> command. First, transfer to the droplet that supports both IPv4 and IPv6, like:&lt;/p>
+&lt;/h2>&lt;p>To transfer files between the IPv4 and IPv6-only servers, you can use the &lt;code>scp&lt;/code> command. First, transfer to the droplet
+that supports both IPv4 and IPv6, like:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>scp fleet-osquery_1.24.0_amd64.deb root@143.198.235.211:~
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, SSH into that droplet and transfer the file to the IPv6-only droplet:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>scp fleet-osquery_1.24.0_amd64.deb root@&lt;span style="color:#ae81ff">\[&lt;/span>2604:a880:4:1d0::4d3:3000&lt;span style="color:#ae81ff">\]&lt;/span>:~
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>In this tutorial, we created a Linux VM using IPv6, with IPv4 disabled. We also transferred files between an IPv4 and an IPv6-only server. IPv6 is the future of the Internet, and learning how to use it is essential. You can now create your own IPv6-only servers and experiment with them.&lt;/p>
+&lt;/h2>&lt;p>In this tutorial, we created a Linux VM using IPv6, with IPv4 disabled. We also transferred files between an IPv4 and an
+IPv6-only server. IPv6 is the future of the Internet, and learning how to use it is essential. You can now create your
+own IPv6-only servers and experiment with them.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" >why you need VLANs in your home network&lt;/a>.&lt;/p>
 &lt;h2 id="create-an-ipv6-only-linux-server-video">&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor">&lt;/a>Create an IPv6-only Linux server video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
