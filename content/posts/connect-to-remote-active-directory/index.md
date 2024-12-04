@@ -139,7 +139,7 @@ resolved this issue by allowing SSH access in Active Directory settings.
 - Recently, we covered [how to test a Windows NDES SCEP server](../test-ndes-scep-server/).
 - Previously, we explained [how to code sign a Windows application](../code-signing-windows/).
 
-## Watch
+## Watch how to connect to remote Active Directory server
 
 {{< youtube wFlntCobLsA >}}
 
