@@ -4,19 +4,27 @@ description = "Real-world examples of fixing security vulnerabilities in Yarn"
 image = "cover.png"
 date = 2024-04-10
 categories = ["Security"]
-tags = ["Yarn", "Vulnerabilities", "Application Security"]
+tags = ["Yarn", "Vulnerabilities", "Application Security", "Dependency Management"]
 draft = false
 +++
 
 ## Why fix security vulnerabilities?
 
-Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect your data and users.
+Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized
+access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect
+your data and users.
 
 ## Finding vulnerabilities
 
-Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can help you identify security vulnerabilities in your code and dependencies. One such tool is [OpenSSF Scorecard](https://securityscorecards.dev/), which combines multiple other tools into a single GitHub action. It uses the [OSV service](https://osv.dev/) to find vulnerabilities affecting your project's dependencies. OSV (Open Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects' vulnerabilities.
+Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can
+help you identify security vulnerabilities in your code and dependencies. One such tool is
+[OpenSSF Scorecard](https://securityscorecards.dev/), which combines multiple other tools into a single GitHub action.
+It uses the [OSV service](https://osv.dev/) to find vulnerabilities affecting your project's dependencies. OSV (Open
+Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects'
+vulnerabilities.
 
-In this article, we will focus on fixing a few recent real-world security vulnerabilities in our `yarn.lock` dependencies.
+In this article, we will focus on fixing a few recent real-world security vulnerabilities in our `yarn.lock`
+dependencies.
 
 ```
 score is 3: 6 existing vulnerabilities detected:
@@ -31,13 +39,15 @@ Click Remediation section below to solve this issue
 
 ### Using local tools to find vulnerabilities
 
-In a local environment, we can use [OSV-Scanner](https://google.github.io/osv-scanner/) to find vulnerabilities in our dependencies. Running:
+In a local environment, we can use [OSV-Scanner](https://google.github.io/osv-scanner/) to find vulnerabilities in our
+dependencies. Running:
 
 ```bash
 osv-scanner scan --lockfile yarn.lock
 ```
 
 It will output the same vulnerabilities mentioned above but with additional details.
+
 ```
 ╭─────────────────────────────────────┬──────┬───────────┬────────────────┬─────────┬───────────╮
 │ OSV URL                             │ CVSS │ ECOSYSTEM │ PACKAGE        │ VERSION │ SOURCE    │
@@ -57,9 +67,11 @@ Another way to find these vulnerabilities is by using the built-in [yarn audit](
 
 ## Waiving vulnerabilities
 
-In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability documentation and acknowledge it but decide not to fix it.
+In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability
+documentation and acknowledge it but decide not to fix it.
 
-To waive a vulnerability for the OSV flow, you can create an `osv-scanner.toml` file in the root of your project. For example, to waive the `GHSA-crh6-fp67-6883` vulnerability, you can add the following to the `osv-scanner.toml` file:
+To waive a vulnerability for the OSV flow, you can create an `osv-scanner.toml` file in the root of your project. For
+example, to waive the `GHSA-crh6-fp67-6883` vulnerability, you can add the following to the `osv-scanner.toml` file:
 
 ```toml
 [[IgnoredVulns]]
@@ -71,7 +83,8 @@ In our example, we will not waive any vulnerabilities, but we will fix them by u
 
 ## Updating an inner dependency
 
-In our example, we have a vulnerability in the `@xmldom/xmldom` package. From the vulnerability URL, we know we must update this package to `0.8.4` or later.
+In our example, we have a vulnerability in the `@xmldom/xmldom` package. From the vulnerability URL, we know we must
+update this package to `0.8.4` or later.
 
 Running `yarn why @xmldom/xmldom` will show that it is an inner dependency of another package:
 
@@ -91,7 +104,8 @@ Looking at `yarn.lock` shows:
   integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
 ```
 
-We see that `0.8.4` will satisfy the dependency requirement of `^0.8.3`. We can update the package by deleting the above section from `yarn.lock` and running `yarn install`
+We see that `0.8.4` will satisfy the dependency requirement of `^0.8.3`. We can update the package by deleting the above
+section from `yarn.lock` and running `yarn install`
 
 We will then see the update:
 
@@ -104,13 +118,16 @@ We will then see the update:
 
 ## Upgrading an inner dependency by overriding the version
 
-Our following vulnerability is in the `axios` package. We need to update it to `0.28.0` or later. By running `yarn why axios` we see that this package is part of a deep dependency chain:
+Our following vulnerability is in the `axios` package. We need to update it to `0.28.0` or later. By running
+`yarn why axios` we see that this package is part of a deep dependency chain:
+
 ```
 => Found "wait-on#axios@0.21.4"
 info This module exists because "@storybook#test-runner#jest-playwright-preset#jest-process-manager#wait-on" depends on it.
 ```
 
-The needed version `0.28.0` does not satisfy the `^0.21.4` requirement. We can override the version by adding the following to the `package.json` file:
+The needed version `0.28.0` does not satisfy the `^0.21.4` requirement. We can override the version by adding the
+following to the `package.json` file:
 
 ```json
 "resolutions": {
@@ -120,7 +137,9 @@ The needed version `0.28.0` does not satisfy the `^0.21.4` requirement. We can o
 
 ## Upgrading the parent dependency
 
-The following vulnerability is in the `lodash.set` package. The vulnerability URL shows that there is no fix for this vulnerability. We also see at [npmjs.com](https://www.npmjs.com/package/lodash.set) that this package was last updated eight years ago.
+The following vulnerability is in the `lodash.set` package. The vulnerability URL shows that there is no fix for this
+vulnerability. We also see at [npmjs.com](https://www.npmjs.com/package/lodash.set) that this package was last updated
+eight years ago.
 
 We need to update the parent package that uses `lodash.set`. Running `yarn why lodash.set` shows:
 
@@ -130,15 +149,19 @@ info Reasons this module exists
    - Hoisted from "nock#lodash.set"
 ```
 
-We update the parent by running `yarn upgrade nock@latest`. Luckily, the latest version of `nock` does not depend on `lodash.set`, and `lodash.set` is removed from `yarn.lock`.
+We update the parent by running `yarn upgrade nock@latest`. Luckily, the latest version of `nock` does not depend on
+`lodash.set`, and `lodash.set` is removed from `yarn.lock`.
 
 ## Removing a dependency
 
-Sometimes the best way to fix a vulnerability is to remove the vulnerable dependency. This can be done with the `yarn remove <dependency>` command. However, this requires code changes. You must find a different library or implement the removed functionality yourself.
+Sometimes the best way to fix a vulnerability is to remove the vulnerable dependency. This can be done with the
+`yarn remove <dependency>` command. However, this requires code changes. You must find a different library or implement
+the removed functionality yourself.
 
 ## Conclusion
 
 We use the above strategies to fix the vulnerabilities in our project.
+
 - Updating an inner dependency
 - Upgrading an inner dependency by overriding the version
 - Upgrading the parent dependency
@@ -146,10 +169,11 @@ We use the above strategies to fix the vulnerabilities in our project.
 
 We can now rerun the vulnerability scanner to verify that we fixed the vulnerabilities.
 
-In addition, we must run our unit test and integration test suite to ensure that the updates do not break our application.
+In addition, we must run our unit test and integration test suite to ensure that the updates do not break our
+application.
 
 ## Fix security vulnerabilities in Yarn video
 
 {{< youtube 59EpVz9mH_w >}}
 
-*Note:* If you want to comment on this article, please do so on the YouTube video.
+_Note:_ If you want to comment on this article, please do so on the YouTube video.

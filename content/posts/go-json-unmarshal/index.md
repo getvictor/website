@@ -251,6 +251,9 @@ decoding vs [gob](https://pkg.go.dev/encoding/gob) decoding in that article.
 In addition, we wrote about [how to read program arguments from STDIN with Go](..//get-args-from-stdin/), which is more
 secure than using environment variables or command-line arguments.
 
+Also, we explained [the difference between Go modules and packages](../go-modules-and-packages/), which is essential for
+organizing and managing Go code.
+
 ## Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 
 {{< youtube yHhk5wGNxk4 >}}
