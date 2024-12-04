@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Dependency Management on Victor on Software</title><link>https://victoronsoftware.com/tags/dependency-management/</link><description>Recent content in Dependency Management on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/dependency-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Go modules and packages — which one to use and when</title><link>https://victoronsoftware.com/posts/go-modules-and-packages/</link><pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-modules-and-packages/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.png" alt="Featured image of post Go modules and packages — which one to use and when" />&lt;h2 id="what-is-a-go-package">&lt;a href="#what-is-a-go-package" class="header-anchor">&lt;/a>What is a Go package?
+&lt;/h2>&lt;p>A Go package is a collection of Go source files in the same directory that are compiled together. It can contain
+functions, types, and variables. Go packages organize code and provide a way to share code between different program
+parts.&lt;/p>
+&lt;p>By convention, the package name is the same as the last element of the import path. For example, the package name for
+the &lt;code>fmt&lt;/code> package in the &lt;code>fmt&lt;/code> directory is &lt;code>fmt&lt;/code>. You can name the package differently from the directory name, but it
+is not recommended.&lt;/p>
+&lt;p>When a Go application is compiled, the Go compiler compiles all the packages imported by the main package. The main
+package contains the &lt;code>main&lt;/code> function and is the entry point of the program. However, all the imported packages can be
+compiled separately as well, even if they do not contain the &lt;code>main&lt;/code> function. That&amp;rsquo;s what happens when we run unit tests
+for all packages in a Go project — each package is compiled separately and can be tested independently.&lt;/p>
+&lt;p>The directory structure does not have to match the package dependencies. For example, given the following directory
+structure:&lt;/p>
+&lt;pre tabindex="0">&lt;code>service/
+service.go
+api/
+api.go
+db/
+db.go
+&lt;/code>&lt;/pre>&lt;p>The packages &lt;code>service&lt;/code>, &lt;code>api&lt;/code>, and &lt;code>db&lt;/code> can be completely independent. The &lt;code>service&lt;/code> package does not include the
+&lt;code>api.go&lt;/code> and &lt;code>db.go&lt;/code> files because they are in a different directory. Go&amp;rsquo;s package dependency graph has no relation to
+the directory structure.&lt;/p>
+&lt;h2 id="what-is-a-go-module">&lt;a href="#what-is-a-go-module" class="header-anchor">&lt;/a>What is a Go module?
+&lt;/h2>&lt;p>A &lt;a class="link" href="https://go.dev/ref/mod" target="_blank" rel="noopener"
+>Go module&lt;/a>, introduced in Go 1.11, is a collection of Go packages that are versioned
+together. A Go module is defined by a &lt;code>go.mod&lt;/code> file located at the module&amp;rsquo;s root. The &lt;code>go.mod&lt;/code> file contains the module
+name and the versions of the dependencies the module uses.&lt;/p>
+&lt;p>A Go module can contain multiple packages, and the packages do not need to be related to each other.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.svg"
+alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory.">&lt;figcaption>
+&lt;h4>Sample project with two modules&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>A Go module can exist at any level of the directory structure, even nested within another module. The Go toolchain
+treats all Go modules as independent entities, regardless of their location in the directory structure.&lt;/p>
+&lt;h2 id="how-to-use-multiple-modules-in-one-go-workarea">&lt;a href="#how-to-use-multiple-modules-in-one-go-workarea" class="header-anchor">&lt;/a>How to use multiple modules in one Go workarea
+&lt;/h2>&lt;h3 id="1-create-a-new-go-workarea">&lt;a href="#1-create-a-new-go-workarea" class="header-anchor">&lt;/a>1. Create a new Go workarea:
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mkdir -p go-modules
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd go-modules
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go mod init example.com/go-modules
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="2-create-a-simple-go-file-in-the-root-of-the-workarea">&lt;a href="#2-create-a-simple-go-file-in-the-root-of-the-workarea" class="header-anchor">&lt;/a>2. Create a simple Go file in the root of the workarea:
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, world.\n&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="3-create-a-new-go-module-in-a-subdirectory">&lt;a href="#3-create-a-new-go-module-in-a-subdirectory" class="header-anchor">&lt;/a>3. Create a new Go module in a subdirectory:
+&lt;/h3>&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mkdir -p adder
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd adder
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go mod init example.com/go-modules/adder
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With the following Go file in the &lt;code>adder&lt;/code> directory:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">adder&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">Add&lt;/span>(&lt;span style="color:#a6e22e">a&lt;/span>, &lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>) &lt;span style="color:#66d9ef">int&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">a&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="4-use-the-adder-package-in-the-main-package">&lt;a href="#4-use-the-adder-package-in-the-main-package" class="header-anchor">&lt;/a>4. Use the &lt;code>adder&lt;/code> package in the &lt;code>main&lt;/code> package:
+&lt;/h3>&lt;p>You cannot simply import the &lt;code>adder&lt;/code> package in the &lt;code>main&lt;/code> package because they are in different modules.&lt;/p>
+&lt;p>One way to use the &lt;code>adder&lt;/code> package is to publish it and use &lt;code>go get&lt;/code> to download it as the &lt;code>main&lt;/code> dependency. However,
+this is impractical for local development and doesn&amp;rsquo;t make sense when we explicitly want to use multiple modules in one
+repository.&lt;/p>
+&lt;p>The proper way is to use a &lt;a class="link" href="https://go.dev/ref/mod#workspaces" target="_blank" rel="noopener"
+>workspace, declared in the go.work file&lt;/a>, introduced in
+Go 1.18.&lt;/p>
+&lt;p>In the top level of the workarea, create a &lt;code>go.work&lt;/code> file with all the modules in the subdirectories:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go work use -r .
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting &lt;code>go.work&lt;/code> file will look like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>go 1.23.2
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>use (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> .
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ./adder
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you can import the &lt;code>adder&lt;/code> package in the &lt;code>main&lt;/code> package:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;example.com/go-modules/adder&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, world.\n&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Print&lt;/span>(&lt;span style="color:#a6e22e">myadder&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="should-i-use-multiple-go-modules-in-one-repository">&lt;a href="#should-i-use-multiple-go-modules-in-one-repository" class="header-anchor">&lt;/a>Should I use multiple Go modules in one repository?
+&lt;/h2>&lt;p>Generally, it is not recommended to use multiple Go modules in one repository. However, there are some cases where it
+makes sense, like:&lt;/p>
+&lt;ul>
+&lt;li>Temporarily pull in a third-party module to add a feature before this feature is merged upstream.&lt;/li>
+&lt;li>Work on multiple interdependent modules that can be versioned and released independently.&lt;/li>
+&lt;/ul>
+&lt;p>Usually, it is better to use packages within a single module to organize and decouple code.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../staticcheck-go-linter/" >using the staticcheck linter on a large Go project&lt;/a>.&lt;/li>
+&lt;li>Previously, we described &lt;a class="link" href="../go-json-unmarshal/" >how to use Go to unmarshal JSON null, set, and missing fields&lt;/a>.&lt;/li>
+&lt;li>We also published an article on &lt;a class="link" href="../go-test-execution-time/" >accurately measuring the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="multiple-modules-in-one-go-project-on-github">&lt;a href="#multiple-modules-in-one-go-project-on-github" class="header-anchor">&lt;/a>Multiple modules in one Go project on GitHub
+&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/getvictor/go-modules" target="_blank" rel="noopener"
+>Example Go project with multiple modules&lt;/a>&lt;/p>
+&lt;h2 id="watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository">&lt;a href="#watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository" class="header-anchor">&lt;/a>Watch an explanation of Go modules and packages, along with an example of using multiple modules in one repository
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/EdV1rx5613g"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Fix security vulnerabilities in Yarn</title><link>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</link><pubDate>Wed, 10 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/cover.png" alt="Featured image of post Fix security vulnerabilities in Yarn" />&lt;h2 id="why-fix-security-vulnerabilities">&lt;a href="#why-fix-security-vulnerabilities" class="header-anchor">&lt;/a>Why fix security vulnerabilities?
+&lt;/h2>&lt;p>Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized
+access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect
+your data and users.&lt;/p>
+&lt;h2 id="finding-vulnerabilities">&lt;a href="#finding-vulnerabilities" class="header-anchor">&lt;/a>Finding vulnerabilities
+&lt;/h2>&lt;p>Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can
+help you identify security vulnerabilities in your code and dependencies. One such tool is
+&lt;a class="link" href="https://securityscorecards.dev/" target="_blank" rel="noopener"
+>OpenSSF Scorecard&lt;/a>, which combines multiple other tools into a single GitHub action.
+It uses the &lt;a class="link" href="https://osv.dev/" target="_blank" rel="noopener"
+>OSV service&lt;/a> to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open
+Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects'
+vulnerabilities.&lt;/p>
+&lt;p>In this article, we will focus on fixing a few recent real-world security vulnerabilities in our &lt;code>yarn.lock&lt;/code>
+dependencies.&lt;/p>
+&lt;pre tabindex="0">&lt;code>score is 3: 6 existing vulnerabilities detected:
+Warn: Project is vulnerable to: GHSA-crh6-fp67-6883
+Warn: Project is vulnerable to: GHSA-wf5p-g6vw-rhxx
+Warn: Project is vulnerable to: GHSA-p6mc-m468-83gw
+Warn: Project is vulnerable to: GHSA-566m-qj78-rww5
+Warn: Project is vulnerable to: GHSA-7fh5-64p2-3v2j
+Warn: Project is vulnerable to: GHSA-4wf5-vphf-c2xc
+Click Remediation section below to solve this issue
+&lt;/code>&lt;/pre>&lt;h3 id="using-local-tools-to-find-vulnerabilities">&lt;a href="#using-local-tools-to-find-vulnerabilities" class="header-anchor">&lt;/a>Using local tools to find vulnerabilities
+&lt;/h3>&lt;p>In a local environment, we can use &lt;a class="link" href="https://google.github.io/osv-scanner/" target="_blank" rel="noopener"
+>OSV-Scanner&lt;/a> to find vulnerabilities in our
+dependencies. Running:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>osv-scanner scan --lockfile yarn.lock
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>It will output the same vulnerabilities mentioned above but with additional details.&lt;/p>
+&lt;pre tabindex="0">&lt;code>╭─────────────────────────────────────┬──────┬───────────┬────────────────┬─────────┬───────────╮
+│ OSV URL │ CVSS │ ECOSYSTEM │ PACKAGE │ VERSION │ SOURCE │
+├─────────────────────────────────────┼──────┼───────────┼────────────────┼─────────┼───────────┤
+│ https://osv.dev/GHSA-crh6-fp67-6883 │ 9.8 │ npm │ @xmldom/xmldom │ 0.8.3 │ yarn.lock │
+│ https://osv.dev/GHSA-wf5p-g6vw-rhxx │ 6.5 │ npm │ axios │ 0.21.4 │ yarn.lock │
+│ https://osv.dev/GHSA-p6mc-m468-83gw │ 7.4 │ npm │ lodash.set │ 4.3.2 │ yarn.lock │
+│ https://osv.dev/GHSA-566m-qj78-rww5 │ 5.3 │ npm │ postcss │ 6.0.23 │ yarn.lock │
+│ https://osv.dev/GHSA-7fh5-64p2-3v2j │ 5.3 │ npm │ postcss │ 6.0.23 │ yarn.lock │
+│ https://osv.dev/GHSA-7fh5-64p2-3v2j │ 5.3 │ npm │ postcss │ 7.0.39 │ yarn.lock │
+│ https://osv.dev/GHSA-7fh5-64p2-3v2j │ 5.3 │ npm │ postcss │ 8.4.21 │ yarn.lock │
+│ https://osv.dev/GHSA-4wf5-vphf-c2xc │ 7.5 │ npm │ terser │ 5.12.1 │ yarn.lock │
+╰─────────────────────────────────────┴──────┴───────────┴────────────────┴─────────┴───────────╯
+&lt;/code>&lt;/pre>&lt;p>Another way to find these vulnerabilities is by using the built-in &lt;a class="link" href="https://yarnpkg.com/cli/audit" target="_blank" rel="noopener"
+>yarn audit&lt;/a> command.&lt;/p>
+&lt;h2 id="waiving-vulnerabilities">&lt;a href="#waiving-vulnerabilities" class="header-anchor">&lt;/a>Waiving vulnerabilities
+&lt;/h2>&lt;p>In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability
+documentation and acknowledge it but decide not to fix it.&lt;/p>
+&lt;p>To waive a vulnerability for the OSV flow, you can create an &lt;code>osv-scanner.toml&lt;/code> file in the root of your project. For
+example, to waive the &lt;code>GHSA-crh6-fp67-6883&lt;/code> vulnerability, you can add the following to the &lt;code>osv-scanner.toml&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-toml" data-lang="toml">&lt;span style="display:flex;">&lt;span>[[&lt;span style="color:#a6e22e">IgnoredVulns&lt;/span>]]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">id&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;GHSA-crh6-fp67-6883&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">reason&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;We examined this vulnerability and concluded that it does not affect our project for a very good reason.&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we will not waive any vulnerabilities, but we will fix them by updating the dependencies.&lt;/p>
+&lt;h2 id="updating-an-inner-dependency">&lt;a href="#updating-an-inner-dependency" class="header-anchor">&lt;/a>Updating an inner dependency
+&lt;/h2>&lt;p>In our example, we have a vulnerability in the &lt;code>@xmldom/xmldom&lt;/code> package. From the vulnerability URL, we know we must
+update this package to &lt;code>0.8.4&lt;/code> or later.&lt;/p>
+&lt;p>Running &lt;code>yarn why @xmldom/xmldom&lt;/code> will show that it is an inner dependency of another package:&lt;/p>
+&lt;pre tabindex="0">&lt;code>=&amp;gt; Found &amp;#34;@xmldom/xmldom@0.8.3&amp;#34;
+info Reasons this module exists
+- &amp;#34;msw#@mswjs#interceptors&amp;#34; depends on it
+- Hoisted from &amp;#34;msw#@mswjs#interceptors#@xmldom#xmldom&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>Looking at &lt;code>yarn.lock&lt;/code> shows:&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
+version &amp;#34;0.8.3&amp;#34;
+resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.3.tgz#beaf980612532aa9a3004aff7e428943aeaa0711&amp;#34;
+integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
+&lt;/code>&lt;/pre>&lt;p>We see that &lt;code>0.8.4&lt;/code> will satisfy the dependency requirement of &lt;code>^0.8.3&lt;/code>. We can update the package by deleting the above
+section from &lt;code>yarn.lock&lt;/code> and running &lt;code>yarn install&lt;/code>&lt;/p>
+&lt;p>We will then see the update:&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
+version &amp;#34;0.8.10&amp;#34;
+resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
+integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
+&lt;/code>&lt;/pre>&lt;h2 id="upgrading-an-inner-dependency-by-overriding-the-version">&lt;a href="#upgrading-an-inner-dependency-by-overriding-the-version" class="header-anchor">&lt;/a>Upgrading an inner dependency by overriding the version
+&lt;/h2>&lt;p>Our following vulnerability is in the &lt;code>axios&lt;/code> package. We need to update it to &lt;code>0.28.0&lt;/code> or later. By running
+&lt;code>yarn why axios&lt;/code> we see that this package is part of a deep dependency chain:&lt;/p>
+&lt;pre tabindex="0">&lt;code>=&amp;gt; Found &amp;#34;wait-on#axios@0.21.4&amp;#34;
+info This module exists because &amp;#34;@storybook#test-runner#jest-playwright-preset#jest-process-manager#wait-on&amp;#34; depends on it.
+&lt;/code>&lt;/pre>&lt;p>The needed version &lt;code>0.28.0&lt;/code> does not satisfy the &lt;code>^0.21.4&lt;/code> requirement. We can override the version by adding the
+following to the &lt;code>package.json&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;resolutions&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;**/wait-on/axios&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;^0.28.0&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="upgrading-the-parent-dependency">&lt;a href="#upgrading-the-parent-dependency" class="header-anchor">&lt;/a>Upgrading the parent dependency
+&lt;/h2>&lt;p>The following vulnerability is in the &lt;code>lodash.set&lt;/code> package. The vulnerability URL shows that there is no fix for this
+vulnerability. We also see at &lt;a class="link" href="https://www.npmjs.com/package/lodash.set" target="_blank" rel="noopener"
+>npmjs.com&lt;/a> that this package was last updated
+eight years ago.&lt;/p>
+&lt;p>We need to update the parent package that uses &lt;code>lodash.set&lt;/code>. Running &lt;code>yarn why lodash.set&lt;/code> shows:&lt;/p>
+&lt;pre tabindex="0">&lt;code>info Reasons this module exists
+- &amp;#34;nock&amp;#34; depends on it
+- Hoisted from &amp;#34;nock#lodash.set&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>We update the parent by running &lt;code>yarn upgrade nock@latest&lt;/code>. Luckily, the latest version of &lt;code>nock&lt;/code> does not depend on
+&lt;code>lodash.set&lt;/code>, and &lt;code>lodash.set&lt;/code> is removed from &lt;code>yarn.lock&lt;/code>.&lt;/p>
+&lt;h2 id="removing-a-dependency">&lt;a href="#removing-a-dependency" class="header-anchor">&lt;/a>Removing a dependency
+&lt;/h2>&lt;p>Sometimes the best way to fix a vulnerability is to remove the vulnerable dependency. This can be done with the
+&lt;code>yarn remove &amp;lt;dependency&amp;gt;&lt;/code> command. However, this requires code changes. You must find a different library or implement
+the removed functionality yourself.&lt;/p>
+&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
+&lt;/h2>&lt;p>We use the above strategies to fix the vulnerabilities in our project.&lt;/p>
+&lt;ul>
+&lt;li>Updating an inner dependency&lt;/li>
+&lt;li>Upgrading an inner dependency by overriding the version&lt;/li>
+&lt;li>Upgrading the parent dependency&lt;/li>
+&lt;li>Removing a dependency&lt;/li>
+&lt;/ul>
+&lt;p>We can now rerun the vulnerability scanner to verify that we fixed the vulnerabilities.&lt;/p>
+&lt;p>In addition, we must run our unit test and integration test suite to ensure that the updates do not break our
+application.&lt;/p>
+&lt;h2 id="fix-security-vulnerabilities-in-yarn-video">&lt;a href="#fix-security-vulnerabilities-in-yarn-video" class="header-anchor">&lt;/a>Fix security vulnerabilities in Yarn video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/59EpVz9mH_w"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
