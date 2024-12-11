@@ -233,7 +233,8 @@ Later, we will [use mTLS with the Windows certificate store](../mtls-with-window
 
 ## Further reading
 
-Recently, we showed [how to convert a script into a macOS install package](../script-only-macos-install-package/).
+- Recently, we explained [agents and daemons and plists on macOS](../macos-launchd-agents-and-daemons/).
+- We also showed [how to convert a script into a macOS install package](../script-only-macos-install-package/).
 
 ## Example code on GitHub
 

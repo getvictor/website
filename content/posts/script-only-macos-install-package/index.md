@@ -144,6 +144,7 @@ to the MDM and deploy it to your managed devices.
 
 ## Further reading
 
+- Recently, we explained [launchd agents and daemons on macOS](../macos-launchd-agents-and-daemons/).
 - In the past, we showed [how to create an EXE installer for Windows](../exe-installer/) and
   [code sign a Windows application](../code-signing-windows/).
 - We also covered [using Mutual TLS (mTLS) with macOS keychain](../mtls-with-apple-keychain/).
