@@ -1166,7 +1166,10 @@ alt="Safari mTLS popup">&lt;figcaption>
 &lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>. This is the first step toward &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >creating an mTLS client integrated with the macOS keychain&lt;/a>.&lt;/p>
 &lt;p>Later, we will &lt;a class="link" href="../mtls-with-windows" >use mTLS with the Windows certificate store&lt;/a> and &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create an mTLS client integrated with the Windows certificate store&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we showed &lt;a class="link" href="../script-only-macos-install-package/" >how to convert a script into a macOS install package&lt;/a>.&lt;/p>
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../macos-launchd-agents-and-daemons/" >agents and daemons and plists on macOS&lt;/a>.&lt;/li>
+&lt;li>We also showed &lt;a class="link" href="../script-only-macos-install-package/" >how to convert a script into a macOS install package&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>

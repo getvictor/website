@@ -1,4 +1,162 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 04 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Go modules and packages — which one to use and when</title><link>https://victoronsoftware.com/posts/go-modules-and-packages/</link><pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-modules-and-packages/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.png" alt="Featured image of post Go modules and packages — which one to use and when" />&lt;h2 id="what-is-a-go-package">&lt;a href="#what-is-a-go-package" class="header-anchor">&lt;/a>What is a Go package?
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>What are launchd agents and daemons on macOS?</title><link>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</link><pubDate>Wed, 11 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/macos-agents-and-daemons.png" alt="Featured image of post What are launchd agents and daemons on macOS?" />&lt;ul>
+&lt;li>&lt;a class="link" href="#how-to-find-the-plist-file-for-a-running-process" >How to find the plist file for a running process&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-launchd">&lt;a href="#what-is-launchd" class="header-anchor">&lt;/a>What is launchd?
+&lt;/h2>&lt;p>&lt;code>launchd&lt;/code> is a macOS system service manager that starts, stops, and manages daemons, agents, and other processes. It is
+the first process the kernel starts and is responsible for starting all other processes on the system.&lt;/p>
+&lt;p>If you go to &lt;code>Activity Monitor&lt;/code> on your Mac and &lt;code>View&lt;/code> &amp;gt; &lt;code>All Processes, Hierarchically&lt;/code>, you will see that all
+processes are children of &lt;code>launchd&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/activity-monitor.png"
+alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd.">
+&lt;/figure>
+&lt;h2 id="what-are-launchd-agents-and-daemons">&lt;a href="#what-are-launchd-agents-and-daemons" class="header-anchor">&lt;/a>What are launchd agents and daemons?
+&lt;/h2>&lt;p>&lt;code>launchd&lt;/code> can start and manage agents and daemons.&lt;/p>
+&lt;h3 id="daemons">&lt;a href="#daemons" class="header-anchor">&lt;/a>Daemons
+&lt;/h3>&lt;p>Daemons are background processes that run without a user interface. They typically start at boot time and run
+continuously in the background. One example of a daemon is Apple&amp;rsquo;s &lt;code>timed&lt;/code> time synchronization daemon, which maintains
+system clock accuracy by synchronizing the clock with reference clocks over the network. Another example is a device
+management daemon, such as &lt;a class="link" href="https://fleetdm.com/docs/get-started/anatomy#orbit" target="_blank" rel="noopener"
+>Fleet&amp;rsquo;s &lt;code>orbit&lt;/code>&lt;/a>, which manages the
+device&amp;rsquo;s configuration and security settings.&lt;/p>
+&lt;h3 id="agents">&lt;a href="#agents" class="header-anchor">&lt;/a>Agents
+&lt;/h3>&lt;p>Agents are similar to daemons but run in the context of a user session. They are started when a user logs in and can
+interact with the user interface. Agents are helpful for tasks that need to run in the background but also need to
+communicate with the user. For example, a security agent can check the system&amp;rsquo;s state and notify the user if they fail a
+corporate security policy.&lt;/p>
+&lt;p>Agents may or may not have a user interface. Many 3rd party agents run in the background and provide a menu bar icon to
+configure the agent&amp;rsquo;s behavior.&lt;/p>
+&lt;h2 id="how-are-agents-and-daemons-configured-with-plist">&lt;a href="#how-are-agents-and-daemons-configured-with-plist" class="header-anchor">&lt;/a>How are agents and daemons configured with plist?
+&lt;/h2>&lt;p>&lt;code>launchd&lt;/code> uses property list (&lt;code>.plist&lt;/code>) files to define the configuration of agents and daemons. These files specify the
+program to run, the arguments to pass, the environment variables to set, and other settings.&lt;/p>
+&lt;p>Here is an example of a &lt;code>.plist&lt;/code> file for a launchd daemon:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>EnvironmentVariables&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_ENROLL_SECRET_PATH&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>/opt/orbit/secret.txt&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_FLEET_URL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>https://dogfood.fleetdm.com&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_ENABLE_SCRIPTS&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>true&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_ORBIT_CHANNEL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>stable&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_OSQUERYD_CHANNEL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>stable&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_UPDATE_URL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>https://updates.fleetdm.com&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_FLEET_DESKTOP&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>true&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_DESKTOP_CHANNEL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>stable&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ORBIT_UPDATE_INTERVAL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>15m0s&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>KeepAlive&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;true/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Label&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>com.fleetdm.orbit&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ProgramArguments&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>/opt/orbit/bin/orbit/orbit&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>RunAtLoad&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;true/&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>StandardErrorPath&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>/var/log/orbit/orbit.stderr.log&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>StandardOutPath&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>/var/log/orbit/orbit.stdout.log&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ThrottleInterval&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>10&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The typical locations for agent and daemon &lt;code>.plist&lt;/code> files are:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Type&lt;/th>
+&lt;th>Location&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>User Agents&lt;/td>
+&lt;td>&lt;code>~/Library/LaunchAgents&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Global Agents&lt;/td>
+&lt;td>&lt;code>/Library/LaunchAgents&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>System Agents&lt;/td>
+&lt;td>&lt;code>/System/Library/LaunchAgents&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Global Daemons&lt;/td>
+&lt;td>&lt;code>/Library/LaunchDaemons&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>System Daemons&lt;/td>
+&lt;td>&lt;code>/System/Library/LaunchDaemons&lt;/code>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;em>Note:&lt;/em> In rare cases, the &lt;code>.plist&lt;/code> files may be located in other directories or missing entirely.&lt;/p>
+&lt;h3 id="how-to-view-the-contents-of-a-plist-file">&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor">&lt;/a>How to view the contents of a &lt;code>.plist&lt;/code> file
+&lt;/h3>&lt;p>&lt;code>.plist&lt;/code> files come in several formats, including binary, XML, and JSON.&lt;/p>
+&lt;p>You can view the contents of a &lt;code>.plist&lt;/code> file using the &lt;code>plutil&lt;/code> (property list utility) command. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>plutil -p /System/Library/LaunchDaemons/com.apple.analyticsd.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>plutil&lt;/code> can also convert between different &lt;code>.plist&lt;/code> formats. For example, to convert a binary &lt;code>.plist&lt;/code> file to XML,
+run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>cp /System/Library/LaunchDaemons/com.apple.analyticsd.plist my.plist
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>plutil -convert xml1 my.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="can-i-use-a-plist-file-for-cron-like-scheduling">&lt;a href="#can-i-use-a-plist-file-for-cron-like-scheduling" class="header-anchor">&lt;/a>Can I use a &lt;code>.plist&lt;/code> file for cron-like scheduling?
+&lt;/h3>&lt;p>Yes, you can use &lt;code>launchd&lt;/code> to schedule tasks in a &lt;code>.plist&lt;/code> file. &lt;code>launchd&lt;/code> is the recommended alternative to &lt;code>cron&lt;/code> on
+macOS. The &lt;code>StartCalendarInterval&lt;/code> key specifies when the task should run. For example, to run a task every day at 5 AM,
+you can add the following to your &lt;code>.plist&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>StartCalendarInterval&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Hour&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>5&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Minute&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>0&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="how-to-find-the-plist-file-for-a-running-process">&lt;a href="#how-to-find-the-plist-file-for-a-running-process" class="header-anchor">&lt;/a>How to find the plist file for a running process
+&lt;/h2>&lt;p>Suppose you identified a process running on your Mac from &lt;code>Activity Monitor&lt;/code> and want to find the &lt;code>.plist&lt;/code> file that
+started it. The process should be a child of &lt;code>launchd&lt;/code>.&lt;/p>
+&lt;p>To find the identifier of a running process, you can use the &lt;code>launchctl&lt;/code> command. The &lt;code>launchctl list&lt;/code> command lists all
+agents and daemons started by the user, while the &lt;code>sudo launchctl list&lt;/code> lists all agents and daemons started by the
+system.&lt;/p>
+&lt;p>For example, to find the identifier of the process with PID &lt;code>62303&lt;/code>, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">(&lt;/span> /usr/bin/sudo launchctl list; launchctl list &lt;span style="color:#f92672">)&lt;/span> | grep &lt;span style="color:#ae81ff">62303&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will show the identifier, such as:&lt;/p>
+&lt;pre tabindex="0">&lt;code>62303 0 com.fleetdm.orbit
+&lt;/code>&lt;/pre>&lt;p>You can now look in the standard locations for the &lt;code>com.fleetdm.orbit.plist&lt;/code> file. Alternatively, you can use the
+&lt;code>launchctl dumpstate&lt;/code> command to dump the state of all launchd jobs, including the &lt;code>.plist&lt;/code> files that started them. For
+example, in a macOS system with Fleet&amp;rsquo;s orbit running, you can run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>launchctl dumpstate | grep -B &lt;span style="color:#ae81ff">1&lt;/span> -A &lt;span style="color:#ae81ff">4&lt;/span> -E &lt;span style="color:#e6db74">&amp;#34;active count = [1-9]&amp;#34;&lt;/span> | grep com.fleetdm.orbit
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And the output will show the path to the &lt;code>.plist&lt;/code> file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>system/com.fleetdm.orbit &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path &lt;span style="color:#f92672">=&lt;/span> /Library/LaunchDaemons/com.fleetdm.orbit.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can now view the contents of the &lt;code>.plist&lt;/code> file to understand how the process was started.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>plutil -p /Library/LaunchDaemons/com.fleetdm.orbit.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we showed &lt;a class="link" href="../script-only-macos-install-package/" >two ways to turn a script into a macOS install package&lt;/a>.&lt;/li>
+&lt;li>Previously, we explained &lt;a class="link" href="../mtls-with-apple-keychain/" >how to configure mTLS using the macOS keychain&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/idFJmajURpE"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Go modules and packages — which one to use and when</title><link>https://victoronsoftware.com/posts/go-modules-and-packages/</link><pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-modules-and-packages/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.png" alt="Featured image of post Go modules and packages — which one to use and when" />&lt;h2 id="what-is-a-go-package">&lt;a href="#what-is-a-go-package" class="header-anchor">&lt;/a>What is a Go package?
 &lt;/h2>&lt;p>A Go package is a collection of Go source files in the same directory that are compiled together. It can contain
 functions, types, and variables. Go packages organize code and provide a way to share code between different program
 parts.&lt;/p>
@@ -428,6 +586,7 @@ tool.&lt;/p>
 to the MDM and deploy it to your managed devices.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../macos-launchd-agents-and-daemons/" >launchd agents and daemons on macOS&lt;/a>.&lt;/li>
 &lt;li>In the past, we showed &lt;a class="link" href="../exe-installer/" >how to create an EXE installer for Windows&lt;/a> and
 &lt;a class="link" href="../code-signing-windows/" >code sign a Windows application&lt;/a>.&lt;/li>
 &lt;li>We also covered &lt;a class="link" href="../mtls-with-apple-keychain/" >using Mutual TLS (mTLS) with macOS keychain&lt;/a>.&lt;/li>
@@ -6777,7 +6936,10 @@ alt="Safari mTLS popup">&lt;figcaption>
 &lt;/h2>&lt;p>In the following article, we will &lt;a class="link" href="../mtls-go-client" >create our own mTLS client with the Go programming language&lt;/a>. This is the first step toward &lt;a class="link" href="../mtls-go-client-using-apple-keychain" >creating an mTLS client integrated with the macOS keychain&lt;/a>.&lt;/p>
 &lt;p>Later, we will &lt;a class="link" href="../mtls-with-windows" >use mTLS with the Windows certificate store&lt;/a> and &lt;a class="link" href="../mtls-go-client-windows-certificate-store" >create an mTLS client integrated with the Windows certificate store&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we showed &lt;a class="link" href="../script-only-macos-install-package/" >how to convert a script into a macOS install package&lt;/a>.&lt;/p>
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../macos-launchd-agents-and-daemons/" >agents and daemons and plists on macOS&lt;/a>.&lt;/li>
+&lt;li>We also showed &lt;a class="link" href="../script-only-macos-install-package/" >how to convert a script into a macOS install package&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a>&lt;/p>
