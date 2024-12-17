@@ -1,10 +1,13 @@
 baseURL = 'https://victoronsoftware.com/'
 languageCode = 'en-us'
-paginate = 10
 title = 'Victor on Software'
 theme = "hugo-theme-stack"
 enableRobotsTXT = false
 capitalizeListTitles = false
+ignoreLogs = ['warning-goldmark-raw-html']
+
+[pagination]
+  pagerSize = 10
 
 [services]
 [services.googleAnalytics]
