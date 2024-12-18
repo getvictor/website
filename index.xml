@@ -1,4 +1,168 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>What are launchd agents and daemons on macOS?</title><link>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</link><pubDate>Wed, 11 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/macos-agents-and-daemons.png" alt="Featured image of post What are launchd agents and daemons on macOS?" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 18 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" />&lt;ul>
+&lt;li>&lt;a class="link" href="#get-a-google-sheets-api-key" >Get a Google Sheets API key&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#share-a-google-sheets-spreadsheet-with-the-service-account" >Share a Google Sheets spreadsheet with the service account&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#edit-a-google-sheets-spreadsheet-using-the-api" >Edit a Google Sheets spreadsheet using the API&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>When you need to edit a Google Sheets spreadsheet quickly, you can use the Google Sheets API. The API allows you to
+programmatically read, write, and update data in a Google Sheets spreadsheet. However, following the
+&lt;a class="link" href="https://developers.google.com/sheets/api/guides/concepts" target="_blank" rel="noopener"
+>Google Sheets API documentation&lt;/a> can be overwhelming. In this
+article, we will show you how to get a Google Sheets API key and edit a Google Sheets spreadsheet using the API.&lt;/p>
+&lt;h2 id="user-authentication-oauth-vs-api-key-jwt">&lt;a href="#user-authentication-oauth-vs-api-key-jwt" class="header-anchor">&lt;/a>User authentication (OAuth) vs. API key (JWT)
+&lt;/h2>&lt;p>The problem is that the Google API documentation focuses on the &lt;a class="link" href="https://oauth.net/2/" target="_blank" rel="noopener"
+>OAuth 2.0&lt;/a> user authentication
+flow. This flow is useful when you need to access Google Sheets on behalf of a user. For example, you&amp;rsquo;re creating your
+web app, and you need to read or write data in a Google Sheets spreadsheet owned by your web app user. The OAuth
+standard allows Google to authenticate the user and authorize your app to access the user&amp;rsquo;s data without exposing the
+user&amp;rsquo;s credentials to your web app. The OAuth flow interacts with three parties &amp;ndash; the user, your web app, and Google.&lt;/p>
+&lt;p>In our case, we want to access a specific Google Sheets spreadsheet programmatically without user interaction. We can
+use the API key (JWT) authentication method. JWT stands for JSON Web Token, a standard for securely transmitting
+information between two parties. This method allows us to access Google Sheets programmatically without user
+interaction. The API key (JWT) method interacts with two parties: your app and Google.&lt;/p>
+&lt;h2 id="get-a-google-sheets-api-key">&lt;a href="#get-a-google-sheets-api-key" class="header-anchor">&lt;/a>Get a Google Sheets API key
+&lt;/h2>&lt;p>To get a Google Sheets API key, follow these steps:&lt;/p>
+&lt;ol>
+&lt;li>Go to the &lt;a class="link" href="https://console.cloud.google.com/" target="_blank" rel="noopener"
+>Google Cloud Console&lt;/a>.&lt;/li>
+&lt;li>Create a new project or select an existing project.
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
+alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted.">
+&lt;/figure>
+&lt;/li>
+&lt;li>In the new project, go to &lt;strong>APIs &amp;amp; Services&lt;/strong> and enable the &lt;strong>Google Sheets API&lt;/strong>. After enabling it, you should see
+it in the &lt;strong>Enabled APIs &amp;amp; services&lt;/strong> list.
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
+alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled.">
+&lt;/figure>
+&lt;/li>
+&lt;li>Go to &lt;strong>APIs &amp;amp; Services&lt;/strong> &amp;gt; &lt;strong>Credentials&lt;/strong> and create a new Service Account. This account does not need any optional
+permissions.
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
+alt="Google Cloud IAM &amp;amp; Admin screen with a service account.">
+&lt;/figure>
+&lt;/li>
+&lt;li>Create a new JSON key for the service account.
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
+alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key.">
+&lt;/figure>
+&lt;/li>
+&lt;li>After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
+credentials for your service account. Keep it secure. For example, we received
+&lt;code>axial-paratext-444915-f9-8ef1de636587.json&lt;/code> with the following content:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;service_account&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;axial-paratext-444915-f9&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;private_key_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;8ef1de636587238a028addaa8be9dbdf1d406420&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;private_key&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGFXmEc6VK0TO9\n2E/LDel4gTYl1u8uZGtX16B7Lo4ufM7ics3h9Gyi1lJMcGrHruGEzatDeTRclILd\nLhLwrckfl3IF9MIsqwaEkHk7YnUXj9zGl+v8LTGJL0ycQ9hVdoD6cCOOAmghLj8F\n9Sl6KQ5PHGbBUUL4qi8uExKY4tQOrqol1Pi3RPpAOCR6BLC/ZFPp+4e4HRhF+DMD\nI1QX8QwPit9XdIomnZPUL5sGD+q4cp1gHLBuBp2ehyiFI5MGhgzvCIQzaTExw7GK\nqrjYMjBKXaFRqGpZJWJMdVmGGHpmZLCL/wQmhujlThrF0FO8BHAGriAvUgDbH7m/\nMzGRk/KzAgMBAAECggEAE7LwBkWP8xxR9nfMG6fzB3pmHaY93BG9gRtfCNEM77+W\nvXtoUSfDJACHZ7WoUNpp8BCaDxg/JlPYndFmrcvCnCMuAjygkNujRsytWcQFXAYB\nETjrjYUbD4cGKeYvXfRuiDldt9Iyc9ZLCzch3FW36BMtft0reVpHXeAksdKg/yKf\nhM4jw3tQMu5JR3trLHtqwaA8VUav7I2Qn8nxEbB/0+AUatqpDOp/hQNTN7MGZ/i7\n4V0538U7C9RYDzk9hBBT2/IegGixlL0lX2V6LjYlRcEgC0PLuKF7gM/RRnorNPnv\nHfHxyZt6/MyI8RLRwwv05ZSITaOj66lXxReVsMXxhQKBgQD+vJPrvKD7mGiXRQto\nh1LJqPcyknzLzxf2OX5vZyF8asdroU0sRy8pYYHy8JCPlkOJ0fj9kq6R79W+rmn3\npFkvwRY9dUcJLpoMAMEfO4wQp3QKpxdkjMS8xGcEVOIZacAHCof7uUwrHUUcqRIq\nwrgZcj5P8ZjwsLmuqLNeXqFYNwKBgQDHEPf4PCyjieF+aGvaOPLfn/lRBbEQGlrg\n9Z09UXpxcW39RMq7MkS+U9m88Kn9MsEK3umJdP+s5m8ddVdIVgZLj96Ufn52RzRT\ne8crSjCVC3oQaloScvOBSQA1Z3Bn+QstIko042i2qTNJWMArdCJe9uRbwL1hqEvx\n+LtNPniDZQKBgQDX4g9maFzx/G8fS+doNc8mkmi01kqnGyJOjNknJnrNi1zoTTIv\nBUDly/oqXk/VMF6ajXV7yPTjPyOhTwUFV6Yx/2yOtzZ1hKYO6BDDHF8Ouitw37zG\nfTo6VCSOGjXnnaSdEwK9hYMUwuCQcoSv8oe9IQHIFJMt4EfsypIAtyf7rwKBgFtC\ntzvRcnGC+6K1AoTnyMimkWkIn/UO8Azj7TM4UFcDtnX+/KY3VHahAFhzSKswgnmW\nWiBPSAufFN+/dMVP0tD/Yv5Ww2k8GYwQWe3JtF4QBeTSrPp6QpJJwlO5WToBXZNS\nfgyjGNVs2ntMucTyF/PLYkOCKBBGVJLZAh1Wf29VAoGADf7a1l8kDKgokm6pc4qG\nzb97GMk1CpE0dGl31dvx2ilckDVP354yfWEwVXWWVfVSq/LQdJVgkdArYbAPdsPb\nYuUfNwXMSp/OjmEL2QyC2zRm+2ZZZt5bcnPRbYETzb2An8kDYX49vwgBLJXpLOmt\nlCvxUDyoASHgAMu+OlqHIh4=\n-----END PRIVATE KEY-----\n&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_email&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;example@axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;114906617333001451487&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auth_uri&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://accounts.google.com/o/oauth2/auth&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;token_uri&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://oauth2.googleapis.com/token&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auth_provider_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://www.googleapis.com/oauth2/v1/certs&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://www.googleapis.com/robot/v1/metadata/x509/example%40axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;universe_domain&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;googleapis.com&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="share-a-google-sheets-spreadsheet-with-the-service-account">&lt;a href="#share-a-google-sheets-spreadsheet-with-the-service-account" class="header-anchor">&lt;/a>Share a Google Sheets spreadsheet with the service account
+&lt;/h2>&lt;p>Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
+In our case, the service account email is &lt;code>example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
+alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions.">
+&lt;/figure>
+&lt;p>Note the spreadsheet ID from the URL. For example, in the URL
+&lt;code>https://docs.google.com/spreadsheets/d/1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4/edit&lt;/code>, the spreadsheet ID is
+&lt;code>1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&lt;/code>.&lt;/p>
+&lt;h2 id="edit-a-google-sheets-spreadsheet-using-the-api">&lt;a href="#edit-a-google-sheets-spreadsheet-using-the-api" class="header-anchor">&lt;/a>Edit a Google Sheets spreadsheet using the API
+&lt;/h2>&lt;p>Now that we have the Google Sheets API key and editor permissions for the target spreadsheet, we can edit it using the
+API. For this example, we will use the Go programming language.&lt;/p>
+&lt;p>In an empty directory, create a Go project and get the necessary dependencies:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod init google-sheets-api
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get golang.org/x/oauth2@v0.24.0
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get google.golang.org/api@v0.211.0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Copy the JSON key file to the project directory and rename it to &lt;code>credentials.json&lt;/code>.&lt;/p>
+&lt;p>Create a new Go file, &lt;code>main.go&lt;/code>, with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;context&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;os&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;golang.org/x/oauth2/google&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;google.golang.org/api/option&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;google.golang.org/api/sheets/v4&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">spreadsheetId&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">serviceAccountKey&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;credentials.json&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to read client secret file: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cfg&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">google&lt;/span>.&lt;span style="color:#a6e22e">JWTConfigFromJSON&lt;/span>(&lt;span style="color:#a6e22e">serviceAccountKey&lt;/span>, &lt;span style="color:#a6e22e">sheets&lt;/span>.&lt;span style="color:#a6e22e">SpreadsheetsScope&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to parse client secret file to config: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">srv&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">sheets&lt;/span>.&lt;span style="color:#a6e22e">NewService&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#a6e22e">option&lt;/span>.&lt;span style="color:#a6e22e">WithHTTPClient&lt;/span>(&lt;span style="color:#a6e22e">client&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to retrieve Sheets client: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">readRange&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Sheet1!A2:B2&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">resp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">srv&lt;/span>.&lt;span style="color:#a6e22e">Spreadsheets&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#a6e22e">spreadsheetId&lt;/span>, &lt;span style="color:#a6e22e">readRange&lt;/span>).&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to retrieve data from sheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span>) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;No data found.&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Date, Value:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">row&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s, %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">row&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>], &lt;span style="color:#a6e22e">row&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>])
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Replace the &lt;code>spreadsheetId&lt;/code> constant with the ID of your target spreadsheet.&lt;/p>
+&lt;p>This code authenticates with the Google Sheets API using the service account key and reads the data from cells A2 and B2
+in the &lt;code>Sheet1&lt;/code> sheet of the target spreadsheet.&lt;/p>
+&lt;p>Update the dependencies and run the program:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod tidy
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go run main.go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result should look like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Date, Value:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>2024-12-16 10:00:00, 10
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To write data to a Google Sheets spreadsheet, use the &lt;code>spreadsheets.Values.Update&lt;/code> and &lt;code>Spreadsheets.BatchUpdate&lt;/code>
+methods. For example, the following modified code inserts a new row above other rows with the current date and an
+incremented value:&lt;/p>
+&lt;script src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
+&lt;p>We can review the spreadsheet to verify that our code added the new row.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
+alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">
+&lt;/figure>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we covered &lt;a class="link" href="../remote-development-environment/" >how to set up a remote development environment&lt;/a>.&lt;/li>
+&lt;li>Previously, we showed &lt;a class="link" href="../webhook-flow-with-tines/" >how to build a webhook flow with Tines&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-edit-google-sheets-spreadsheet-using-the-api">&lt;a href="#watch-how-to-edit-google-sheets-spreadsheet-using-the-api" class="header-anchor">&lt;/a>Watch how to edit Google Sheets spreadsheet using the API
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/J2UEYjQVhZ8"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>What are launchd agents and daemons on macOS?</title><link>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</link><pubDate>Wed, 11 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/macos-agents-and-daemons.png" alt="Featured image of post What are launchd agents and daemons on macOS?" />&lt;ul>
 &lt;li>&lt;a class="link" href="#how-to-find-the-plist-file-for-a-running-process" >How to find the plist file for a running process&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-is-launchd">&lt;a href="#what-is-launchd" class="header-anchor">&lt;/a>What is launchd?
@@ -1582,8 +1746,11 @@ development environment.&lt;/li>
 did not drill down to the issue, but a potential workaround is to use JetBrains&amp;rsquo;s code assistant plugin.&lt;/li>
 &lt;/ul>
 &lt;h1 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h1>&lt;p>We recently explained &lt;a class="link" href="../secure-mysql-docker" >how to secure a MySQL Docker container for Zero Trust&lt;/a>.&lt;/p>
-&lt;p>We also discussed &lt;a class="link" href="../github-code-review-issues" >the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/p>
+&lt;/h1>&lt;ul>
+&lt;li>We recently explained &lt;a class="link" href="../secure-mysql-docker" >how to secure a MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
+&lt;li>We also discussed &lt;a class="link" href="../github-code-review-issues" >the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
+&lt;li>We wrote about &lt;a class="link" href="../google-sheets-api/" >quickly editing a Google Sheets spreadsheet via the API&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h1 id="watch-how-to-set-up-a-remote-development-environment">&lt;a href="#watch-how-to-set-up-a-remote-development-environment" class="header-anchor">&lt;/a>Watch how to set up a remote development environment
 &lt;/h1>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -3578,34 +3745,48 @@ early, ensure our extension continues to work as expected, and make improve our 
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
 &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklS2CS7jEA_W6U5e96dN2kWa" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
 &lt;/div></description></item><item><title>Building a webhook flow with Tines</title><link>https://victoronsoftware.com/posts/webhook-flow-with-tines/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/webhook-flow-with-tines/</guid><description>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/tines-fleet-webhook-workflow.png" alt="Featured image of post Building a webhook flow with Tines" />&lt;h2 id="what-is-a-webhook">&lt;a href="#what-is-a-webhook" class="header-anchor">&lt;/a>What is a webhook?
-&lt;/h2>&lt;p>A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p>
+&lt;/h2>&lt;p>A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger
+an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p>
 &lt;h2 id="what-is-tines">&lt;a href="#what-is-tines" class="header-anchor">&lt;/a>What is Tines?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://www.tines.io/" target="_blank" rel="noopener"
->Tines&lt;/a> is a no-code automation platform that allows you to automate repetitive tasks. It is a powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p>
+>Tines&lt;/a> is a no-code automation platform that allows you to automate repetitive tasks. It is a
+powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p>
 &lt;h2 id="what-is-fleet">&lt;a href="#what-is-fleet" class="header-anchor">&lt;/a>What is Fleet?
 &lt;/h2>&lt;p>&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
->Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
->Osquery&lt;/a> agents run on these devices and report to the Fleet server.&lt;/p>
+>Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as
+laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+>Osquery&lt;/a> agents run on these devices and report to the Fleet
+server.&lt;/p>
 &lt;h2 id="our-example-it-workflow">&lt;a href="#our-example-it-workflow" class="header-anchor">&lt;/a>Our example IT workflow
-&lt;/h2>&lt;p>In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a webhook callback from Fleet. Tines will then send an MDM (Mobile Device Management) command to the device to update the device&amp;rsquo;s OS version.&lt;/p>
-&lt;p>Fleet will send a callback via its calendar integration feature. Fleet can put a &amp;ldquo;System Maintenance&amp;rdquo; event on the device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate the failing policy. This article is an example of one such flow.&lt;/p>
+&lt;/h2>&lt;p>In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a
+webhook callback from Fleet. Tines will then send an MDM (Mobile Device Management) command to the device to update the
+device&amp;rsquo;s OS version.&lt;/p>
+&lt;p>Fleet will send a callback via its calendar integration feature. Fleet can put a &amp;ldquo;System Maintenance&amp;rdquo; event on the
+device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more
+failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate
+the failing policy. This article is an example of one such flow.&lt;/p>
 &lt;h2 id="getting-started----webhook-action">&lt;a href="#getting-started----webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
-&lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
+&lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
+action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
 alt="Tines webhook action">&lt;figcaption>
 &lt;h4>Tines webhook action&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="handling-errors">&lt;a href="#handling-errors" class="header-anchor">&lt;/a>Handling errors
-&lt;/h2>&lt;p>Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p>
+&lt;/h2>&lt;p>Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we
+add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
+webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
 alt="Tines trigger action checking for an error">&lt;figcaption>
 &lt;h4>Tines trigger action checking for an error&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or triggering other actions.&lt;/p>
+&lt;p>We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
+triggering other actions.&lt;/p>
 &lt;h2 id="checking-whether-webhook-indicates-an-outdated-os">&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor">&lt;/a>Checking whether webhook indicates an outdated OS
-&lt;/h2>&lt;p>At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous testing, we know that the webhook payload will look like this:&lt;/p>
+&lt;/h2>&lt;p>At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous
+testing, we know that the webhook payload will look like this:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;timestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-03-28T13:57:31.668954-05:00&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">11058&lt;/span>,
@@ -3625,7 +3806,8 @@ alt="Tines trigger action checking for an error">&lt;figcaption>
 &lt;li>Serial number.&lt;/li>
 &lt;li>A list of failing policies.&lt;/li>
 &lt;/ul>
-&lt;p>We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p>
+&lt;p>We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
+up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
 alt="Tines trigger action checking for an outdated OS">&lt;figcaption>
 &lt;h4>Tines trigger action checking for an outdated OS&lt;/h4>
@@ -3634,21 +3816,27 @@ alt="Tines trigger action checking for an outdated OS">&lt;figcaption>
 &lt;p>We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p>
 &lt;pre tabindex="0">&lt;code>IF(FIND(calendar_webhook.body.failing_policies, LAMBDA(item, item.name = &amp;#34;macOS - OS version up to date&amp;#34;)).id &amp;gt; 0, TRUE)
 &lt;/code>&lt;/pre>&lt;h2 id="getting-device-details-from-fleet">&lt;a href="#getting-device-details-from-fleet" class="header-anchor">&lt;/a>Getting device details from Fleet
-&lt;/h2>&lt;p>Next, we need to get more details about the device from Fleet. Devices are called hosts in Fleet. We add an &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p>
+&lt;/h2>&lt;p>Next, we need to get more details about the device from Fleet. Devices are called hosts in Fleet. We add an &amp;ldquo;HTTP
+Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
+ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
 alt="Tines HTTP Request action to get Fleet device details">&lt;figcaption>
 &lt;h4>Tines HTTP Request action to get Fleet device details&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p>
+&lt;p>To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
+key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
 alt="Add credential to Tines story">&lt;figcaption>
 &lt;h4>Add credential to Tines story&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="creating-mdm-command-payload-to-update-os-version">&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor">&lt;/a>Creating MDM command payload to update OS version
-&lt;/h2>&lt;p>We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS version. We use the &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
->ScheduleOSUpdate&lt;/a> command from Apple&amp;rsquo;s MDM protocol.&lt;/p>
+&lt;/h2>&lt;p>We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS
+version. We use the
+&lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
+>ScheduleOSUpdate&lt;/a>
+command from Apple&amp;rsquo;s MDM protocol.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
@@ -3671,20 +3859,23 @@ alt="Add credential to Tines story">&lt;figcaption>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&amp;lt;&lt;/span>&lt;span style="color:#f92672">&amp;lt;UUID&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">()&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&amp;gt;&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the device. Note that the &lt;code>&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code> Tines function creates a unique UUID for this MDM command.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
+device. Note that the &lt;code>&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code> Tines function creates a unique UUID for this MDM command.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
 alt="Tines event to create ScheduleOSUpdate MDM command">&lt;figcaption>
 &lt;h4>Tines event to create ScheduleOSUpdate MDM command&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story to encode the XML payload. It uses the Tines &lt;code>BASE64_ENCODE&lt;/code> function.&lt;/p>
+&lt;p>The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
+to encode the XML payload. It uses the Tines &lt;code>BASE64_ENCODE&lt;/code> function.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
 alt="Tines Base64 Encode event">&lt;figcaption>
 &lt;h4>Tines Base64 Encode event&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="run-mdm-command-on-device">&lt;a href="#run-mdm-command-on-device" class="header-anchor">&lt;/a>Run MDM command on device
-&lt;/h2>&lt;p>Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a POST request to the Fleet API to send the MDM command to the device.&lt;/p>
+&lt;/h2>&lt;p>Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
+POST request to the Fleet API to send the MDM command to the device.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
 alt="Tines HTTP Request action to run MDM command on device">&lt;figcaption>
 &lt;h4>Tines HTTP Request action to run MDM command on device&lt;/h4>
@@ -3697,7 +3888,14 @@ alt="macOS restart notification after OS update">&lt;figcaption>
 &lt;/figcaption>
 &lt;/figure>
 &lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how Tines can automate workflows and tasks in IT environments.&lt;/p>
+&lt;/h2>&lt;p>In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an
+outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how
+Tines can automate workflows and tasks in IT environments.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained
+&lt;a class="link" href="../google-sheets-api/" >how to quickly get started with Google Sheets API for your development scripts&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="building-a-webhook-flow-with-tines-video">&lt;a href="#building-a-webhook-flow-with-tines-video" class="header-anchor">&lt;/a>Building a webhook flow with Tines video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -3708,7 +3906,8 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p>
-&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines" target="_blank" rel="noopener"
+&lt;p>&lt;em>This article originally appeared in
+&lt;a class="link" href="https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines" target="_blank" rel="noopener"
 >Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" />&lt;ul>
 &lt;li>&lt;a class="link" href="#excessive-database-locks" >Excessive database locks&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#read-after-write-consistency" >Read-after-write consistency&lt;/a>&lt;/li>
