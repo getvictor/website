@@ -176,6 +176,10 @@ We can review the spreadsheet to verify that our code added the new row.
 
 {{< figure src="google-sheets-with-new-row.png" alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">}}
 
+## Next steps
+
+- [Automate tracking of engineering metrics](../track-engineering-metrics/).
+
 ## Further reading
 
 - Recently, we covered [how to set up a remote development environment](../remote-development-environment/).

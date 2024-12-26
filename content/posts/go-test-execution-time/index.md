@@ -223,6 +223,7 @@ performance data for your Go test suite.
 - We also explored [fuzz testing with Go](../fuzz-testing-with-go).
 - In addition, we showed [how to create an EXE installer for a Go program](../exe-installer).
 - We also published an article on [using Go modules and packages](../go-modules-and-packages).
+- And we wrote about [automatically tracking engineering metrics with Go](../track-engineering-metrics/).
 
 ## Watch how to measure the execution time of Go tests accurately
 

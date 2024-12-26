@@ -125,6 +125,7 @@ Here is an example [GitHub Action to replace GitHub's pull request review proces
 
 ## Further reading
 
+- [How to track engineering metrics with GitHub Actions](../track-engineering-metrics/)
 - [How git merge works with PRs](../git-merges-and-pull-requests)
 - [How to reuse GitHub workflows and steps](../github-reusable-workflows-and-steps)
 - [Set up a remote dev environment](../remote-development-environment)
