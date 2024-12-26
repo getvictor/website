@@ -1,4 +1,161 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 18 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
+improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
+article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
+suite.&lt;/p>
+&lt;p>Some standard engineering metrics include:&lt;/p>
+&lt;ul>
+&lt;li>Number of bugs&lt;/li>
+&lt;li>Lead time for changes (or bug fixes)&lt;/li>
+&lt;li>Code coverage&lt;/li>
+&lt;li>Build/test success rate&lt;/li>
+&lt;li>Deployment frequency&lt;/li>
+&lt;li>Number of incidents&lt;/li>
+&lt;li>Mean time to recovery&lt;/li>
+&lt;li>Delivered story points&lt;/li>
+&lt;li>and many more&lt;/li>
+&lt;/ul>
+&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
+per-team basis.&lt;/p>
+&lt;h2 id="building-an-engineering-metrics-tracker">&lt;a href="#building-an-engineering-metrics-tracker" class="header-anchor">&lt;/a>Building an engineering metrics tracker
+&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
+Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
+&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
+services. We will use the Go programming language in our example.&lt;/p>
+&lt;h2 id="gathering-the-number-of-open-bugs">&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor">&lt;/a>Gathering the number of open bugs
+&lt;/h2>&lt;p>The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
+>GitHub API&lt;/a> is a well-documented way to query issues in a repository.&lt;/p>
+&lt;p>There are also many quality client libraries for the API. We will use the
+&lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
+>go-github&lt;/a> client.&lt;/p>
+&lt;p>Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">getGitHubIssues&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>) ([]&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">githubToken&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">Getenv&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;GITHUB_TOKEN&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>(&lt;span style="color:#66d9ef">nil&lt;/span>).&lt;span style="color:#a6e22e">WithAuthToken&lt;/span>(&lt;span style="color:#a6e22e">githubToken&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">IssueListByRepoOptions&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">State&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;open&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Labels&lt;/span>: []&lt;span style="color:#66d9ef">string&lt;/span>{&lt;span style="color:#e6db74">&amp;#34;#g-mdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;:release&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bug&amp;#34;&lt;/span>},
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">issues&lt;/span>, &lt;span style="color:#a6e22e">resp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Issues&lt;/span>.&lt;span style="color:#a6e22e">ListByRepo&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleetdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleet&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">allIssues&lt;/span> = append(&lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#a6e22e">issues&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">NextPage&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span>.&lt;span style="color:#a6e22e">Page&lt;/span> = &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">NextPage&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a
+personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions
+automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
+&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>,
+and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
+&lt;h2 id="updating-the-google-sheets-spreadsheet">&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor">&lt;/a>Updating the Google Sheets spreadsheet
+&lt;/h2>&lt;p>To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
+>Google Sheets API&lt;/a>
+with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
+>Google&amp;rsquo;s Go client library&lt;/a>.&lt;/p>
+&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
+spreadsheet using the API, see our previous article:
+&lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
+&lt;p>See our integrated
+&lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
+>function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a>
+on GitHub.&lt;/p>
+&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
+you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
+&lt;pre tabindex="0">&lt;code>spreadsheetId := os.Getenv(&amp;#34;SPREADSHEET_ID&amp;#34;)
+serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34;))
+&lt;/code>&lt;/pre>&lt;p>The glue code combining the above two functions is straightforward.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">getGitHubIssues&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to get GitHub issues: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Total issues: %d\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">allIssues&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">updateSpreadsheet&lt;/span>(len(&lt;span style="color:#a6e22e">allIssues&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to update spreadsheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
+automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
+&lt;h2 id="automating-the-metric-gathering-process-with-github-actions">&lt;a href="#automating-the-metric-gathering-process-with-github-actions" class="header-anchor">&lt;/a>Automating the metric-gathering process with GitHub Actions
+&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
+repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the
+latest metrics.&lt;/p>
+&lt;p>Create a &lt;code>.github/workflows/update-spreadsheet.yml&lt;/code> file in your repository with the following content:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Update spreadsheet with latest metrics&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">workflow_dispatch&lt;/span>: &lt;span style="color:#75715e"># Manual&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">schedule&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">cron&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;0 */12 * * *&amp;#39;&lt;/span> &lt;span style="color:#75715e"># At 00:00 and 12:00 UTC&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">env&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">GITHUB_TOKEN&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span> &lt;span style="color:#75715e"># automatically generated&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">GOOGLE_SERVICE_ACCOUNT_KEY&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">SPREADSHEET_ID&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.SPREADSHEET_ID }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">update-spreadsheet&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683&lt;/span> &lt;span style="color:#75715e"># v4.2.2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">fetch-depth&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Setup Go&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a&lt;/span> &lt;span style="color:#75715e"># v5.2.0&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">go run main.go&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the
+&lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the
+repository settings.&lt;/p>
+&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
+manually run the workflow to test it.&lt;/p>
+&lt;h2 id="display-the-metrics-in-google-docs">&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor">&lt;/a>Display the metrics in Google Docs
+&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can
+&lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
+>copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet.
+This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
+&lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
+alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs">
+&lt;/figure>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="code-on-github">&lt;a href="#code-on-github" class="header-anchor">&lt;/a>Code on GitHub
+&lt;/h2>&lt;p>For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
+>github-metrics&lt;/a>.&lt;/p>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/yzT-1nuKvNI"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" />&lt;ul>
 &lt;li>&lt;a class="link" href="#get-a-google-sheets-api-key" >Get a Google Sheets API key&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#share-a-google-sheets-spreadsheet-with-the-service-account" >Share a Google Sheets spreadsheet with the service account&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#edit-a-google-sheets-spreadsheet-using-the-api" >Edit a Google Sheets spreadsheet using the API&lt;/a>&lt;/li>
@@ -148,6 +305,10 @@ incremented value:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
 alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">
 &lt;/figure>
+&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../track-engineering-metrics/" >Automate tracking of engineering metrics&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we covered &lt;a class="link" href="../remote-development-environment/" >how to set up a remote development environment&lt;/a>.&lt;/li>
@@ -1850,6 +2011,7 @@ the PR)&lt;/li>
 &lt;p>Here is an example &lt;a class="link" href="../typescript-github-action/" >GitHub Action to replace GitHub&amp;rsquo;s pull request review process&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../track-engineering-metrics/" >How to track engineering metrics with GitHub Actions&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests" >How git merge works with PRs&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps" >How to reuse GitHub workflows and steps&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../remote-development-environment" >Set up a remote dev environment&lt;/a>&lt;/li>
@@ -2112,6 +2274,7 @@ performance data for your Go test suite.&lt;/p>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
 &lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../go-modules-and-packages" >using Go modules and packages&lt;/a>.&lt;/li>
+&lt;li>And we wrote about &lt;a class="link" href="../track-engineering-metrics/" >automatically tracking engineering metrics with Go&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately">&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor">&lt;/a>Watch how to measure the execution time of Go tests accurately
 &lt;/h2>&lt;div class="video-wrapper">
@@ -5270,6 +5433,7 @@ work that may run on the same runner and share the same work area.&lt;/p>
 >https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a>&lt;/p>
 &lt;h2 id="other-articles-related-to-github">&lt;a href="#other-articles-related-to-github" class="header-anchor">&lt;/a>Other articles related to GitHub
 &lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../track-engineering-metrics/" >Automate tracking of engineering metrics with GitHub Actions&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../github-code-review-issues" >Is GitHub code review process broken in your company?&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests/" >&lt;em>git merge&lt;/em> and GitHub pull requests explained&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../find-code-owners-for-pull-request" >Finding the minimum required code owner approvers for pull request&lt;/a>&lt;/li>
