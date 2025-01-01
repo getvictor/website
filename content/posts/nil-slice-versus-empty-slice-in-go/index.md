@@ -8,23 +8,27 @@ tags = ["Golang", "null", "Go Style Guide"]
 draft = false
 +++
 
-{{< youtube q0B4q_0u4XI >}}
-
-When starting to code in Go, I encountered the following situation. I needed to create an empty slice, so I did:
+When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:
 
 ```go
 slice := []string{}
 ```
 
-However, my IDE flagged it as a warning, and pointed me to [this Go style guide passage](https://go.dev/wiki/CodeReviewComments#declaring-empty-slices), which recommended using a nil slice instead:
+However, my IDE flagged it as a warning, and pointed me to
+[this Go style guide passage](https://go.dev/wiki/CodeReviewComments#declaring-empty-slices), which recommended using a
+nil slice instead:
 
 ```go
 var slice []string
 ```
 
-This recommendation didn't seem right to me. How can a nil variable be better? Won’t I run into issues like null pointer exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to be nil.
+This recommendation didn't seem right. How can a nil variable be better? Won’t we run into issues like null pointer
+exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it
+is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to
+be nil.
 
-The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return true. That’s pretty much it.
+The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
+true. That’s pretty much it.
 
 ```go
 if slice == nil {
@@ -88,7 +92,8 @@ fmt.Printf("len after passByPointer: %#v\n", len(slice))
 len after passByPointer: 1
 ```
 
-The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil pointer like you can a nil slice. This code causes a crash:
+The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil
+pointer like you can a nil slice. This code causes a crash:
 
 ```go
 var nullSlice *[]string
@@ -98,3 +103,11 @@ fmt.Printf("Crash: %#v\n", len(*nullSlice))
 Here's the full gist:
 
 {{< gist getvictor bff0fa45185630e264a40476207d8e4d >}}
+
+## Further reading
+
+- Recently, we wrote about [overriding methods in Go](../method-overriding-in-go/).
+
+## Watch nil slice vs empty slice video
+
+{{< youtube q0B4q_0u4XI >}}

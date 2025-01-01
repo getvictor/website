@@ -150,7 +150,8 @@ Usually, it is better to use packages within a single module to organize and dec
 
 ## Further reading
 
-- Recently, we wrote about [using the staticcheck linter on a large Go project](../staticcheck-go-linter/).
+- Recently, we covered [method overriding in Go](../method-overriding-in-go/).
+- We also wrote about [using the staticcheck linter on a large Go project](../staticcheck-go-linter/).
 - Previously, we described [how to use Go to unmarshal JSON null, set, and missing fields](../go-json-unmarshal/).
 - We also published an article on [accurately measuring the execution time of Go tests](../go-test-execution-time/).
 

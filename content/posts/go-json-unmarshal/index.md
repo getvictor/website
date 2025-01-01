@@ -244,15 +244,14 @@ available on the Go Playground.
 
 ## Further reading
 
-Recently, we published an article on
-[how to optimize the performance of a Go application](../optimizing-performance-of-go-app/). We benchmarked JSON
-decoding vs [gob](https://pkg.go.dev/encoding/gob) decoding in that article.
-
-In addition, we wrote about [how to read program arguments from STDIN with Go](..//get-args-from-stdin/), which is more
-secure than using environment variables or command-line arguments.
-
-Also, we explained [the difference between Go modules and packages](../go-modules-and-packages/), which is essential for
-organizing and managing Go code.
+- Recently, we published an article on
+  [how to optimize the performance of a Go application](../optimizing-performance-of-go-app/). We benchmarked JSON
+  decoding vs [gob](https://pkg.go.dev/encoding/gob) decoding in that article.
+- In addition, we wrote about [how to read program arguments from STDIN with Go](..//get-args-from-stdin/), which is
+  more secure than using environment variables or command-line arguments.
+- Also, we explained [the difference between Go modules and packages](../go-modules-and-packages/), which is essential
+  for organizing and managing Go code.
+- In addition, we [explained method overriding in Go](../method-overriding-in-go/).
 
 ## Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 
