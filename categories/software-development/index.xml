@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>How to override methods in Go</title><link>https://victoronsoftware.com/posts/method-overriding-in-go/</link><pubDate>Wed, 01 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/method-overriding-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/method-overriding-headline.png" alt="Featured image of post How to override methods in Go" />&lt;ul>
+&lt;li>&lt;a class="link" href="#method-overriding-with-embedded-structs" >Example of method overriding with embedded structs&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-method-overriding">&lt;a href="#what-is-method-overriding" class="header-anchor">&lt;/a>What is method overriding?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Method_overriding" target="_blank" rel="noopener"
+>Method overriding&lt;/a> is a feature of object-oriented programming
+languages that allows a subclass to provide a specific implementation of a method already defined in its superclass.
+When a subclass overrides a method, the subclass&amp;rsquo;s method is called instead of the superclass&amp;rsquo;s method when the object
+is of the subclass type. Method overriding is an example of polymorphism, where the same method name can have different
+implementations depending on the object&amp;rsquo;s type.&lt;/p>
+&lt;p>Go does not have classes, but it has structs and interfaces that can be used to achieve similar functionality.&lt;/p>
+&lt;h2 id="embedded-structs">&lt;a href="#embedded-structs" class="header-anchor">&lt;/a>Embedded structs
+&lt;/h2>&lt;p>Go favors composition over inheritance. Multiple smaller types can be combined to create a larger type. A clean way to
+do this is through &lt;a class="link" href="https://golang.org/doc/effective_go#embedding" target="_blank" rel="noopener"
+>embedded structs&lt;/a>. When a struct embeds another
+struct, it inherits the embedded struct&amp;rsquo;s fields and methods. For example, consider the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">m&lt;/span>&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>) &lt;span style="color:#a6e22e">Do&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, World! %d\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">MyComposedPrint&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Base:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">m&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Composed:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">MyComposedPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code outputs the following when run:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Base:
+Hello, World! 0
+Hello, World! 1
+Composed:
+Hello, World! 0
+Hello, World! 1
+&lt;/code>&lt;/pre>&lt;p>The composed struct forwards the method call to the embedded struct.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/embedded-struct.png"
+alt="MyPrint struct inside the MyComposedPrint struct.">
+&lt;/figure>
+&lt;h2 id="method-overriding-with-embedded-structs">&lt;a href="#method-overriding-with-embedded-structs" class="header-anchor">&lt;/a>Method overriding with embedded structs
+&lt;/h2>&lt;p>To override a method in Go, you can define a method with the same name and parameters in the composed struct. For
+example, consider the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">m&lt;/span>&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>) &lt;span style="color:#a6e22e">Do&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, World! %d\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">MyComposedPrint&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">m&lt;/span>&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">MyComposedPrint&lt;/span>) &lt;span style="color:#a6e22e">Do&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// call the parent method, similar to super.Do() in other languages
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">MyPrint&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, Composed World! %d\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Base:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">m&lt;/span> &lt;span style="color:#a6e22e">MyPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Composed:&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">MyComposedPrint&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This code outputs the following when run:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Base:
+Hello, World! 0
+Hello, World! 1
+Composed:
+Hello, World! 0
+Hello, Composed World! 1
+Hello, World! 2
+Hello, Composed World! 3
+&lt;/code>&lt;/pre>&lt;p>&lt;code>MyComposedPrint.Do&lt;/code> overrides &lt;code>MyPrint.Do&lt;/code>. When deciding which method to call, Go first looks for the method in the
+type itself. If the method is not found, Go looks for the method in the embedded types.&lt;/p>
+&lt;h2 id="method-overriding-and-interfaces">&lt;a href="#method-overriding-and-interfaces" class="header-anchor">&lt;/a>Method overriding and interfaces
+&lt;/h2>&lt;p>Method overriding is often used in conjunction with interfaces. An interface defines a set of methods a type must
+implement to satisfy the interface. When a type implements an interface, it can be used wherever the interface is
+expected. An interface is another example of polymorphism in Go.&lt;/p>
+&lt;p>One typical pattern is overriding a method in a 3rd party library. For example, you can embed a type from a library and
+override a method to add additional functionality. However, you will still pass the new type in your code using the
+library&amp;rsquo;s original interface.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>We recently described &lt;a class="link" href="../go-modules-and-packages/" >the differences between Go modules and packages&lt;/a>.&lt;/li>
+&lt;li>Previously, we explained &lt;a class="link" href="../go-json-unmarshal/" >how to properly unmarshal JSON null, set, and missing fields in Go&lt;/a>.&lt;/li>
+&lt;li>We also explained &lt;a class="link" href="../nil-slice-versus-empty-slice-in-go/" >the difference between nil slice and empty slice in Go&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-method-overriding-in-go-video">&lt;a href="#watch-method-overriding-in-go-video" class="header-anchor">&lt;/a>Watch method overriding in Go video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/OW42Lv8HjUk"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
 improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
 article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
 suite.&lt;/p>
@@ -421,7 +547,8 @@ makes sense, like:&lt;/p>
 &lt;p>Usually, it is better to use packages within a single module to organize and decouple code.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../staticcheck-go-linter/" >using the staticcheck linter on a large Go project&lt;/a>.&lt;/li>
+&lt;li>Recently, we covered &lt;a class="link" href="../method-overriding-in-go/" >method overriding in Go&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../staticcheck-go-linter/" >using the staticcheck linter on a large Go project&lt;/a>.&lt;/li>
 &lt;li>Previously, we described &lt;a class="link" href="../go-json-unmarshal/" >how to use Go to unmarshal JSON null, set, and missing fields&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../go-test-execution-time/" >accurately measuring the execution time of Go tests&lt;/a>.&lt;/li>
 &lt;/ul>
@@ -922,14 +1049,17 @@ Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,
 >Go code for unmarshalling JSON null, set, and missing fields&lt;/a> is
 available on the Go Playground.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we published an article on
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we published an article on
 &lt;a class="link" href="../optimizing-performance-of-go-app/" >how to optimize the performance of a Go application&lt;/a>. We benchmarked JSON
 decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
->gob&lt;/a> decoding in that article.&lt;/p>
-&lt;p>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is more
-secure than using environment variables or command-line arguments.&lt;/p>
-&lt;p>Also, we explained &lt;a class="link" href="../go-modules-and-packages/" >the difference between Go modules and packages&lt;/a>, which is essential for
-organizing and managing Go code.&lt;/p>
+>gob&lt;/a> decoding in that article.&lt;/li>
+&lt;li>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is
+more secure than using environment variables or command-line arguments.&lt;/li>
+&lt;li>Also, we explained &lt;a class="link" href="../go-modules-and-packages/" >the difference between Go modules and packages&lt;/a>, which is essential
+for organizing and managing Go code.&lt;/li>
+&lt;li>In addition, we &lt;a class="link" href="../method-overriding-in-go/" >explained method overriding in Go&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately">&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor">&lt;/a>Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
@@ -5080,21 +5210,19 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/q0B4q_0u4XI"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>When starting to code in Go, I encountered the following situation. I needed to create an empty slice, so I did:&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;p>When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>{}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, my IDE flagged it as a warning, and pointed me to &lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
->this Go style guide passage&lt;/a>, which recommended using a nil slice instead:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, my IDE flagged it as a warning, and pointed me to
+&lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
+>this Go style guide passage&lt;/a>, which recommended using a
+nil slice instead:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This recommendation didn&amp;rsquo;t seem right to me. How can a nil variable be better? Won’t I run into issues like null pointer exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to be nil.&lt;/p>
-&lt;p>The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return true. That’s pretty much it.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
+exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it
+is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to
+be nil.&lt;/p>
+&lt;p>The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
+true. That’s pretty much it.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Slice is nil.&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#66d9ef">else&lt;/span> {
@@ -5121,11 +5249,25 @@ title="YouTube Video"
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">passByPointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;len after passByPointer: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">slice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>len after passByPointer: 1
-&lt;/code>&lt;/pre>&lt;p>The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil pointer like you can a nil slice. This code causes a crash:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil
+pointer like you can a nil slice. This code causes a crash:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nullSlice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Crash: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">nullSlice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s the full gist:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script></description></item><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;p>Authorization is giving permission to a user to do an action on the server. As developers, we must ensure that users are
+&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" >overriding methods in Go&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-nil-slice-vs-empty-slice-video">&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor">&lt;/a>Watch nil slice vs empty slice video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/q0B4q_0u4XI"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;p>Authorization is giving permission to a user to do an action on the server. As developers, we must ensure that users are
 only allowed to do what they are authorized.&lt;/p>
 &lt;p>One way to ensure that authorization has happened is to loudly flag when it hasn&amp;rsquo;t. This is how we do it at
 &lt;a class="link" href="https://www.fleetdm.com" target="_blank" rel="noopener"

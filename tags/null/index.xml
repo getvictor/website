@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>null on Victor on Software</title><link>https://victoronsoftware.com/tags/null/</link><description>Recent content in null on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/null/index.xml" rel="self" type="application/rss+xml"/><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/q0B4q_0u4XI"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>When starting to code in Go, I encountered the following situation. I needed to create an empty slice, so I did:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>null on Victor on Software</title><link>https://victoronsoftware.com/tags/null/</link><description>Recent content in null on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/null/index.xml" rel="self" type="application/rss+xml"/><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;p>When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>{}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, my IDE flagged it as a warning, and pointed me to &lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
->this Go style guide passage&lt;/a>, which recommended using a nil slice instead:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, my IDE flagged it as a warning, and pointed me to
+&lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
+>this Go style guide passage&lt;/a>, which recommended using a
+nil slice instead:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This recommendation didn&amp;rsquo;t seem right to me. How can a nil variable be better? Won’t I run into issues like null pointer exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to be nil.&lt;/p>
-&lt;p>The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return true. That’s pretty much it.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
+exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it
+is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to
+be nil.&lt;/p>
+&lt;p>The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
+true. That’s pretty much it.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Slice is nil.&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#66d9ef">else&lt;/span> {
@@ -39,8 +37,22 @@ title="YouTube Video"
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">passByPointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;len after passByPointer: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">slice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>len after passByPointer: 1
-&lt;/code>&lt;/pre>&lt;p>The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil pointer like you can a nil slice. This code causes a crash:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil
+pointer like you can a nil slice. This code causes a crash:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nullSlice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Crash: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">nullSlice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s the full gist:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script></description></item></channel></rss>
+&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" >overriding methods in Go&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-nil-slice-vs-empty-slice-video">&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor">&lt;/a>Watch nil slice vs empty slice video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/q0B4q_0u4XI"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item></channel></rss>

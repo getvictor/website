@@ -189,14 +189,17 @@ Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,
 >Go code for unmarshalling JSON null, set, and missing fields&lt;/a> is
 available on the Go Playground.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we published an article on
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we published an article on
 &lt;a class="link" href="../optimizing-performance-of-go-app/" >how to optimize the performance of a Go application&lt;/a>. We benchmarked JSON
 decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
->gob&lt;/a> decoding in that article.&lt;/p>
-&lt;p>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is more
-secure than using environment variables or command-line arguments.&lt;/p>
-&lt;p>Also, we explained &lt;a class="link" href="../go-modules-and-packages/" >the difference between Go modules and packages&lt;/a>, which is essential for
-organizing and managing Go code.&lt;/p>
+>gob&lt;/a> decoding in that article.&lt;/li>
+&lt;li>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is
+more secure than using environment variables or command-line arguments.&lt;/li>
+&lt;li>Also, we explained &lt;a class="link" href="../go-modules-and-packages/" >the difference between Go modules and packages&lt;/a>, which is essential
+for organizing and managing Go code.&lt;/li>
+&lt;li>In addition, we &lt;a class="link" href="../method-overriding-in-go/" >explained method overriding in Go&lt;/a>.&lt;/li>
+&lt;/ul>
 &lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately">&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor">&lt;/a>Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
