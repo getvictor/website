@@ -43,7 +43,49 @@ database will run on port 3309.
 
 We run `docker compose up` using the following `docker-compose.yml` file:
 
-{{< gist getvictor 92ce5a8541ce27a1ea36f9eb7feb0344 >}}
+```yaml
+---
+version: "2"
+services:
+  mysql_master:
+    image: mysql:8.0
+    volumes:
+      - mysql-replica-main:/tmp
+    command:
+      [
+        "mysqld",
+        "--datadir=/tmp/mysqldata-replica-main",
+        "--log-bin=bin.log",
+        "--server-id=1"
+      ]
+    environment:
+      &mysql-default-environment
+      MYSQL_ROOT_PASSWORD: toor
+      MYSQL_DATABASE: test
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: insecure
+    ports:
+      - "3308:3306"
+
+  mysql_slave:
+    image: mysql:8.0
+    volumes:
+      - mysql-replica-read:/tmp
+    command:
+      [
+        "mysqld",
+        "--datadir=/tmp/mysqldata-replica-read",
+        "--log-bin=bin.log",
+        "--server-id=2"
+      ]
+    environment: *mysql-default-environment
+    ports:
+      - "3309:3306"
+
+volumes:
+  mysql-replica-main:
+  mysql-replica-read:
+```
 
 ## Create a DB user for replication {#create-db-user-for-replication}
 
