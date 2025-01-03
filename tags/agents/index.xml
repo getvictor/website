@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agents on Victor on Software</title><link>https://victoronsoftware.com/tags/agents/</link><description>Recent content in Agents on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 11 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/agents/index.xml" rel="self" type="application/rss+xml"/><item><title>What are launchd agents and daemons on macOS?</title><link>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</link><pubDate>Wed, 11 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/macos-agents-and-daemons.png" alt="Featured image of post What are launchd agents and daemons on macOS?" />&lt;ul>
 &lt;li>&lt;a class="link" href="#how-to-find-the-plist-file-for-a-running-process" >How to find the plist file for a running process&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#create-and-edit-plist-files-with-plistbuddy" >Create and edit .plist files with PlistBuddy&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-is-launchd">&lt;a href="#what-is-launchd" class="header-anchor">&lt;/a>What is launchd?
 &lt;/h2>&lt;p>&lt;code>launchd&lt;/code> is a macOS system service manager that starts, stops, and manages daemons, agents, and other processes. It is
@@ -142,7 +143,17 @@ example, in a macOS system with Fleet&amp;rsquo;s orbit running, you can run:&lt
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> path &lt;span style="color:#f92672">=&lt;/span> /Library/LaunchDaemons/com.fleetdm.orbit.plist
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can now view the contents of the &lt;code>.plist&lt;/code> file to understand how the process was started.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>plutil -p /Library/LaunchDaemons/com.fleetdm.orbit.plist
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-and-edit-plist-files-with-plistbuddy">&lt;a href="#create-and-edit-plist-files-with-plistbuddy" class="header-anchor">&lt;/a>Create and edit .plist files with PlistBuddy
+&lt;/h2>&lt;p>&lt;code>PlistBuddy&lt;/code> is a powerful built-in macOS tool for creating and editing &lt;code>.plist&lt;/code> files. You can use it to automate the
+creation and modification of launchd agents and daemons.&lt;/p>
+&lt;p>You can create and edit &lt;code>.plist&lt;/code> files using the &lt;code>PlistBuddy&lt;/code>. For example, to create a new &lt;code>.plist&lt;/code> file with a
+key-value pair, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74">&amp;#34;Add :Label string com.fleetdm.orbit&amp;#34;&lt;/span> com.fleetdm.orbit.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To edit an existing &lt;code>.plist&lt;/code> file, use the &lt;code>-c&lt;/code> flag with the &lt;code>Set&lt;/code> command. For example, to change the above &lt;code>Label&lt;/code>
+key to &lt;code>com.fleetdm.orbit2&lt;/code>, run:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74">&amp;#34;Set :Label com.fleetdm.orbit2&amp;#34;&lt;/span> com.fleetdm.orbit.plist
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Run &lt;code>/usr/libexec/PlistBuddy --help&lt;/code> for more information on using &lt;code>PlistBuddy&lt;/code>.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we showed &lt;a class="link" href="../script-only-macos-install-package/" >two ways to turn a script into a macOS install package&lt;/a>.&lt;/li>
 &lt;li>Previously, we explained &lt;a class="link" href="../mtls-with-apple-keychain/" >how to configure mTLS using the macOS keychain&lt;/a>.&lt;/li>
