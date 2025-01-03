@@ -10,6 +10,7 @@ draft = false
 +++
 
 - [How to find the plist file for a running process](#how-to-find-the-plist-file-for-a-running-process)
+- [Create and edit .plist files with PlistBuddy](#create-and-edit-plist-files-with-plistbuddy)
 
 ## What is launchd?
 
@@ -183,6 +184,27 @@ You can now view the contents of the `.plist` file to understand how the process
 ```shell
 plutil -p /Library/LaunchDaemons/com.fleetdm.orbit.plist
 ```
+
+## Create and edit .plist files with PlistBuddy
+
+`PlistBuddy` is a powerful built-in macOS tool for creating and editing `.plist` files. You can use it to automate the
+creation and modification of launchd agents and daemons.
+
+You can create and edit `.plist` files using the `PlistBuddy`. For example, to create a new `.plist` file with a
+key-value pair, run:
+
+```shell
+/usr/libexec/PlistBuddy -c "Add :Label string com.fleetdm.orbit" com.fleetdm.orbit.plist
+```
+
+To edit an existing `.plist` file, use the `-c` flag with the `Set` command. For example, to change the above `Label`
+key to `com.fleetdm.orbit2`, run:
+
+```shell
+/usr/libexec/PlistBuddy -c "Set :Label com.fleetdm.orbit2" com.fleetdm.orbit.plist
+```
+
+Run `/usr/libexec/PlistBuddy --help` for more information on using `PlistBuddy`.
 
 ## Further reading
 
