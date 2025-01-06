@@ -2,7 +2,7 @@
 title = 'Create a MySQL replica database in 4 short steps (2025)'
 description = "Scale your database using source-replica (master-slave) replication"
 image = "mysql-master-slave-replication.png"
-date = 2025-01-08
+date = 2025-01-06
 categories = ["Database Administration"]
 tags = ["MySQL", "Database Scaling"]
 draft = false
