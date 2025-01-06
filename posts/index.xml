@@ -1,4 +1,136 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 01 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to override methods in Go</title><link>https://victoronsoftware.com/posts/method-overriding-in-go/</link><pubDate>Wed, 01 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/method-overriding-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/method-overriding-headline.png" alt="Featured image of post How to override methods in Go" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 06 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Create a MySQL replica database in 4 short steps (2025)</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL replica database in 4 short steps (2025)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+&lt;/h2>&lt;p>In this article, we will create a MySQL replica database. A MySQL replica is a read-only copy of the primary database,
+which is kept in sync with the main database using MySQL replication threads.&lt;/p>
+&lt;p>The steps we will follow are:&lt;/p>
+&lt;ol>
+&lt;li>&lt;a class="link" href="#create-mysql-source-and-replica-databases" >Spin up MySQL source and replica databases&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#create-db-user-for-replication" >Create a user for replication&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#retrieve-source-binary-log-coordinates" >Obtain source binary log coordinates&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#configure-replica-and-start-replication" >Configure replica DB and start replication&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;p>To add a replica to an existing MySQL database, see the
+&lt;a class="link" href="#copy-database-from-source-and-start-replication-manually" >copy database from source and start replication manually&lt;/a>
+section.&lt;/p>
+&lt;h2 id="terminology-master-slave-vs-source-replica">&lt;a href="#terminology-master-slave-vs-source-replica" class="header-anchor">&lt;/a>Terminology: master-slave vs source-replica
+&lt;/h2>&lt;p>In database replication, the terms master-slave and source-replica are used interchangeably. In recent MySQL versions,
+the term source-replica is preferred over master-slave due to its more neutral connotation. Many keywords and variables
+in MySQL have recently been renamed to use neutral terms. We will use the terms source and replica in this article.&lt;/p>
+&lt;h2 id="what-is-database-replication">&lt;a href="#what-is-database-replication" class="header-anchor">&lt;/a>What is database replication?
+&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the source) to be copied to one or more
+database servers (replicas). Replication is asynchronous, meaning the replica instance does not need to be connected to
+the source constantly. The replica can catch up with the source when either becomes available.&lt;/p>
+&lt;p>Database replicas are used for:&lt;/p>
+&lt;ul>
+&lt;li>Scaling read operations&lt;/li>
+&lt;li>High availability&lt;/li>
+&lt;li>Disaster recovery&lt;/li>
+&lt;/ul>
+&lt;p>MySQL implements replication using the binary log. The source server writes changes to the binary log, and the replica
+server reads it and applies the changes to its database.&lt;/p>
+&lt;h2 id="create-mysql-source-and-replica-databases">&lt;a href="#create-mysql-source-and-replica-databases" class="header-anchor">&lt;/a>Create MySQL source and replica databases
+&lt;/h2>&lt;p>We will use Docker to create the MySQL source and replica databases. We will use the
+&lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
+>official MySQL Docker image&lt;/a>. The source database will run on port 3308, and the
+replica database will run on port 3309. Both servers will have the database named &lt;code>test&lt;/code>. We tested these instructions
+on MySQL 8.0.36, MySQL 8.4.3, and MySQL 9.1.0.&lt;/p>
+&lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
+&lt;script src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
+&lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
+&lt;/h2>&lt;p>Replication in MySQL requires a user with the
+&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.4/en/privileges-provided.html#priv_replication-slave" target="_blank" rel="noopener"
+>&lt;code>REPLICATION SLAVE&lt;/code>&lt;/a>
+privilege. We will create a user named &lt;code>replicator&lt;/code> with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
+&lt;p>Connect to the source database using the MySQL client:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3308&lt;/span> -uroot -ptoor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the &lt;code>replicator&lt;/code> user and grant the &lt;code>REPLICATION SLAVE&lt;/code> privilege:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">USER&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span> IDENTIFIED &lt;span style="color:#66d9ef">BY&lt;/span> &lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GRANT&lt;/span> REPLICATION SLAVE &lt;span style="color:#66d9ef">ON&lt;/span> &lt;span style="color:#f92672">*&lt;/span>.&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLUSH &lt;span style="color:#66d9ef">PRIVILEGES&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="retrieve-source-binary-log-coordinates">&lt;a href="#retrieve-source-binary-log-coordinates" class="header-anchor">&lt;/a>Retrieve source binary log coordinates
+&lt;/h2>&lt;p>For the replica server to start replication, it needs to know the source&amp;rsquo;s binary log file and position. We can obtain
+this information using the MySQL client we opened in the previous step.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> BINARY LOG STATUS;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In MySQL 8.0, use the &lt;code>SHOW MASTER STATUS&lt;/code> command instead of &lt;code>SHOW BINARY LOG STATUS&lt;/code>.&lt;/p>
+&lt;p>The output will look like this:&lt;/p>
+&lt;pre tabindex="0">&lt;code>+------------+----------+--------------+------------------+-------------------+
+| File | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
++------------+----------+--------------+------------------+-------------------+
+| bin.000003 | 862 | | | |
++------------+----------+--------------+------------------+-------------------+
+1 row in set (0.01 sec)
+&lt;/code>&lt;/pre>&lt;p>We must remember the &lt;code>File&lt;/code> and &lt;code>Position&lt;/code> values for the next step.&lt;/p>
+&lt;h2 id="configure-replica-and-start-replication">&lt;a href="#configure-replica-and-start-replication" class="header-anchor">&lt;/a>Configure replica DB and start replication
+&lt;/h2>&lt;p>Now, we will connect to the replica database and configure it to replicate from the source database.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3309&lt;/span> -uroot -ptoor
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE REPLICATION SOURCE TO&lt;/code> command to configure the replica to replicate from the source. Replace
+&lt;code>SOURCE_LOG_FILE&lt;/code> and &lt;code>SOURCE_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>CHANGE REPLICATION &lt;span style="color:#66d9ef">SOURCE&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_HOST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;mysql_source&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_PORT&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3306&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_USER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_PASSWORD&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_LOG_FILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;bin.000003&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_LOG_POS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">862&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GET_SOURCE_PUBLIC_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SOURCE_HOST&lt;/code> is the primary source&amp;rsquo;s hostname, which matches the docker service name. The &lt;code>GET_SOURCE_PUBLIC_KEY&lt;/code>
+option is needed for &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
+&lt;p>Finally, start the replica:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> REPLICA;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The replica will now start cloning data from the source database. You can check the replication status using the
+&lt;code>SHOW REPLICA STATUS\G&lt;/code> command. Use this command to check for errors if you suspect something is wrong.&lt;/p>
+&lt;p>We can create a table with data on the source database and check if it is replicated to the replica database:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>USE test;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> users (id INT &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span>, name VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>));
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="restore-replication-after-an-issue">&lt;a href="#restore-replication-after-an-issue" class="header-anchor">&lt;/a>Restore replication after an issue
+&lt;/h2>&lt;p>If the replica crashes and comes back up, it may be unable to resume replication from where it left off. If the replica
+stops replicating due to an error, first try to restart replication on the replica:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>STOP REPLICA;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> REPLICA;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Check the replication status for errors using the &lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
+&lt;p>If the replica still does not replicate, we need to copy the database from the source and restart replication manually.&lt;/p>
+&lt;h3 id="copy-database-from-source-and-start-replication-manually">&lt;a href="#copy-database-from-source-and-start-replication-manually" class="header-anchor">&lt;/a>Copy database from source and start replication manually
+&lt;/h3>&lt;p>Reset the replica:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>STOP REPLICA;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">RESET&lt;/span> REPLICA &lt;span style="color:#66d9ef">ALL&lt;/span>;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Optionally, drop and recreate the database on the replica:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">DROP&lt;/span> &lt;span style="color:#66d9ef">DATABASE&lt;/span> test;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">DATABASE&lt;/span> test;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If the source database still has the binary log files around from the first time we set up replication, we can redo the
+original steps using the same source log file and position. If not, we need to back up the source database and restore
+it on the replica.&lt;/p>
+&lt;p>Backup the source database (on port 3308 with database name &lt;code>test&lt;/code>):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>bash &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">c&lt;/span> &lt;span style="color:#e6db74">&amp;#39;mysqldump --host 127.0.0.1 --port 3308 -uroot -ptoor test | gzip -&amp;#39;&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> backup.&lt;span style="color:#66d9ef">sql&lt;/span>.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Restore the backup on the replica database (on port 3309):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>bash &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">c&lt;/span> &lt;span style="color:#e6db74">&amp;#39;gzip -dc - | mysql --host 127.0.0.1 --port 3308 -uroot -ptoor test&amp;#39;&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> backup.&lt;span style="color:#66d9ef">sql&lt;/span>.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, redo the following steps from above:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#retrieve-source-binary-log-coordinates" >Obtain source binary log coordinates&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#configure-replica-and-start-replication" >Configure replica DB and start replication&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>As you can see, restarting replication after an issue can be more involved than just restarting the replica. Regular
+backups can help in such situations. When backing up the source database, make sure to include the binary log files,
+along with the corresponding binary log position. You can then use these files to restore or spin up a new replica while
+the source database is actively running.&lt;/p>
+&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of
+the issues we summarized was
+&lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
+&lt;li>In the past, we encountered a
+&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../secure-mysql-docker" >securing your MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="follow-along-with-the-mysql-source-replica-video">&lt;a href="#follow-along-with-the-mysql-source-replica-video" class="header-anchor">&lt;/a>Follow along with the MySQL source-replica video
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/mpCeatW4t_U"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to override methods in Go</title><link>https://victoronsoftware.com/posts/method-overriding-in-go/</link><pubDate>Wed, 01 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/method-overriding-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/method-overriding-headline.png" alt="Featured image of post How to override methods in Go" />&lt;ul>
 &lt;li>&lt;a class="link" href="#method-overriding-with-embedded-structs" >Example of method overriding with embedded structs&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-is-method-overriding">&lt;a href="#what-is-method-overriding" class="header-anchor">&lt;/a>What is method overriding?
@@ -4717,137 +4849,6 @@ alt="Debugging Chrome extension popup">&lt;figcaption>
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/a3n-C-7u3VE"
-allowfullscreen
-title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Create a MySQL slave replica in 4 short steps</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Sat, 18 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL slave replica in 4 short steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a MySQL slave replica. A MySQL slave is a read-only copy of the master database. Using
-MySQL replication, the slave database is kept in sync with the master database.&lt;/p>
-&lt;p>The steps we will follow are:&lt;/p>
-&lt;ol>
-&lt;li>&lt;a class="link" href="#create-mysql-master-and-slave-databases" >Spin up MySQL master and slave databases&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#create-db-user-for-replication" >Create a user for replication&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#retrieve-master-binary-log-coordinates" >Obtain master binary log coordinates&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#configure-slave-and-start-replication" >Configure slave and start replication&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;h2 id="what-is-database-replication">&lt;a href="#what-is-database-replication" class="header-anchor">&lt;/a>What is database replication?
-&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the master) to be copied to one or more
-database servers (the slaves or replicas). Replication is asynchronous, meaning that the slave does not need to be
-connected to the master constantly. The replica can catch up with the master when it is available.&lt;/p>
-&lt;p>Database replicas are used for:&lt;/p>
-&lt;ul>
-&lt;li>Scaling read operations&lt;/li>
-&lt;li>High availability&lt;/li>
-&lt;li>Disaster recovery&lt;/li>
-&lt;/ul>
-&lt;p>MySQL implements replication using the binary log. The master server writes changes to the binary log, and the slave
-server reads the binary log and applies the changes to its database.&lt;/p>
-&lt;h2 id="create-mysql-master-and-slave-databases">&lt;a href="#create-mysql-master-and-slave-databases" class="header-anchor">&lt;/a>Create MySQL master and slave databases
-&lt;/h2>&lt;p>We will use Docker to create the MySQL master and slave databases. We will use the
-&lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
->official MySQL Docker image&lt;/a>. The master database will run on port 3308, and the slave
-database will run on port 3309.&lt;/p>
-&lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>---
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql_master&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8.0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">mysql-replica-main:/tmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;mysqld&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--datadir=/tmp/mysqldata-replica-main&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--log-bin=bin.log&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--server-id=1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">&amp;amp;mysql-default-environment&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_ROOT_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">toor&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_DATABASE&lt;/span>: &lt;span style="color:#ae81ff">test&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_USER&lt;/span>: &lt;span style="color:#ae81ff">test_user&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">MYSQL_PASSWORD&lt;/span>: &lt;span style="color:#ae81ff">insecure&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;3308:3306&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql_slave&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">image&lt;/span>: &lt;span style="color:#ae81ff">mysql:8.0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">volumes&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">mysql-replica-read:/tmp&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">command&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;mysqld&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--datadir=/tmp/mysqldata-replica-read&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--log-bin=bin.log&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;--server-id=2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">environment&lt;/span>: &lt;span style="color:#75715e">*mysql-default-environment&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ports&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#34;3309:3306&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">volumes&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql-replica-main&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mysql-replica-read&lt;/span>:
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
-&lt;/h2>&lt;p>Replication in MySQL requires a user with the &lt;code>REPLICATION SLAVE&lt;/code> privilege. We will create a user named &lt;code>replicator&lt;/code>
-with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
-&lt;p>Connect to the master database using the MySQL client:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3308&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the &lt;code>replicator&lt;/code> user and grant the &lt;code>REPLICATION SLAVE&lt;/code> privilege:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">USER&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span> IDENTIFIED &lt;span style="color:#66d9ef">BY&lt;/span> &lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GRANT&lt;/span> REPLICATION SLAVE &lt;span style="color:#66d9ef">ON&lt;/span> &lt;span style="color:#f92672">*&lt;/span>.&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLUSH &lt;span style="color:#66d9ef">PRIVILEGES&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="retrieve-master-binary-log-coordinates">&lt;a href="#retrieve-master-binary-log-coordinates" class="header-anchor">&lt;/a>Retrieve master binary log coordinates
-&lt;/h2>&lt;p>For the slave to start replication, it needs to know the master&amp;rsquo;s binary log file and position. We can obtain this
-information using the MySQL client which we opened in the previous step.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> MASTER STATUS;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will look like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>+------------+----------+--------------+------------------+-------------------+
-| File | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
-+------------+----------+--------------+------------------+-------------------+
-| bin.000003 | 861 | | | |
-+------------+----------+--------------+------------------+-------------------+
-1 row in set (0.01 sec)
-&lt;/code>&lt;/pre>&lt;p>We must remember the &lt;code>File&lt;/code> and &lt;code>Position&lt;/code> values for the next step.&lt;/p>
-&lt;h2 id="configure-slave-and-start-replication">&lt;a href="#configure-slave-and-start-replication" class="header-anchor">&lt;/a>Configure slave and start replication
-&lt;/h2>&lt;p>Now, we will connect to the slave database and configure it to replicate from the master database.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3309&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE MASTER TO&lt;/code> command to configure the slave to replicate from the master. Replace &lt;code>MASTER_LOG_FILE&lt;/code> and
-&lt;code>MASTER_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>CHANGE MASTER &lt;span style="color:#66d9ef">TO&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_HOST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;mysql_master&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_PORT&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3306&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_USER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_PASSWORD&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_FILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;bin.000003&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> MASTER_LOG_POS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">861&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GET_MASTER_PUBLIC_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>MASTER_HOST&lt;/code> is the hostname of the master, which matches the docker service name. The &lt;code>GET_MASTER_PUBLIC_KEY&lt;/code> option
-is needed for MySQL 8.0 &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
-&lt;p>Finally, start the slave:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> SLAVE;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The slave will now start replicating data from the master database. You can check the replication status using the
-&lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
-&lt;p>We can create a table with data on the master database and check if it is replicated to the slave database:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>USE test;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> users (id INT &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span>, name VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>));
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of
-the issues we summarized was
-&lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
-&lt;li>In the past, we encountered a
-&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../secure-mysql-docker" >securing your MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="follow-along-with-the-mysql-master-slave-replication-on-video">&lt;a href="#follow-along-with-the-mysql-master-slave-replication-on-video" class="header-anchor">&lt;/a>Follow along with the MySQL master-slave replication on video
-&lt;/h2>&lt;div class="video-wrapper">
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/nMbb1199HQU"
 allowfullscreen
 title="YouTube Video"
 >
