@@ -1,4 +1,128 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 06 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Create a MySQL replica database in 4 short steps (2025)</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL replica database in 4 short steps (2025)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 08 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Secure private CDN content with CloudFront signed URLs</title><link>https://victoronsoftware.com/posts/cloudfront-signed-urls/</link><pubDate>Wed, 08 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/cloudfront-signed-urls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/signed-url-headline.png" alt="Featured image of post Secure private CDN content with CloudFront signed URLs" />&lt;ol>
+&lt;li>&lt;a class="link" href="#create-a-cloudfront-distribution" >Create a CloudFront distribution&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#create-a-cloudfront-key-pair-and-add-it-to-a-key-group" >Create a CloudFront key pair and add it to a key group&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#associate-the-key-group-with-the-cloudfront-distribution" >Associate the key group with the CloudFront distribution&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#generate-a-signed-url-using-aws-sdks" >Generate a signed URL using AWS SDKs&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-is-cloudfront-cdn">&lt;a href="#what-is-cloudfront-cdn" class="header-anchor">&lt;/a>What is CloudFront CDN?
+&lt;/h2>&lt;p>&lt;a class="link" href="https://aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
+>Amazon CloudFront&lt;/a> is a content delivery network (CDN) service that securely
+delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
+CloudFront is a popular choice for serving users worldwide with static assets, such as images, videos, and software
+package files.&lt;/p>
+&lt;p>CloudFront uses S3 buckets, EC2 instances, and other AWS resources as origins to cache and serve content. When a user
+requests a file from a CloudFront distribution, CloudFront checks its cache for the file. If the file is not in the
+cache, CloudFront retrieves it from the origin and caches it for future requests.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/users-requesting-from-cloudfront.png">&lt;figcaption>
+&lt;h4>Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="what-are-cloudfront-signed-urls">&lt;a href="#what-are-cloudfront-signed-urls" class="header-anchor">&lt;/a>What are CloudFront signed URLs?
+&lt;/h2>&lt;p>CloudFront signed URLs grant access to private content served by CloudFront. By default, CloudFront distributions are
+public and serve content to anyone who requests it. However, your signed URLs can restrict access according to some of
+the following rules:&lt;/p>
+&lt;ul>
+&lt;li>source IP address&lt;/li>
+&lt;li>begin access time and/or expiration time&lt;/li>
+&lt;/ul>
+&lt;p>Signed URLs are helpful when you want to serve private content to specific users or for a limited time. For example:&lt;/p>
+&lt;ul>
+&lt;li>Serve paid content to customers who have purchased a subscription&lt;/li>
+&lt;li>Share private documents with a specific group of users&lt;/li>
+&lt;li>Provide temporary access to a file for a limited time&lt;/li>
+&lt;li>Serve content to users without requiring them to log in&lt;/li>
+&lt;/ul>
+&lt;p>A signed URL looks like a regular CloudFront URL but contains additional query parameters that specify the access
+restrictions. Depending on the limits you apply, a signed URL may be quite lengthy.&lt;/p>
+&lt;p>&lt;a class="link" href="https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires=1736178766&amp;amp;Signature=HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id=K1HFGXOMBB6TFF" target="_blank" rel="noopener"
+>https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires=1736178766&amp;Signature=HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;Key-Pair-Id=K1HFGXOMBB6TFF&lt;/a>&lt;/p>
+&lt;h2 id="how-to-create-cloudfront-signed-urls">&lt;a href="#how-to-create-cloudfront-signed-urls" class="header-anchor">&lt;/a>How to create CloudFront signed URLs
+&lt;/h2>&lt;p>You must have an AWS account and an S3 bucket with private content as a prerequisite.&lt;/p>
+&lt;h3 id="create-a-cloudfront-distribution">&lt;a href="#create-a-cloudfront-distribution" class="header-anchor">&lt;/a>Create a CloudFront distribution
+&lt;/h3>&lt;ol>
+&lt;li>Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
+>CloudFront console&lt;/a>.&lt;/li>
+&lt;li>Choose &lt;strong>Create Distribution&lt;/strong>.&lt;/li>
+&lt;li>In the &lt;strong>Origin domain&lt;/strong> section, choose your S3 bucket as the origin.
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/create-cloudfront-distribution.png">
+&lt;/figure>
+&lt;/li>
+&lt;li>In the &lt;strong>Origin access&lt;/strong> section, select &lt;strong>Origin access control settings (recommended)&lt;/strong> and click &lt;strong>Create new
+OAC&lt;/strong>.&lt;/li>
+&lt;li>In the &lt;strong>Create new OAC&lt;/strong> modal, click &lt;strong>Create&lt;/strong>.&lt;/li>
+&lt;li>Choose one option in the &lt;strong>WebApplication Firewall (WAF)&lt;/strong> section.&lt;/li>
+&lt;li>Click &lt;strong>Create Distribution&lt;/strong> to create the CloudFront distribution.&lt;/li>
+&lt;li>In the yellow &lt;strong>The S3 bucket policy needs to be updated&lt;/strong> banner, click &lt;strong>Copy policy&lt;/strong> and then click &lt;strong>Go to S3
+bucket permissions to update policy&lt;/strong>.&lt;/li>
+&lt;li>Under bucket &lt;strong>Permissions&lt;/strong> &amp;gt; &lt;strong>Bucket policy&lt;/strong>, click &lt;strong>Edit&lt;/strong> and paste the copied policy.&lt;/li>
+&lt;li>Click &lt;strong>Save changes&lt;/strong>.&lt;/li>
+&lt;li>Back in the CloudFront console, wait for the distribution to deploy. When the distribution is done deploying, the
+&lt;strong>Last modified&lt;/strong> column will change from &lt;strong>Deploying&lt;/strong> to a date and time.&lt;/li>
+&lt;/ol>
+&lt;p>At this point, the CloudFront distribution will serve content from the S3 bucket to anyone who requests it. Signed URLs
+do NOT protect it until we set them up in the following steps. Test the distribution by accessing a file using the
+CloudFront URL.&lt;/p>
+&lt;h3 id="create-a-cloudfront-key-pair-and-add-it-to-a-key-group">&lt;a href="#create-a-cloudfront-key-pair-and-add-it-to-a-key-group" class="header-anchor">&lt;/a>Create a CloudFront key pair and add it to a key group
+&lt;/h3>&lt;p>The recommended method for signing URLs is using trusted key groups. A key group is a collection of public keys that
+CloudFront uses to verify signed URLs.&lt;/p>
+&lt;ol>
+&lt;li>Use OpenSSL to generate a private key and a public key:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>openssl genrsa -out private_key.pem &lt;span style="color:#ae81ff">2048&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl rsa -pubout -in private_key.pem -out public_key.pem
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ol start="2">
+&lt;li>Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
+>CloudFront console&lt;/a>.&lt;/li>
+&lt;li>In the side menu, choose &lt;strong>Key management&lt;/strong> &amp;gt; &lt;strong>Public keys&lt;/strong>.&lt;/li>
+&lt;li>Click &lt;strong>Create public key&lt;/strong>.&lt;/li>
+&lt;li>Enter a name for the key, paste the contents of the &lt;code>public_key.pem&lt;/code> file, and click &lt;strong>Create public key&lt;/strong>.&lt;/li>
+&lt;li>Remember the key ID for a later step.&lt;/li>
+&lt;li>In the CloudFront side menu, choose &lt;strong>Key management&lt;/strong> &amp;gt; &lt;strong>Key groups&lt;/strong>.&lt;/li>
+&lt;li>Click &lt;strong>Create key group&lt;/strong>.&lt;/li>
+&lt;li>Enter a name for the key group, select the public key you created, and click &lt;strong>Create key group&lt;/strong>.&lt;/li>
+&lt;/ol>
+&lt;h3 id="associate-the-key-group-with-the-cloudfront-distribution">&lt;a href="#associate-the-key-group-with-the-cloudfront-distribution" class="header-anchor">&lt;/a>Associate the key group with the CloudFront distribution
+&lt;/h3>&lt;ol>
+&lt;li>Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
+>CloudFront console&lt;/a>.&lt;/li>
+&lt;li>Click on the CloudFront distribution you created.&lt;/li>
+&lt;li>In the &lt;strong>Behaviors&lt;/strong> tab, select a behavior and click &lt;strong>Edit&lt;/strong>.&lt;/li>
+&lt;li>In the &lt;strong>Restrict viewer access&lt;/strong> section, select &lt;strong>Yes&lt;/strong>, choose the key group you created, and &lt;strong>Save changes&lt;/strong>.&lt;/li>
+&lt;/ol>
+&lt;p>Now, the CloudFront URL will only serve content to users using a signed URL with the private key. Accessing content
+without a signed URL will result in an access denied 403 error.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;Error&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;Code&amp;gt;&lt;/span>MissingKey&lt;span style="color:#f92672">&amp;lt;/Code&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;Message&amp;gt;&lt;/span>Missing Key-Pair-Id query parameter or cookie value&lt;span style="color:#f92672">&amp;lt;/Message&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/Error&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="generate-a-signed-url-using-aws-sdks">&lt;a href="#generate-a-signed-url-using-aws-sdks" class="header-anchor">&lt;/a>Generate a signed URL using AWS SDKs
+&lt;/h3>&lt;p>You can generate signed URLs using the AWS SDKs for various programming languages. Amazon provides
+&lt;a class="link" href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-urls.html#private-content-overview-sample-code" target="_blank" rel="noopener"
+>examples for several languages&lt;/a>.
+We will show an example using the Go SDK.&lt;/p>
+&lt;p>In a new directory, create a Go project and add the AWS SDK as a dependency:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod init cloudfront-signed-urls
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign@v1.8.3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Copy the &lt;code>private_key.pem&lt;/code> file to the project directory and create a new Go file with the following code:&lt;/p>
+&lt;script src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js">&lt;/script>
+&lt;p>Run the Go program to generate a signed URL:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672">=&lt;/span>1736178766&amp;amp;Signature&lt;span style="color:#f92672">=&lt;/span>HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672">=&lt;/span>K1HFGXOMBB6TFF
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The signed URL will expire in 1 hour.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../macos-launchd-agents-and-daemons/" >launchd agents and daemons on macOS&lt;/a>.&lt;/li>
+&lt;li>Previously, we &lt;a class="link" href="../remote-development-environment/" >set up a remote development environment for our web app&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-start-using-cloudfront-signed-urls">&lt;a href="#watch-how-to-start-using-cloudfront-signed-urls" class="header-anchor">&lt;/a>Watch how to start using CloudFront signed URLs
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/RzTZExHie88"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Create a MySQL replica database in 4 short steps (2025)</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL replica database in 4 short steps (2025)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
 &lt;/h2>&lt;p>In this article, we will create a MySQL replica database. A MySQL replica is a read-only copy of the primary database,
 which is kept in sync with the main database using MySQL replication threads.&lt;/p>
 &lt;p>The steps we will follow are:&lt;/p>
@@ -740,6 +864,7 @@ key to &lt;code>com.fleetdm.orbit2&lt;/code>, run:&lt;/p>
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we showed &lt;a class="link" href="../script-only-macos-install-package/" >two ways to turn a script into a macOS install package&lt;/a>.&lt;/li>
 &lt;li>Previously, we explained &lt;a class="link" href="../mtls-with-apple-keychain/" >how to configure mTLS using the macOS keychain&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../cloudfront-signed-urls/" >how to create signed URLs with AWS CloudFront&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-the-video-on-launchd-agents-and-daemons-and-how-to-find-the-plist-file-for-a-running-process">&lt;a href="#watch-the-video-on-launchd-agents-and-daemons-and-how-to-find-the-plist-file-for-a-running-process" class="header-anchor">&lt;/a>Watch the video on launchd agents and daemons, and how to find the plist file for a running process
 &lt;/h2>&lt;div class="video-wrapper">
@@ -2184,6 +2309,7 @@ did not drill down to the issue, but a potential workaround is to use JetBrains&
 &lt;li>We recently explained &lt;a class="link" href="../secure-mysql-docker" >how to secure a MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
 &lt;li>We also discussed &lt;a class="link" href="../github-code-review-issues" >the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
 &lt;li>We wrote about &lt;a class="link" href="../google-sheets-api/" >quickly editing a Google Sheets spreadsheet via the API&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../cloudfront-signed-urls/" >creating secure signed URLs with AWS CloudFront&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h1 id="watch-how-to-set-up-a-remote-development-environment">&lt;a href="#watch-how-to-set-up-a-remote-development-environment" class="header-anchor">&lt;/a>Watch how to set up a remote development environment
 &lt;/h1>&lt;div class="video-wrapper">
