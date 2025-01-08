@@ -148,6 +148,7 @@ Some issues we encountered included:
 - We recently explained [how to secure a MySQL Docker container for Zero Trust](../secure-mysql-docker).
 - We also discussed [the issues with GitHub's code review process](../github-code-review-issues).
 - We wrote about [quickly editing a Google Sheets spreadsheet via the API](../google-sheets-api/).
+- We also covered [creating secure signed URLs with AWS CloudFront](../cloudfront-signed-urls/).
 
 # Watch how to set up a remote development environment
 

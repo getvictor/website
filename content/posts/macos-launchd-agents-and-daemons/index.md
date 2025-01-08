@@ -210,6 +210,7 @@ Run `/usr/libexec/PlistBuddy --help` for more information on using `PlistBuddy`.
 
 - Recently, we showed [two ways to turn a script into a macOS install package](../script-only-macos-install-package/).
 - Previously, we explained [how to configure mTLS using the macOS keychain](../mtls-with-apple-keychain/).
+- We also covered [how to create signed URLs with AWS CloudFront](../cloudfront-signed-urls/).
 
 ## Watch the video on launchd agents and daemons, and how to find the plist file for a running process
 
