@@ -1,6 +1,6 @@
 +++
 title = "Secure private CDN content with CloudFront signed URLs"
-description = "How securely serve private CDN content using CloudFront signed URLs in 4 steps"
+description = "How to securely serve private CDN content using CloudFront signed URLs in 4 steps"
 authors = ["Victor Lyuboslavsky"]
 image = "signed-url-headline.png"
 date = 2025-01-08
