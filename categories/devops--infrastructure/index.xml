@@ -1,4 +1,149 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps &amp; Infrastructure on Victor on Software</title><link>https://victoronsoftware.com/categories/devops--infrastructure/</link><description>Recent content in DevOps &amp; Infrastructure on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 08 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/devops--infrastructure/index.xml" rel="self" type="application/rss+xml"/><item><title>Secure private CDN content with CloudFront signed URLs</title><link>https://victoronsoftware.com/posts/cloudfront-signed-urls/</link><pubDate>Wed, 08 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/cloudfront-signed-urls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/signed-url-headline.png" alt="Featured image of post Secure private CDN content with CloudFront signed URLs" />&lt;ol>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DevOps &amp; Infrastructure on Victor on Software</title><link>https://victoronsoftware.com/categories/devops--infrastructure/</link><description>Recent content in DevOps &amp; Infrastructure on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 15 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/devops--infrastructure/index.xml" rel="self" type="application/rss+xml"/><item><title>Top 5 metrics for software load testing performance</title><link>https://victoronsoftware.com/posts/software-load-testing/</link><pubDate>Wed, 15 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-load-testing/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/loadtest-fail.png" alt="Featured image of post Top 5 metrics for software load testing performance" />&lt;ol>
+&lt;li>&lt;a class="link" href="#server-cpu-and-memory-utilization" >Server CPU and memory utilization&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#server-errors" >Server errors&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#server-api-latency-response-time" >Server API latency (response time)&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#database-slow-queries" >Database slow queries&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#database-performance-metrics" >Database performance metrics&lt;/a>&lt;/li>
+&lt;/ol>
+&lt;h2 id="what-is-software-load-testing">&lt;a href="#what-is-software-load-testing" class="header-anchor">&lt;/a>What is software load testing?
+&lt;/h2>&lt;p>Software load testing is a type of performance testing that simulates real-world user load on a software application.
+Load tests usually run in a test environment identical to the production environment.&lt;/p>
+&lt;p>The goals of load testing may include:&lt;/p>
+&lt;ul>
+&lt;li>Ensure the application meets the required performance criteria&lt;/li>
+&lt;li>Ensure the application performance did not degrade after changes&lt;/li>
+&lt;li>Test a new feature&amp;rsquo;s performance before releasing it to production&lt;/li>
+&lt;li>Identify bottlenecks in the application to reduce compute costs and/or risks&lt;/li>
+&lt;li>Run &lt;a class="link" href="https://en.wikipedia.org/wiki/Chaos_engineering" target="_blank" rel="noopener"
+>chaos engineering&lt;/a> performance experiments&lt;/li>
+&lt;/ul>
+&lt;p>Load testing can be done manually or automatically. Many open-source and commercial tools are available to help you run
+load tests. Some features of load testing tools include:&lt;/p>
+&lt;ul>
+&lt;li>Record and replay user interactions, including simulating unique users&lt;/li>
+&lt;li>Simulate different user loads&lt;/li>
+&lt;li>Monitor the application&amp;rsquo;s performance during the test&lt;/li>
+&lt;li>Generate reports with performance metrics&lt;/li>
+&lt;/ul>
+&lt;p>This article lists the key metrics you should gather during a software load test of your web application.&lt;/p>
+&lt;h2 id="server-cpu-and-memory-utilization">&lt;a href="#server-cpu-and-memory-utilization" class="header-anchor">&lt;/a>Server CPU and memory utilization
+&lt;/h2>&lt;p>CPU utilization is the percentage of time the CPU is busy processing instructions, and memory utilization is the
+percentage of memory used by the server. Companies deploy multiple instances of the same application web server, and the
+load balancer distributes the user requests among them. These metrics are averages across all instances.&lt;/p>
+&lt;p>High CPU or memory utilization can indicate a bottleneck in the application or server. It may also signal that the
+application needs to be scaled horizontally (add more instances) or vertically (increase the server&amp;rsquo;s resources).&lt;/p>
+&lt;p>Low CPU or memory utilization may indicate that the application is over-provisioned, and infrastructure engineers could
+reduce resources to save costs.&lt;/p>
+&lt;p>Typical expectations for CPU and memory utilization are:&lt;/p>
+&lt;ul>
+&lt;li>CPU utilization should be below 80% on average&lt;/li>
+&lt;li>Memory utilization should be below 80% on average&lt;/li>
+&lt;/ul>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/cpu-utilization.png">&lt;figcaption>
+&lt;h4>High CPU utilization during load test&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="server-errors">&lt;a href="#server-errors" class="header-anchor">&lt;/a>Server errors
+&lt;/h2>&lt;p>Server errors are error messages in the application logs or 5XX HTTP status codes. They can indicate that the
+application is not handling the load well, has a bug, or is misconfigured.&lt;/p>
+&lt;p>Error logs are a key debugging tool for developers. They can help identify the root cause of a functional or performance
+error and fix it. As such, developers must use error logs to report actual server errors and not just informational
+messages. For example, a 404 error is typically not a server error but a client error. A website user requesting a
+resource that does not exist is a common scenario. Client errors should be logged as informational messages or tagged
+appropriately to be excluded from the server error metric.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/server-errors.png">&lt;figcaption>
+&lt;h4>AWS Logs Insights JSON error filter and sample error patterns&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The ideal number of server errors is zero. However, in practice, some errors are expected. For example, some startup or
+shutdown-related errors may occur if application servers are scaling up or down due to load. Note the expected errors in
+the test plan and adjust the error filter accordingly.&lt;/p>
+&lt;h2 id="server-api-latency-response-time">&lt;a href="#server-api-latency-response-time" class="header-anchor">&lt;/a>Server API latency (response time)
+&lt;/h2>&lt;p>API latency is the time it takes for the server to respond to a request, measured in milliseconds. Typically, the
+business cares about user-facing API endpoints, such as the login, checkout, or search endpoints.&lt;/p>
+&lt;p>API latency is a critical metric for user experience. High latency can lead to user frustration and abandonment.&lt;/p>
+&lt;p>One standard metric is the 95th percentile latency. This metric indicates the latency that 95% of the requests are
+faster than. It is a good indicator of the user experience because it filters out outliers.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/api-latency.png">&lt;figcaption>
+&lt;h4>Example spike in latency during a load test experiment&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Telemetry tools such as &lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
+>OpenTelemetry&lt;/a> can help you gather API latency metrics and correlate
+them with other metrics, such as server errors or CPU utilization.&lt;/p>
+&lt;h2 id="database-slow-queries">&lt;a href="#database-slow-queries" class="header-anchor">&lt;/a>Database slow queries
+&lt;/h2>&lt;p>Query response time is the time it takes for the database to respond to a query. Slow queries can indicate that the
+query is not optimized or that the table needs an index.&lt;/p>
+&lt;p>Slow queries can lead to high API latency and server errors. They can also lead to high CPU and memory utilization on
+the database server.&lt;/p>
+&lt;p>Typically, we want to look at the average query response time multiplied by the number of queries per second for each
+query signature. This will identify the queries that have the most impact on database performance.&lt;/p>
+&lt;p>The list of slow queries should remain stable during a load test. If it changes, it may indicate a new unoptimized query
+or a new bug in the application.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/db-slow-queries.png">&lt;figcaption>
+&lt;h4>AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h2 id="database-performance-metrics">&lt;a href="#database-performance-metrics" class="header-anchor">&lt;/a>Database performance metrics
+&lt;/h2>&lt;p>Along with slow queries, we always gather the following database performance metrics:&lt;/p>
+&lt;h3 id="database-cpu-utilization">&lt;a href="#database-cpu-utilization" class="header-anchor">&lt;/a>Database CPU utilization
+&lt;/h3>&lt;p>Just like the server, we monitor the database&amp;rsquo;s CPU utilization. The typical expectation is that CPU utilization should
+be below 80% on average.&lt;/p>
+&lt;p>Memory utilization may not be as critical for the database as for the server. We expect the database to use as much
+memory as possible to cache data and speed up queries.&lt;/p>
+&lt;h3 id="database-threads-running-sessions">&lt;a href="#database-threads-running-sessions" class="header-anchor">&lt;/a>Database threads running (sessions)
+&lt;/h3>&lt;p>Database threads running is the number of database connections actively processing queries. High thread counts can
+indicate that the database is under heavy load.&lt;/p>
+&lt;p>The number of threads should be at or below the number of CPUs on the database server.&lt;/p>
+&lt;h3 id="database-io-operations-per-second-iops">&lt;a href="#database-io-operations-per-second-iops" class="header-anchor">&lt;/a>Database IO operations per second (IOPS)
+&lt;/h3>&lt;p>Database IOPS is the number of disk read and write operations the database performs per second. High IOPS can indicate
+that the database is not effectively caching data or that too many writes are occurring.&lt;/p>
+&lt;p>IOPS should be in line with the database&amp;rsquo;s provisioned IOPS. If IOPS are consistently higher than provisioned, the
+database may need to be scaled up.&lt;/p>
+&lt;h2 id="additional-metrics">&lt;a href="#additional-metrics" class="header-anchor">&lt;/a>Additional metrics
+&lt;/h2>&lt;p>The following metrics may also be necessary. However, these additional metrics may be more situational than the above
+top 5 metrics.&lt;/p>
+&lt;h3 id="network-traffic">&lt;a href="#network-traffic" class="header-anchor">&lt;/a>Network traffic
+&lt;/h3>&lt;p>Network traffic includes the number of bytes sent and received by the server. Typically, the data received by the server
+is the user&amp;rsquo;s request, and the data sent by the server is the response.&lt;/p>
+&lt;p>However, in microservices architectures and servers with 3rd party integrations, our server may also make requests to
+other web servers.&lt;/p>
+&lt;p>User traffic is typically consistent from load test to load test. Traffic to other servers may change as engineers add
+new features. If the network traffic changes significantly, it may indicate a new bug in the application, such as
+application servers making too many requests to a 3rd party service.&lt;/p>
+&lt;h3 id="performance-profile">&lt;a href="#performance-profile" class="header-anchor">&lt;/a>Performance profile
+&lt;/h3>&lt;p>Many performance tools and modern programming languages can generate a performance profile. A performance profile is a
+breakdown of the time spent in each function of the application. It can help identify bottlenecks in the application
+code.&lt;/p>
+&lt;p>If code performance is a significant concern, take a performance profile during the load test and compare it to a
+baseline or the previous load test profile. If the profile changes significantly, it may indicate a new bug in the
+application or a new performance bottleneck.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/performance-profile.png">&lt;figcaption>
+&lt;h4>Example performance profile from Go pprof&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="database-replication-lag">&lt;a href="#database-replication-lag" class="header-anchor">&lt;/a>Database replication lag
+&lt;/h3>&lt;p>If the database is replicated, the replication lag is the time it takes for changes to be sent from the primary database
+and applied to the replica database. High replication lag can indicate that the replica is not keeping up with the
+primary database.&lt;/p>
+&lt;p>High replication lag can lead to a bad user experience &amp;ndash; for example, if the user saves data, then immediately
+retrieves it and receives stale data.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we examined
+&lt;a class="link" href="../opentelemetry-with-jaeger/" >whether OpenTelemetry is useful for the average software engineer&lt;/a>.&lt;/li>
+&lt;li>We also looked at &lt;a class="link" href="../optimizing-performance-of-go-app/" >benchmarking performance of different Go serializers&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-us-discuss-the-software-load-testing-performance-metrics">&lt;a href="#watch-us-discuss-the-software-load-testing-performance-metrics" class="header-anchor">&lt;/a>Watch us discuss the software load testing performance metrics
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/KHS4D2QfsFk"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Secure private CDN content with CloudFront signed URLs</title><link>https://victoronsoftware.com/posts/cloudfront-signed-urls/</link><pubDate>Wed, 08 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/cloudfront-signed-urls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/signed-url-headline.png" alt="Featured image of post Secure private CDN content with CloudFront signed URLs" />&lt;ol>
 &lt;li>&lt;a class="link" href="#create-a-cloudfront-distribution" >Create a CloudFront distribution&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#create-a-cloudfront-key-pair-and-add-it-to-a-key-group" >Create a CloudFront key pair and add it to a key group&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#associate-the-key-group-with-the-cloudfront-distribution" >Associate the key group with the CloudFront distribution&lt;/a>&lt;/li>
@@ -769,7 +914,8 @@ does not provide a way to trace the transaction lifecycle, and it creates many s
 Jaeger UI.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >benchmarking the performance of your Go code&lt;/a>&lt;/li>
+&lt;li>Recently, we listed &lt;a class="link" href="../software-load-testing/" >the key metrics to gather during software load testing&lt;/a>.&lt;/li>
+&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" >benchmarking the performance of your Go code&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"

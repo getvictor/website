@@ -968,7 +968,8 @@ does not provide a way to trace the transaction lifecycle, and it creates many s
 Jaeger UI.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >benchmarking the performance of your Go code&lt;/a>&lt;/li>
+&lt;li>Recently, we listed &lt;a class="link" href="../software-load-testing/" >the key metrics to gather during software load testing&lt;/a>.&lt;/li>
+&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" >benchmarking the performance of your Go code&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
@@ -1510,7 +1511,8 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;a class="link" href="../opentelemetry-with-jaeger/" >OpenTelemetry and Jaeger&lt;/a>.&lt;/p>
 &lt;p>In addition:&lt;/p>
 &lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
+&lt;li>Recently, we &lt;a class="link" href="../software-load-testing/" >listed the top metrics to gather during software load testing&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
 &lt;li>We discussed how to
 &lt;a class="link" href="../go-json-unmarshal/" >use Go to accurately unmashal JSON payloads with null, set, and missing fields&lt;/a>.&lt;/li>
 &lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go/" >creating fuzz tests in Go&lt;/a>.&lt;/li>
