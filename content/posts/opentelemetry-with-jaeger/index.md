@@ -199,7 +199,8 @@ Jaeger UI.
 
 ## Further reading
 
-- Recently, we wrote about [benchmarking the performance of your Go code](../optimizing-performance-of-go-app)
+- Recently, we listed [the key metrics to gather during software load testing](../software-load-testing/).
+- Previously, we wrote about [benchmarking the performance of your Go code](../optimizing-performance-of-go-app/).
 
 ## Example code on GitHub
 

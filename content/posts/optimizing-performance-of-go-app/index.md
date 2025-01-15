@@ -173,7 +173,8 @@ Beyond benchmarking, you can step up your performance game with
 
 In addition:
 
-- Recently, we wrote about [accurately measuring Go test execution time](../go-test-execution-time/).
+- Recently, we [listed the top metrics to gather during software load testing](../software-load-testing/).
+- We also wrote about [accurately measuring Go test execution time](../go-test-execution-time/).
 - We discussed how to
   [use Go to accurately unmashal JSON payloads with null, set, and missing fields](../go-json-unmarshal/).
 - Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go/).
