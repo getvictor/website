@@ -9,8 +9,8 @@ in the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
 >handler.go&lt;/a>
 file. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user-authenticated endpoints
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ue&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">newUserAuthenticatedEndpointer&lt;/span>(&lt;span style="color:#a6e22e">svc&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>, &lt;span style="color:#a6e22e">apiVersions&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user-authenticated endpoints&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ue&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">newUserAuthenticatedEndpointer&lt;/span>(&lt;span style="color:#a6e22e">svc&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>, &lt;span style="color:#a6e22e">apiVersions&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ue&lt;/span>.&lt;span style="color:#a6e22e">POST&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/api/_version_/fleet/trigger&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">triggerEndpoint&lt;/span>, &lt;span style="color:#a6e22e">triggerRequest&lt;/span>{})
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Every endpoint calls &lt;strong>kithttp.NewServer&lt;/strong> and wraps the endpoint with our &lt;strong>AuthzCheck&lt;/strong>. From
@@ -25,11 +25,11 @@ alt="Catch missed authorization check block diagram">
 was checked. Otherwise, an error is returned. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/middleware/authzcheck/authzcheck.go#L51" target="_blank" rel="noopener"
 >authzcheck.go&lt;/a>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// If authorization was not checked, return a response that will
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// marshal to a generic error and log that the check was missed.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">authzctx&lt;/span>.&lt;span style="color:#a6e22e">Checked&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Getting to here means there is an authorization-related bug in our code.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">authz&lt;/span>.&lt;span style="color:#a6e22e">CheckMissingWithResponse&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// If authorization was not checked, return a response that will&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// marshal to a generic error and log that the check was missed.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">authzctx&lt;/span>.&lt;span style="color:#a6e22e">Checked&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Getting to here means there is an authorization-related bug in our code.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">authz&lt;/span>.&lt;span style="color:#a6e22e">CheckMissingWithResponse&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This additional check is useful during our development and QA process, to ensure that authorization always happens in
 our business logic.&lt;/p>

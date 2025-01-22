@@ -54,14 +54,14 @@ pass data back to the main workflow.</p><p>Here is an example of a reusable work
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;reusable_input=${{ inputs.reusable_input }}&#34;
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;HELLO_WORLD_SECRET=${HELLO_WORLD_SECRET}&#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;step_output=${{ inputs.reusable_input }}_processed&#34; &gt;&gt; $GITHUB_OUTPUT</span>          
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;step_output=${{ inputs.reusable_input }}_processed&#34; &gt;&gt; $GITHUB_OUTPUT</span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/download-artifact@v4</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>with</span>:
 </span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>input_file</span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Process file</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;Processing file: ${{ inputs.filename }}&#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;file processed&#34; &gt;&gt; ${{ inputs.filename }}</span>          
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          echo &#34;file processed&#34; &gt;&gt; ${{ inputs.filename }}</span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>actions/upload-artifact@v4</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>with</span>:
 </span></span><span style=display:flex><span>          <span style=color:#f92672>name</span>: <span style=color:#ae81ff>output_file</span>
@@ -108,12 +108,12 @@ share files since the reusable steps run on the same runner and in the same work
 </span></span><span style=display:flex><span>      <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;reusable_input=${{ inputs.reusable_input }}&#34;
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;HELLO_WORLD_SECRET=${HELLO_WORLD_SECRET}&#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;step_output=${{ inputs.reusable_input }}_processed&#34; &gt;&gt; $GITHUB_OUTPUT</span>        
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;step_output=${{ inputs.reusable_input }}_processed&#34; &gt;&gt; $GITHUB_OUTPUT</span>
 </span></span><span style=display:flex><span>    - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Process file</span>
 </span></span><span style=display:flex><span>      <span style=color:#f92672>shell</span>: <span style=color:#ae81ff>bash</span>
 </span></span><span style=display:flex><span>      <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;Processing file: ${{ inputs.filename }}&#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;file processed&#34; &gt;&gt; ${{ inputs.filename }}</span>        
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        echo &#34;file processed&#34; &gt;&gt; ${{ inputs.filename }}</span>
 </span></span></code></pre></div><p>The composite action is called via the <code>uses</code> setting on a step. Our action accepts an input called <code>reusable_input</code> and
 generates an output called <code>reusable_output</code>. It also processes a file called <code>filename</code>.</p><p>The following code snippet shows how to use the composite action in a job.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span>  - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Use reusable steps</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>id</span>: <span style=color:#ae81ff>reusable-steps</span>

@@ -144,16 +144,16 @@ with the codebase.</p><p>To set up GitHub Actions, create a <code>.github/workfl
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Install dependencies</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm install --no-save</span>          
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm install --no-save</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Format check and lint</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
 </span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm run format-check
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm run lint</span>          
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm run lint</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Build</span>
 </span></span><span style=display:flex><span>        <span style=color:#f92672>run</span>: |<span style=color:#e6db74>
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm run build</span>          
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>          npm run build</span>
 </span></span></code></pre></div><p>Since our git repository is shared by multiple projects (from various articles), we use the <code>paths</code> key to only run the
 workflow when the code in the <code>4-linting-and-formatting</code> directory changes.</p><p>After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
 Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:</p><figure><img src=/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png alt="GitHub Actions workflow results"><figcaption><h4>GitHub Actions workflow results</h4></figcaption></figure><p>For more details on GitHub Actions workflows, see our article on

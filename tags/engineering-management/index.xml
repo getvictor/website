@@ -1,7 +1,198 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering Management on Victor on Software</title><link>https://victoronsoftware.com/tags/engineering-management/</link><description>Recent content in Engineering Management on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/engineering-management/index.xml" rel="self" type="application/rss+xml"/><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
-improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
-article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
-suite.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering Management on Victor on Software</title><link>https://victoronsoftware.com/tags/engineering-management/</link><description>Recent content in Engineering Management on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/engineering-management/index.xml" rel="self" type="application/rss+xml"/><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" />&lt;ul>
+&lt;li>&lt;a class="link" href="#metrics-for-unreadable-code" >Metrics for unreadable code&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#how-to-make-your-codebase-more-readable" >How to make your codebase more readable&lt;/a>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#fix-poor-software-structure" >Fix poor software structure&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#refactor-local-code-for-understanding" >Refactor local code for understanding&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#use-unit-and-integration-tests" >Use unit and integration tests&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#useful-comments" >Useful comments&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Readable code is software code that is easy to understand and easy to change.&lt;/p>
+&lt;p>Unreadable code is a common complaint among software developers and one of the main contributors to technical debt.
+Abandoning unreadable code is one of the reasons engineers love to work on greenfield projects—there is no legacy code
+to deal with.&lt;/p>
+&lt;p>You&amp;rsquo;ve probably heard comments like, &amp;ldquo;It would take me longer to understand this code than to rewrite it from scratch.&amp;rdquo;
+This sentiment illustrates the problem with unreadable code: it slows down the development process.&lt;/p>
+&lt;p>Some engineers refer to readable code as &amp;ldquo;clean code.&amp;rdquo; In our opinion, &amp;ldquo;readable code&amp;rdquo; and &amp;ldquo;clean code&amp;rdquo; are synonymous,
+and the term &amp;ldquo;readable code&amp;rdquo; is easier to understand and, therefore, more &amp;ldquo;readable.&amp;rdquo;&lt;/p>
+&lt;h2 id="why-is-unreadable-code-a-problem">&lt;a href="#why-is-unreadable-code-a-problem" class="header-anchor">&lt;/a>Why is unreadable code a problem?
+&lt;/h2>&lt;p>Although the &amp;ldquo;unreadable code&amp;rdquo; claim feels like a subjective opinion, it has a concrete business impact on software
+projects.&lt;/p>
+&lt;p>We want our code to be readable to speed up adding new features and bug fixes.&lt;/p>
+&lt;p>For example, we recently spent three hours figuring out how a feature worked, only to realize there was a documentation
+bug. Unfortunately, we made no improvements to make the code more readable, and the next developer will likely have the
+same problem. This next developer may be ourselves one year from now when we will have forgotten everything we learned
+about the feature.&lt;/p>
+&lt;h3 id="metrics-for-unreadable-code">&lt;a href="#metrics-for-unreadable-code" class="header-anchor">&lt;/a>Metrics for unreadable code
+&lt;/h3>&lt;p>You can use several metrics to measure your code&amp;rsquo;s readability. The ideal metric would be the time it takes to
+understand the code, but this isn&amp;rsquo;t easy to measure. Instead, you can use the following proxies:&lt;/p>
+&lt;p>&lt;strong>Time to fix a bug&lt;/strong>—Measure the time from when a developer starts working on a bug until the bug fix is ready for code
+review. Alternatively, measure the time from when a developer starts working on a bug until their first commit. A first
+commit is a good proxy for understanding the bug and starting to fix it.&lt;/p>
+&lt;p>&lt;strong>Time to add a new feature&lt;/strong>—Measure the time from when a developer starts working on a new feature until it is ready
+for code review.&lt;/p>
+&lt;p>&lt;strong>Time to onboard a new team member&lt;/strong>—Measure the time it takes for a new team member to make their first commit.&lt;/p>
+&lt;p>&lt;strong>Code style violations&lt;/strong>—Measure the codebase&amp;rsquo;s number of code style violations. Code style violations can be measured
+using linters or static analysis tools. Some examples of code style violations relevant to readability are:&lt;/p>
+&lt;ul>
+&lt;li>Long functions&lt;/li>
+&lt;li>Long files&lt;/li>
+&lt;li>Deeply nested control structures&lt;/li>
+&lt;li>Poorly named variables, such as 1-character variable names&lt;/li>
+&lt;/ul>
+&lt;p>Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
+linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
+>&lt;code>gofmt&lt;/code>&lt;/a>.&lt;/p>
+&lt;h2 id="how-to-make-your-codebase-more-readable">&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor">&lt;/a>How to make your codebase more readable
+&lt;/h2>&lt;p>Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
+incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p>
+&lt;h3 id="fix-poor-software-structure">&lt;a href="#fix-poor-software-structure" class="header-anchor">&lt;/a>Fix poor software structure
+&lt;/h3>&lt;p>One pattern we see frequently is that the functionality of a core feature is spread across multiple software modules.
+The first problem this creates is that the software developer trying to understand the feature has to discover all the
+modules that implement the feature. Often, this requires grepping the codebase for key names &amp;ndash; a tedious and
+error-prone process. The second problem is that the developer has to jump between files and directories to understand
+how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png">&lt;figcaption>
+&lt;h4>Hard to understand feature due to poor software design&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
+to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
+feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
+restructuring the code or rewriting old functionality from scratch. This process makes sense for prototypes or early
+products looking for product-market fit, but it is not sustainable for mature long-term software projects.&lt;/p>
+&lt;p>Often, developers may not be able to create a good software design when they start working on a new feature because they
+don&amp;rsquo;t understand all its ramifications. However, they should restructure their work before moving on to the next
+task—the best time to improve code is when you have all the context in your head.&lt;/p>
+&lt;p>We can restructure the above code example to move all the feature&amp;rsquo;s functionality into one or two modules. This
+reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
+are not distracted by unrelated code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png">&lt;figcaption>
+&lt;h4>Easier to understand feature encapsulated in separate modules&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="refactor-local-code-for-understanding">&lt;a href="#refactor-local-code-for-understanding" class="header-anchor">&lt;/a>Refactor local code for understanding
+&lt;/h3>&lt;p>When entering a function, you should quickly understand what it does. The function code should be readable. If an
+engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p>
+&lt;p>Long functions are difficult to understand because they require the developer to simultaneously keep a lot of
+information in their head. Oftentimes, the function presents implementation details to the developer before they can
+grasp the big picture. This process is cognitively demanding and error-prone.&lt;/p>
+&lt;p>Instead, we can refactor extended functions into smaller functions that each do one thing. This refactoring makes the
+code easier to understand because we can understand each small function in isolation. Hide complex logic in functions
+with descriptive names.&lt;/p>
+&lt;p>In addition, use descriptive names for variables. Good names make the code self-documenting and reduce the need for
+comments.&lt;/p>
+&lt;p>As an example of a function before and after refactoring, see this
+&lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
+>refactoring example gist&lt;/a>. For a full explanation,
+you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
+>jump to the refactoring section&lt;/a> of the video below.&lt;/p>
+&lt;h3 id="use-unit-and-integration-tests">&lt;a href="#use-unit-and-integration-tests" class="header-anchor">&lt;/a>Use unit and integration tests
+&lt;/h3>&lt;p>From a readability perspective, tests are a form of documentation. They show how the code is supposed to work. When
+reading a test, you can see how the code is supposed to behave in different scenarios.&lt;/p>
+&lt;p>Tests should also be readable. The same restructuring and refactoring principles apply to tests.&lt;/p>
+&lt;p>Another essential benefit of tests is that they allow developers to refactor code with confidence. When you refactor
+code, you can run the tests to ensure that the code still works as expected. Unfortunately, this means that when you
+want to make a change in legacy code without tests, you either have to write tests first or do a lot of manual testing
+to ensure that the code still works.&lt;/p>
+&lt;h3 id="useful-comments">&lt;a href="#useful-comments" class="header-anchor">&lt;/a>Useful comments
+&lt;/h3>&lt;p>Comments should explain why the code is written the way it is, not what the code does. The code should be
+self-explanatory with descriptive variable and function names and encapsulated implementation details.&lt;/p>
+&lt;p>Sometimes, it is hard to tell the difference between &amp;ldquo;why&amp;rdquo; and &amp;ldquo;what,&amp;rdquo; so feel free to err on the side of commenting.&lt;/p>
+&lt;p>You can remove the comment if you renamed a variable or a function, and now the comment duplicates the code. One problem
+with comments is that they can get out of date, which is worse than no comments.&lt;/p>
+&lt;p>For example, before refactoring, you had this code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, len(&lt;span style="color:#a6e22e">existingDecls&lt;/span>)&lt;span style="color:#f92672">+&lt;/span>len(&lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">existingDecls&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">incomingDecls&lt;/span>[&lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>]; &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After refactoring, the comment is a duplicate and no longer needed. It is even worse in this case because we renamed the
+variable, but the comment still refers to the old name. The comment is not only a duplicate but also misleading:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">namesToKeep&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">namesOfDeclarationsToNotDelete&lt;/span>(&lt;span style="color:#a6e22e">existingDecls&lt;/span>, &lt;span style="color:#a6e22e">enrichedDeclarations&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="language-features-that-make-the-code-less-readable">&lt;a href="#language-features-that-make-the-code-less-readable" class="header-anchor">&lt;/a>Language features that make the code less readable
+&lt;/h2>&lt;p>Some language features can make the code less readable. We will give an example from Go because we are familiar with Go,
+but the same principles apply to other languages.&lt;/p>
+&lt;h3 id="go-nested-functions">&lt;a href="#go-nested-functions" class="header-anchor">&lt;/a>Go nested functions
+&lt;/h3>&lt;p>Go supports nested functions like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Upon entering the function as a reader, the first thing you see is the &lt;code>inner&lt;/code> function. The reader is presented with
+specific implementation details before understanding the big picture. Instead, the reader should know where the nested
+function is used before reading these implementation details.&lt;/p>
+&lt;p>One way to solve this issue is to forbid nested functions in your style guide. Always extract nested functions to the
+struct level or file level. However, this approach loses the benefits of closures and increases the number of functions
+at the struct/file level.&lt;/p>
+&lt;p>We hope that the Go team will improve the readability of nested functions in the future. For example, they could allow
+nested functions to be defined at the end of the function after the primary implementation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// nested functions&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, IDE vendors can improve readability by entirely hiding nested functions by default.&lt;/p>
+&lt;h2 id="additional-benefits-of-readable-code">&lt;a href="#additional-benefits-of-readable-code" class="header-anchor">&lt;/a>Additional benefits of readable code
+&lt;/h2>&lt;p>As you improve the readability of your code, you will notice several side effects:&lt;/p>
+&lt;ul>
+&lt;li>Many bugs will be easier to spot&lt;/li>
+&lt;li>Other developers will be less likely to interrupt you with questions about your code&lt;/li>
+&lt;li>If your code is open source, you may get more contributions&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we
+&lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/HCGyWuE9zbY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office suite.&lt;/p>
 &lt;p>Some standard engineering metrics include:&lt;/p>
 &lt;ul>
 &lt;li>Number of bugs&lt;/li>
@@ -14,18 +205,14 @@ suite.&lt;/p>
 &lt;li>Delivered story points&lt;/li>
 &lt;li>and many more&lt;/li>
 &lt;/ul>
-&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
-per-team basis.&lt;/p>
+&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a per-team basis.&lt;/p>
 &lt;h2 id="building-an-engineering-metrics-tracker">&lt;a href="#building-an-engineering-metrics-tracker" class="header-anchor">&lt;/a>Building an engineering metrics tracker
-&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
-Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
-&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
-services. We will use the Go programming language in our example.&lt;/p>
+&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
+&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering services. We will use the Go programming language in our example.&lt;/p>
 &lt;h2 id="gathering-the-number-of-open-bugs">&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor">&lt;/a>Gathering the number of open bugs
 &lt;/h2>&lt;p>The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
 >GitHub API&lt;/a> is a well-documented way to query issues in a repository.&lt;/p>
-&lt;p>There are also many quality client libraries for the API. We will use the
-&lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
+&lt;p>There are also many quality client libraries for the API. We will use the &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
 >go-github&lt;/a> client.&lt;/p>
 &lt;p>Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
@@ -36,8 +223,8 @@ services. We will use the Go programming language in our example.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">githubToken&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">Getenv&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;GITHUB_TOKEN&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>(&lt;span style="color:#66d9ef">nil&lt;/span>).&lt;span style="color:#a6e22e">WithAuthToken&lt;/span>(&lt;span style="color:#a6e22e">githubToken&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">IssueListByRepoOptions&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">State&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;open&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Labels&lt;/span>: []&lt;span style="color:#66d9ef">string&lt;/span>{&lt;span style="color:#e6db74">&amp;#34;#g-mdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;:release&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bug&amp;#34;&lt;/span>},
@@ -55,25 +242,16 @@ services. We will use the Go programming language in our example.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a
-personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions
-automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
-&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>,
-and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
+&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>, and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
 &lt;h2 id="updating-the-google-sheets-spreadsheet">&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor">&lt;/a>Updating the Google Sheets spreadsheet
 &lt;/h2>&lt;p>To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
->Google Sheets API&lt;/a>
-with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
+>Google Sheets API&lt;/a> with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
 >Google&amp;rsquo;s Go client library&lt;/a>.&lt;/p>
-&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
-spreadsheet using the API, see our previous article:
-&lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
-&lt;p>See our integrated
-&lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
->function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a>
-on GitHub.&lt;/p>
-&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
-you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
+&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the spreadsheet using the API, see our previous article: &lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
+&lt;p>See our integrated &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
+>function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a> on GitHub.&lt;/p>
+&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally, you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
 &lt;pre tabindex="0">&lt;code>spreadsheetId := os.Getenv(&amp;#34;SPREADSHEET_ID&amp;#34;)
 serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34;))
 &lt;/code>&lt;/pre>&lt;p>The glue code combining the above two functions is straightforward.&lt;/p>
@@ -90,12 +268,9 @@ serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to update spreadsheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
-automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
 &lt;h2 id="automating-the-metric-gathering-process-with-github-actions">&lt;a href="#automating-the-metric-gathering-process-with-github-actions" class="header-anchor">&lt;/a>Automating the metric-gathering process with GitHub Actions
-&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
-repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the
-latest metrics.&lt;/p>
+&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the latest metrics.&lt;/p>
 &lt;p>Create a &lt;code>.github/workflows/update-spreadsheet.yml&lt;/code> file in your repository with the following content:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Update spreadsheet with latest metrics&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -123,22 +298,17 @@ latest metrics.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">go run main.go&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the
-&lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the
-repository settings.&lt;/p>
-&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
-manually run the workflow to test it.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the &lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the repository settings.&lt;/p>
+&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can manually run the workflow to test it.&lt;/p>
 &lt;h2 id="display-the-metrics-in-google-docs">&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor">&lt;/a>Display the metrics in Google Docs
-&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can
-&lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
->copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet.
-This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
-&lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
+&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
+>copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet. This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking &lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
 alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs">
 &lt;/figure>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../readable-code/" >how to measure unreadable code and turn it into clean code&lt;/a>.&lt;/li>
 &lt;li>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/li>
 &lt;li>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/li>
 &lt;li>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/li>

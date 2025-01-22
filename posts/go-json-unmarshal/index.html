@@ -38,37 +38,37 @@ For example, when <code>name</code> is not specified in the JSON payload, we may
 interface to detect the difference between null and missing fields. The <code>UnmarshalJSON</code> method allows us to inspect the
 JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that <code>UnmarshalJSON</code> is only
 called when the field is present in the JSON payload. So, we can mark a <code>Set</code> flag as <code>true</code> when the field is present
-and <code>false</code> when it is not.</p><p>Here is an example implementation:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span> <span style=color:#a6e22e>any</span>] <span style=color:#66d9ef>struct</span> {
+and <code>false</code> when it is not.</p><p>Here is an example implementation:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span> <span style=color:#66d9ef>any</span>] <span style=color:#66d9ef>struct</span> {
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>Set</span>   <span style=color:#66d9ef>bool</span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>Valid</span> <span style=color:#66d9ef>bool</span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>Value</span> <span style=color:#a6e22e>T</span>
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// MarshalJSON implements the json.Marshaler interface.
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// Only Value is marshaled, and only if Valid is true.
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>MarshalJSON</span>() ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span><span style=color:#75715e>// MarshalJSON implements the json.Marshaler interface.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Only Value is marshaled, and only if Valid is true.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>MarshalJSON</span>() ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Valid</span> {
 </span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span> []byte(<span style=color:#e6db74>&#34;null&#34;</span>), <span style=color:#66d9ef>nil</span>
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>Marshal</span>(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Value</span>)
 </span></span><span style=display:flex><span>}
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>// UnmarshalJSON implements the json.Unmarshaler interface.
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// Set is always set to true, even if the JSON data was set to null.
-</span></span></span><span style=display:flex><span><span style=color:#75715e>// Valid is set if the JSON data is not set to null.
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>UnmarshalJSON</span>(<span style=color:#a6e22e>data</span> []<span style=color:#66d9ef>byte</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span><span style=color:#75715e>// UnmarshalJSON implements the json.Unmarshaler interface.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Set is always set to true, even if the JSON data was set to null.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Valid is set if the JSON data is not set to null.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Any</span>[<span style=color:#a6e22e>T</span>]) <span style=color:#a6e22e>UnmarshalJSON</span>(<span style=color:#a6e22e>data</span> []<span style=color:#66d9ef>byte</span>) <span style=color:#66d9ef>error</span> {
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Set</span> = <span style=color:#66d9ef>true</span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Valid</span> = <span style=color:#66d9ef>false</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>bytes</span>.<span style=color:#a6e22e>Equal</span>(<span style=color:#a6e22e>data</span>, []byte(<span style=color:#e6db74>&#34;null&#34;</span>)) {
-</span></span><span style=display:flex><span>       <span style=color:#75715e>// The key was set to null, set value to zero/default value
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>       <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>zero</span> <span style=color:#a6e22e>T</span>
+</span></span><span style=display:flex><span>       <span style=color:#75715e>// The key was set to null, set value to zero/default value</span>
+</span></span><span style=display:flex><span>       <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>zero</span> <span style=color:#a6e22e>T</span>
 </span></span><span style=display:flex><span>       <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>Value</span> = <span style=color:#a6e22e>zero</span>
 </span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
 </span></span><span style=display:flex><span>    }
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>    <span style=color:#75715e>// The key isn&#39;t set to null
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>v</span> <span style=color:#a6e22e>T</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// The key isn&#39;t set to null</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>v</span> <span style=color:#a6e22e>T</span>
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>Unmarshal</span>(<span style=color:#a6e22e>data</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>v</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
 </span></span><span style=display:flex><span>       <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
 </span></span><span style=display:flex><span>    }

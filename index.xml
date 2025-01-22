@@ -1,4 +1,198 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 15 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Top 5 metrics for software load testing performance</title><link>https://victoronsoftware.com/posts/software-load-testing/</link><pubDate>Wed, 15 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-load-testing/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/loadtest-fail.png" alt="Featured image of post Top 5 metrics for software load testing performance" />&lt;ol>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" />&lt;ul>
+&lt;li>&lt;a class="link" href="#metrics-for-unreadable-code" >Metrics for unreadable code&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#how-to-make-your-codebase-more-readable" >How to make your codebase more readable&lt;/a>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#fix-poor-software-structure" >Fix poor software structure&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#refactor-local-code-for-understanding" >Refactor local code for understanding&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#use-unit-and-integration-tests" >Use unit and integration tests&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#useful-comments" >Useful comments&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Readable code is software code that is easy to understand and easy to change.&lt;/p>
+&lt;p>Unreadable code is a common complaint among software developers and one of the main contributors to technical debt.
+Abandoning unreadable code is one of the reasons engineers love to work on greenfield projects—there is no legacy code
+to deal with.&lt;/p>
+&lt;p>You&amp;rsquo;ve probably heard comments like, &amp;ldquo;It would take me longer to understand this code than to rewrite it from scratch.&amp;rdquo;
+This sentiment illustrates the problem with unreadable code: it slows down the development process.&lt;/p>
+&lt;p>Some engineers refer to readable code as &amp;ldquo;clean code.&amp;rdquo; In our opinion, &amp;ldquo;readable code&amp;rdquo; and &amp;ldquo;clean code&amp;rdquo; are synonymous,
+and the term &amp;ldquo;readable code&amp;rdquo; is easier to understand and, therefore, more &amp;ldquo;readable.&amp;rdquo;&lt;/p>
+&lt;h2 id="why-is-unreadable-code-a-problem">&lt;a href="#why-is-unreadable-code-a-problem" class="header-anchor">&lt;/a>Why is unreadable code a problem?
+&lt;/h2>&lt;p>Although the &amp;ldquo;unreadable code&amp;rdquo; claim feels like a subjective opinion, it has a concrete business impact on software
+projects.&lt;/p>
+&lt;p>We want our code to be readable to speed up adding new features and bug fixes.&lt;/p>
+&lt;p>For example, we recently spent three hours figuring out how a feature worked, only to realize there was a documentation
+bug. Unfortunately, we made no improvements to make the code more readable, and the next developer will likely have the
+same problem. This next developer may be ourselves one year from now when we will have forgotten everything we learned
+about the feature.&lt;/p>
+&lt;h3 id="metrics-for-unreadable-code">&lt;a href="#metrics-for-unreadable-code" class="header-anchor">&lt;/a>Metrics for unreadable code
+&lt;/h3>&lt;p>You can use several metrics to measure your code&amp;rsquo;s readability. The ideal metric would be the time it takes to
+understand the code, but this isn&amp;rsquo;t easy to measure. Instead, you can use the following proxies:&lt;/p>
+&lt;p>&lt;strong>Time to fix a bug&lt;/strong>—Measure the time from when a developer starts working on a bug until the bug fix is ready for code
+review. Alternatively, measure the time from when a developer starts working on a bug until their first commit. A first
+commit is a good proxy for understanding the bug and starting to fix it.&lt;/p>
+&lt;p>&lt;strong>Time to add a new feature&lt;/strong>—Measure the time from when a developer starts working on a new feature until it is ready
+for code review.&lt;/p>
+&lt;p>&lt;strong>Time to onboard a new team member&lt;/strong>—Measure the time it takes for a new team member to make their first commit.&lt;/p>
+&lt;p>&lt;strong>Code style violations&lt;/strong>—Measure the codebase&amp;rsquo;s number of code style violations. Code style violations can be measured
+using linters or static analysis tools. Some examples of code style violations relevant to readability are:&lt;/p>
+&lt;ul>
+&lt;li>Long functions&lt;/li>
+&lt;li>Long files&lt;/li>
+&lt;li>Deeply nested control structures&lt;/li>
+&lt;li>Poorly named variables, such as 1-character variable names&lt;/li>
+&lt;/ul>
+&lt;p>Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
+linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
+>&lt;code>gofmt&lt;/code>&lt;/a>.&lt;/p>
+&lt;h2 id="how-to-make-your-codebase-more-readable">&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor">&lt;/a>How to make your codebase more readable
+&lt;/h2>&lt;p>Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
+incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p>
+&lt;h3 id="fix-poor-software-structure">&lt;a href="#fix-poor-software-structure" class="header-anchor">&lt;/a>Fix poor software structure
+&lt;/h3>&lt;p>One pattern we see frequently is that the functionality of a core feature is spread across multiple software modules.
+The first problem this creates is that the software developer trying to understand the feature has to discover all the
+modules that implement the feature. Often, this requires grepping the codebase for key names &amp;ndash; a tedious and
+error-prone process. The second problem is that the developer has to jump between files and directories to understand
+how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png">&lt;figcaption>
+&lt;h4>Hard to understand feature due to poor software design&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
+to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
+feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
+restructuring the code or rewriting old functionality from scratch. This process makes sense for prototypes or early
+products looking for product-market fit, but it is not sustainable for mature long-term software projects.&lt;/p>
+&lt;p>Often, developers may not be able to create a good software design when they start working on a new feature because they
+don&amp;rsquo;t understand all its ramifications. However, they should restructure their work before moving on to the next
+task—the best time to improve code is when you have all the context in your head.&lt;/p>
+&lt;p>We can restructure the above code example to move all the feature&amp;rsquo;s functionality into one or two modules. This
+reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
+are not distracted by unrelated code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png">&lt;figcaption>
+&lt;h4>Easier to understand feature encapsulated in separate modules&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="refactor-local-code-for-understanding">&lt;a href="#refactor-local-code-for-understanding" class="header-anchor">&lt;/a>Refactor local code for understanding
+&lt;/h3>&lt;p>When entering a function, you should quickly understand what it does. The function code should be readable. If an
+engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p>
+&lt;p>Long functions are difficult to understand because they require the developer to simultaneously keep a lot of
+information in their head. Oftentimes, the function presents implementation details to the developer before they can
+grasp the big picture. This process is cognitively demanding and error-prone.&lt;/p>
+&lt;p>Instead, we can refactor extended functions into smaller functions that each do one thing. This refactoring makes the
+code easier to understand because we can understand each small function in isolation. Hide complex logic in functions
+with descriptive names.&lt;/p>
+&lt;p>In addition, use descriptive names for variables. Good names make the code self-documenting and reduce the need for
+comments.&lt;/p>
+&lt;p>As an example of a function before and after refactoring, see this
+&lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
+>refactoring example gist&lt;/a>. For a full explanation,
+you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
+>jump to the refactoring section&lt;/a> of the video below.&lt;/p>
+&lt;h3 id="use-unit-and-integration-tests">&lt;a href="#use-unit-and-integration-tests" class="header-anchor">&lt;/a>Use unit and integration tests
+&lt;/h3>&lt;p>From a readability perspective, tests are a form of documentation. They show how the code is supposed to work. When
+reading a test, you can see how the code is supposed to behave in different scenarios.&lt;/p>
+&lt;p>Tests should also be readable. The same restructuring and refactoring principles apply to tests.&lt;/p>
+&lt;p>Another essential benefit of tests is that they allow developers to refactor code with confidence. When you refactor
+code, you can run the tests to ensure that the code still works as expected. Unfortunately, this means that when you
+want to make a change in legacy code without tests, you either have to write tests first or do a lot of manual testing
+to ensure that the code still works.&lt;/p>
+&lt;h3 id="useful-comments">&lt;a href="#useful-comments" class="header-anchor">&lt;/a>Useful comments
+&lt;/h3>&lt;p>Comments should explain why the code is written the way it is, not what the code does. The code should be
+self-explanatory with descriptive variable and function names and encapsulated implementation details.&lt;/p>
+&lt;p>Sometimes, it is hard to tell the difference between &amp;ldquo;why&amp;rdquo; and &amp;ldquo;what,&amp;rdquo; so feel free to err on the side of commenting.&lt;/p>
+&lt;p>You can remove the comment if you renamed a variable or a function, and now the comment duplicates the code. One problem
+with comments is that they can get out of date, which is worse than no comments.&lt;/p>
+&lt;p>For example, before refactoring, you had this code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, len(&lt;span style="color:#a6e22e">existingDecls&lt;/span>)&lt;span style="color:#f92672">+&lt;/span>len(&lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">existingDecls&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">incomingDecls&lt;/span>[&lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>]; &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After refactoring, the comment is a duplicate and no longer needed. It is even worse in this case because we renamed the
+variable, but the comment still refers to the old name. The comment is not only a duplicate but also misleading:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">namesToKeep&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">namesOfDeclarationsToNotDelete&lt;/span>(&lt;span style="color:#a6e22e">existingDecls&lt;/span>, &lt;span style="color:#a6e22e">enrichedDeclarations&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="language-features-that-make-the-code-less-readable">&lt;a href="#language-features-that-make-the-code-less-readable" class="header-anchor">&lt;/a>Language features that make the code less readable
+&lt;/h2>&lt;p>Some language features can make the code less readable. We will give an example from Go because we are familiar with Go,
+but the same principles apply to other languages.&lt;/p>
+&lt;h3 id="go-nested-functions">&lt;a href="#go-nested-functions" class="header-anchor">&lt;/a>Go nested functions
+&lt;/h3>&lt;p>Go supports nested functions like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Upon entering the function as a reader, the first thing you see is the &lt;code>inner&lt;/code> function. The reader is presented with
+specific implementation details before understanding the big picture. Instead, the reader should know where the nested
+function is used before reading these implementation details.&lt;/p>
+&lt;p>One way to solve this issue is to forbid nested functions in your style guide. Always extract nested functions to the
+struct level or file level. However, this approach loses the benefits of closures and increases the number of functions
+at the struct/file level.&lt;/p>
+&lt;p>We hope that the Go team will improve the readability of nested functions in the future. For example, they could allow
+nested functions to be defined at the end of the function after the primary implementation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// nested functions&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, IDE vendors can improve readability by entirely hiding nested functions by default.&lt;/p>
+&lt;h2 id="additional-benefits-of-readable-code">&lt;a href="#additional-benefits-of-readable-code" class="header-anchor">&lt;/a>Additional benefits of readable code
+&lt;/h2>&lt;p>As you improve the readability of your code, you will notice several side effects:&lt;/p>
+&lt;ul>
+&lt;li>Many bugs will be easier to spot&lt;/li>
+&lt;li>Other developers will be less likely to interrupt you with questions about your code&lt;/li>
+&lt;li>If your code is open source, you may get more contributions&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we
+&lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/HCGyWuE9zbY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Top 5 metrics for software load testing performance</title><link>https://victoronsoftware.com/posts/software-load-testing/</link><pubDate>Wed, 15 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-load-testing/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/loadtest-fail.png" alt="Featured image of post Top 5 metrics for software load testing performance" />&lt;ol>
 &lt;li>&lt;a class="link" href="#server-cpu-and-memory-utilization" >Server CPU and memory utilization&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#server-errors" >Server errors&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#server-api-latency-response-time" >Server API latency (response time)&lt;/a>&lt;/li>
@@ -475,8 +669,8 @@ example, consider the following code:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">m&lt;/span>&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">MyComposedPrint&lt;/span>) &lt;span style="color:#a6e22e">Do&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// call the parent method, similar to super.Do() in other languages
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">MyPrint&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// call the parent method, similar to super.Do() in other languages&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">MyPrint&lt;/span>.&lt;span style="color:#a6e22e">Do&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Hello, Composed World! %d\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">m&lt;/span>.&lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
@@ -525,10 +719,7 @@ title="YouTube Video"
 >
 &lt;/iframe>
 &lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
-improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
-article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
-suite.&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office suite.&lt;/p>
 &lt;p>Some standard engineering metrics include:&lt;/p>
 &lt;ul>
 &lt;li>Number of bugs&lt;/li>
@@ -541,18 +732,14 @@ suite.&lt;/p>
 &lt;li>Delivered story points&lt;/li>
 &lt;li>and many more&lt;/li>
 &lt;/ul>
-&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
-per-team basis.&lt;/p>
+&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a per-team basis.&lt;/p>
 &lt;h2 id="building-an-engineering-metrics-tracker">&lt;a href="#building-an-engineering-metrics-tracker" class="header-anchor">&lt;/a>Building an engineering metrics tracker
-&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
-Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
-&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
-services. We will use the Go programming language in our example.&lt;/p>
+&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
+&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering services. We will use the Go programming language in our example.&lt;/p>
 &lt;h2 id="gathering-the-number-of-open-bugs">&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor">&lt;/a>Gathering the number of open bugs
 &lt;/h2>&lt;p>The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
 >GitHub API&lt;/a> is a well-documented way to query issues in a repository.&lt;/p>
-&lt;p>There are also many quality client libraries for the API. We will use the
-&lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
+&lt;p>There are also many quality client libraries for the API. We will use the &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
 >go-github&lt;/a> client.&lt;/p>
 &lt;p>Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
@@ -563,8 +750,8 @@ services. We will use the Go programming language in our example.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">githubToken&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">Getenv&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;GITHUB_TOKEN&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>(&lt;span style="color:#66d9ef">nil&lt;/span>).&lt;span style="color:#a6e22e">WithAuthToken&lt;/span>(&lt;span style="color:#a6e22e">githubToken&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">IssueListByRepoOptions&lt;/span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">State&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;open&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Labels&lt;/span>: []&lt;span style="color:#66d9ef">string&lt;/span>{&lt;span style="color:#e6db74">&amp;#34;#g-mdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;:release&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bug&amp;#34;&lt;/span>},
@@ -582,25 +769,16 @@ services. We will use the Go programming language in our example.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a
-personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions
-automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
-&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>,
-and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
+&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>, and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
 &lt;h2 id="updating-the-google-sheets-spreadsheet">&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor">&lt;/a>Updating the Google Sheets spreadsheet
 &lt;/h2>&lt;p>To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
->Google Sheets API&lt;/a>
-with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
+>Google Sheets API&lt;/a> with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
 >Google&amp;rsquo;s Go client library&lt;/a>.&lt;/p>
-&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
-spreadsheet using the API, see our previous article:
-&lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
-&lt;p>See our integrated
-&lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
->function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a>
-on GitHub.&lt;/p>
-&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
-you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
+&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the spreadsheet using the API, see our previous article: &lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
+&lt;p>See our integrated &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
+>function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a> on GitHub.&lt;/p>
+&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally, you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
 &lt;pre tabindex="0">&lt;code>spreadsheetId := os.Getenv(&amp;#34;SPREADSHEET_ID&amp;#34;)
 serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34;))
 &lt;/code>&lt;/pre>&lt;p>The glue code combining the above two functions is straightforward.&lt;/p>
@@ -617,12 +795,9 @@ serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to update spreadsheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
-automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
 &lt;h2 id="automating-the-metric-gathering-process-with-github-actions">&lt;a href="#automating-the-metric-gathering-process-with-github-actions" class="header-anchor">&lt;/a>Automating the metric-gathering process with GitHub Actions
-&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
-repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the
-latest metrics.&lt;/p>
+&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the latest metrics.&lt;/p>
 &lt;p>Create a &lt;code>.github/workflows/update-spreadsheet.yml&lt;/code> file in your repository with the following content:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Update spreadsheet with latest metrics&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
@@ -650,22 +825,17 @@ latest metrics.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">go run main.go&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the
-&lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the
-repository settings.&lt;/p>
-&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
-manually run the workflow to test it.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the &lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the repository settings.&lt;/p>
+&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can manually run the workflow to test it.&lt;/p>
 &lt;h2 id="display-the-metrics-in-google-docs">&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor">&lt;/a>Display the metrics in Google Docs
-&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can
-&lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
->copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet.
-This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
-&lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
+&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
+>copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet. This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking &lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
 alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs">
 &lt;/figure>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../readable-code/" >how to measure unreadable code and turn it into clean code&lt;/a>.&lt;/li>
 &lt;li>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/li>
 &lt;li>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/li>
 &lt;li>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/li>
@@ -1553,8 +1723,8 @@ r.CurrentYear = time.Now().Year()
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In this case, the &lt;code>CurrentYear&lt;/code> field was used in our template, but the linter could not detect it. We spent a few
 minutes testing the template to ensure that the &lt;code>CurrentYear&lt;/code> field was being populated correctly. To waive this
 failure, we add a comment:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>() &lt;span style="color:#75715e">// nolint:staticcheck // SA4005 false positive for Go templates
-&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>() &lt;span style="color:#75715e">// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
 >SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a>
 &lt;/h3>&lt;p>We saw a lot of &lt;code>SA4006&lt;/code> fails in our codebase. It was the most common &lt;code>staticcheck&lt;/code> fail we encountered. Here is an
 example:&lt;/p>
@@ -1631,37 +1801,37 @@ go get github.com/XSAM/otelsql@v0.35.0
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">mux&lt;/span>.&lt;span style="color:#a6e22e">NewRouter&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">Use&lt;/span>(&lt;span style="color:#a6e22e">otelmux&lt;/span>.&lt;span style="color:#a6e22e">Middleware&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;fleet&amp;#34;&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>github.com/XSAM/otelsql&lt;/code> package is needed to instrument our SQL database queries.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#a6e22e">semconv&lt;/span> &lt;span style="color:#e6db74">&amp;#34;go.opentelemetry.io/otel/semconv/v1.26.0&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">init&lt;/span>() {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Register&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;mysql&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(&lt;span style="color:#a6e22e">semconv&lt;/span>.&lt;span style="color:#a6e22e">DBSystemMySQL&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanOptions&lt;/span>(&lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">SpanOptions&lt;/span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// DisableErrSkip ignores driver.ErrSkip errors, which are frequently returned by the MySQL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// driver when certain optional methods or paths are not implemented/taken.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// For example, interpolateParams=false (the secure default) will not do a parametrized
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// sql.conn.query directly without preparing it first, causing driver.ErrSkip
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">DisableErrSkip&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.conn.reset_session since it takes ~1us and doesn&amp;#39;t provide useful
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// information
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">OmitConnResetSession&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.rows since it is very quick and typically doesn&amp;#39;t provide useful
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// information beyond what&amp;#39;s already reported by prepare/exec/query
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">OmitRows&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// DisableErrSkip ignores driver.ErrSkip errors, which are frequently returned by the MySQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// driver when certain optional methods or paths are not implemented/taken.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// For example, interpolateParams=false (the secure default) will not do a parametrized&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// sql.conn.query directly without preparing it first, causing driver.ErrSkip&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">DisableErrSkip&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.conn.reset_session since it takes ~1us and doesn&amp;#39;t provide useful&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// information&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">OmitConnResetSession&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.rows since it is very quick and typically doesn&amp;#39;t provide useful&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// information beyond what&amp;#39;s already reported by prepare/exec/query&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">OmitRows&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// WithSpanNameFormatter allows us to customize the span name, which is especially useful for SQL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// queries run outside an HTTPS transaction, which do not belong to a parent span, show up as their
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// own trace, and would otherwise be named &amp;#34;sql.conn.query&amp;#34; or &amp;#34;sql.conn.exec&amp;#34;.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanNameFormatter&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>, &lt;span style="color:#a6e22e">method&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Method&lt;/span>, &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// WithSpanNameFormatter allows us to customize the span name, which is especially useful for SQL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// queries run outside an HTTPS transaction, which do not belong to a parent span, show up as their&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// own trace, and would otherwise be named &amp;#34;sql.conn.query&amp;#34; or &amp;#34;sql.conn.exec&amp;#34;.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanNameFormatter&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>, &lt;span style="color:#a6e22e">method&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Method&lt;/span>, &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">string&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> string(&lt;span style="color:#a6e22e">method&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Append query with extra whitespaces removed
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Join&lt;/span>(&lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Fields&lt;/span>(&lt;span style="color:#a6e22e">query&lt;/span>), &lt;span style="color:#e6db74">&amp;#34; &amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Append query with extra whitespaces removed&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Join&lt;/span>(&lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Fields&lt;/span>(&lt;span style="color:#a6e22e">query&lt;/span>), &lt;span style="color:#e6db74">&amp;#34; &amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">query&lt;/span>) &amp;gt; &lt;span style="color:#ae81ff">100&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">query&lt;/span>[:&lt;span style="color:#ae81ff">100&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -2024,37 +2194,37 @@ JSON token stream and decide how to unmarshal the JSON payload. The critical ins
 called when the field is present in the JSON payload. So, we can mark a &lt;code>Set&lt;/code> flag as &lt;code>true&lt;/code> when the field is present
 and &lt;code>false&lt;/code> when it is not.&lt;/p>
 &lt;p>Here is an example implementation:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span> &lt;span style="color:#a6e22e">any&lt;/span>] &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span> &lt;span style="color:#66d9ef">any&lt;/span>] &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Set&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Valid&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Value&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// MarshalJSON implements the json.Marshaler interface.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Only Value is marshaled, and only if Valid is true.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">MarshalJSON&lt;/span>() ([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// MarshalJSON implements the json.Marshaler interface.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Only Value is marshaled, and only if Valid is true.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">MarshalJSON&lt;/span>() ([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>), &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Marshal&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// UnmarshalJSON implements the json.Unmarshaler interface.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Set is always set to true, even if the JSON data was set to null.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Valid is set if the JSON data is not set to null.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">UnmarshalJSON&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// UnmarshalJSON implements the json.Unmarshaler interface.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Set is always set to true, even if the JSON data was set to null.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Valid is set if the JSON data is not set to null.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">UnmarshalJSON&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Set&lt;/span> = &lt;span style="color:#66d9ef">true&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> = &lt;span style="color:#66d9ef">false&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Equal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key was set to null, set value to zero/default value
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">zero&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key was set to null, set value to zero/default value&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">zero&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span> = &lt;span style="color:#a6e22e">zero&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key isn&amp;#39;t set to null
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">v&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key isn&amp;#39;t set to null&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">v&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">v&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
@@ -2471,49 +2641,35 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#issue-2-re-approvals-for-every-push" >Re-approvals for every push&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#issue-3-impractical-to-maintain-a-protected-feature-branch" >Impractical for protected feature branches&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>Our team has been using GitHub to review the code for our open-source product. We have encountered several issues with
-GitHub code reviews. The default GitHub code review process is not scalable and provides a poor developer experience.&lt;/p>
+&lt;p>Our team has been using GitHub to review the code for our open-source product. We have encountered several issues with GitHub code reviews. The default GitHub code review process is not scalable and provides a poor developer experience.&lt;/p>
 &lt;h2 id="how-to-set-up-a-github-code-review-process">&lt;a href="#how-to-set-up-a-github-code-review-process" class="header-anchor">&lt;/a>How to set up a GitHub code review process
-&lt;/h2>&lt;p>GitHub admins can create a
-&lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
->branch protection rule&lt;/a>
-that requires a code review before merging the code to the main branch.&lt;/p>
+&lt;/h2>&lt;p>GitHub admins can create a &lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
+>branch protection rule&lt;/a> that requires a code review before merging the code to the main branch.&lt;/p>
 &lt;p>Here&amp;rsquo;s a representative branch protection rule:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
 alt="Branch protection rule requiring code review before merging">&lt;figcaption>
 &lt;h4>PR branch protection rule&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
-&lt;code>CODEOWNERS&lt;/code> file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p>
-&lt;p>In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the required code owners for a PR&lt;/a>.
-This is another issue, but we will not discuss it in this article.&lt;/p>
+&lt;p>When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the &lt;code>CODEOWNERS&lt;/code> file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p>
+&lt;p>In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the required code owners for a PR&lt;/a>. This is another issue, but we will not discuss it in this article.&lt;/p>
 &lt;h2 id="issue-1-codeowners-is-not-scalable">&lt;a href="#issue-1-codeowners-is-not-scalable" class="header-anchor">&lt;/a>Issue 1: CODEOWNERS is not scalable
-&lt;/h2>&lt;p>GitHub uses a
-&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>GitHub uses a &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
 >&lt;code>CODEOWNERS&lt;/code> file to define individuals or teams responsible for each file in the repository&lt;/a>.&lt;/p>
-&lt;p>The &lt;code>CODEOWNERS&lt;/code> file format favors fine-grained code ownership, where the last matching pattern takes precedence over
-previous patterns. Here is an example from the GitHub documentation:&lt;/p>
+&lt;p>The &lt;code>CODEOWNERS&lt;/code> file format favors fine-grained code ownership, where the last matching pattern takes precedence over previous patterns. Here is an example from the GitHub documentation:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span># In this example, @octocat owns any file in the `/apps`
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># directory in the root of your repository except for the `/apps/github`
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># subdirectory, as this subdirectory has its own owner @doctocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/ @octocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @doctocat
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CODEOWNERS&lt;/code> file is not scalable for medium-to-large and even small organizations. As the number of code owners
-grows, each pull request is likely to require approval from more code owners. Each code owner may request changes,
-potentially leading to cycles and cycles of re-approvals.&lt;/p>
-&lt;p>Tracking down multiple people to approve and re-approve a PR can be time-consuming and frustrating for developers. This
-results in longer PR turnaround times, slower development velocity, and missed commitments.&lt;/p>
-&lt;p>From a developer experience perspective, we want to make the code review process as smooth and efficient as possible,
-which means one reviewer for one PR. This approach is feasible by manually inverting the
-&lt;code>last matching pattern takes precedence&lt;/code> rule in the &lt;code>CODEOWNERS&lt;/code> file by always including the owner(s) from the
-previous pattern. For example, we would rewrite the above owners as:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CODEOWNERS&lt;/code> file is not scalable for medium-to-large and even small organizations. As the number of code owners grows, each pull request is likely to require approval from more code owners. Each code owner may request changes, potentially leading to cycles and cycles of re-approvals.&lt;/p>
+&lt;p>Tracking down multiple people to approve and re-approve a PR can be time-consuming and frustrating for developers. This results in longer PR turnaround times, slower development velocity, and missed commitments.&lt;/p>
+&lt;p>From a developer experience perspective, we want to make the code review process as smooth and efficient as possible, which means one reviewer for one PR. This approach is feasible by manually inverting the &lt;code>last matching pattern takes precedence&lt;/code> rule in the &lt;code>CODEOWNERS&lt;/code> file by always including the owner(s) from the previous pattern. For example, we would rewrite the above owners as:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>/apps/ @octocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @octocat @doctocat
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Keeping the &lt;code>CODEOWNERS&lt;/code> file in this format may be cumbersome to do manually, but it can be done with a script.&lt;/p>
 &lt;h2 id="issue-2-re-approvals-for-every-push">&lt;a href="#issue-2-re-approvals-for-every-push" class="header-anchor">&lt;/a>Issue 2: Re-approvals for every push
-&lt;/h2>&lt;p>When a developer makes a new push to a PR, all the code owners need to re-approve it. This is a poor developer
-experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p>
+&lt;/h2>&lt;p>When a developer makes a new push to a PR, all the code owners need to re-approve it. This is a poor developer experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p>
 &lt;p>The issue stems from the lack of fine-grained control over the following option:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
 alt="Dismiss stale pull request approvals when new commits are pushed">
@@ -2526,29 +2682,17 @@ alt="Dismiss stale pull request approvals when new commits are pushed">
 &lt;li>fully accepting a suggestion from the reviewer&lt;/li>
 &lt;li>re-generating an auto-generated file, such as documentation&lt;/li>
 &lt;/ul>
-&lt;p>The required re-approvals can be frustrating and time-consuming for developers and code owners. They make developers
-feel untrusted and inefficient.&lt;/p>
-&lt;p>The main argument for requiring re-approvals is security—we don&amp;rsquo;t want to merge potentially malicious code. If that&amp;rsquo;s
-the case, we should have a security review process in place, not a code review process. A security review can be done by
-a separate individual and improved by automated tools.&lt;/p>
-&lt;p>In addition, we should be able to completely exclude some files/directories from the code review process. For example,
-generated files, such as documentation based on code changes, should not require code review. Other generated files,
-such as testing mocks, may have CI/CD checks that ensure they are generated correctly, and they should not require code
-review either.&lt;/p>
+&lt;p>The required re-approvals can be frustrating and time-consuming for developers and code owners. They make developers feel untrusted and inefficient.&lt;/p>
+&lt;p>The main argument for requiring re-approvals is security—we don&amp;rsquo;t want to merge potentially malicious code. If that&amp;rsquo;s the case, we should have a security review process in place, not a code review process. A security review can be done by a separate individual and improved by automated tools.&lt;/p>
+&lt;p>In addition, we should be able to completely exclude some files/directories from the code review process. For example, generated files, such as documentation based on code changes, should not require code review. Other generated files, such as testing mocks, may have CI/CD checks that ensure they are generated correctly, and they should not require code review either.&lt;/p>
 &lt;h2 id="issue-3-impractical-to-maintain-a-protected-feature-branch">&lt;a href="#issue-3-impractical-to-maintain-a-protected-feature-branch" class="header-anchor">&lt;/a>Issue 3: Impractical to maintain a protected feature branch
-&lt;/h2>&lt;p>A protected feature branch requires code reviews before merging. Since all the commits on the feature branch have
-already been reviewed and approved, it is considered safe to merge into the main branch.&lt;/p>
-&lt;p>The main issue is that the developer cannot simply update this feature branch with the latest changes on the main
-branch. They need PR approval from all the code owners who have already approved the same changes on the main branch.
-This busy work is another example of a waste of time and effort.&lt;/p>
-&lt;p>In addition, a feature branch may be long-lived and introduce changes across multiple areas of the code base. This means
-that it may require approval from many code owners, which can be time-consuming and frustrating.&lt;/p>
+&lt;/h2>&lt;p>A protected feature branch requires code reviews before merging. Since all the commits on the feature branch have already been reviewed and approved, it is considered safe to merge into the main branch.&lt;/p>
+&lt;p>The main issue is that the developer cannot simply update this feature branch with the latest changes on the main branch. They need PR approval from all the code owners who have already approved the same changes on the main branch. This busy work is another example of a waste of time and effort.&lt;/p>
+&lt;p>In addition, a feature branch may be long-lived and introduce changes across multiple areas of the code base. This means that it may require approval from many code owners, which can be time-consuming and frustrating.&lt;/p>
 &lt;h2 id="solution-custom-github-action-to-manage-code-reviews">&lt;a href="#solution-custom-github-action-to-manage-code-reviews" class="header-anchor">&lt;/a>Solution: Custom GitHub Action to manage code reviews
-&lt;/h2>&lt;p>Instead of relying on the default GitHub code review process, we can create a custom GitHub Action to manage code
-reviews. The custom GitHub Action can:&lt;/p>
+&lt;/h2>&lt;p>Instead of relying on the default GitHub code review process, we can create a custom GitHub Action to manage code reviews. The custom GitHub Action can:&lt;/p>
 &lt;ul>
-&lt;li>automatically identify a single reviewer for a PR (or identify a small group of reviewers, each of whom can approve
-the PR)&lt;/li>
+&lt;li>automatically identify a single reviewer for a PR (or identify a small group of reviewers, each of whom can approve the PR)&lt;/li>
 &lt;li>automatically exclude specific files/directories from the code review process&lt;/li>
 &lt;li>automatically maintain the approval state of the PR when new commits meeting explicit criteria are pushed&lt;/li>
 &lt;li>enable a usable and practical protected feature branch&lt;/li>
@@ -2559,6 +2703,7 @@ the PR)&lt;/li>
 &lt;li>&lt;a class="link" href="../track-engineering-metrics/" >How to track engineering metrics with GitHub Actions&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests" >How git merge works with PRs&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps" >How to reuse GitHub workflows and steps&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../readable-code/" >What is clean, readable code and why it matters?&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../remote-development-environment" >Set up a remote dev environment&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-the-top-3-issues-with-github-code-reviews">&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor">&lt;/a>Watch the top 3 issues with GitHub code reviews
@@ -2644,15 +2789,11 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
-&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster
-feedback, which leads to quicker iterations and better code quality.&lt;/p>
-&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test
-suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve
-their performance.&lt;/p>
+&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster feedback, which leads to quicker iterations and better code quality.&lt;/p>
+&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve their performance.&lt;/p>
 &lt;h2 id="problems-with-current-measurement-tools">&lt;a href="#problems-with-current-measurement-tools" class="header-anchor">&lt;/a>Problems with current measurement tools
 &lt;/h2>&lt;p>We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p>
-&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the
-&lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
+&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
 >gotestsum&lt;/a> tool gave us the following output for our test suite:&lt;/p>
 &lt;pre tabindex="0">&lt;code>github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
@@ -2672,31 +2813,19 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504 1m35.73s
 github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/recent_vulns 1m34.87s
 ...
-&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times
-in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
-&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests.
-We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
-&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if
-our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the
-test suite.&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
+&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests. We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
+&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the test suite.&lt;/p>
 &lt;h2 id="understanding-parallelism-in-go-tests">&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor">&lt;/a>Understanding parallelism in Go tests
 &lt;/h2>&lt;p>Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
 alt="Sequence diagram of a go test run with two packages, two tests, and two subtests.">
 &lt;/figure>
-&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in
-parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults
-to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
-&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However,
-you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is
-controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test
-suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package
-concurrently, for a total of 64 tests running concurrently.&lt;/p>
-&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially
-by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
+&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
+&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p>
+&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
 &lt;h2 id="accurately-measuring-test-execution-time">&lt;a href="#accurately-measuring-test-execution-time" class="header-anchor">&lt;/a>Accurately measuring test execution time
-&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs
-test results in JSON format, which we can parse and analyze.&lt;/p>
+&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs test results in JSON format, which we can parse and analyze.&lt;/p>
 &lt;p>The &lt;code>Action&lt;/code> field in the JSON output shows the start and end times of each test and subtest.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969606869Z&amp;#34;&lt;/span>,
@@ -2761,17 +2890,13 @@ test results in JSON format, which we can parse and analyze.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution
-time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to
-the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
-&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the
-test or subtest is running in parallel.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
+&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p>
 &lt;p>We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
 >goteststats&lt;/a> that does these calculations.&lt;/p>
 &lt;h2 id="accurate-test-execution-time-measurement-in-practice">&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor">&lt;/a>Accurate test execution time measurement in practice
 &lt;/h2>&lt;p>By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> parser on the JSON output of our test suite, we
-gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
+>goteststats&lt;/a> parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
 &lt;pre tabindex="0">&lt;code>WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
@@ -2789,19 +2914,11 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504: 5.517s (total: 1m35.74s parallel: 17)
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240726100517: 5.418s (total: 1m33.987s parallel: 17)
 ...
-&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently
-with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this
-test from the suite.&lt;/p>
-&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the
-times in the report add up to around 14 minutes.&lt;/p>
-&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for
-identifying slow tests and improving their performance.&lt;/p>
-&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running
-concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that
-this test is a bottleneck and should parallelized.&lt;/p>
-&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if
-the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing
-package. For example:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this test from the suite.&lt;/p>
+&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the times in the report add up to around 14 minutes.&lt;/p>
+&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for identifying slow tests and improving their performance.&lt;/p>
+&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that this test is a bottleneck and should parallelized.&lt;/p>
+&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing package. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:23:17.8084601Z&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;output&amp;#34;&lt;/span>,
@@ -2811,11 +2928,11 @@ package. For example:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="goteststats-on-github">&lt;a href="#goteststats-on-github" class="header-anchor">&lt;/a>&lt;code>goteststats&lt;/code> on GitHub
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> is available on GitHub. You can use it to get detailed
-performance data for your Go test suite.&lt;/p>
+>goteststats&lt;/a> is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>.&lt;/li>
+&lt;li>And &lt;a class="link" href="../readable-code/" >how to measure and fix unreadable code&lt;/a>.&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
 &lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../go-modules-and-packages" >using Go modules and packages&lt;/a>.&lt;/li>
@@ -2875,8 +2992,8 @@ with the &lt;strong>Benchmark&lt;/strong> prefix instead of the &lt;strong>Test&
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkJSONImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
@@ -2917,8 +3034,8 @@ the loop 357 times.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkGobImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
@@ -2926,8 +3043,8 @@ the loop 357 times.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// decode gob
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// decode gob&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">gob&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
@@ -6531,8 +6648,8 @@ title="YouTube Video"
 >CertFindCertificateInStore&lt;/a>, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
 >CryptAcquireCertificatePrivateKey&lt;/a> functions from the &lt;code>crypt32&lt;/code> DLL (dynamic link library).&lt;/p>
 &lt;p>First, we open the &lt;code>MY&lt;/code> store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Open the certificate store
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">storePtr&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#a6e22e">windowsStoreName&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Open the certificate store&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">storePtr&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#a6e22e">windowsStoreName&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
@@ -6547,8 +6664,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we find the certificate by the common name.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Find the certificate
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pPrevCertContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Find the certificate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pPrevCertContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">certContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">commonNamePtr&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#a6e22e">commonName&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> {
@@ -6563,14 +6680,14 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// We can extract the certificate chain and further filter the certificate
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// we want here.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// We can extract the certificate chain and further filter the certificate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// we want here.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="converting-the-windows-certificate-to-a-go-x509certificate">&lt;a href="#converting-the-windows-certificate-to-a-go-x509certificate" class="header-anchor">&lt;/a>Converting the Windows certificate to a Go &lt;code>x509.Certificate&lt;/code>
 &lt;/h3>&lt;p>After retrieving the certificate from the Windows certificate store, we convert it to a Go &lt;code>x509.Certificate&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Copy the certificate data so that we have our own copy outside the windows context
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">encodedCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Slice&lt;/span>(&lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">EncodedCert&lt;/span>, &lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">Length&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Copy the certificate data so that we have our own copy outside the windows context&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">encodedCert&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Slice&lt;/span>(&lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">EncodedCert&lt;/span>, &lt;span style="color:#a6e22e">certContext&lt;/span>.&lt;span style="color:#a6e22e">Length&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">buf&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Clone&lt;/span>(&lt;span style="color:#a6e22e">encodedCert&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">foundCert&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">ParseCertificate&lt;/span>(&lt;span style="color:#a6e22e">buf&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
@@ -6593,8 +6710,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Our example only supports the &lt;code>tls.PSSWithSHA256&lt;/code> signature algorithm to keep the code simple.&lt;/p>
 &lt;h2 id="signing-the-mtls-digest-with-the-windows-certificate-store">&lt;a href="#signing-the-mtls-digest-with-the-windows-certificate-store" class="header-anchor">&lt;/a>Signing the mTLS digest with the Windows certificate store
 &lt;/h2>&lt;p>As discussed in the previous &lt;a class="link" href="../mtls-go-custom-signer" >mTLS Go client with custom certificate signer&lt;/a> article, we must sign the &lt;code>CertificateVerify&lt;/code> message during the TLS handshake. We will use the &lt;code>CustomSigner&lt;/code> to sign the digest, which implements the &lt;code>crypto.Signer&lt;/code> interface as defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">store&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">windowsCertContext&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">CertContext&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
@@ -6610,8 +6727,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">...&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="retrieve-the-private-key-reference-from-the-windows-certificate-store">&lt;a href="#retrieve-the-private-key-reference-from-the-windows-certificate-store" class="header-anchor">&lt;/a>Retrieve the private key reference from the Windows certificate store
 &lt;/h4>&lt;p>We retrieve the private key reference from the Windows certificate store using the &lt;code>CryptAcquireCertificatePrivateKey&lt;/code> function.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get private key
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">var&lt;/span> (
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get private key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> (
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">privateKey&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">Handle&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pdwKeySpec&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pfCallerFreeProvOrNCryptKey&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
@@ -6651,12 +6768,12 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;unsupported salt length %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">pssOpts&lt;/span>.&lt;span style="color:#a6e22e">SaltLength&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sha256&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">windows&lt;/span>.&lt;span style="color:#a6e22e">UTF16PtrFromString&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;SHA256&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Create BCRYPT_PSS_PADDING_INFO structure:
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// typedef struct _BCRYPT_PSS_PADDING_INFO {
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// LPCWSTR pszAlgId;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// ULONG cbSalt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// } BCRYPT_PSS_PADDING_INFO;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Create BCRYPT_PSS_PADDING_INFO structure:&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// typedef struct _BCRYPT_PSS_PADDING_INFO {&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// LPCWSTR pszAlgId;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ULONG cbSalt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// } BCRYPT_PSS_PADDING_INFO;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">pszAlgId&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">uint16&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cbSalt&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
@@ -6667,9 +6784,9 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ), &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally, we sign the digest using the &lt;code>NCryptSignHash&lt;/code> function.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Sign the digest
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// The first call to NCryptSignHash retrieves the size of the signature
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">size&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Sign the digest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The first call to NCryptSignHash retrieves the size of the signature&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">size&lt;/span> &lt;span style="color:#66d9ef">uint32&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">success&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">nCryptSignHash&lt;/span>.&lt;span style="color:#a6e22e">Call&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">privateKey&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">pPaddingInfo&lt;/span>),
@@ -6684,8 +6801,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;NCryptSignHash: failed to get signature length: %#x&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">success&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The second call to NCryptSignHash retrieves the signature
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">signature&lt;/span> = make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">size&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The second call to NCryptSignHash retrieves the signature&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">signature&lt;/span> = make([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#a6e22e">size&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">success&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">nCryptSignHash&lt;/span>.&lt;span style="color:#a6e22e">Call&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">privateKey&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> uintptr(&lt;span style="color:#a6e22e">pPaddingInfo&lt;/span>),
@@ -6720,21 +6837,21 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
 &lt;h2 id="setting-up-the-environment">&lt;a href="#setting-up-the-environment" class="header-anchor">&lt;/a>Setting up the environment
@@ -7012,9 +7129,9 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">str1&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">strconv&lt;/span>.&lt;span style="color:#a6e22e">Unquote&lt;/span>(&lt;span style="color:#e6db74">`&amp;#34;\uAC00&amp;#34;`&lt;/span>) &lt;span style="color:#75715e">// 가
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">str2&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">strconv&lt;/span>.&lt;span style="color:#a6e22e">Unquote&lt;/span>(&lt;span style="color:#e6db74">`&amp;#34;\u1100\u1161&amp;#34;`&lt;/span>) &lt;span style="color:#75715e">// ᄀ + ᅡ
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">str1&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">str1&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">strconv&lt;/span>.&lt;span style="color:#a6e22e">Unquote&lt;/span>(&lt;span style="color:#e6db74">`&amp;#34;\uAC00&amp;#34;`&lt;/span>) &lt;span style="color:#75715e">// 가&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">str2&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">strconv&lt;/span>.&lt;span style="color:#a6e22e">Unquote&lt;/span>(&lt;span style="color:#e6db74">`&amp;#34;\u1100\u1161&amp;#34;`&lt;/span>) &lt;span style="color:#75715e">// ᄀ + ᅡ&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">str1&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#a6e22e">str2&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">str1&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#a6e22e">str2&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;raw equal&amp;#34;&lt;/span>)
@@ -7086,9 +7203,9 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFBooleanTrue&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDictionaryAddValue&lt;/span>(&lt;span style="color:#a6e22e">identitySearch&lt;/span>, &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecMatchSubjectWholeString&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">commonNameCFString&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// To filter by issuers, we must provide a CFDataRef array of DER-encoded ASN.1 items.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// C.CFDictionaryAddValue(identitySearch, unsafe.Pointer(C.kSecMatchIssuers), unsafe.Pointer(issuerCFArray))
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDictionaryAddValue&lt;/span>(&lt;span style="color:#a6e22e">identitySearch&lt;/span>, &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecReturnRef&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// To filter by issuers, we must provide a CFDataRef array of DER-encoded ASN.1 items.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// C.CFDictionaryAddValue(identitySearch, unsafe.Pointer(C.kSecMatchIssuers), unsafe.Pointer(issuerCFArray))&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDictionaryAddValue&lt;/span>(&lt;span style="color:#a6e22e">identitySearch&lt;/span>, &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecReturnRef&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFBooleanTrue&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDictionaryAddValue&lt;/span>(&lt;span style="color:#a6e22e">identitySearch&lt;/span>, &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecMatchLimit&lt;/span>),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecMatchLimitAll&lt;/span>))
@@ -7112,8 +7229,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">continue&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make sure certificate is not expired
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>.&lt;span style="color:#a6e22e">NotAfter&lt;/span>.&lt;span style="color:#a6e22e">After&lt;/span>(&lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>()) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make sure certificate is not expired&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">x509Cert&lt;/span>.&lt;span style="color:#a6e22e">NotAfter&lt;/span>.&lt;span style="color:#a6e22e">After&lt;/span>(&lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>()) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">foundCert&lt;/span> = &lt;span style="color:#a6e22e">x509Cert&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">foundIdentity&lt;/span> = &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>(&lt;span style="color:#a6e22e">identityMatch&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Found certificate from issuer %s with public key type %T\n&amp;#34;&lt;/span>,
@@ -7124,17 +7241,17 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>identityRefToCert&lt;/code> function converts the &lt;code>SecIdentityRef&lt;/code> to a Go &lt;code>x509.Certificate&lt;/code> object. It exports the certificate to PEM format using &lt;a class="link" href="https://developer.apple.com/documentation/security/1394828-secitemexport" target="_blank" rel="noopener"
 >SecItemExport&lt;/a> and then parses the PEM to get the &lt;code>x509.Certificate&lt;/code> object.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">identityRefToCert&lt;/span>(&lt;span style="color:#a6e22e">identityRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityRef&lt;/span>) (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert the identity to a certificate
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">certificateRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecCertificateRef&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert the identity to a certificate&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">certificateRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecCertificateRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecIdentityCopyCertificate&lt;/span>(&lt;span style="color:#a6e22e">identityRef&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">certificateRef&lt;/span>);
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;failed to get certificate from identity: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">status&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFRelease&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFTypeRef&lt;/span>(&lt;span style="color:#a6e22e">certificateRef&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Export the certificate to PEM
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// SecItemExport: https://developer.apple.com/documentation/security/1394828-secitemexport
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pemDataRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataRef&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Export the certificate to PEM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// SecItemExport: https://developer.apple.com/documentation/security/1394828-secitemexport&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">pemDataRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">status&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecItemExport&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFTypeRef&lt;/span>(&lt;span style="color:#a6e22e">certificateRef&lt;/span>), &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecFormatPEMSequence&lt;/span>, &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecItemPemArmour&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">pemDataRef&lt;/span>,
@@ -7193,14 +7310,14 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;crypto.Signer.Sign with key type %T, opts type %T, hash %s\n&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">k&lt;/span>.&lt;span style="color:#a6e22e">Public&lt;/span>(), &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>.&lt;span style="color:#a6e22e">HashFunc&lt;/span>().&lt;span style="color:#a6e22e">String&lt;/span>())
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert the digest to a CFDataRef
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">digestCFData&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataCreate&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFAllocatorDefault&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert the digest to a CFDataRef&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">digestCFData&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataCreate&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFAllocatorDefault&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">UInt8&lt;/span>)(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">digest&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])), &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFIndex&lt;/span>(len(&lt;span style="color:#a6e22e">digest&lt;/span>)))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFRelease&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFTypeRef&lt;/span>(&lt;span style="color:#a6e22e">digestCFData&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// SecKeyAlgorithm: https://developer.apple.com/documentation/security/seckeyalgorithm
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#75715e">// SecKeyCreateSignature: https://developer.apple.com/documentation/security/1643916-seckeycreatesignature
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">cfErrorRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFErrorRef&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// SecKeyAlgorithm: https://developer.apple.com/documentation/security/seckeyalgorithm&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// SecKeyCreateSignature: https://developer.apple.com/documentation/security/1643916-seckeycreatesignature&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">cfErrorRef&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFErrorRef&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">signCFData&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">SecKeyCreateSignature&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">k&lt;/span>.&lt;span style="color:#a6e22e">privateKey&lt;/span>, &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kSecKeyAlgorithmRSASignatureDigestPSSSHA256&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataRef&lt;/span>(&lt;span style="color:#a6e22e">digestCFData&lt;/span>), &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfErrorRef&lt;/span>,
@@ -7210,8 +7327,8 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFRelease&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFTypeRef&lt;/span>(&lt;span style="color:#a6e22e">signCFData&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert CFDataRef to Go byte slice
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">GoBytes&lt;/span>(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataGetBytePtr&lt;/span>(&lt;span style="color:#a6e22e">signCFData&lt;/span>)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Convert CFDataRef to Go byte slice&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">GoBytes&lt;/span>(&lt;span style="color:#a6e22e">unsafe&lt;/span>.&lt;span style="color:#a6e22e">Pointer&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataGetBytePtr&lt;/span>(&lt;span style="color:#a6e22e">signCFData&lt;/span>)),
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.int(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDataGetLength&lt;/span>(&lt;span style="color:#a6e22e">signCFData&lt;/span>))), &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
@@ -7236,21 +7353,21 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We limit the scope of this example to TLS 1.3&lt;/p>
 &lt;h2 id="build-the-mtls-client">&lt;a href="#build-the-mtls-client" class="header-anchor">&lt;/a>Build the mTLS client
@@ -7328,8 +7445,8 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/ul>
 &lt;h2 id="building-our-cryptosigner">&lt;a href="#building-our-cryptosigner" class="header-anchor">&lt;/a>Building our crypto.Signer
 &lt;/h2>&lt;p>We will build a custom &lt;code>crypto.Signer&lt;/code> that signs the &lt;code>CertificateVerify&lt;/code> message. The &lt;code>crypto.Signer&lt;/code> interface is defined in the Go standard library&amp;rsquo;s &lt;code>crypto&lt;/code> package. It is used to sign messages with a private key.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// CustomSigner is a crypto.Signer that uses the client certificate and key to sign&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">CustomSigner&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">x509Cert&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">x509&lt;/span>.&lt;span style="color:#a6e22e">Certificate&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clientCertPath&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">clientKeyPath&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
@@ -7417,21 +7534,21 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Trying to hit the mTLS server with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client-signer.go --url https://localhost:8889/hello-world.txt --cert certs/client.crt --key certs/client.key
@@ -7488,21 +7605,21 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>{}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Trying the ordinary TLS server with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client.go --url https://localhost:8888/hello-world.txt
@@ -7561,21 +7678,21 @@ title="YouTube Video"
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make a GET request to the URL&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">urlPath&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error making get request: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>() { &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>() }()
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">rspBytes&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">io&lt;/span>.&lt;span style="color:#a6e22e">ReadAll&lt;/span>(&lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;error reading response: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Print the response body&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s\n&amp;#34;&lt;/span>, string(&lt;span style="color:#a6e22e">rspBytes&lt;/span>))
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, trying the mTLS server with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go run client-mtls.go --url https://localhost:8889/hello-world.txt --cert certs/client.crt --key certs/client.key
@@ -8009,9 +8126,9 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">serviceStringRef&lt;/span> = &lt;span style="color:#a6e22e">stringToCFString&lt;/span>(&lt;span style="color:#a6e22e">service&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// AddSecret will add a secret to the keychain. This application can retrieve this
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// secret without any user authorization.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">AddSecret&lt;/span>(&lt;span style="color:#a6e22e">secret&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// AddSecret will add a secret to the keychain. This application can retrieve this&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// secret without any user authorization.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">AddSecret&lt;/span>(&lt;span style="color:#a6e22e">secret&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFDictionaryCreateMutable&lt;/span>(
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFAllocatorDefault&lt;/span>,
@@ -8040,8 +8157,8 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// stringToCFString will return a CFStringRef
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">stringToCFString&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFStringRef&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// stringToCFString will return a CFStringRef&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">stringToCFString&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFStringRef&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">bytes&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []byte(&lt;span style="color:#a6e22e">s&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ptr&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> (&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">UInt8&lt;/span>)(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">bytes&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>])
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFStringCreateWithBytes&lt;/span>(&lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">kCFAllocatorDefault&lt;/span>, &lt;span style="color:#a6e22e">ptr&lt;/span>, &lt;span style="color:#a6e22e">C&lt;/span>.&lt;span style="color:#a6e22e">CFIndex&lt;/span>(len(&lt;span style="color:#a6e22e">bytes&lt;/span>)),
@@ -8722,8 +8839,8 @@ in the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
 >handler.go&lt;/a>
 file. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user-authenticated endpoints
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#a6e22e">ue&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">newUserAuthenticatedEndpointer&lt;/span>(&lt;span style="color:#a6e22e">svc&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>, &lt;span style="color:#a6e22e">apiVersions&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// user-authenticated endpoints&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ue&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">newUserAuthenticatedEndpointer&lt;/span>(&lt;span style="color:#a6e22e">svc&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>, &lt;span style="color:#a6e22e">apiVersions&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ue&lt;/span>.&lt;span style="color:#a6e22e">POST&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;/api/_version_/fleet/trigger&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">triggerEndpoint&lt;/span>, &lt;span style="color:#a6e22e">triggerRequest&lt;/span>{})
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Every endpoint calls &lt;strong>kithttp.NewServer&lt;/strong> and wraps the endpoint with our &lt;strong>AuthzCheck&lt;/strong>. From
@@ -8738,11 +8855,11 @@ alt="Catch missed authorization check block diagram">
 was checked. Otherwise, an error is returned. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/middleware/authzcheck/authzcheck.go#L51" target="_blank" rel="noopener"
 >authzcheck.go&lt;/a>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// If authorization was not checked, return a response that will
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// marshal to a generic error and log that the check was missed.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">authzctx&lt;/span>.&lt;span style="color:#a6e22e">Checked&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Getting to here means there is an authorization-related bug in our code.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">authz&lt;/span>.&lt;span style="color:#a6e22e">CheckMissingWithResponse&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>)
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// If authorization was not checked, return a response that will&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// marshal to a generic error and log that the check was missed.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">authzctx&lt;/span>.&lt;span style="color:#a6e22e">Checked&lt;/span>() {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Getting to here means there is an authorization-related bug in our code.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">authz&lt;/span>.&lt;span style="color:#a6e22e">CheckMissingWithResponse&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This additional check is useful during our development and QA process, to ensure that authorization always happens in
 our business logic.&lt;/p>

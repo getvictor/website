@@ -1,4 +1,198 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Developer Experience on Victor on Software</title><link>https://victoronsoftware.com/tags/developer-experience/</link><description>Recent content in Developer Experience on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 23 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/developer-experience/index.xml" rel="self" type="application/rss+xml"/><item><title>How to create a custom GitHub Action using TypeScript</title><link>https://victoronsoftware.com/posts/typescript-github-action/</link><pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/typescript-github-action/</guid><description>&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/typescript-github-action-headline.png" alt="Featured image of post How to create a custom GitHub Action using TypeScript" />&lt;p>In this article, we&amp;rsquo;ll create a custom reusable GitHub Action using TypeScript. As covered in our article on
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Developer Experience on Victor on Software</title><link>https://victoronsoftware.com/tags/developer-experience/</link><description>Recent content in Developer Experience on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 22 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/developer-experience/index.xml" rel="self" type="application/rss+xml"/><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" />&lt;ul>
+&lt;li>&lt;a class="link" href="#metrics-for-unreadable-code" >Metrics for unreadable code&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#how-to-make-your-codebase-more-readable" >How to make your codebase more readable&lt;/a>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#fix-poor-software-structure" >Fix poor software structure&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#refactor-local-code-for-understanding" >Refactor local code for understanding&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#use-unit-and-integration-tests" >Use unit and integration tests&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#useful-comments" >Useful comments&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>Readable code is software code that is easy to understand and easy to change.&lt;/p>
+&lt;p>Unreadable code is a common complaint among software developers and one of the main contributors to technical debt.
+Abandoning unreadable code is one of the reasons engineers love to work on greenfield projects—there is no legacy code
+to deal with.&lt;/p>
+&lt;p>You&amp;rsquo;ve probably heard comments like, &amp;ldquo;It would take me longer to understand this code than to rewrite it from scratch.&amp;rdquo;
+This sentiment illustrates the problem with unreadable code: it slows down the development process.&lt;/p>
+&lt;p>Some engineers refer to readable code as &amp;ldquo;clean code.&amp;rdquo; In our opinion, &amp;ldquo;readable code&amp;rdquo; and &amp;ldquo;clean code&amp;rdquo; are synonymous,
+and the term &amp;ldquo;readable code&amp;rdquo; is easier to understand and, therefore, more &amp;ldquo;readable.&amp;rdquo;&lt;/p>
+&lt;h2 id="why-is-unreadable-code-a-problem">&lt;a href="#why-is-unreadable-code-a-problem" class="header-anchor">&lt;/a>Why is unreadable code a problem?
+&lt;/h2>&lt;p>Although the &amp;ldquo;unreadable code&amp;rdquo; claim feels like a subjective opinion, it has a concrete business impact on software
+projects.&lt;/p>
+&lt;p>We want our code to be readable to speed up adding new features and bug fixes.&lt;/p>
+&lt;p>For example, we recently spent three hours figuring out how a feature worked, only to realize there was a documentation
+bug. Unfortunately, we made no improvements to make the code more readable, and the next developer will likely have the
+same problem. This next developer may be ourselves one year from now when we will have forgotten everything we learned
+about the feature.&lt;/p>
+&lt;h3 id="metrics-for-unreadable-code">&lt;a href="#metrics-for-unreadable-code" class="header-anchor">&lt;/a>Metrics for unreadable code
+&lt;/h3>&lt;p>You can use several metrics to measure your code&amp;rsquo;s readability. The ideal metric would be the time it takes to
+understand the code, but this isn&amp;rsquo;t easy to measure. Instead, you can use the following proxies:&lt;/p>
+&lt;p>&lt;strong>Time to fix a bug&lt;/strong>—Measure the time from when a developer starts working on a bug until the bug fix is ready for code
+review. Alternatively, measure the time from when a developer starts working on a bug until their first commit. A first
+commit is a good proxy for understanding the bug and starting to fix it.&lt;/p>
+&lt;p>&lt;strong>Time to add a new feature&lt;/strong>—Measure the time from when a developer starts working on a new feature until it is ready
+for code review.&lt;/p>
+&lt;p>&lt;strong>Time to onboard a new team member&lt;/strong>—Measure the time it takes for a new team member to make their first commit.&lt;/p>
+&lt;p>&lt;strong>Code style violations&lt;/strong>—Measure the codebase&amp;rsquo;s number of code style violations. Code style violations can be measured
+using linters or static analysis tools. Some examples of code style violations relevant to readability are:&lt;/p>
+&lt;ul>
+&lt;li>Long functions&lt;/li>
+&lt;li>Long files&lt;/li>
+&lt;li>Deeply nested control structures&lt;/li>
+&lt;li>Poorly named variables, such as 1-character variable names&lt;/li>
+&lt;/ul>
+&lt;p>Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
+linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
+>&lt;code>gofmt&lt;/code>&lt;/a>.&lt;/p>
+&lt;h2 id="how-to-make-your-codebase-more-readable">&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor">&lt;/a>How to make your codebase more readable
+&lt;/h2>&lt;p>Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
+incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p>
+&lt;h3 id="fix-poor-software-structure">&lt;a href="#fix-poor-software-structure" class="header-anchor">&lt;/a>Fix poor software structure
+&lt;/h3>&lt;p>One pattern we see frequently is that the functionality of a core feature is spread across multiple software modules.
+The first problem this creates is that the software developer trying to understand the feature has to discover all the
+modules that implement the feature. Often, this requires grepping the codebase for key names &amp;ndash; a tedious and
+error-prone process. The second problem is that the developer has to jump between files and directories to understand
+how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png">&lt;figcaption>
+&lt;h4>Hard to understand feature due to poor software design&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
+to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
+feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
+restructuring the code or rewriting old functionality from scratch. This process makes sense for prototypes or early
+products looking for product-market fit, but it is not sustainable for mature long-term software projects.&lt;/p>
+&lt;p>Often, developers may not be able to create a good software design when they start working on a new feature because they
+don&amp;rsquo;t understand all its ramifications. However, they should restructure their work before moving on to the next
+task—the best time to improve code is when you have all the context in your head.&lt;/p>
+&lt;p>We can restructure the above code example to move all the feature&amp;rsquo;s functionality into one or two modules. This
+reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
+are not distracted by unrelated code.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png">&lt;figcaption>
+&lt;h4>Easier to understand feature encapsulated in separate modules&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;h3 id="refactor-local-code-for-understanding">&lt;a href="#refactor-local-code-for-understanding" class="header-anchor">&lt;/a>Refactor local code for understanding
+&lt;/h3>&lt;p>When entering a function, you should quickly understand what it does. The function code should be readable. If an
+engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p>
+&lt;p>Long functions are difficult to understand because they require the developer to simultaneously keep a lot of
+information in their head. Oftentimes, the function presents implementation details to the developer before they can
+grasp the big picture. This process is cognitively demanding and error-prone.&lt;/p>
+&lt;p>Instead, we can refactor extended functions into smaller functions that each do one thing. This refactoring makes the
+code easier to understand because we can understand each small function in isolation. Hide complex logic in functions
+with descriptive names.&lt;/p>
+&lt;p>In addition, use descriptive names for variables. Good names make the code self-documenting and reduce the need for
+comments.&lt;/p>
+&lt;p>As an example of a function before and after refactoring, see this
+&lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
+>refactoring example gist&lt;/a>. For a full explanation,
+you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
+>jump to the refactoring section&lt;/a> of the video below.&lt;/p>
+&lt;h3 id="use-unit-and-integration-tests">&lt;a href="#use-unit-and-integration-tests" class="header-anchor">&lt;/a>Use unit and integration tests
+&lt;/h3>&lt;p>From a readability perspective, tests are a form of documentation. They show how the code is supposed to work. When
+reading a test, you can see how the code is supposed to behave in different scenarios.&lt;/p>
+&lt;p>Tests should also be readable. The same restructuring and refactoring principles apply to tests.&lt;/p>
+&lt;p>Another essential benefit of tests is that they allow developers to refactor code with confidence. When you refactor
+code, you can run the tests to ensure that the code still works as expected. Unfortunately, this means that when you
+want to make a change in legacy code without tests, you either have to write tests first or do a lot of manual testing
+to ensure that the code still works.&lt;/p>
+&lt;h3 id="useful-comments">&lt;a href="#useful-comments" class="header-anchor">&lt;/a>Useful comments
+&lt;/h3>&lt;p>Comments should explain why the code is written the way it is, not what the code does. The code should be
+self-explanatory with descriptive variable and function names and encapsulated implementation details.&lt;/p>
+&lt;p>Sometimes, it is hard to tell the difference between &amp;ldquo;why&amp;rdquo; and &amp;ldquo;what,&amp;rdquo; so feel free to err on the side of commenting.&lt;/p>
+&lt;p>You can remove the comment if you renamed a variable or a function, and now the comment duplicates the code. One problem
+with comments is that they can get out of date, which is worse than no comments.&lt;/p>
+&lt;p>For example, before refactoring, you had this code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> make([]&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#ae81ff">0&lt;/span>, len(&lt;span style="color:#a6e22e">existingDecls&lt;/span>)&lt;span style="color:#f92672">+&lt;/span>len(&lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">existingDecls&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">incomingDecls&lt;/span>[&lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>]; &lt;span style="color:#a6e22e">newP&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">p&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keepNames&lt;/span> = append(&lt;span style="color:#a6e22e">keepNames&lt;/span>, &lt;span style="color:#a6e22e">fleetmdm&lt;/span>.&lt;span style="color:#a6e22e">ListFleetReservedMacOSDeclarationNames&lt;/span>()&lt;span style="color:#f92672">...&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After refactoring, the comment is a duplicate and no longer needed. It is even worse in this case because we renamed the
+variable, but the comment still refers to the old name. The comment is not only a duplicate but also misleading:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// figure out which declarations we should not delete, and put those into keepNames list&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">namesToKeep&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">namesOfDeclarationsToNotDelete&lt;/span>(&lt;span style="color:#a6e22e">existingDecls&lt;/span>, &lt;span style="color:#a6e22e">enrichedDeclarations&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="language-features-that-make-the-code-less-readable">&lt;a href="#language-features-that-make-the-code-less-readable" class="header-anchor">&lt;/a>Language features that make the code less readable
+&lt;/h2>&lt;p>Some language features can make the code less readable. We will give an example from Go because we are familiar with Go,
+but the same principles apply to other languages.&lt;/p>
+&lt;h3 id="go-nested-functions">&lt;a href="#go-nested-functions" class="header-anchor">&lt;/a>Go nested functions
+&lt;/h3>&lt;p>Go supports nested functions like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Upon entering the function as a reader, the first thing you see is the &lt;code>inner&lt;/code> function. The reader is presented with
+specific implementation details before understanding the big picture. Instead, the reader should know where the nested
+function is used before reading these implementation details.&lt;/p>
+&lt;p>One way to solve this issue is to forbid nested functions in your style guide. Always extract nested functions to the
+struct level or file level. However, this approach loses the benefits of closures and increases the number of functions
+at the struct/file level.&lt;/p>
+&lt;p>We hope that the Go team will improve the readability of nested functions in the future. For example, they could allow
+nested functions to be defined at the end of the function after the primary implementation:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">outer&lt;/span>(&lt;span style="color:#a6e22e">foo&lt;/span> &lt;span style="color:#a6e22e">Foo&lt;/span>, &lt;span style="color:#a6e22e">bar&lt;/span> &lt;span style="color:#a6e22e">Bar&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of additional code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">something&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">i&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// nested functions&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">inner&lt;/span>(&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#a6e22e">Item&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// many lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// of implementation details&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, IDE vendors can improve readability by entirely hiding nested functions by default.&lt;/p>
+&lt;h2 id="additional-benefits-of-readable-code">&lt;a href="#additional-benefits-of-readable-code" class="header-anchor">&lt;/a>Additional benefits of readable code
+&lt;/h2>&lt;p>As you improve the readability of your code, you will notice several side effects:&lt;/p>
+&lt;ul>
+&lt;li>Many bugs will be easier to spot&lt;/li>
+&lt;li>Other developers will be less likely to interrupt you with questions about your code&lt;/li>
+&lt;li>If your code is open source, you may get more contributions&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we
+&lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/HCGyWuE9zbY"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to create a custom GitHub Action using TypeScript</title><link>https://victoronsoftware.com/posts/typescript-github-action/</link><pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/typescript-github-action/</guid><description>&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/typescript-github-action-headline.png" alt="Featured image of post How to create a custom GitHub Action using TypeScript" />&lt;p>In this article, we&amp;rsquo;ll create a custom reusable GitHub Action using TypeScript. As covered in our article on
 &lt;a class="link" href="../github-reusable-workflows-and-steps/" >reusing GitHub workflows and steps&lt;/a>, GitHub Actions allow you to automate your
 software development workflows. By creating a custom GitHub Action, you can extend the functionality of GitHub Actions
 to suit your specific needs.&lt;/p>
@@ -341,49 +535,35 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#issue-2-re-approvals-for-every-push" >Re-approvals for every push&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#issue-3-impractical-to-maintain-a-protected-feature-branch" >Impractical for protected feature branches&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;p>Our team has been using GitHub to review the code for our open-source product. We have encountered several issues with
-GitHub code reviews. The default GitHub code review process is not scalable and provides a poor developer experience.&lt;/p>
+&lt;p>Our team has been using GitHub to review the code for our open-source product. We have encountered several issues with GitHub code reviews. The default GitHub code review process is not scalable and provides a poor developer experience.&lt;/p>
 &lt;h2 id="how-to-set-up-a-github-code-review-process">&lt;a href="#how-to-set-up-a-github-code-review-process" class="header-anchor">&lt;/a>How to set up a GitHub code review process
-&lt;/h2>&lt;p>GitHub admins can create a
-&lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
->branch protection rule&lt;/a>
-that requires a code review before merging the code to the main branch.&lt;/p>
+&lt;/h2>&lt;p>GitHub admins can create a &lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
+>branch protection rule&lt;/a> that requires a code review before merging the code to the main branch.&lt;/p>
 &lt;p>Here&amp;rsquo;s a representative branch protection rule:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
 alt="Branch protection rule requiring code review before merging">&lt;figcaption>
 &lt;h4>PR branch protection rule&lt;/h4>
 &lt;/figcaption>
 &lt;/figure>
-&lt;p>When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
-&lt;code>CODEOWNERS&lt;/code> file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p>
-&lt;p>In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the required code owners for a PR&lt;/a>.
-This is another issue, but we will not discuss it in this article.&lt;/p>
+&lt;p>When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the &lt;code>CODEOWNERS&lt;/code> file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p>
+&lt;p>In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the required code owners for a PR&lt;/a>. This is another issue, but we will not discuss it in this article.&lt;/p>
 &lt;h2 id="issue-1-codeowners-is-not-scalable">&lt;a href="#issue-1-codeowners-is-not-scalable" class="header-anchor">&lt;/a>Issue 1: CODEOWNERS is not scalable
-&lt;/h2>&lt;p>GitHub uses a
-&lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
+&lt;/h2>&lt;p>GitHub uses a &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
 >&lt;code>CODEOWNERS&lt;/code> file to define individuals or teams responsible for each file in the repository&lt;/a>.&lt;/p>
-&lt;p>The &lt;code>CODEOWNERS&lt;/code> file format favors fine-grained code ownership, where the last matching pattern takes precedence over
-previous patterns. Here is an example from the GitHub documentation:&lt;/p>
+&lt;p>The &lt;code>CODEOWNERS&lt;/code> file format favors fine-grained code ownership, where the last matching pattern takes precedence over previous patterns. Here is an example from the GitHub documentation:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span># In this example, @octocat owns any file in the `/apps`
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># directory in the root of your repository except for the `/apps/github`
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span># subdirectory, as this subdirectory has its own owner @doctocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/ @octocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @doctocat
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CODEOWNERS&lt;/code> file is not scalable for medium-to-large and even small organizations. As the number of code owners
-grows, each pull request is likely to require approval from more code owners. Each code owner may request changes,
-potentially leading to cycles and cycles of re-approvals.&lt;/p>
-&lt;p>Tracking down multiple people to approve and re-approve a PR can be time-consuming and frustrating for developers. This
-results in longer PR turnaround times, slower development velocity, and missed commitments.&lt;/p>
-&lt;p>From a developer experience perspective, we want to make the code review process as smooth and efficient as possible,
-which means one reviewer for one PR. This approach is feasible by manually inverting the
-&lt;code>last matching pattern takes precedence&lt;/code> rule in the &lt;code>CODEOWNERS&lt;/code> file by always including the owner(s) from the
-previous pattern. For example, we would rewrite the above owners as:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CODEOWNERS&lt;/code> file is not scalable for medium-to-large and even small organizations. As the number of code owners grows, each pull request is likely to require approval from more code owners. Each code owner may request changes, potentially leading to cycles and cycles of re-approvals.&lt;/p>
+&lt;p>Tracking down multiple people to approve and re-approve a PR can be time-consuming and frustrating for developers. This results in longer PR turnaround times, slower development velocity, and missed commitments.&lt;/p>
+&lt;p>From a developer experience perspective, we want to make the code review process as smooth and efficient as possible, which means one reviewer for one PR. This approach is feasible by manually inverting the &lt;code>last matching pattern takes precedence&lt;/code> rule in the &lt;code>CODEOWNERS&lt;/code> file by always including the owner(s) from the previous pattern. For example, we would rewrite the above owners as:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-plaintext" data-lang="plaintext">&lt;span style="display:flex;">&lt;span>/apps/ @octocat
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>/apps/github @octocat @doctocat
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Keeping the &lt;code>CODEOWNERS&lt;/code> file in this format may be cumbersome to do manually, but it can be done with a script.&lt;/p>
 &lt;h2 id="issue-2-re-approvals-for-every-push">&lt;a href="#issue-2-re-approvals-for-every-push" class="header-anchor">&lt;/a>Issue 2: Re-approvals for every push
-&lt;/h2>&lt;p>When a developer makes a new push to a PR, all the code owners need to re-approve it. This is a poor developer
-experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p>
+&lt;/h2>&lt;p>When a developer makes a new push to a PR, all the code owners need to re-approve it. This is a poor developer experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p>
 &lt;p>The issue stems from the lack of fine-grained control over the following option:&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
 alt="Dismiss stale pull request approvals when new commits are pushed">
@@ -396,29 +576,17 @@ alt="Dismiss stale pull request approvals when new commits are pushed">
 &lt;li>fully accepting a suggestion from the reviewer&lt;/li>
 &lt;li>re-generating an auto-generated file, such as documentation&lt;/li>
 &lt;/ul>
-&lt;p>The required re-approvals can be frustrating and time-consuming for developers and code owners. They make developers
-feel untrusted and inefficient.&lt;/p>
-&lt;p>The main argument for requiring re-approvals is security—we don&amp;rsquo;t want to merge potentially malicious code. If that&amp;rsquo;s
-the case, we should have a security review process in place, not a code review process. A security review can be done by
-a separate individual and improved by automated tools.&lt;/p>
-&lt;p>In addition, we should be able to completely exclude some files/directories from the code review process. For example,
-generated files, such as documentation based on code changes, should not require code review. Other generated files,
-such as testing mocks, may have CI/CD checks that ensure they are generated correctly, and they should not require code
-review either.&lt;/p>
+&lt;p>The required re-approvals can be frustrating and time-consuming for developers and code owners. They make developers feel untrusted and inefficient.&lt;/p>
+&lt;p>The main argument for requiring re-approvals is security—we don&amp;rsquo;t want to merge potentially malicious code. If that&amp;rsquo;s the case, we should have a security review process in place, not a code review process. A security review can be done by a separate individual and improved by automated tools.&lt;/p>
+&lt;p>In addition, we should be able to completely exclude some files/directories from the code review process. For example, generated files, such as documentation based on code changes, should not require code review. Other generated files, such as testing mocks, may have CI/CD checks that ensure they are generated correctly, and they should not require code review either.&lt;/p>
 &lt;h2 id="issue-3-impractical-to-maintain-a-protected-feature-branch">&lt;a href="#issue-3-impractical-to-maintain-a-protected-feature-branch" class="header-anchor">&lt;/a>Issue 3: Impractical to maintain a protected feature branch
-&lt;/h2>&lt;p>A protected feature branch requires code reviews before merging. Since all the commits on the feature branch have
-already been reviewed and approved, it is considered safe to merge into the main branch.&lt;/p>
-&lt;p>The main issue is that the developer cannot simply update this feature branch with the latest changes on the main
-branch. They need PR approval from all the code owners who have already approved the same changes on the main branch.
-This busy work is another example of a waste of time and effort.&lt;/p>
-&lt;p>In addition, a feature branch may be long-lived and introduce changes across multiple areas of the code base. This means
-that it may require approval from many code owners, which can be time-consuming and frustrating.&lt;/p>
+&lt;/h2>&lt;p>A protected feature branch requires code reviews before merging. Since all the commits on the feature branch have already been reviewed and approved, it is considered safe to merge into the main branch.&lt;/p>
+&lt;p>The main issue is that the developer cannot simply update this feature branch with the latest changes on the main branch. They need PR approval from all the code owners who have already approved the same changes on the main branch. This busy work is another example of a waste of time and effort.&lt;/p>
+&lt;p>In addition, a feature branch may be long-lived and introduce changes across multiple areas of the code base. This means that it may require approval from many code owners, which can be time-consuming and frustrating.&lt;/p>
 &lt;h2 id="solution-custom-github-action-to-manage-code-reviews">&lt;a href="#solution-custom-github-action-to-manage-code-reviews" class="header-anchor">&lt;/a>Solution: Custom GitHub Action to manage code reviews
-&lt;/h2>&lt;p>Instead of relying on the default GitHub code review process, we can create a custom GitHub Action to manage code
-reviews. The custom GitHub Action can:&lt;/p>
+&lt;/h2>&lt;p>Instead of relying on the default GitHub code review process, we can create a custom GitHub Action to manage code reviews. The custom GitHub Action can:&lt;/p>
 &lt;ul>
-&lt;li>automatically identify a single reviewer for a PR (or identify a small group of reviewers, each of whom can approve
-the PR)&lt;/li>
+&lt;li>automatically identify a single reviewer for a PR (or identify a small group of reviewers, each of whom can approve the PR)&lt;/li>
 &lt;li>automatically exclude specific files/directories from the code review process&lt;/li>
 &lt;li>automatically maintain the approval state of the PR when new commits meeting explicit criteria are pushed&lt;/li>
 &lt;li>enable a usable and practical protected feature branch&lt;/li>
@@ -429,6 +597,7 @@ the PR)&lt;/li>
 &lt;li>&lt;a class="link" href="../track-engineering-metrics/" >How to track engineering metrics with GitHub Actions&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../git-merges-and-pull-requests" >How git merge works with PRs&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../github-reusable-workflows-and-steps" >How to reuse GitHub workflows and steps&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../readable-code/" >What is clean, readable code and why it matters?&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../remote-development-environment" >Set up a remote dev environment&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-the-top-3-issues-with-github-code-reviews">&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor">&lt;/a>Watch the top 3 issues with GitHub code reviews
@@ -444,15 +613,11 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
-&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster
-feedback, which leads to quicker iterations and better code quality.&lt;/p>
-&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test
-suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve
-their performance.&lt;/p>
+&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster feedback, which leads to quicker iterations and better code quality.&lt;/p>
+&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve their performance.&lt;/p>
 &lt;h2 id="problems-with-current-measurement-tools">&lt;a href="#problems-with-current-measurement-tools" class="header-anchor">&lt;/a>Problems with current measurement tools
 &lt;/h2>&lt;p>We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p>
-&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the
-&lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
+&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
 >gotestsum&lt;/a> tool gave us the following output for our test suite:&lt;/p>
 &lt;pre tabindex="0">&lt;code>github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
@@ -472,31 +637,19 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504 1m35.73s
 github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/recent_vulns 1m34.87s
 ...
-&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times
-in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
-&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests.
-We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
-&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if
-our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the
-test suite.&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
+&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests. We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
+&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the test suite.&lt;/p>
 &lt;h2 id="understanding-parallelism-in-go-tests">&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor">&lt;/a>Understanding parallelism in Go tests
 &lt;/h2>&lt;p>Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
 alt="Sequence diagram of a go test run with two packages, two tests, and two subtests.">
 &lt;/figure>
-&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in
-parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults
-to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
-&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However,
-you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is
-controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test
-suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package
-concurrently, for a total of 64 tests running concurrently.&lt;/p>
-&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially
-by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
+&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
+&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p>
+&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
 &lt;h2 id="accurately-measuring-test-execution-time">&lt;a href="#accurately-measuring-test-execution-time" class="header-anchor">&lt;/a>Accurately measuring test execution time
-&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs
-test results in JSON format, which we can parse and analyze.&lt;/p>
+&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs test results in JSON format, which we can parse and analyze.&lt;/p>
 &lt;p>The &lt;code>Action&lt;/code> field in the JSON output shows the start and end times of each test and subtest.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969606869Z&amp;#34;&lt;/span>,
@@ -561,17 +714,13 @@ test results in JSON format, which we can parse and analyze.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution
-time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to
-the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
-&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the
-test or subtest is running in parallel.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
+&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p>
 &lt;p>We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
 >goteststats&lt;/a> that does these calculations.&lt;/p>
 &lt;h2 id="accurate-test-execution-time-measurement-in-practice">&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor">&lt;/a>Accurate test execution time measurement in practice
 &lt;/h2>&lt;p>By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> parser on the JSON output of our test suite, we
-gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
+>goteststats&lt;/a> parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
 &lt;pre tabindex="0">&lt;code>WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
@@ -589,19 +738,11 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504: 5.517s (total: 1m35.74s parallel: 17)
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240726100517: 5.418s (total: 1m33.987s parallel: 17)
 ...
-&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently
-with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this
-test from the suite.&lt;/p>
-&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the
-times in the report add up to around 14 minutes.&lt;/p>
-&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for
-identifying slow tests and improving their performance.&lt;/p>
-&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running
-concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that
-this test is a bottleneck and should parallelized.&lt;/p>
-&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if
-the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing
-package. For example:&lt;/p>
+&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this test from the suite.&lt;/p>
+&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the times in the report add up to around 14 minutes.&lt;/p>
+&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for identifying slow tests and improving their performance.&lt;/p>
+&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that this test is a bottleneck and should parallelized.&lt;/p>
+&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing package. For example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:23:17.8084601Z&amp;#34;&lt;/span>,
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;output&amp;#34;&lt;/span>,
@@ -611,11 +752,11 @@ package. For example:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="goteststats-on-github">&lt;a href="#goteststats-on-github" class="header-anchor">&lt;/a>&lt;code>goteststats&lt;/code> on GitHub
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> is available on GitHub. You can use it to get detailed
-performance data for your Go test suite.&lt;/p>
+>goteststats&lt;/a> is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>.&lt;/li>
+&lt;li>And &lt;a class="link" href="../readable-code/" >how to measure and fix unreadable code&lt;/a>.&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
 &lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../go-modules-and-packages" >using Go modules and packages&lt;/a>.&lt;/li>
