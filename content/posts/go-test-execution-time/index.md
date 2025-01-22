@@ -13,19 +13,15 @@ draft = false
 
 ## Why measure test execution time?
 
-By speeding up your test suite, you're improving developer experience and productivity. Faster tests mean faster
-feedback, which leads to quicker iterations and better code quality.
+By speeding up your test suite, you're improving developer experience and productivity. Faster tests mean faster feedback, which leads to quicker iterations and better code quality.
 
-When you run tests, you want to know how long they take to execute. This information can help you optimize your test
-suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve
-their performance.
+When you run tests, you want to know how long they take to execute. This information can help you optimize your test suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve their performance.
 
 ## Problems with current measurement tools
 
 We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.
 
-For example, running the `gotestsum tool slowest` command from the
-[gotestsum](https://github.com/gotestyourself/gotestsum) tool gave us the following output for our test suite:
+For example, running the `gotestsum tool slowest` command from the [gotestsum](https://github.com/gotestyourself/gotestsum) tool gave us the following output for our test suite:
 
 ```
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
@@ -48,15 +44,11 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 ...
 ```
 
-The first thing to notice is that the numbers don't add up. Our test suite takes around 14 minutes to run, but the times
-in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.
+The first thing to notice is that the numbers don't add up. Our test suite takes around 14 minutes to run, but the times in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.
 
-The second thing to notice is that our tests contain many subtests. The `TestMDMApple` test contains over 40 subtests.
-We want to know the execution time of each subtest, not just the total time for the test.
+The second thing to notice is that our tests contain many subtests. The `TestMDMApple` test contains over 40 subtests. We want to know the execution time of each subtest, not just the total time for the test.
 
-The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if
-our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the
-test suite.
+The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the test suite.
 
 ## Understanding parallelism in Go tests
 
@@ -64,23 +56,15 @@ Before measuring the execution time of our tests, we need to understand how Go t
 
 {{< figure src="go-test-parallelism.svg" alt="Sequence diagram of a go test run with two packages, two tests, and two subtests." >}}
 
-When you run `go test`, Go compiles each package in your test suite in a separate binary. It then runs each binary in
-parallel. The tests in different packages run concurrently. This behavior is controlled by the `-p` flag, which defaults
-to `GOMAXPROCS`, the number of CPUs on your machine.
+When you run `go test`, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the `-p` flag, which defaults to `GOMAXPROCS`, the number of CPUs on your machine.
 
-Within a package, tests run sequentially by default -- the tests in the same package run one after the other. However,
-you can run tests in parallel within a package by calling `t.Parallel()` in your test functions. This behavior is
-controlled by the `-parallel` flag, which also defaults to `GOMAXPROCS`. So, in a system with 8 CPUs, running a test
-suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package
-concurrently, for a total of 64 tests running concurrently.
+Within a package, tests run sequentially by default -- the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling `t.Parallel()` in your test functions. This behavior is controlled by the `-parallel` flag, which also defaults to `GOMAXPROCS`. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.
 
-Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially
-by default. However, you can also run subtests in parallel by calling `t.Parallel()` in your subtest functions.
+Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling `t.Parallel()` in your subtest functions.
 
 ## Accurately measuring test execution time {#accurately-measuring-test-execution-time}
 
-To measure the execution time of your tests, we must use the `-json` flag with the `go test` command. This flag outputs
-test results in JSON format, which we can parse and analyze.
+To measure the execution time of your tests, we must use the `-json` flag with the `go test` command. This flag outputs test results in JSON format, which we can parse and analyze.
 
 The `Action` field in the JSON output shows the start and end times of each test and subtest.
 
@@ -150,19 +134,15 @@ The `Action` field in the JSON output shows the start and end times of each test
 }
 ```
 
-While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution
-time of each test by dividing the total time by the number of tests running concurrently. Since we don't have access to
-the actual CPU time each test used, this is the best approximation we can get.
+While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don't have access to the actual CPU time each test used, this is the best approximation we can get.
 
-When tests run in parallel, we typically see the `pause` and `cont` actions. If we see these actions, we know that the
-test or subtest is running in parallel.
+When tests run in parallel, we typically see the `pause` and `cont` actions. If we see these actions, we know that the test or subtest is running in parallel.
 
 We created a parser called [goteststats](https://github.com/getvictor/goteststats) that does these calculations.
 
 ## Accurate test execution time measurement in practice
 
-By running our [goteststats](https://github.com/getvictor/goteststats) parser on the JSON output of our test suite, we
-gained actionable insights into our tests' performance.
+By running our [goteststats](https://github.com/getvictor/goteststats) parser on the JSON output of our test suite, we gained actionable insights into our tests' performance.
 
 ```
 WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
@@ -184,23 +164,15 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 ...
 ```
 
-For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently
-with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this
-test from the suite.
+For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this test from the suite.
 
-The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the
-times in the report add up to around 14 minutes.
+The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the times in the report add up to around 14 minutes.
 
-The second thing to notice is that we now have the execution time of each subtest. This information is crucial for
-identifying slow tests and improving their performance.
+The second thing to notice is that we now have the execution time of each subtest. This information is crucial for identifying slow tests and improving their performance.
 
-The third thing to notice is that we now have information about parallelism. We can see how many tests are running
-concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that
-this test is a bottleneck and should parallelized.
+The third thing to notice is that we now have information about parallelism. We can see how many tests are running concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that this test is a bottleneck and should parallelized.
 
-The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if
-the console output of the code under test does not include a new line and gets mixed with the output of Go's testing
-package. For example:
+The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if the console output of the code under test does not include a new line and gets mixed with the output of Go's testing package. For example:
 
 ```json
 {
@@ -214,12 +186,12 @@ package. For example:
 
 ## `goteststats` on GitHub
 
-[goteststats](https://github.com/getvictor/goteststats) is available on GitHub. You can use it to get detailed
-performance data for your Go test suite.
+[goteststats](https://github.com/getvictor/goteststats) is available on GitHub. You can use it to get detailed performance data for your Go test suite.
 
 ## Further reading
 
 - Recently, we wrote about [optimizing the performance of Go applications](../optimizing-performance-of-go-app).
+- And [how to measure and fix unreadable code](../readable-code/).
 - We also explored [fuzz testing with Go](../fuzz-testing-with-go).
 - In addition, we showed [how to create an EXE installer for a Go program](../exe-installer).
 - We also published an article on [using Go modules and packages](../go-modules-and-packages).
