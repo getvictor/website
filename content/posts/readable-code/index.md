@@ -236,7 +236,7 @@ As you improve the readability of your code, you will notice several side effect
 
 ## Make bigger improvements to your codebase with evolutionary architecture
 
-In the following article, we will
+In the following article, we
 [discuss how to make bigger improvements to your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture).
 
 ## Further reading
