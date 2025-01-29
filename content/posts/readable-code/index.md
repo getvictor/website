@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "readable-code-headline.png"
 date = 2025-01-22
 categories = ["Software Development"]
-tags = ["Developer Experience", "Engineering Management"]
+tags = ["Developer Experience", "Engineering Management", "Technical Debt"]
 draft = false
 +++
 
@@ -233,6 +233,11 @@ As you improve the readability of your code, you will notice several side effect
 - Many bugs will be easier to spot
 - Other developers will be less likely to interrupt you with questions about your code
 - If your code is open source, you may get more contributions
+
+## Make bigger improvements to your codebase with evolutionary architecture
+
+In the following article, we will
+[discuss how to make bigger improvements to your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture).
 
 ## Further reading
 

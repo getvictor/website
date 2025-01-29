@@ -9,7 +9,10 @@ tags = ["Engineering Management", "GitHub API", "Google APIs", "GitHub Actions",
 draft = false
 +++
 
-Engineering metrics are essential for tracking your team's progress and productivity and identifying areas for improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office suite.
+Engineering metrics are essential for tracking your team's progress and productivity and identifying areas for
+improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
+article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
+suite.
 
 Some standard engineering metrics include:
 
@@ -23,19 +26,23 @@ Some standard engineering metrics include:
 - Delivered story points
 - and many more
 
-Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a per-team basis.
+Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
+per-team basis.
 
 ## Building an engineering metrics tracker
 
-For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.
+For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
+Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.
 
-All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering services. We will use the Go programming language in our example.
+All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
+services. We will use the Go programming language in our example.
 
 ## Gathering the number of open bugs
 
 The [GitHub API](https://docs.github.com/en/rest) is a well-documented way to query issues in a repository.
 
-There are also many quality client libraries for the API. We will use the [go-github](https://github.com/google/go-github) client.
+There are also many quality client libraries for the API. We will use the
+[go-github](https://github.com/google/go-github) client.
 
 Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:
 
@@ -69,19 +76,28 @@ func getGitHubIssues(ctx context.Context) ([]*github.Issue, error) {
 }
 ```
 
-The above code snippet uses a `GITHUB_TOKEN` environment variable to authenticate with the GitHub API. You can create a personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions automatically. The token is optional for public repositories but required for private repositories.
+The above code snippet uses a `GITHUB_TOKEN` environment variable to authenticate with the GitHub API. You can create a
+personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions
+automatically. The token is optional for public repositories but required for private repositories.
 
-The code snippet queries the open issues in the public `fleetdm/fleet` repository with the labels `#g-mdm`, `:release`, and `bug`. Fleet's MDM product team currently uses these labels for bugs in progress or ready to be worked on.
+The code snippet queries the open issues in the public `fleetdm/fleet` repository with the labels `#g-mdm`, `:release`,
+and `bug`. Fleet's MDM product team currently uses these labels for bugs in progress or ready to be worked on.
 
 ## Updating the Google Sheets spreadsheet
 
-To update the Google Sheets spreadsheet, we will use the [Google Sheets API](https://developers.google.com/sheets/api) with the [Google's Go client library](https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4).
+To update the Google Sheets spreadsheet, we will use the [Google Sheets API](https://developers.google.com/sheets/api)
+with the [Google's Go client library](https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4).
 
-For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the spreadsheet using the API, see our previous article: [How to quickly edit Google Sheets spreadsheet using the API](../google-sheets-api/).
+For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
+spreadsheet using the API, see our previous article:
+[How to quickly edit Google Sheets spreadsheet using the API](../google-sheets-api/).
 
-See our integrated [function to update the Google Sheets spreadsheet with the number of open bugs](https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55) on GitHub.
+See our integrated
+[function to update the Google Sheets spreadsheet with the number of open bugs](https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55)
+on GitHub.
 
-In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally, you must set the `SPREADSHEET_ID` and `GOOGLE_SERVICE_ACCOUNT_KEY` environment variables.
+In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
+you must set the `SPREADSHEET_ID` and `GOOGLE_SERVICE_ACCOUNT_KEY` environment variables.
 
 ```
 spreadsheetId := os.Getenv("SPREADSHEET_ID")
@@ -106,11 +122,14 @@ func main() {
 }
 ```
 
-We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to automate this process so that the metrics are always up to date and we have a consistent historical record.
+We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
+automate this process so that the metrics are always up to date and we have a consistent historical record.
 
 ## Automating the metric-gathering process with GitHub Actions
 
-GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the latest metrics.
+GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
+repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the
+latest metrics.
 
 Create a `.github/workflows/update-spreadsheet.yml` file in your repository with the following content:
 
@@ -143,19 +162,26 @@ jobs:
         run: go run main.go
 ```
 
-The above GitHub Actions workflow runs the `main.go` script every 12 hours. GitHub automatically generates the `GITHUB_TOKEN` secret. The `GOOGLE_SERVICE_ACCOUNT_KEY` and `SPREADSHEET_ID` secrets must be set up manually in the repository settings.
+The above GitHub Actions workflow runs the `main.go` script every 12 hours. GitHub automatically generates the
+`GITHUB_TOKEN` secret. The `GOOGLE_SERVICE_ACCOUNT_KEY` and `SPREADSHEET_ID` secrets must be set up manually in the
+repository settings.
 
-The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can manually run the workflow to test it.
+The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
+manually run the workflow to test it.
 
 ## Display the metrics in Google Docs
 
-To see the metrics in Google Docs or Google Slides, you can [copy and paste the relevant cells](https://support.google.com/docs/answer/7009814) from the Google Sheets spreadsheet. This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking **Tools > Linked objects > Update All**.
+To see the metrics in Google Docs or Google Slides, you can
+[copy and paste the relevant cells](https://support.google.com/docs/answer/7009814) from the Google Sheets spreadsheet.
+This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
+**Tools > Linked objects > Update All**.
 
 {{< figure src="google-sheets-linked-to-google-docs.png" alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs">}}
 
 ## Further reading
 
-- Recently, we explained [how to measure unreadable code and turn it into clean code](../readable-code/).
+- Recently, we explained [how to measure unreadable code and turn it into clean code](../readable-code/), as well as
+  [how to make incremental improvements to your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/).
 - Previously, we showed [how to reuse workflows and steps in GitHub Actions](../github-reusable-workflows-and-steps/).
 - We also covered [measuring the execution time of Go tests](../go-test-execution-time/).
 - We also described [inefficiencies in the GitHub code review process](../github-code-review-issues/).
