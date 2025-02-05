@@ -153,6 +153,7 @@ Link to the
 - Recently, we covered [how to easily track engineering metrics](../track-engineering-metrics/).
 - Previously, we demonstrated
   [the most significant issues with GitHub's code review process](../github-code-review-issues/).
+- We also showed [how to create an architectural test that finds Go package dependencies](../go-package-dependencies/).
 
 ## Watch how to scale your codebase with evolutionary architecture
 
