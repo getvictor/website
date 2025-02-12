@@ -110,6 +110,7 @@ A failing run of our architecture test will look like this:
 - In the previous article, we discussed
   [how to scale your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/).
 - Before that, we [explained the difference between Go modules and Go packages](../go-modules-and-packages/).
+- We also covered [common code refactorings in Go for readability and maintainability](../common-refactorings/).
 
 ## Watch how to find package dependencies of a Go package
 

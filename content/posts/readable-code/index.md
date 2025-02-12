@@ -116,6 +116,9 @@ As an example of a function before and after refactoring, see this
 [refactoring example gist](https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8). For a full explanation,
 you can [jump to the refactoring section](https://www.youtube.com/watch?v=HCGyWuE9zbY&t=720s) of the video below.
 
+For more examples of common refactorings, see our article on
+[top refactorings every software developer should know](../common-refactorings/).
+
 ### Use unit and integration tests
 
 From a readability perspective, tests are a form of documentation. They show how the code is supposed to work. When
