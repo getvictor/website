@@ -1,4 +1,164 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to find package dependencies of a Go package</title><link>https://victoronsoftware.com/posts/go-package-dependencies/</link><pubDate>Wed, 05 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-package-dependencies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-package-dependencies/go-dependencies-headline.png" alt="Featured image of post How to find package dependencies of a Go package" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code refactorings every software engineer should know</title><link>https://victoronsoftware.com/posts/common-refactorings/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/common-refactorings/</guid><description>&lt;img src="https://victoronsoftware.com/posts/common-refactorings/common-refactorings-headline.png" alt="Featured image of post Top code refactorings every software engineer should know" />&lt;ul>
+&lt;li>&lt;a class="link" href="#extract-method-aka-extract-function" >Extract method (aka extract function)&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#inline-variable" >Inline variable&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#extract-variable" >Extract variable&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#inline-method-aka-inline-function" >Inline method (aka inline function)&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-code-refactoring">&lt;a href="#what-is-code-refactoring" class="header-anchor">&lt;/a>What is code refactoring?
+&lt;/h2>&lt;p>Code refactoring involves modifying existing software code without changing its observable behavior. Refactoring
+improves the code base&amp;rsquo;s readability and maintainability. See our previous article on
+&lt;a class="link" href="../readable-code/" >why readable code is important&lt;/a>.&lt;/p>
+&lt;h2 id="why-are-engineers-afraid-of-refactoring">&lt;a href="#why-are-engineers-afraid-of-refactoring" class="header-anchor">&lt;/a>Why are engineers afraid of refactoring?
+&lt;/h2>&lt;p>Refactoring is essential to software development and should be done regularly as part of day-to-day work. Unfortunately,
+many engineers are afraid of refactoring, don&amp;rsquo;t know how to do it, or don&amp;rsquo;t consider it part of their job
+responsibilities.&lt;/p>
+&lt;p>Some engineers fear that refactoring will introduce bugs or break existing functionality. The root cause of this fear is
+the lack of automated tests. Without automated tests, ensuring that the refactored code behaves as expected is
+difficult. A code base without automated tests is a ticking time bomb and cannot be maintained by any sane engineer.
+Before refactoring code in such a code base, you should add automated tests for the targeted code.&lt;/p>
+&lt;p>Other engineers fear that refactoring will take too much time. This fear is often unfounded, as refactoring can be done
+incrementally and in small steps. For example, after refactoring the code for an hour or less, merge your changes to
+your main branch and, if needed, continue doing the next small refactoring steps. Your organization should never
+allocate weeks of development for &amp;ldquo;large refactorings.&amp;rdquo;&lt;/p>
+&lt;p>Engineers may also fear refactoring because they don&amp;rsquo;t want to make too many changes to the code, making it difficult
+for reviewers to review the changes. The issue is that many current code review systems don&amp;rsquo;t understand the code
+changes&amp;rsquo; semantics (i.e., the meaning). These systems only understand line changes and are frequently confused by
+relocated code. In this case, the coder should explain the changes to the reviewer. Alternatively, the organization can
+adopt a better code review tool. For a further discussion of
+&lt;a class="link" href="../github-code-review-issues/" >issues with GitHub code reviews, see our previous article&lt;/a>.&lt;/p>
+&lt;p>This article will show some common refactorings you can safely do with automation from your IDE (Integrated Development
+Environment).&lt;/p>
+&lt;h2 id="extract-method-aka-extract-function">&lt;a href="#extract-method-aka-extract-function" class="header-anchor">&lt;/a>Extract method (aka extract function)
+&lt;/h2>&lt;p>The &lt;code>extract method&lt;/code> refactoring takes a piece of code and moves it into a new method. There are several reasons to do
+this, all of which improve the readability and maintainability of the code:&lt;/p>
+&lt;ul>
+&lt;li>The code is too long and must be broken into smaller, more manageable pieces.&lt;/li>
+&lt;li>The code is duplicated in multiple places and needs to be consolidated into a single method.&lt;/li>
+&lt;li>We want to separate the code implementation from the code intention. The code implementation is what the code does,
+and the code intention is why it does it. Move the code implementation into its own method and name the new method
+based on the code intention.&lt;/li>
+&lt;/ul>
+&lt;p>For example, consider the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">ContainsFunc&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>, &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pkgs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When entering the &lt;code>expandPackages&lt;/code> method, the reader is immediately confronted with a complex expression. They must
+stop and think about what the code does. Even though the amount of code is small, it still hampers readability. The code
+implementation is mixed with the code intention. One way to improve the situation is to add a comment. A better way is
+to extract the code into its own method and name the new method based on the code intention.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">needExpansion&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pkgs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">needExpansion&lt;/span>(&lt;span style="color:#a6e22e">packages&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">ContainsFunc&lt;/span>(&lt;span style="color:#a6e22e">packages&lt;/span>, &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Most IDEs automatically perform this refactoring. Highlight the code you want to extract, open the refactoring menu, and
+select the &lt;code>Extract Method&lt;/code> option.&lt;/p>
+&lt;h2 id="inline-variable">&lt;a href="#inline-variable" class="header-anchor">&lt;/a>Inline variable
+&lt;/h2>&lt;p>Every variable should have a purpose and a good explanatory name that describes its intent. As the number of variables
+grows in a method, it becomes increasingly difficult to understand the code. One way to improve the readability of the
+code is to inline variables. Inlining a variable is replacing the variable with the right-hand side of the assignment.&lt;/p>
+&lt;p>For example, consider the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pd&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">packageDependency&lt;/span>) &lt;span style="color:#a6e22e">chain&lt;/span>() (&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#66d9ef">int&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">parent&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;\n&amp;#34;&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The variable &lt;code>name&lt;/code> does not add any value to the code. It is simply a copy of the &lt;code>pd.name&lt;/code> field. We can inline the
+variable to improve the readability of the code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pd&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">packageDependency&lt;/span>) &lt;span style="color:#a6e22e">chain&lt;/span>() (&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#66d9ef">int&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">parent&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;\n&amp;#34;&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the variable you want to inline, open the refactoring menu,
+and select the &lt;code>Inline&lt;/code> option.&lt;/p>
+&lt;h2 id="extract-variable">&lt;a href="#extract-variable" class="header-anchor">&lt;/a>Extract variable
+&lt;/h2>&lt;p>The &lt;code>extract variable&lt;/code> refactoring takes a complex expression and moves it into a new variable. Mechanically, it is the
+opposite of the above &lt;code>inline variable&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
+&lt;ul>
+&lt;li>The expression is complex and must be broken into smaller, more manageable pieces.&lt;/li>
+&lt;li>The meaning of the expression is unclear and needs to be clarified with a descriptive variable name.&lt;/li>
+&lt;/ul>
+&lt;p>Sometimes, you have a choice between extracting a method or a variable. In general, you should extract a method to make
+the code more readable. However, if the method is only used once and the parent function is not complex, it may be
+better to extract a variable.&lt;/p>
+&lt;p>For example, consider the same code from our &lt;code>extract method&lt;/code> example above:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">ContainsFunc&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>, &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pkgs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can extract the complex expression into a variable to improve the readability of the code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">needExpansion&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">ContainsFunc&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>, &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">needExpansion&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pkgs&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the expression you want to extract, open the refactoring
+menu, and select the &lt;code>Extract Variable&lt;/code> or &lt;code>Introduce Variable&lt;/code> option.&lt;/p>
+&lt;h2 id="inline-method-aka-inline-function">&lt;a href="#inline-method-aka-inline-function" class="header-anchor">&lt;/a>Inline method (aka inline function)
+&lt;/h2>&lt;p>The &lt;code>inline method&lt;/code> refactoring takes a method and moves its code into the caller. Mechanically, it is the opposite of
+the &lt;code>extract method&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
+&lt;ul>
+&lt;li>The method is too simple, and its body is as clear as its name.&lt;/li>
+&lt;li>We want to simplify code and remove a level of indirection.&lt;/li>
+&lt;li>We must regroup code into a single method before proceeding with a better refactoring.&lt;/li>
+&lt;/ul>
+&lt;p>For example, consider the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// method code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">dep&lt;/span>.&lt;span style="color:#a6e22e">has&lt;/span>(&lt;span style="color:#a6e22e">expandedPackages&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more coe ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pd&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">packageDependency&lt;/span>) &lt;span style="color:#a6e22e">has&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>, &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can inline the &lt;code>has&lt;/code> method:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// method code ...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">expandedPackages&lt;/span>, &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more coe ...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the method call you want to inline, open the refactoring
+menu, and select the &lt;code>Inline Function/Method&lt;/code> option.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>The code examples above are from our article on
+&lt;a class="link" href="../go-package-dependencies/" >finding package dependencies of a Go package&lt;/a>.&lt;/li>
+&lt;li>We also discussed
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-examples-of-top-code-refactorings">&lt;a href="#watch-examples-of-top-code-refactorings" class="header-anchor">&lt;/a>Watch examples of top code refactorings
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/Mzj9XQlieHk"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to find package dependencies of a Go package</title><link>https://victoronsoftware.com/posts/go-package-dependencies/</link><pubDate>Wed, 05 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-package-dependencies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-package-dependencies/go-dependencies-headline.png" alt="Featured image of post How to find package dependencies of a Go package" />&lt;ul>
 &lt;li>&lt;a class="link" href="#find-package-dependencies-using-go-list" >Find package dependencies using &lt;code>go list&lt;/code>&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#find-package-dependencies-using-go-code" >Find package dependencies using Go code&lt;/a>&lt;/li>
 &lt;/ul>
@@ -72,6 +232,7 @@ github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 &lt;li>In the previous article, we discussed
 &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
 &lt;li>Before that, we &lt;a class="link" href="../go-modules-and-packages/" >explained the difference between Go modules and Go packages&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../common-refactorings/" >common code refactorings in Go for readability and maintainability&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-find-package-dependencies-of-a-go-package">&lt;a href="#watch-how-to-find-package-dependencies-of-a-go-package" class="header-anchor">&lt;/a>Watch how to find package dependencies of a Go package
 &lt;/h2>&lt;div class="video-wrapper">
@@ -207,6 +368,7 @@ below.&lt;/p>
 &lt;li>Previously, we demonstrated
 &lt;a class="link" href="../github-code-review-issues/" >the most significant issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
 &lt;li>We also showed &lt;a class="link" href="../go-package-dependencies/" >how to create an architectural test that finds Go package dependencies&lt;/a>.&lt;/li>
+&lt;li>We also published an article on &lt;a class="link" href="../common-refactorings/" >the common code refactorings to improve code readability&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-scale-your-codebase-with-evolutionary-architecture">&lt;a href="#watch-how-to-scale-your-codebase-with-evolutionary-architecture" class="header-anchor">&lt;/a>Watch how to scale your codebase with evolutionary architecture
 &lt;/h2>&lt;div class="video-wrapper">
@@ -308,6 +470,8 @@ comments.&lt;/p>
 >refactoring example gist&lt;/a>. For a full explanation,
 you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
 >jump to the refactoring section&lt;/a> of the video below.&lt;/p>
+&lt;p>For more examples of common refactorings, see our article on
+&lt;a class="link" href="../common-refactorings/" >top refactorings every software developer should know&lt;/a>.&lt;/p>
 &lt;h3 id="use-unit-and-integration-tests">&lt;a href="#use-unit-and-integration-tests" class="header-anchor">&lt;/a>Use unit and integration tests
 &lt;/h3>&lt;p>From a readability perspective, tests are a form of documentation. They show how the code is supposed to work. When
 reading a test, you can see how the code is supposed to behave in different scenarios.&lt;/p>
