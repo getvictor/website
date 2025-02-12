@@ -13,7 +13,7 @@ _This article is part of a series on **technical debt**. Check out the previous 
 
 - [Why readable code is important and how to refactor code for readability](../readable-code/)
 
-## Table of contents
+## Intro to evolutionary architecture
 
 - [Current architecture](#current-architecture)
 - [Problems with the current architecture](#problems-with-the-current-architecture)
