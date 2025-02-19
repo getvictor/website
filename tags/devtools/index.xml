@@ -30,7 +30,7 @@ run options with:&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For our project, we add a few more flags to the &lt;code>golangci-lint run&lt;/code> command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --timeout 10m --max-same-issues &lt;span style="color:#ae81ff">0&lt;/span> --max-issues-per-linter &lt;span style="color:#ae81ff">0&lt;/span> --exclude-dirs ./node_modules
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="analyze-and-fix-staticcheck-issues">&lt;a href="#analyze-and-fix-staticcheck-issues" class="header-anchor">&lt;/a>Analyze and fix staticcheck issues
-&lt;/h2>&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-fieldhttpsstaticcheckdevdocscheckssa1019">&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-fieldhttpsstaticcheckdevdocscheckssa1019" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
+&lt;/h2>&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-field">&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-field" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
 >SA1019 - Using a deprecated function, variable, constant or field&lt;/a>
 &lt;/h3>&lt;p>After running the linter, the first thing we notice is a considerable number of
 &lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
@@ -58,7 +58,7 @@ turned off by the sheer number of these fails and will simply turn off &lt;code>
 the &lt;code>SA1019&lt;/code> check.&lt;/p>
 &lt;p>We then run &lt;code>golangci-lint&lt;/code> with the custom configuration file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --config staticcheck.yml
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsishttpsstaticcheckdevdocscheckssa1032">&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsishttpsstaticcheckdevdocscheckssa1032" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsis">&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsis" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
 >SA1032 - Wrong order of arguments to errors.Is&lt;/a>
 &lt;/h3>&lt;p>After rerunning the linter, we saw a &lt;code>SA1032&lt;/code> fail:&lt;/p>
 &lt;pre tabindex="0">&lt;code>server/datastore/mysql/vpp.go:1090:6: SA1032: arguments have the wrong order (staticcheck)
@@ -66,7 +66,7 @@ if errors.Is(sql.ErrNoRows, err) {
 ^
 &lt;/code>&lt;/pre>&lt;p>This failure is a good catch and a potential bug. We fix it by swapping the arguments:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">errors&lt;/span>.&lt;span style="color:#a6e22e">Is&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>, &lt;span style="color:#a6e22e">sql&lt;/span>.&lt;span style="color:#a6e22e">ErrNoRows&lt;/span>) {
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiverhttpsstaticcheckdevdocscheckssa4005">&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiverhttpsstaticcheckdevdocscheckssa4005" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver">&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
 >SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a>
 &lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4005&lt;/code>:&lt;/p>
 &lt;pre tabindex="0">&lt;code>server/mail/users.go:44:2: SA4005: ineffective assignment to field PasswordResetMailer.CurrentYear (staticcheck)
@@ -87,7 +87,7 @@ r.CurrentYear = time.Now().Year()
 minutes testing the template to ensure that the &lt;code>CurrentYear&lt;/code> field was being populated correctly. To waive this
 failure, we add a comment:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>() &lt;span style="color:#75715e">// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
 >SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a>
 &lt;/h3>&lt;p>We saw a lot of &lt;code>SA4006&lt;/code> fails in our codebase. It was the most common &lt;code>staticcheck&lt;/code> fail we encountered. Here is an
 example:&lt;/p>
@@ -97,7 +97,7 @@ repo, err = openRepo(tmpDir)
 &lt;/code>&lt;/pre>&lt;p>This is a bug or a potential bug. The developer assigned a value to &lt;code>repo&lt;/code> but never used it. We fix it by removing the
 assignment:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">openRepo&lt;/span>(&lt;span style="color:#a6e22e">tmpDir&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-usehttpsstaticcheckdevdocscheckssa4009">&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-usehttpsstaticcheckdevdocscheckssa4009" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-use">&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-use" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
 >SA4009 - A function argument is overwritten before its first use&lt;/a>
 &lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4009&lt;/code>. Here is an example:&lt;/p>
 &lt;pre tabindex="0">&lt;code>orbit/pkg/installer/installer.go:288:37: SA4009: argument ctx is overwritten before first use (staticcheck)

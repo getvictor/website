@@ -1565,7 +1565,7 @@ device&amp;rsquo;s OS version.&lt;/p>
 device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more
 failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate
 the failing policy. This article is an example of one such flow.&lt;/p>
-&lt;h2 id="getting-started----webhook-action">&lt;a href="#getting-started----webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
+&lt;h2 id="getting-started--webhook-action">&lt;a href="#getting-started--webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
 &lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
@@ -2387,7 +2387,7 @@ from a backup or brand new. This VM should use virtual network bridges for its c
 configured, we can stop the first router VM and switch the port connections to the second VM. This flow also requires
 accessing the router via the serial interface to update the WAN/LAN interfaces.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we have been &lt;a class="link" href="https://victoronsoftware.com/posts/why-you-need-vlan/" >setting up VLANs on our home network&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we have been &lt;a class="link" href="../why-you-need-vlan/" >setting up VLANs on our home network&lt;/a>.&lt;/p>
 &lt;h2 id="setting-up-a-virtual-router-video">&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor">&lt;/a>Setting up a virtual router video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"

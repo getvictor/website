@@ -1,4 +1,166 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Developer Experience on Victor on Software</title><link>https://victoronsoftware.com/tags/developer-experience/</link><description>Recent content in Developer Experience on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 29 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/developer-experience/index.xml" rel="self" type="application/rss+xml"/><item><title>How to scale your codebase with evolutionary architecture</title><link>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</link><pubDate>Wed, 29 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</guid><description>&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-architecture-headline.png" alt="Featured image of post How to scale your codebase with evolutionary architecture" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous article:&lt;/em>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Developer Experience on Victor on Software</title><link>https://victoronsoftware.com/tags/developer-experience/</link><description>Recent content in Developer Experience on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/developer-experience/index.xml" rel="self" type="application/rss+xml"/><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" />&lt;p>Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
+code changes cause an unexpectedly long recompile time. In this article, we show how to analyze your compilation times
+and take steps to improve them.&lt;/p>
+&lt;h2 id="turn-on-the-go-build-cache">&lt;a href="#turn-on-the-go-build-cache" class="header-anchor">&lt;/a>Turn on the Go build cache
+&lt;/h2>&lt;p>First, you must know that Go is very good at caching build artifacts. If you make a small change and rerun the build,
+the rerun will be significantly faster because Go will reuse the cached artifacts from the previous build. However, if
+you update the Go version, change the build flags, or pull in new or different dependencies, Go may rebuild everything
+from scratch.&lt;/p>
+&lt;p>The first step in improving your build time is to make sure you are using a build cache. The cache is enabled by default
+on your development machine, but that may not be true on your CI/CD system. Ensure you use a build cache across multiple
+CI/CD runs. For example, the GitHub Actions
+&lt;a class="link" href="https://github.com/actions/setup-go?tab=readme-ov-file#caching-dependency-files-and-build-outputs" target="_blank" rel="noopener"
+>&lt;code>setup-go&lt;/code> action has caching turned on by default&lt;/a>.&lt;/p>
+&lt;h2 id="analyze-a-go-build">&lt;a href="#analyze-a-go-build" class="header-anchor">&lt;/a>Analyze a Go build
+&lt;/h2>&lt;p>We can clear the build cache with the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>go clean -cache
+&lt;/code>&lt;/pre>&lt;p>Now, we can run a clean build with the &lt;code>-debug-trace&lt;/code> flag:&lt;/p>
+&lt;pre tabindex="0">&lt;code>time go build -debug-trace=debug-trace.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>We use the &lt;code>time&lt;/code> command to measure the time the build takes. It is good practice to always use the &lt;code>time&lt;/code> command when
+measuring performance. The &lt;code>time&lt;/code> command is built into our Z shell (zsh), but a similar command is available in other
+shells and OSes.&lt;/p>
+&lt;p>In the time output, we see how long our build took:&lt;/p>
+&lt;pre tabindex="0">&lt;code>79.25s user 20.13s system 518% cpu 19.183 total
+&lt;/code>&lt;/pre>&lt;p>The total time (19.183s) is the wall clock time we waited for the build to finish. The user and system times are spent
+executing user and system code. They are larger than the wall clock time because we use a multi-core machine.&lt;/p>
+&lt;p>The debug trace is in
+&lt;a class="link" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview" target="_blank" rel="noopener"
+>Trace Event Format&lt;/a> and looks
+like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;Running build command&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608027038&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;load.PackagesAndErrors&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608027222&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/WatchBeam/clock@v0.0.0-20170901150240-b08e6b4da7ea&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608038996&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/WatchBeam/clock@v0.0.0-20170901150240-b08e6b4da7ea&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039035&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/briandowns/spinner@v1.23.1&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039382&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/briandowns/spinner@v1.23.1&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039410&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/e-dard/netbug@v0.0.0-20151029172837-e64d308a0b20&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039643&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/e-dard/netbug@v0.0.0-20151029172837-e64d308a0b20&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039808&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/getsentry/sentry-go@v0.18.0&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608053496&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">...&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">and&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">so&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">on&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A widespread tool for visualizing Trace Event Format is &lt;a class="link" href="https://ui.perfetto.dev/" target="_blank" rel="noopener"
+>Perfetto&lt;/a>. Click &lt;code>Open trace file&lt;/code>
+and upload your trace. Use &lt;code>Ctrl&lt;/code> + &lt;code>Scroll&lt;/code> to zoom in and out and &lt;code>Shift&lt;/code> + &lt;code>Scroll&lt;/code> to move right or left. The &lt;code>WASD&lt;/code>
+keyboard keys also work.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png">&lt;figcaption>
+&lt;h4>The Perfetto tool showing a Go build debug trace&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
+>https://github.com/mattn/go-sqlite3&lt;/a> dependency is taking most of the build time. The fact that
+we have 16 cores doesn&amp;rsquo;t help because Go is not parallelizing the build for this dependency. This dependency uses CGO,
+so the build takes time to compile C files.&lt;/p>
+&lt;p>We attempted to speed up the build by adding the &lt;code>go-sqlite3&lt;/code> dependency to our top &lt;code>./cmd/fleet&lt;/code> package, assuming the
+build tool would start compiling it first. However, the total build took longer because the subsequent link step became
+much slower.&lt;/p>
+&lt;p>As we mentioned above, the initial compile time is usually not a big concern if you are using a build cache. So, let&amp;rsquo;s
+try making a small change and analyzing the recompile time. We make a change to a frequently modified package.&lt;/p>
+&lt;pre tabindex="0">&lt;code>echo &amp;#39;var _ = &amp;#34;bozo&amp;#34;&amp;#39; &amp;gt;&amp;gt; ./server/datastore/mysql/mysql.go
+time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>The total recompile time is 1.229s, and the trace looks like this:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png">&lt;figcaption>
+&lt;h4>The Perfetto tool showing a Go recompile debug trace&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We see that the &lt;code>mysql&lt;/code> package we modified is taking about half the recompile time. The &lt;code>load.PackagesAndErrors&lt;/code> step
+takes ~300ms and is not parallelized. This step is part of the Go toolchain. Modifying a smaller package would reduce
+the recompile time. If you have a large package that is frequently modified, you can improve the build time by splitting
+it into smaller packages.&lt;/p>
+&lt;h2 id="find-why-dependencies">&lt;a href="#find-why-dependencies" class="header-anchor">&lt;/a>Find why dependencies are included in the build
+&lt;/h2>&lt;p>In a previous article, we described &lt;a class="link" href="../go-package-dependencies" >how to find Go package dependencies&lt;/a>. A way to analyze
+the build and see why a dependency is being pulled in is to use the &lt;code>-debug-actiongraph&lt;/code> flag:&lt;/p>
+&lt;pre tabindex="0">&lt;code>go clean -cache
+time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>The resulting &lt;code>actiongraph.json&lt;/code> is a JSON file containing an array of entries such as:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ID&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">27&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Mode&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;build&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/server/datastore/filesystem&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Deps&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">4&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">11&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">23&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">33&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">93&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">97&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">180&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">103&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Objdir&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Priority&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">843&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;NeedBuild&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ActionID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;JGOAJdypDJJbwlHvaUPE&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;BuildID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;JGOAJdypDJJbwlHvaUPE/B47ZHL3FCDKdll6TubU2&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeReady&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.257806-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeStart&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.272756-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeDone&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.293356-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Cmd&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/opt/homebrew/Cellar/go/1.23.4/libexec/pkg/tool/darwin_arm64/compile -o /var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/_pkg_.a -trimpath \&amp;#34;/var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845=\u003e\&amp;#34; -p github.com/fleetdm/fleet/v4/server/datastore/filesystem -lang=go1.23 -complete -buildid JGOAJdypDJJbwlHvaUPE/JGOAJdypDJJbwlHvaUPE -goversion go1.23.4 -c=4 -shared -nolocalimports -importcfg /var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/importcfg -pack /Users/victor/work/fleet/server/datastore/filesystem/software_installer.go&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdReal&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">17479792&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdUser&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">17327000&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdSys&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">5692000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CmdReal&lt;/code>, &lt;code>CmdUser&lt;/code>, and &lt;code>CmdSys&lt;/code> fields show the real, user, and system time spent executing the command. The
+&lt;code>Deps&lt;/code> field shows the package&amp;rsquo;s dependencies.&lt;/p>
+&lt;p>Although we can write our own tool to analyze the &lt;code>actiongraph.json&lt;/code> file, we can also use the
+&lt;a class="link" href="https://github.com/icio/actiongraph" target="_blank" rel="noopener"
+>https://github.com/icio/actiongraph&lt;/a> tool. Install the tool with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go install github.com/icio/actiongraph@latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can find the longest compile steps with:&lt;/p>
+&lt;pre tabindex="0">&lt;code>actiongraph -f actiongraph.json top
+13.786s 16.14% build github.com/mattn/go-sqlite3
+1.396s 17.78% build runtime/cgo
+1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
+1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
+1.095s 22.13% build github.com/google/go-github/v37/github
+1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
+0.983s 24.55% build github.com/open-policy-agent/opa/ast
+0.975s 25.69% build github.com/klauspost/compress/zstd
+0.916s 26.76% build github.com/shoenig/go-m1cpu
+0.755s 27.64% build crypto/tls
+0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
+0.722s 29.36% build github.com/shirou/gopsutil/v3/process
+0.664s 30.14% build net
+0.626s 30.87% build github.com/open-policy-agent/opa/topdown
+0.625s 31.60% build runtime
+0.622s 32.33% build google.golang.org/protobuf/internal/impl
+0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
+0.605s 33.75% build golang.org/x/net/http2
+0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
+0.576s 35.10% build github.com/spf13/pflag
+&lt;/code>&lt;/pre>&lt;p>The tool also has a &lt;code>graph&lt;/code> subcommand to highlight all import paths from the build target to the package indicated by
+&lt;code>--why&lt;/code>. We can convert the &lt;code>.dot&lt;/code> file to an SVG file with the &lt;a class="link" href="https://graphviz.org/" target="_blank" rel="noopener"
+>Graphviz&lt;/a> &lt;code>dot&lt;/code> command.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg">&lt;figcaption>
+&lt;h4>Why the go-sqlite3 package is included in the build&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p>
+&lt;p>There is no official documentation for the above debug flags. However, they can be found in the
+&lt;a class="link" href="https://go.dev/src/cmd/go/internal/work/build.go" target="_blank" rel="noopener"
+>Go source code&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Undocumented, unstable debugging flags.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugActiongraph&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-actiongraph&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugRuntimeTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-runtime-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>We also &lt;a class="link" href="../common-refactorings/" >demonstrated some common code refactorings that can be done with your IDE&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-analyze-go-builds">&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor">&lt;/a>Watch how to analyze Go builds
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/fs81KvxhwhI"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to scale your codebase with evolutionary architecture</title><link>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</link><pubDate>Wed, 29 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</guid><description>&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-architecture-headline.png" alt="Featured image of post How to scale your codebase with evolutionary architecture" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous article:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../readable-code/" >Why readable code is important and how to refactor code for readability&lt;/a>&lt;/li>
 &lt;/ul>
@@ -923,7 +1085,7 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 >goteststats&lt;/a> is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a> and &lt;a class="link" href="../analyze-go-build/" >analyzing Go build times&lt;/a>.&lt;/li>
 &lt;li>And &lt;a class="link" href="../readable-code/" >how to measure and fix unreadable code&lt;/a>.&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
 &lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>

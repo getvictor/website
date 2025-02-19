@@ -1,42 +1,185 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code refactorings every software engineer should know</title><link>https://victoronsoftware.com/posts/common-refactorings/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/common-refactorings/</guid><description>&lt;img src="https://victoronsoftware.com/posts/common-refactorings/common-refactorings-headline.png" alt="Featured image of post Top code refactorings every software engineer should know" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" />&lt;p>Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
+code changes cause an unexpectedly long recompile time. In this article, we show how to analyze your compilation times
+and take steps to improve them.&lt;/p>
+&lt;h2 id="turn-on-the-go-build-cache">&lt;a href="#turn-on-the-go-build-cache" class="header-anchor">&lt;/a>Turn on the Go build cache
+&lt;/h2>&lt;p>First, you must know that Go is very good at caching build artifacts. If you make a small change and rerun the build,
+the rerun will be significantly faster because Go will reuse the cached artifacts from the previous build. However, if
+you update the Go version, change the build flags, or pull in new or different dependencies, Go may rebuild everything
+from scratch.&lt;/p>
+&lt;p>The first step in improving your build time is to make sure you are using a build cache. The cache is enabled by default
+on your development machine, but that may not be true on your CI/CD system. Ensure you use a build cache across multiple
+CI/CD runs. For example, the GitHub Actions
+&lt;a class="link" href="https://github.com/actions/setup-go?tab=readme-ov-file#caching-dependency-files-and-build-outputs" target="_blank" rel="noopener"
+>&lt;code>setup-go&lt;/code> action has caching turned on by default&lt;/a>.&lt;/p>
+&lt;h2 id="analyze-a-go-build">&lt;a href="#analyze-a-go-build" class="header-anchor">&lt;/a>Analyze a Go build
+&lt;/h2>&lt;p>We can clear the build cache with the following:&lt;/p>
+&lt;pre tabindex="0">&lt;code>go clean -cache
+&lt;/code>&lt;/pre>&lt;p>Now, we can run a clean build with the &lt;code>-debug-trace&lt;/code> flag:&lt;/p>
+&lt;pre tabindex="0">&lt;code>time go build -debug-trace=debug-trace.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>We use the &lt;code>time&lt;/code> command to measure the time the build takes. It is good practice to always use the &lt;code>time&lt;/code> command when
+measuring performance. The &lt;code>time&lt;/code> command is built into our Z shell (zsh), but a similar command is available in other
+shells and OSes.&lt;/p>
+&lt;p>In the time output, we see how long our build took:&lt;/p>
+&lt;pre tabindex="0">&lt;code>79.25s user 20.13s system 518% cpu 19.183 total
+&lt;/code>&lt;/pre>&lt;p>The total time (19.183s) is the wall clock time we waited for the build to finish. The user and system times are spent
+executing user and system code. They are larger than the wall clock time because we use a multi-core machine.&lt;/p>
+&lt;p>The debug trace is in
+&lt;a class="link" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview" target="_blank" rel="noopener"
+>Trace Event Format&lt;/a> and looks
+like this:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>[
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;Running build command&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608027038&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;load.PackagesAndErrors&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608027222&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/WatchBeam/clock@v0.0.0-20170901150240-b08e6b4da7ea&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608038996&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/WatchBeam/clock@v0.0.0-20170901150240-b08e6b4da7ea&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039035&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/briandowns/spinner@v1.23.1&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039382&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/briandowns/spinner@v1.23.1&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039410&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/e-dard/netbug@v0.0.0-20151029172837-e64d308a0b20&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039643&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/e-dard/netbug@v0.0.0-20151029172837-e64d308a0b20&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;E&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608039808&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>,{&lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;modfetch.download github.com/getsentry/sentry-go@v0.18.0&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ph&amp;#34;&lt;/span>:&lt;span style="color:#e6db74">&amp;#34;B&amp;#34;&lt;/span>,&lt;span style="color:#f92672">&amp;#34;ts&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">1739801608053496&lt;/span>,&lt;span style="color:#f92672">&amp;#34;pid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>,&lt;span style="color:#f92672">&amp;#34;tid&amp;#34;&lt;/span>:&lt;span style="color:#ae81ff">0&lt;/span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">...&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">and&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">so&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">on&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>A widespread tool for visualizing Trace Event Format is &lt;a class="link" href="https://ui.perfetto.dev/" target="_blank" rel="noopener"
+>Perfetto&lt;/a>. Click &lt;code>Open trace file&lt;/code>
+and upload your trace. Use &lt;code>Ctrl&lt;/code> + &lt;code>Scroll&lt;/code> to zoom in and out and &lt;code>Shift&lt;/code> + &lt;code>Scroll&lt;/code> to move right or left. The &lt;code>WASD&lt;/code>
+keyboard keys also work.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png">&lt;figcaption>
+&lt;h4>The Perfetto tool showing a Go build debug trace&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
+>https://github.com/mattn/go-sqlite3&lt;/a> dependency is taking most of the build time. The fact that
+we have 16 cores doesn&amp;rsquo;t help because Go is not parallelizing the build for this dependency. This dependency uses CGO,
+so the build takes time to compile C files.&lt;/p>
+&lt;p>We attempted to speed up the build by adding the &lt;code>go-sqlite3&lt;/code> dependency to our top &lt;code>./cmd/fleet&lt;/code> package, assuming the
+build tool would start compiling it first. However, the total build took longer because the subsequent link step became
+much slower.&lt;/p>
+&lt;p>As we mentioned above, the initial compile time is usually not a big concern if you are using a build cache. So, let&amp;rsquo;s
+try making a small change and analyzing the recompile time. We make a change to a frequently modified package.&lt;/p>
+&lt;pre tabindex="0">&lt;code>echo &amp;#39;var _ = &amp;#34;bozo&amp;#34;&amp;#39; &amp;gt;&amp;gt; ./server/datastore/mysql/mysql.go
+time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>The total recompile time is 1.229s, and the trace looks like this:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png">&lt;figcaption>
+&lt;h4>The Perfetto tool showing a Go recompile debug trace&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We see that the &lt;code>mysql&lt;/code> package we modified is taking about half the recompile time. The &lt;code>load.PackagesAndErrors&lt;/code> step
+takes ~300ms and is not parallelized. This step is part of the Go toolchain. Modifying a smaller package would reduce
+the recompile time. If you have a large package that is frequently modified, you can improve the build time by splitting
+it into smaller packages.&lt;/p>
+&lt;h2 id="find-why-dependencies">&lt;a href="#find-why-dependencies" class="header-anchor">&lt;/a>Find why dependencies are included in the build
+&lt;/h2>&lt;p>In a previous article, we described &lt;a class="link" href="../go-package-dependencies" >how to find Go package dependencies&lt;/a>. A way to analyze
+the build and see why a dependency is being pulled in is to use the &lt;code>-debug-actiongraph&lt;/code> flag:&lt;/p>
+&lt;pre tabindex="0">&lt;code>go clean -cache
+time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
+&lt;/code>&lt;/pre>&lt;p>The resulting &lt;code>actiongraph.json&lt;/code> is a JSON file containing an array of entries such as:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ID&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">27&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Mode&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;build&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/server/datastore/filesystem&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Deps&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">4&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">11&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">23&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">33&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">93&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">97&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">180&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ae81ff">103&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Objdir&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;/var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Priority&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">843&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;NeedBuild&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;ActionID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;JGOAJdypDJJbwlHvaUPE&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;BuildID&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;JGOAJdypDJJbwlHvaUPE/B47ZHL3FCDKdll6TubU2&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeReady&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.257806-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeStart&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.272756-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;TimeDone&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2025-02-18T09:02:54.293356-06:00&amp;#34;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Cmd&amp;#34;&lt;/span>: [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;/opt/homebrew/Cellar/go/1.23.4/libexec/pkg/tool/darwin_arm64/compile -o /var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/_pkg_.a -trimpath \&amp;#34;/var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845=\u003e\&amp;#34; -p github.com/fleetdm/fleet/v4/server/datastore/filesystem -lang=go1.23 -complete -buildid JGOAJdypDJJbwlHvaUPE/JGOAJdypDJJbwlHvaUPE -goversion go1.23.4 -c=4 -shared -nolocalimports -importcfg /var/folders/r6/br06kz3s6lxb_75zz6dkjvvc0000gn/T/go-build3105381437/b845/importcfg -pack /Users/victor/work/fleet/server/datastore/filesystem/software_installer.go&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdReal&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">17479792&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdUser&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">17327000&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;CmdSys&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">5692000&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CmdReal&lt;/code>, &lt;code>CmdUser&lt;/code>, and &lt;code>CmdSys&lt;/code> fields show the real, user, and system time spent executing the command. The
+&lt;code>Deps&lt;/code> field shows the package&amp;rsquo;s dependencies.&lt;/p>
+&lt;p>Although we can write our own tool to analyze the &lt;code>actiongraph.json&lt;/code> file, we can also use the
+&lt;a class="link" href="https://github.com/icio/actiongraph" target="_blank" rel="noopener"
+>https://github.com/icio/actiongraph&lt;/a> tool. Install the tool with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go install github.com/icio/actiongraph@latest
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can find the longest compile steps with:&lt;/p>
+&lt;pre tabindex="0">&lt;code>actiongraph -f actiongraph.json top
+13.786s 16.14% build github.com/mattn/go-sqlite3
+1.396s 17.78% build runtime/cgo
+1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
+1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
+1.095s 22.13% build github.com/google/go-github/v37/github
+1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
+0.983s 24.55% build github.com/open-policy-agent/opa/ast
+0.975s 25.69% build github.com/klauspost/compress/zstd
+0.916s 26.76% build github.com/shoenig/go-m1cpu
+0.755s 27.64% build crypto/tls
+0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
+0.722s 29.36% build github.com/shirou/gopsutil/v3/process
+0.664s 30.14% build net
+0.626s 30.87% build github.com/open-policy-agent/opa/topdown
+0.625s 31.60% build runtime
+0.622s 32.33% build google.golang.org/protobuf/internal/impl
+0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
+0.605s 33.75% build golang.org/x/net/http2
+0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
+0.576s 35.10% build github.com/spf13/pflag
+&lt;/code>&lt;/pre>&lt;p>The tool also has a &lt;code>graph&lt;/code> subcommand to highlight all import paths from the build target to the package indicated by
+&lt;code>--why&lt;/code>. We can convert the &lt;code>.dot&lt;/code> file to an SVG file with the &lt;a class="link" href="https://graphviz.org/" target="_blank" rel="noopener"
+>Graphviz&lt;/a> &lt;code>dot&lt;/code> command.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg">&lt;figcaption>
+&lt;h4>Why the go-sqlite3 package is included in the build&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p>
+&lt;p>There is no official documentation for the above debug flags. However, they can be found in the
+&lt;a class="link" href="https://go.dev/src/cmd/go/internal/work/build.go" target="_blank" rel="noopener"
+>Go source code&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Undocumented, unstable debugging flags.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugActiongraph&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-actiongraph&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugRuntimeTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-runtime-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>We also &lt;a class="link" href="../common-refactorings/" >demonstrated some common code refactorings that can be done with your IDE&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-analyze-go-builds">&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor">&lt;/a>Watch how to analyze Go builds
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/fs81KvxhwhI"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Top code refactorings every software engineer should know</title><link>https://victoronsoftware.com/posts/common-refactorings/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/common-refactorings/</guid><description>&lt;img src="https://victoronsoftware.com/posts/common-refactorings/common-refactorings-headline.png" alt="Featured image of post Top code refactorings every software engineer should know" />&lt;ul>
 &lt;li>&lt;a class="link" href="#extract-method-aka-extract-function" >Extract method (aka extract function)&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#inline-variable" >Inline variable&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#extract-variable" >Extract variable&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#inline-method-aka-inline-function" >Inline method (aka inline function)&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-is-code-refactoring">&lt;a href="#what-is-code-refactoring" class="header-anchor">&lt;/a>What is code refactoring?
-&lt;/h2>&lt;p>Code refactoring involves modifying existing software code without changing its observable behavior. Refactoring
-improves the code base&amp;rsquo;s readability and maintainability. See our previous article on
-&lt;a class="link" href="../readable-code/" >why readable code is important&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Code refactoring involves modifying existing software code without changing its observable behavior. Refactoring improves the code base&amp;rsquo;s readability and maintainability. See our previous article on &lt;a class="link" href="../readable-code/" >why readable code is important&lt;/a>.&lt;/p>
 &lt;h2 id="why-are-engineers-afraid-of-refactoring">&lt;a href="#why-are-engineers-afraid-of-refactoring" class="header-anchor">&lt;/a>Why are engineers afraid of refactoring?
-&lt;/h2>&lt;p>Refactoring is essential to software development and should be done regularly as part of day-to-day work. Unfortunately,
-many engineers are afraid of refactoring, don&amp;rsquo;t know how to do it, or don&amp;rsquo;t consider it part of their job
-responsibilities.&lt;/p>
-&lt;p>Some engineers fear that refactoring will introduce bugs or break existing functionality. The root cause of this fear is
-the lack of automated tests. Without automated tests, ensuring that the refactored code behaves as expected is
-difficult. A code base without automated tests is a ticking time bomb and cannot be maintained by any sane engineer.
-Before refactoring code in such a code base, you should add automated tests for the targeted code.&lt;/p>
-&lt;p>Other engineers fear that refactoring will take too much time. This fear is often unfounded, as refactoring can be done
-incrementally and in small steps. For example, after refactoring the code for an hour or less, merge your changes to
-your main branch and, if needed, continue doing the next small refactoring steps. Your organization should never
-allocate weeks of development for &amp;ldquo;large refactorings.&amp;rdquo;&lt;/p>
-&lt;p>Engineers may also fear refactoring because they don&amp;rsquo;t want to make too many changes to the code, making it difficult
-for reviewers to review the changes. The issue is that many current code review systems don&amp;rsquo;t understand the code
-changes&amp;rsquo; semantics (i.e., the meaning). These systems only understand line changes and are frequently confused by
-relocated code. In this case, the coder should explain the changes to the reviewer. Alternatively, the organization can
-adopt a better code review tool. For a further discussion of
-&lt;a class="link" href="../github-code-review-issues/" >issues with GitHub code reviews, see our previous article&lt;/a>.&lt;/p>
-&lt;p>This article will show some common refactorings you can safely do with automation from your IDE (Integrated Development
-Environment).&lt;/p>
+&lt;/h2>&lt;p>Refactoring is essential to software development and should be done regularly as part of day-to-day work. Unfortunately, many engineers are afraid of refactoring, don&amp;rsquo;t know how to do it, or don&amp;rsquo;t consider it part of their job responsibilities.&lt;/p>
+&lt;p>Some engineers fear that refactoring will introduce bugs or break existing functionality. The root cause of this fear is the lack of automated tests. Without automated tests, ensuring that the refactored code behaves as expected is difficult. A code base without automated tests is a ticking time bomb and cannot be maintained by any sane engineer. Before refactoring code in such a code base, you should add automated tests for the targeted code.&lt;/p>
+&lt;p>Other engineers fear that refactoring will take too much time. This fear is often unfounded, as refactoring can be done incrementally and in small steps. For example, after refactoring the code for an hour or less, merge your changes to your main branch and, if needed, continue doing the next small refactoring steps. Your organization should never allocate weeks of development for &amp;ldquo;large refactorings.&amp;rdquo;&lt;/p>
+&lt;p>Engineers may also fear refactoring because they don&amp;rsquo;t want to make too many changes to the code, making it difficult for reviewers to review the changes. The issue is that many current code review systems don&amp;rsquo;t understand the code changes&amp;rsquo; semantics (i.e., the meaning). These systems only understand line changes and are frequently confused by relocated code. In this case, the coder should explain the changes to the reviewer. Alternatively, the organization can adopt a better code review tool. For a further discussion of &lt;a class="link" href="../github-code-review-issues/" >issues with GitHub code reviews, see our previous article&lt;/a>.&lt;/p>
+&lt;p>This article will show some common refactorings you can safely do with automation from your IDE (Integrated Development Environment).&lt;/p>
 &lt;h2 id="extract-method-aka-extract-function">&lt;a href="#extract-method-aka-extract-function" class="header-anchor">&lt;/a>Extract method (aka extract function)
-&lt;/h2>&lt;p>The &lt;code>extract method&lt;/code> refactoring takes a piece of code and moves it into a new method. There are several reasons to do
-this, all of which improve the readability and maintainability of the code:&lt;/p>
+&lt;/h2>&lt;p>The &lt;code>extract method&lt;/code> refactoring takes a piece of code and moves it into a new method. There are several reasons to do this, all of which improve the readability and maintainability of the code:&lt;/p>
 &lt;ul>
 &lt;li>The code is too long and must be broken into smaller, more manageable pieces.&lt;/li>
 &lt;li>The code is duplicated in multiple places and needs to be consolidated into a single method.&lt;/li>
-&lt;li>We want to separate the code implementation from the code intention. The code implementation is what the code does,
-and the code intention is why it does it. Move the code implementation into its own method and name the new method
-based on the code intention.&lt;/li>
+&lt;li>We want to separate the code implementation from the code intention. The code implementation is what the code does, and the code intention is why it does it. Move the code implementation into its own method and name the new method based on the code intention.&lt;/li>
 &lt;/ul>
 &lt;p>For example, consider the following code:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
@@ -47,10 +190,7 @@ based on the code intention.&lt;/li>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When entering the &lt;code>expandPackages&lt;/code> method, the reader is immediately confronted with a complex expression. They must
-stop and think about what the code does. Even though the amount of code is small, it still hampers readability. The code
-implementation is mixed with the code intention. One way to improve the situation is to add a comment. A better way is
-to extract the code into its own method and name the new method based on the code intention.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When entering the &lt;code>expandPackages&lt;/code> method, the reader is immediately confronted with a complex expression. They must stop and think about what the code does. Even though the amount of code is small, it still hampers readability. The code implementation is mixed with the code intention. One way to improve the situation is to add a comment. A better way is to extract the code into its own method and name the new method based on the code intention.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">needExpansion&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pkgs&lt;/span>
@@ -64,12 +204,9 @@ to extract the code into its own method and name the new method based on the cod
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Most IDEs automatically perform this refactoring. Highlight the code you want to extract, open the refactoring menu, and
-select the &lt;code>Extract Method&lt;/code> option.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Most IDEs automatically perform this refactoring. Highlight the code you want to extract, open the refactoring menu, and select the &lt;code>Extract Method&lt;/code> option.&lt;/p>
 &lt;h2 id="inline-variable">&lt;a href="#inline-variable" class="header-anchor">&lt;/a>Inline variable
-&lt;/h2>&lt;p>Every variable should have a purpose and a good explanatory name that describes its intent. As the number of variables
-grows in a method, it becomes increasingly difficult to understand the code. One way to improve the readability of the
-code is to inline variables. Inlining a variable is replacing the variable with the right-hand side of the assignment.&lt;/p>
+&lt;/h2>&lt;p>Every variable should have a purpose and a good explanatory name that describes its intent. As the number of variables grows in a method, it becomes increasingly difficult to understand the code. One way to improve the readability of the code is to inline variables. Inlining a variable is replacing the variable with the right-hand side of the assignment.&lt;/p>
 &lt;p>For example, consider the following code:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pd&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">packageDependency&lt;/span>) &lt;span style="color:#a6e22e">chain&lt;/span>() (&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#66d9ef">int&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span>
@@ -79,26 +216,21 @@ code is to inline variables. Inlining a variable is replacing the variable with 
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The variable &lt;code>name&lt;/code> does not add any value to the code. It is simply a copy of the &lt;code>pd.name&lt;/code> field. We can inline the
-variable to improve the readability of the code:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The variable &lt;code>name&lt;/code> does not add any value to the code. It is simply a copy of the &lt;code>pd.name&lt;/code> field. We can inline the variable to improve the readability of the code:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pd&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">packageDependency&lt;/span>) &lt;span style="color:#a6e22e">chain&lt;/span>() (&lt;span style="color:#66d9ef">string&lt;/span>, &lt;span style="color:#66d9ef">int&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">parent&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;\n&amp;#34;&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the variable you want to inline, open the refactoring menu,
-and select the &lt;code>Inline&lt;/code> option.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the variable you want to inline, open the refactoring menu, and select the &lt;code>Inline&lt;/code> option.&lt;/p>
 &lt;h2 id="extract-variable">&lt;a href="#extract-variable" class="header-anchor">&lt;/a>Extract variable
-&lt;/h2>&lt;p>The &lt;code>extract variable&lt;/code> refactoring takes a complex expression and moves it into a new variable. Mechanically, it is the
-opposite of the above &lt;code>inline variable&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
+&lt;/h2>&lt;p>The &lt;code>extract variable&lt;/code> refactoring takes a complex expression and moves it into a new variable. Mechanically, it is the opposite of the above &lt;code>inline variable&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
 &lt;ul>
 &lt;li>The expression is complex and must be broken into smaller, more manageable pieces.&lt;/li>
 &lt;li>The meaning of the expression is unclear and needs to be clarified with a descriptive variable name.&lt;/li>
 &lt;/ul>
-&lt;p>Sometimes, you have a choice between extracting a method or a variable. In general, you should extract a method to make
-the code more readable. However, if the method is only used once and the parent function is not complex, it may be
-better to extract a variable.&lt;/p>
+&lt;p>Sometimes, you have a choice between extracting a method or a variable. In general, you should extract a method to make the code more readable. However, if the method is only used once and the parent function is not complex, it may be better to extract a variable.&lt;/p>
 &lt;p>For example, consider the same code from our &lt;code>extract method&lt;/code> example above:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">pt&lt;/span> &lt;span style="color:#a6e22e">PackageTest&lt;/span>) &lt;span style="color:#a6e22e">expandPackages&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>) []&lt;span style="color:#66d9ef">string&lt;/span> {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">ContainsFunc&lt;/span>(&lt;span style="color:#a6e22e">pkgs&lt;/span>, &lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">p&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">bool&lt;/span> {
@@ -118,11 +250,9 @@ better to extract a variable.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// lots more code ...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the expression you want to extract, open the refactoring
-menu, and select the &lt;code>Extract Variable&lt;/code> or &lt;code>Introduce Variable&lt;/code> option.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the expression you want to extract, open the refactoring menu, and select the &lt;code>Extract Variable&lt;/code> or &lt;code>Introduce Variable&lt;/code> option.&lt;/p>
 &lt;h2 id="inline-method-aka-inline-function">&lt;a href="#inline-method-aka-inline-function" class="header-anchor">&lt;/a>Inline method (aka inline function)
-&lt;/h2>&lt;p>The &lt;code>inline method&lt;/code> refactoring takes a method and moves its code into the caller. Mechanically, it is the opposite of
-the &lt;code>extract method&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
+&lt;/h2>&lt;p>The &lt;code>inline method&lt;/code> refactoring takes a method and moves its code into the caller. Mechanically, it is the opposite of the &lt;code>extract method&lt;/code> refactoring. There are several reasons to do this:&lt;/p>
 &lt;ul>
 &lt;li>The method is too simple, and its body is as clear as its name.&lt;/li>
 &lt;li>We want to simplify code and remove a level of indirection.&lt;/li>
@@ -140,14 +270,12 @@ the &lt;code>extract method&lt;/code> refactoring. There are several reasons to 
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// method code ...&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">slices&lt;/span>.&lt;span style="color:#a6e22e">Contains&lt;/span>(&lt;span style="color:#a6e22e">expandedPackages&lt;/span>, &lt;span style="color:#a6e22e">pd&lt;/span>.&lt;span style="color:#a6e22e">name&lt;/span>) {
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// more coe ...&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the method call you want to inline, open the refactoring
-menu, and select the &lt;code>Inline Function/Method&lt;/code> option.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Many IDEs automatically perform this refactoring. Highlight the method call you want to inline, open the refactoring menu, and select the &lt;code>Inline Function/Method&lt;/code> option.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>The code examples above are from our article on
-&lt;a class="link" href="../go-package-dependencies/" >finding package dependencies of a Go package&lt;/a>.&lt;/li>
-&lt;li>We also discussed
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;li>The code examples above are from our article on &lt;a class="link" href="../go-package-dependencies/" >finding package dependencies of a Go package&lt;/a>.&lt;/li>
+&lt;li>We also discussed &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;li>And &lt;a class="link" href="../analyze-go-build/" >how to analyze Go build times&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-examples-of-top-code-refactorings">&lt;a href="#watch-examples-of-top-code-refactorings" class="header-anchor">&lt;/a>Watch examples of top code refactorings
 &lt;/h2>&lt;div class="video-wrapper">
@@ -163,12 +291,8 @@ title="YouTube Video"
 &lt;li>&lt;a class="link" href="#find-package-dependencies-using-go-code" >Find package dependencies using Go code&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-are-package-dependencies-and-module-dependencies">&lt;a href="#what-are-package-dependencies-and-module-dependencies" class="header-anchor">&lt;/a>What are package dependencies and module dependencies?
-&lt;/h2>&lt;p>A package dependency is another package that your Go package imports. When you import a package in Go, you create a
-dependency on that package. The Go compiler will not compile your package if it cannot find and compile the package you
-depend on.&lt;/p>
-&lt;p>On the other hand, a module dependency is a dependency on a module. A module is a collection of related Go packages that
-are versioned together. You declare your module dependencies in your &lt;code>go.mod&lt;/code> file. Your code may use one or more
-packages from your module dependencies.&lt;/p>
+&lt;/h2>&lt;p>A package dependency is another package that your Go package imports. When you import a package in Go, you create a dependency on that package. The Go compiler will not compile your package if it cannot find and compile the package you depend on.&lt;/p>
+&lt;p>On the other hand, a module dependency is a dependency on a module. A module is a collection of related Go packages that are versioned together. You declare your module dependencies in your &lt;code>go.mod&lt;/code> file. Your code may use one or more packages from your module dependencies.&lt;/p>
 &lt;h2 id="why-are-package-dependencies-important">&lt;a href="#why-are-package-dependencies-important" class="header-anchor">&lt;/a>Why are package dependencies important?
 &lt;/h2>&lt;p>Understanding your package dependencies is essential because they:&lt;/p>
 &lt;ul>
@@ -178,48 +302,28 @@ packages from your module dependencies.&lt;/p>
 &lt;li>help you avoid circular dependencies&lt;/li>
 &lt;li>help you optimize your build times&lt;/li>
 &lt;/ul>
-&lt;p>As your codebase grows, keeping track of package dependencies is vital to ensure that the codebase remains maintainable.
-Many developers import dependencies without considering the consequences. In modern IDE tools, they quickly click
-&lt;code>Import&lt;/code> in a pop-up to make the squiggly lines go away. In some cases, IDEs add imports without even asking the
-developer. However, code with many dependencies becomes coupled to other potentially unrelated code. This entanglement
-makes the codebase harder to understand, test, and maintain. For additional details, see
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/#problems-with-the-current-architecture" >the list of problems with a coupled architecture&lt;/a>
-from our previous article.&lt;/p>
+&lt;p>As your codebase grows, keeping track of package dependencies is vital to ensure that the codebase remains maintainable. Many developers import dependencies without considering the consequences. In modern IDE tools, they quickly click &lt;code>Import&lt;/code> in a pop-up to make the squiggly lines go away. In some cases, IDEs add imports without even asking the developer. However, code with many dependencies becomes coupled to other potentially unrelated code. This entanglement makes the codebase harder to understand, test, and maintain. For additional details, see &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/#problems-with-the-current-architecture" >the list of problems with a coupled architecture&lt;/a> from our previous article.&lt;/p>
 &lt;h3 id="what-is-an-architectural-test">&lt;a href="#what-is-an-architectural-test" class="header-anchor">&lt;/a>What is an architectural test?
-&lt;/h3>&lt;p>An architectural test is a test that makes sure your code follows the architectural rules that you have defined.
-Codebases tend to devolve into a Big Ball of Mud as time passes. Architectural tests are one way to keep your codebase
-clean.&lt;/p>
-&lt;p>In our example below, we will check to ensure that our Go package is NOT dependent on another package in our codebase.
-This is a common scenario when you want to refactor your codebase and remove a dependency or add a new package and want
-to ensure that it is not dependent on other parts of the codebase.&lt;/p>
+&lt;/h3>&lt;p>An architectural test is a test that makes sure your code follows the architectural rules that you have defined. Codebases tend to devolve into a Big Ball of Mud as time passes. Architectural tests are one way to keep your codebase clean.&lt;/p>
+&lt;p>In our example below, we will check to ensure that our Go package is NOT dependent on another package in our codebase. This is a common scenario when you want to refactor your codebase and remove a dependency or add a new package and want to ensure that it is not dependent on other parts of the codebase.&lt;/p>
 &lt;h2 id="find-package-dependencies-using-go-list">&lt;a href="#find-package-dependencies-using-go-list" class="header-anchor">&lt;/a>Find package dependencies using &lt;code>go list&lt;/code>
-&lt;/h2>&lt;p>&lt;code>go list&lt;/code> is a powerful tool that you can use to list information about Go packages. You can use the &lt;code>-deps&lt;/code> flag with
-&lt;code>go list&lt;/code> to find package dependencies. Here is an example:&lt;/p>
+&lt;/h2>&lt;p>&lt;code>go list&lt;/code> is a powerful tool that you can use to list information about Go packages. You can use the &lt;code>-deps&lt;/code> flag with &lt;code>go list&lt;/code> to find package dependencies. Here is an example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list -deps ./server/android...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is a list of all the direct and indirect package dependencies of the &lt;code>./server/android&lt;/code> and its subpackages.
-To filter out standard library packages and sort the list, you can use the following command on macOS:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is a list of all the direct and indirect package dependencies of the &lt;code>./server/android&lt;/code> and its subpackages. To filter out standard library packages and sort the list, you can use the following command on macOS:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list -deps ./server/android... | grep -E &lt;span style="color:#e6db74">&amp;#39;^[^\/]*\.[^\/]*\/&amp;#39;&lt;/span> | sort
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above regular expression looks for packages with a &lt;code>.&lt;/code> before the first &lt;code>/&lt;/code> in the package path. This regex filters
-out standard library packages. The &lt;code>sort&lt;/code> command sorts the list alphabetically.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above regular expression looks for packages with a &lt;code>.&lt;/code> before the first &lt;code>/&lt;/code> in the package path. This regex filters out standard library packages. The &lt;code>sort&lt;/code> command sorts the list alphabetically.&lt;/p>
 &lt;p>To check if a package is dependent on another package, you can use the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>! &lt;span style="color:#f92672">(&lt;/span>go list -deps ./server/android... | grep -q &lt;span style="color:#e6db74">&amp;#39;github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm&amp;#39;&lt;/span>&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The leading &lt;code>!&lt;/code> inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command
-will return &lt;code>1&lt;/code>; if it is not, the command will return &lt;code>0&lt;/code>. You can use this command in your CI/CD pipelines to ensure
-that your package is not dependent on a specific package.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The leading &lt;code>!&lt;/code> inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command will return &lt;code>1&lt;/code>; if it is not, the command will return &lt;code>0&lt;/code>. You can use this command in your CI/CD pipelines to ensure that your package is not dependent on a specific package.&lt;/p>
 &lt;h2 id="find-package-dependencies-using-go-code">&lt;a href="#find-package-dependencies-using-go-code" class="header-anchor">&lt;/a>Find package dependencies using Go code
 &lt;/h2>&lt;p>&lt;a class="link" href="https://pkg.go.dev/golang.org/x/tools/go/packages" target="_blank" rel="noopener"
->packages&lt;/a> is a Go package that allows one to load, parse,
-type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we
-will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
->Context.Import method from build package&lt;/a> to recursively find
-dependencies.&lt;/p>
+>packages&lt;/a> is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
+>Context.Import method from build package&lt;/a> to recursively find dependencies.&lt;/p>
 &lt;p>Below is an example architecture test you can add to your test suite.&lt;/p>
 &lt;script src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
 &lt;p>The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
->https://github.com/matthewmcnew/archtest&lt;/a>. You can
-&lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
->jump to the code example section&lt;/a> of the video below for a full
-explanation.&lt;/p>
+>https://github.com/matthewmcnew/archtest&lt;/a>. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
+>jump to the code example section&lt;/a> of the video below for a full explanation.&lt;/p>
 &lt;p>A failing run of our architecture test will look like this:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=== RUN TestPackageDependencies
 arch_test.go:41: Error: package dependency not allowed. Dependency chain:
@@ -227,10 +331,11 @@ github.com/fleetdm/fleet/v4/server/android/service
 github.com/fleetdm/fleet/v4/server/fleet
 github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 --- FAIL: TestPackageDependencies (14.66s)
-&lt;/code>&lt;/pre>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/code>&lt;/pre>&lt;h2 id="find-how-a-dependency-is-included-in-the-build">&lt;a href="#find-how-a-dependency-is-included-in-the-build" class="header-anchor">&lt;/a>Find how a dependency is included in the build
+&lt;/h2>&lt;p>In our article on &lt;a class="link" href="../analyze-go-build" >analyzing Go build times&lt;/a>, we show how to use the &lt;code>-debug-actiongraph&lt;/code> flag to find &lt;a class="link" href="../analyze-go-build#find-why-dependencies" >why a dependency is included in the build&lt;/a>.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>In the previous article, we discussed
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;li>In the previous article, we discussed &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
 &lt;li>Before that, we &lt;a class="link" href="../go-modules-and-packages/" >explained the difference between Go modules and Go packages&lt;/a>.&lt;/li>
 &lt;li>We also covered &lt;a class="link" href="../common-refactorings/" >common code refactorings in Go for readability and maintainability&lt;/a>.&lt;/li>
 &lt;/ul>
@@ -2080,7 +2185,7 @@ run options with:&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For our project, we add a few more flags to the &lt;code>golangci-lint run&lt;/code> command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --timeout 10m --max-same-issues &lt;span style="color:#ae81ff">0&lt;/span> --max-issues-per-linter &lt;span style="color:#ae81ff">0&lt;/span> --exclude-dirs ./node_modules
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="analyze-and-fix-staticcheck-issues">&lt;a href="#analyze-and-fix-staticcheck-issues" class="header-anchor">&lt;/a>Analyze and fix staticcheck issues
-&lt;/h2>&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-fieldhttpsstaticcheckdevdocscheckssa1019">&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-fieldhttpsstaticcheckdevdocscheckssa1019" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
+&lt;/h2>&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-field">&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-field" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
 >SA1019 - Using a deprecated function, variable, constant or field&lt;/a>
 &lt;/h3>&lt;p>After running the linter, the first thing we notice is a considerable number of
 &lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
@@ -2108,7 +2213,7 @@ turned off by the sheer number of these fails and will simply turn off &lt;code>
 the &lt;code>SA1019&lt;/code> check.&lt;/p>
 &lt;p>We then run &lt;code>golangci-lint&lt;/code> with the custom configuration file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --config staticcheck.yml
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsishttpsstaticcheckdevdocscheckssa1032">&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsishttpsstaticcheckdevdocscheckssa1032" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsis">&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsis" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
 >SA1032 - Wrong order of arguments to errors.Is&lt;/a>
 &lt;/h3>&lt;p>After rerunning the linter, we saw a &lt;code>SA1032&lt;/code> fail:&lt;/p>
 &lt;pre tabindex="0">&lt;code>server/datastore/mysql/vpp.go:1090:6: SA1032: arguments have the wrong order (staticcheck)
@@ -2116,7 +2221,7 @@ if errors.Is(sql.ErrNoRows, err) {
 ^
 &lt;/code>&lt;/pre>&lt;p>This failure is a good catch and a potential bug. We fix it by swapping the arguments:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">errors&lt;/span>.&lt;span style="color:#a6e22e">Is&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>, &lt;span style="color:#a6e22e">sql&lt;/span>.&lt;span style="color:#a6e22e">ErrNoRows&lt;/span>) {
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiverhttpsstaticcheckdevdocscheckssa4005">&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiverhttpsstaticcheckdevdocscheckssa4005" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver">&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
 >SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a>
 &lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4005&lt;/code>:&lt;/p>
 &lt;pre tabindex="0">&lt;code>server/mail/users.go:44:2: SA4005: ineffective assignment to field PasswordResetMailer.CurrentYear (staticcheck)
@@ -2137,7 +2242,7 @@ r.CurrentYear = time.Now().Year()
 minutes testing the template to ensure that the &lt;code>CurrentYear&lt;/code> field was being populated correctly. To waive this
 failure, we add a comment:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>() &lt;span style="color:#75715e">// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-codehttpsstaticcheckdevdocscheckssa4006" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
 >SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a>
 &lt;/h3>&lt;p>We saw a lot of &lt;code>SA4006&lt;/code> fails in our codebase. It was the most common &lt;code>staticcheck&lt;/code> fail we encountered. Here is an
 example:&lt;/p>
@@ -2147,7 +2252,7 @@ repo, err = openRepo(tmpDir)
 &lt;/code>&lt;/pre>&lt;p>This is a bug or a potential bug. The developer assigned a value to &lt;code>repo&lt;/code> but never used it. We fix it by removing the
 assignment:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">openRepo&lt;/span>(&lt;span style="color:#a6e22e">tmpDir&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-usehttpsstaticcheckdevdocscheckssa4009">&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-usehttpsstaticcheckdevdocscheckssa4009" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-use">&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-use" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
 >SA4009 - A function argument is overwritten before its first use&lt;/a>
 &lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4009&lt;/code>. Here is an example:&lt;/p>
 &lt;pre tabindex="0">&lt;code>orbit/pkg/installer/installer.go:288:37: SA4009: argument ctx is overwritten before first use (staticcheck)
@@ -3371,7 +3476,7 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 >goteststats&lt;/a> is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a>.&lt;/li>
+&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a> and &lt;a class="link" href="../analyze-go-build/" >analyzing Go build times&lt;/a>.&lt;/li>
 &lt;li>And &lt;a class="link" href="../readable-code/" >how to measure and fix unreadable code&lt;/a>.&lt;/li>
 &lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
 &lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>
@@ -3936,7 +4041,7 @@ title="YouTube Video"
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Using a distributed lock in production distributed systems</title><link>https://victoronsoftware.com/posts/distributed-lock/</link><pubDate>Thu, 18 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/distributed-lock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-lock-headline.png" alt="Featured image of post Using a distributed lock in production distributed systems" />&lt;p>This article will present a problem we encountered in our production distributed system and how we solved it using a
 distributed lock.&lt;/p>
-&lt;h2 id="the-problem----data-inconsistency">&lt;a href="#the-problem----data-inconsistency" class="header-anchor">&lt;/a>The problem &amp;ndash; data inconsistency
+&lt;h2 id="the-problem--data-inconsistency">&lt;a href="#the-problem--data-inconsistency" class="header-anchor">&lt;/a>The problem &amp;ndash; data inconsistency
 &lt;/h2>&lt;p>Recently, we started using the Google Calendar API to monitor calendar changes. However, we noticed that it is possible
 to receive a second callback while processing the first one. This second callback can lead to data inconsistency, race
 conditions, and deadlocks.&lt;/p>
@@ -4985,25 +5090,25 @@ title="YouTube Video"
 basics of building a Chrome extension, how to set up industry leading development tooling, and how to test and deploy
 your extension. Our goal is to show you how to build a Chrome extension that is easy to maintain, test, and deploy for a
 software development team.&lt;/p>
-&lt;h3 id="1-create-a-chrome-extension-from-scratchcreate-chrome-extension">&lt;a href="#1-create-a-chrome-extension-from-scratchcreate-chrome-extension" class="header-anchor">&lt;/a>1. &lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
+&lt;h3 id="1-create-a-chrome-extension-from-scratch">&lt;a href="#1-create-a-chrome-extension-from-scratch" class="header-anchor">&lt;/a>1. &lt;a class="link" href="../create-chrome-extension" >Create a Chrome extension from scratch&lt;/a>
 &lt;/h3>&lt;p>Create a basic Chrome extension without any development tools. We cover the basics such as the major parts of the
 extension, &lt;code>manifest.json&lt;/code>, and manually testing the extension in the Chrome browser.&lt;/p>
-&lt;h3 id="2-add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension">&lt;a href="#2-add-webpack-and-typescript-to-a-chrome-extensionadd-webpack-and-typescript-to-chrome-extension" class="header-anchor">&lt;/a>2. &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
+&lt;h3 id="2-add-webpack-and-typescript-to-a-chrome-extension">&lt;a href="#2-add-webpack-and-typescript-to-a-chrome-extension" class="header-anchor">&lt;/a>2. &lt;a class="link" href="../add-webpack-and-typescript-to-chrome-extension" >Add webpack and TypeScript to a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We add support for TypeScript (which replaces JavaScript) and webpack (which bundles the extension) to our Chrome
 extension.&lt;/p>
-&lt;h3 id="3-message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension">&lt;a href="#3-message-passing-in-a-chrome-extensionmessage-passing-in-chrome-extension" class="header-anchor">&lt;/a>3. &lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
+&lt;h3 id="3-message-passing-in-a-chrome-extension">&lt;a href="#3-message-passing-in-a-chrome-extension" class="header-anchor">&lt;/a>3. &lt;a class="link" href="../message-passing-in-chrome-extension" >Message passing in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We cover message passing communication between different parts of a Chrome extension. We dive into the code and show how
 to communicate between the service worker (background script), content scripts, and the popup.&lt;/p>
-&lt;h3 id="4-linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript">&lt;a href="#4-linting-and-formatting-typescript-in-a-chrome-extensionlinting-and-formatting-typescript" class="header-anchor">&lt;/a>4. &lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
+&lt;h3 id="4-linting-and-formatting-typescript-in-a-chrome-extension">&lt;a href="#4-linting-and-formatting-typescript-in-a-chrome-extension" class="header-anchor">&lt;/a>4. &lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript in a Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We set up ESLint and Prettier to lint and format our TypeScript code. This ensures our code is consistent and follows
 best practices.&lt;/p>
-&lt;h3 id="5-add-options-page-to-chrome-extensionadd-options-to-chrome-extension">&lt;a href="#5-add-options-page-to-chrome-extensionadd-options-to-chrome-extension" class="header-anchor">&lt;/a>5. &lt;a class="link" href="../add-options-to-chrome-extension" >Add options page to Chrome extension&lt;/a>
+&lt;h3 id="5-add-options-page-to-chrome-extension">&lt;a href="#5-add-options-page-to-chrome-extension" class="header-anchor">&lt;/a>5. &lt;a class="link" href="../add-options-to-chrome-extension" >Add options page to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We add an advanced options page to our Chrome extension. This page allows users to configure the extension&amp;rsquo;s behavior
 and settings.&lt;/p>
-&lt;h3 id="6-add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension">&lt;a href="#6-add-css-framework-to-chrome-extensionadd-css-framework-to-chrome-extension" class="header-anchor">&lt;/a>6. &lt;a class="link" href="../add-css-framework-to-chrome-extension" >Add CSS framework to Chrome extension&lt;/a>
+&lt;h3 id="6-add-css-framework-to-chrome-extension">&lt;a href="#6-add-css-framework-to-chrome-extension" class="header-anchor">&lt;/a>6. &lt;a class="link" href="../add-css-framework-to-chrome-extension" >Add CSS framework to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We improve the look and maintainability of our extension by adding a CSS framework. We use Tailwind CSS to quickly style
 our extension and make it look professional.&lt;/p>
-&lt;h3 id="7-add-unit-tests-to-chrome-extensionadd-unit-tests-to-chrome-extension">&lt;a href="#7-add-unit-tests-to-chrome-extensionadd-unit-tests-to-chrome-extension" class="header-anchor">&lt;/a>7. &lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Add unit tests to Chrome extension&lt;/a>
+&lt;h3 id="7-add-unit-tests-to-chrome-extension">&lt;a href="#7-add-unit-tests-to-chrome-extension" class="header-anchor">&lt;/a>7. &lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Add unit tests to Chrome extension&lt;/a>
 &lt;/h3>&lt;p>We write and run unit tests for our Chrome extension using the Jest testing framework. Unit tests help us catch bugs
 early, ensure our extension continues to work as expected, and make improve our code quality.&lt;/p>
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist">&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor">&lt;/a>Build a production-ready Chrome extension video playlist
@@ -5031,7 +5136,7 @@ device&amp;rsquo;s OS version.&lt;/p>
 device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more
 failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate
 the failing policy. This article is an example of one such flow.&lt;/p>
-&lt;h2 id="getting-started----webhook-action">&lt;a href="#getting-started----webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
+&lt;h2 id="getting-started--webhook-action">&lt;a href="#getting-started--webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
 &lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
@@ -6563,7 +6668,7 @@ to reduce tool usage and fully understand each step of the process.&lt;/p>
 &lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained
 by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web
 applications.&lt;/p>
-&lt;h2 id="prerequisites----nodejs-and-npm">&lt;a href="#prerequisites----nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
+&lt;h2 id="prerequisites--nodejs-and-npm">&lt;a href="#prerequisites--nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
 &lt;/h2>&lt;p>&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
 >Node.js and npm&lt;/a> are the most popular tools for
 working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential
@@ -6896,19 +7001,19 @@ title="YouTube Video"
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the filesystem.&lt;/p>
 &lt;p>Here is a summary of the articles in the series:&lt;/p>
-&lt;h3 id="mutual-tls-intro-and-hands-on-examplemtls-hello-world">&lt;a href="#mutual-tls-intro-and-hands-on-examplemtls-hello-world" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-hello-world" >Mutual TLS intro and hands-on example&lt;/a>
+&lt;h3 id="mutual-tls-intro-and-hands-on-example">&lt;a href="#mutual-tls-intro-and-hands-on-example" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-hello-world" >Mutual TLS intro and hands-on example&lt;/a>
 &lt;/h3>&lt;p>An introduction to mTLS and a hands-on example of using an mTLS client to connect to an mTLS server.&lt;/p>
-&lt;h3 id="using-mtls-with-the-macos-keychainmtls-with-apple-keychain">&lt;a href="#using-mtls-with-the-macos-keychainmtls-with-apple-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-apple-keychain" >Using mTLS with the macOS keychain&lt;/a>
+&lt;h3 id="using-mtls-with-the-macos-keychain">&lt;a href="#using-mtls-with-the-macos-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-apple-keychain" >Using mTLS with the macOS keychain&lt;/a>
 &lt;/h3>&lt;p>A guide on how to use the macOS system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the macOS system keychain to find the mTLS certificates.&lt;/p>
-&lt;h3 id="create-an-mtls-go-clientmtls-go-client">&lt;a href="#create-an-mtls-go-clientmtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client" >Create an mTLS Go client&lt;/a>
+&lt;h3 id="create-an-mtls-go-client">&lt;a href="#create-an-mtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client" >Create an mTLS Go client&lt;/a>
 &lt;/h3>&lt;p>We create a standard mTLS client in Go using the &lt;code>crypto/tls&lt;/code> library. This client loads the client certificate and private key from the filesystem.&lt;/p>
-&lt;h3 id="add-a-custom-certificate-signer-to-the-mtls-go-clientmtls-go-custom-signer">&lt;a href="#add-a-custom-certificate-signer-to-the-mtls-go-clientmtls-go-custom-signer" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-custom-signer" >Add a custom certificate signer to the mTLS Go client&lt;/a>
+&lt;h3 id="add-a-custom-certificate-signer-to-the-mtls-go-client">&lt;a href="#add-a-custom-certificate-signer-to-the-mtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-custom-signer" >Add a custom certificate signer to the mTLS Go client&lt;/a>
 &lt;/h3>&lt;p>We implement a custom &lt;code>crypto.Signer&lt;/code> to sign a client certificate during the mTLS handshake. Thus, we are a step closer to removing our client certificate and private key from the filesystem.&lt;/p>
-&lt;h3 id="a-complete-mtls-go-client-using-the-macos-keychainmtls-go-client-using-apple-keychain">&lt;a href="#a-complete-mtls-go-client-using-the-macos-keychainmtls-go-client-using-apple-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >A complete mTLS Go client using the macOS keychain&lt;/a>
+&lt;h3 id="a-complete-mtls-go-client-using-the-macos-keychain">&lt;a href="#a-complete-mtls-go-client-using-the-macos-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >A complete mTLS Go client using the macOS keychain&lt;/a>
 &lt;/h3>&lt;p>In this article, we continue the previous article by connecting our custom signer to the macOS keychain using CGO and Apple APIs.&lt;/p>
-&lt;h3 id="using-mtls-with-the-windows-certificate-storemtls-with-windows">&lt;a href="#using-mtls-with-the-windows-certificate-storemtls-with-windows" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-windows" >Using mTLS with the Windows certificate store&lt;/a>
+&lt;h3 id="using-mtls-with-the-windows-certificate-store">&lt;a href="#using-mtls-with-the-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-windows" >Using mTLS with the Windows certificate store&lt;/a>
 &lt;/h3>&lt;p>Switching to Windows, we learn how to use the Windows system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the Windows certificate store to find the mTLS certificates.&lt;/p>
-&lt;h3 id="create-an-mtls-go-client-using-the-windows-certificate-storemtls-go-client-windows-certificate-store">&lt;a href="#create-an-mtls-go-client-using-the-windows-certificate-storemtls-go-client-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-windows-certificate-store" >Create an mTLS Go client using the Windows certificate store&lt;/a>
+&lt;h3 id="create-an-mtls-go-client-using-the-windows-certificate-store">&lt;a href="#create-an-mtls-go-client-using-the-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-windows-certificate-store" >Create an mTLS Go client using the Windows certificate store&lt;/a>
 &lt;/h3>&lt;p>Using the software pattern from the previous articles on the macOS keychain, we build an mTLS client in Go integrated with the Windows certificate store to store the mTLS certificates and keys.&lt;/p>
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist">&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor">&lt;/a>Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3>
@@ -8338,7 +8443,7 @@ title="YouTube Video"
 &lt;li>IoT (Internet of Things)&lt;/li>
 &lt;li>Mobile apps&lt;/li>
 &lt;/ul>
-&lt;h2 id="how-does-fleet-device-managementhttpsfleetdmcom-use-mtls">&lt;a href="#how-does-fleet-device-managementhttpsfleetdmcom-use-mtls" class="header-anchor">&lt;/a>How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
+&lt;h2 id="how-does-fleet-device-management-use-mtls">&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor">&lt;/a>How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
 >Fleet Device Management&lt;/a> use mTLS?
 &lt;/h2>&lt;p>Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects information about the host and sends it to the Fleet server.&lt;/p>
 &lt;h2 id="how-does-mtls-work">&lt;a href="#how-does-mtls-work" class="header-anchor">&lt;/a>How does mTLS work?
@@ -9204,7 +9309,7 @@ from a backup or brand new. This VM should use virtual network bridges for its c
 configured, we can stop the first router VM and switch the port connections to the second VM. This flow also requires
 accessing the router via the serial interface to update the WAN/LAN interfaces.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we have been &lt;a class="link" href="https://victoronsoftware.com/posts/why-you-need-vlan/" >setting up VLANs on our home network&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>Recently, we have been &lt;a class="link" href="../why-you-need-vlan/" >setting up VLANs on our home network&lt;/a>.&lt;/p>
 &lt;h2 id="setting-up-a-virtual-router-video">&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor">&lt;/a>Setting up a virtual router video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"

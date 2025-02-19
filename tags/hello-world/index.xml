@@ -472,7 +472,7 @@ to reduce tool usage and fully understand each step of the process.&lt;/p>
 &lt;/h2>&lt;p>React is a popular JavaScript library for building user interfaces. It was created by Meta (Facebook) and is maintained
 by Meta and a community of developers. React is used to build single-page applications (SPAs) and dynamic web
 applications.&lt;/p>
-&lt;h2 id="prerequisites----nodejs-and-npm">&lt;a href="#prerequisites----nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
+&lt;h2 id="prerequisites--nodejs-and-npm">&lt;a href="#prerequisites--nodejs-and-npm" class="header-anchor">&lt;/a>Prerequisites &amp;ndash; Node.js and npm
 &lt;/h2>&lt;p>&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
 >Node.js and npm&lt;/a> are the most popular tools for
 working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential
@@ -698,7 +698,7 @@ title="YouTube Video"
 &lt;li>IoT (Internet of Things)&lt;/li>
 &lt;li>Mobile apps&lt;/li>
 &lt;/ul>
-&lt;h2 id="how-does-fleet-device-managementhttpsfleetdmcom-use-mtls">&lt;a href="#how-does-fleet-device-managementhttpsfleetdmcom-use-mtls" class="header-anchor">&lt;/a>How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
+&lt;h2 id="how-does-fleet-device-management-use-mtls">&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor">&lt;/a>How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
 >Fleet Device Management&lt;/a> use mTLS?
 &lt;/h2>&lt;p>Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects information about the host and sends it to the Fleet server.&lt;/p>
 &lt;h2 id="how-does-mtls-work">&lt;a href="#how-does-mtls-work" class="header-anchor">&lt;/a>How does mTLS work?

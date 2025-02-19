@@ -176,7 +176,7 @@ device&amp;rsquo;s OS version.&lt;/p>
 device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more
 failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate
 the failing policy. This article is an example of one such flow.&lt;/p>
-&lt;h2 id="getting-started----webhook-action">&lt;a href="#getting-started----webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
+&lt;h2 id="getting-started--webhook-action">&lt;a href="#getting-started--webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
 &lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"

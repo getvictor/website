@@ -3,12 +3,8 @@
 &lt;li>&lt;a class="link" href="#find-package-dependencies-using-go-code" >Find package dependencies using Go code&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="what-are-package-dependencies-and-module-dependencies">&lt;a href="#what-are-package-dependencies-and-module-dependencies" class="header-anchor">&lt;/a>What are package dependencies and module dependencies?
-&lt;/h2>&lt;p>A package dependency is another package that your Go package imports. When you import a package in Go, you create a
-dependency on that package. The Go compiler will not compile your package if it cannot find and compile the package you
-depend on.&lt;/p>
-&lt;p>On the other hand, a module dependency is a dependency on a module. A module is a collection of related Go packages that
-are versioned together. You declare your module dependencies in your &lt;code>go.mod&lt;/code> file. Your code may use one or more
-packages from your module dependencies.&lt;/p>
+&lt;/h2>&lt;p>A package dependency is another package that your Go package imports. When you import a package in Go, you create a dependency on that package. The Go compiler will not compile your package if it cannot find and compile the package you depend on.&lt;/p>
+&lt;p>On the other hand, a module dependency is a dependency on a module. A module is a collection of related Go packages that are versioned together. You declare your module dependencies in your &lt;code>go.mod&lt;/code> file. Your code may use one or more packages from your module dependencies.&lt;/p>
 &lt;h2 id="why-are-package-dependencies-important">&lt;a href="#why-are-package-dependencies-important" class="header-anchor">&lt;/a>Why are package dependencies important?
 &lt;/h2>&lt;p>Understanding your package dependencies is essential because they:&lt;/p>
 &lt;ul>
@@ -18,48 +14,28 @@ packages from your module dependencies.&lt;/p>
 &lt;li>help you avoid circular dependencies&lt;/li>
 &lt;li>help you optimize your build times&lt;/li>
 &lt;/ul>
-&lt;p>As your codebase grows, keeping track of package dependencies is vital to ensure that the codebase remains maintainable.
-Many developers import dependencies without considering the consequences. In modern IDE tools, they quickly click
-&lt;code>Import&lt;/code> in a pop-up to make the squiggly lines go away. In some cases, IDEs add imports without even asking the
-developer. However, code with many dependencies becomes coupled to other potentially unrelated code. This entanglement
-makes the codebase harder to understand, test, and maintain. For additional details, see
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/#problems-with-the-current-architecture" >the list of problems with a coupled architecture&lt;/a>
-from our previous article.&lt;/p>
+&lt;p>As your codebase grows, keeping track of package dependencies is vital to ensure that the codebase remains maintainable. Many developers import dependencies without considering the consequences. In modern IDE tools, they quickly click &lt;code>Import&lt;/code> in a pop-up to make the squiggly lines go away. In some cases, IDEs add imports without even asking the developer. However, code with many dependencies becomes coupled to other potentially unrelated code. This entanglement makes the codebase harder to understand, test, and maintain. For additional details, see &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/#problems-with-the-current-architecture" >the list of problems with a coupled architecture&lt;/a> from our previous article.&lt;/p>
 &lt;h3 id="what-is-an-architectural-test">&lt;a href="#what-is-an-architectural-test" class="header-anchor">&lt;/a>What is an architectural test?
-&lt;/h3>&lt;p>An architectural test is a test that makes sure your code follows the architectural rules that you have defined.
-Codebases tend to devolve into a Big Ball of Mud as time passes. Architectural tests are one way to keep your codebase
-clean.&lt;/p>
-&lt;p>In our example below, we will check to ensure that our Go package is NOT dependent on another package in our codebase.
-This is a common scenario when you want to refactor your codebase and remove a dependency or add a new package and want
-to ensure that it is not dependent on other parts of the codebase.&lt;/p>
+&lt;/h3>&lt;p>An architectural test is a test that makes sure your code follows the architectural rules that you have defined. Codebases tend to devolve into a Big Ball of Mud as time passes. Architectural tests are one way to keep your codebase clean.&lt;/p>
+&lt;p>In our example below, we will check to ensure that our Go package is NOT dependent on another package in our codebase. This is a common scenario when you want to refactor your codebase and remove a dependency or add a new package and want to ensure that it is not dependent on other parts of the codebase.&lt;/p>
 &lt;h2 id="find-package-dependencies-using-go-list">&lt;a href="#find-package-dependencies-using-go-list" class="header-anchor">&lt;/a>Find package dependencies using &lt;code>go list&lt;/code>
-&lt;/h2>&lt;p>&lt;code>go list&lt;/code> is a powerful tool that you can use to list information about Go packages. You can use the &lt;code>-deps&lt;/code> flag with
-&lt;code>go list&lt;/code> to find package dependencies. Here is an example:&lt;/p>
+&lt;/h2>&lt;p>&lt;code>go list&lt;/code> is a powerful tool that you can use to list information about Go packages. You can use the &lt;code>-deps&lt;/code> flag with &lt;code>go list&lt;/code> to find package dependencies. Here is an example:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list -deps ./server/android...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is a list of all the direct and indirect package dependencies of the &lt;code>./server/android&lt;/code> and its subpackages.
-To filter out standard library packages and sort the list, you can use the following command on macOS:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result is a list of all the direct and indirect package dependencies of the &lt;code>./server/android&lt;/code> and its subpackages. To filter out standard library packages and sort the list, you can use the following command on macOS:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list -deps ./server/android... | grep -E &lt;span style="color:#e6db74">&amp;#39;^[^\/]*\.[^\/]*\/&amp;#39;&lt;/span> | sort
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above regular expression looks for packages with a &lt;code>.&lt;/code> before the first &lt;code>/&lt;/code> in the package path. This regex filters
-out standard library packages. The &lt;code>sort&lt;/code> command sorts the list alphabetically.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above regular expression looks for packages with a &lt;code>.&lt;/code> before the first &lt;code>/&lt;/code> in the package path. This regex filters out standard library packages. The &lt;code>sort&lt;/code> command sorts the list alphabetically.&lt;/p>
 &lt;p>To check if a package is dependent on another package, you can use the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>! &lt;span style="color:#f92672">(&lt;/span>go list -deps ./server/android... | grep -q &lt;span style="color:#e6db74">&amp;#39;github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm&amp;#39;&lt;/span>&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The leading &lt;code>!&lt;/code> inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command
-will return &lt;code>1&lt;/code>; if it is not, the command will return &lt;code>0&lt;/code>. You can use this command in your CI/CD pipelines to ensure
-that your package is not dependent on a specific package.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The leading &lt;code>!&lt;/code> inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command will return &lt;code>1&lt;/code>; if it is not, the command will return &lt;code>0&lt;/code>. You can use this command in your CI/CD pipelines to ensure that your package is not dependent on a specific package.&lt;/p>
 &lt;h2 id="find-package-dependencies-using-go-code">&lt;a href="#find-package-dependencies-using-go-code" class="header-anchor">&lt;/a>Find package dependencies using Go code
 &lt;/h2>&lt;p>&lt;a class="link" href="https://pkg.go.dev/golang.org/x/tools/go/packages" target="_blank" rel="noopener"
->packages&lt;/a> is a Go package that allows one to load, parse,
-type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we
-will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
->Context.Import method from build package&lt;/a> to recursively find
-dependencies.&lt;/p>
+>packages&lt;/a> is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
+>Context.Import method from build package&lt;/a> to recursively find dependencies.&lt;/p>
 &lt;p>Below is an example architecture test you can add to your test suite.&lt;/p>
 &lt;script src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
 &lt;p>The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
->https://github.com/matthewmcnew/archtest&lt;/a>. You can
-&lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
->jump to the code example section&lt;/a> of the video below for a full
-explanation.&lt;/p>
+>https://github.com/matthewmcnew/archtest&lt;/a>. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
+>jump to the code example section&lt;/a> of the video below for a full explanation.&lt;/p>
 &lt;p>A failing run of our architecture test will look like this:&lt;/p>
 &lt;pre tabindex="0">&lt;code>=== RUN TestPackageDependencies
 arch_test.go:41: Error: package dependency not allowed. Dependency chain:
@@ -67,10 +43,11 @@ github.com/fleetdm/fleet/v4/server/android/service
 github.com/fleetdm/fleet/v4/server/fleet
 github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 --- FAIL: TestPackageDependencies (14.66s)
-&lt;/code>&lt;/pre>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/code>&lt;/pre>&lt;h2 id="find-how-a-dependency-is-included-in-the-build">&lt;a href="#find-how-a-dependency-is-included-in-the-build" class="header-anchor">&lt;/a>Find how a dependency is included in the build
+&lt;/h2>&lt;p>In our article on &lt;a class="link" href="../analyze-go-build" >analyzing Go build times&lt;/a>, we show how to use the &lt;code>-debug-actiongraph&lt;/code> flag to find &lt;a class="link" href="../analyze-go-build#find-why-dependencies" >why a dependency is included in the build&lt;/a>.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>In the previous article, we discussed
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;li>In the previous article, we discussed &lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
 &lt;li>Before that, we &lt;a class="link" href="../go-modules-and-packages/" >explained the difference between Go modules and Go packages&lt;/a>.&lt;/li>
 &lt;li>We also covered &lt;a class="link" href="../common-refactorings/" >common code refactorings in Go for readability and maintainability&lt;/a>.&lt;/li>
 &lt;/ul>
