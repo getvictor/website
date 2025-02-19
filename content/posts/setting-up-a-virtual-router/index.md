@@ -81,7 +81,7 @@ accessing the router via the serial interface to update the WAN/LAN interfaces.
 
 ## Further reading
 
-Recently, we have been [setting up VLANs on our home network](/posts/why-you-need-vlan/).
+Recently, we have been [setting up VLANs on our home network](../why-you-need-vlan/).
 
 ## Setting up a virtual router video
 

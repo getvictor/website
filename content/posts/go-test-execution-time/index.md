@@ -190,7 +190,7 @@ The WARNING message indicates that the JSON output did not contain the start tim
 
 ## Further reading
 
-- Recently, we wrote about [optimizing the performance of Go applications](../optimizing-performance-of-go-app).
+- Recently, we wrote about [optimizing the performance of Go applications](../optimizing-performance-of-go-app) and [analyzing Go build times](../analyze-go-build/).
 - And [how to measure and fix unreadable code](../readable-code/).
 - We also explored [fuzz testing with Go](../fuzz-testing-with-go).
 - In addition, we showed [how to create an EXE installer for a Go program](../exe-installer).
