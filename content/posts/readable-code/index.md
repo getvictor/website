@@ -248,6 +248,7 @@ In the following article, we
   [showed how to easily track engineering metrics with GitHub Actions and Google APIs](../track-engineering-metrics/).
 - We also wrote about [measuring and improving the execution time of Go tests](../go-test-execution-time/).
 - In addition, we [pointed out the issues with GitHub's code review process](../github-code-review-issues/).
+- We also covered [the common use cases of AI for today's software developers](../ai-for-software-developers/).
 
 ## Watch
 
