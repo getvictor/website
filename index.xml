@@ -1,4 +1,176 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" />&lt;p>Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to use AI for software development (2025)</title><link>https://victoronsoftware.com/posts/ai-for-software-developers/</link><pubDate>Wed, 26 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/ai-for-software-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-building-software.png" alt="Featured image of post How to use AI for software development (2025)" />&lt;p>The AI landscape is changing rapidly. A new tool seems to come out weekly, or we hear about a breakthrough. As a
+software engineer, it is hard to keep up with all the latest developments and even harder to figure out what is relevant
+to your day-to-day work. Many tech leaders claim that AI is helping them achieve greater engineering velocity, improving
+the quality of their code, and enhancing the engineering experience, to name a few. But how can you leverage AI to
+improve your work as a software engineer? And, most importantly, what is the most effective way to use AI right now?&lt;/p>
+&lt;p>We have followed AI since the early 2000s, when Jeff Hawkins published
+&lt;a class="link" href="https://en.wikipedia.org/wiki/On_Intelligence" target="_blank" rel="noopener"
+>On Intelligence&lt;/a>. AI has come a long way since then. Today, most
+software engineers can benefit from some AI.&lt;/p>
+&lt;p>The top AI use cases for software engineers are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#code-completion" >Code completion&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#code-generation" >Code generation&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#summarizing-or-explaining-code" >Summarizing or explaining code&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#agentic-coding" >Agentic coding&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Some software developers have other use cases for AI, such as image generation, but this article will focus on the above
+ones.&lt;/p>
+&lt;h2 id="code-completion">&lt;a href="#code-completion" class="header-anchor">&lt;/a>Code completion
+&lt;/h2>&lt;p>The original GitHub Copilot popularized AI code completion. It is a tool that can be integrated into your IDE and can
+perform multi-line code completions. GitHub Copilot and similar tools have been extremely popular with software
+developers. We found AI code completion extremely helpful, even though it occasionally generates function signatures and
+other code that is not quite right.&lt;/p>
+&lt;p>For example, after creating the &lt;code>PubSubMessage&lt;/code> struct in our code, Copilot recommended the &lt;code>PubSubMessageAttributes&lt;/code>
+struct. Opening the completions window shows other multi-line suggestions.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/copilot-example.png">&lt;figcaption>
+&lt;h4>GitHub Copilot code completion example&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>The code completion is not only for software code. We used it for documentation, such as writing a user guide for a new
+feature. AI is most useful for boilerplate introductory content. However, beware that some search engines may be able to
+detect the use of AI in your documentation and reduce your search ranking.&lt;/p>
+&lt;h2 id="code-generation">&lt;a href="#code-generation" class="header-anchor">&lt;/a>Code generation
+&lt;/h2>&lt;p>Code generation is similar to code completion, but the desired result is a complete function or code block. Typically,
+engineers use a chat interface such as ChatGPT and provide it with a description of the desired function. Providing a
+detailed description along with inputs and outputs is key to getting the best results.&lt;/p>
+&lt;p>For example, given the following prompt:&lt;/p>
+&lt;blockquote>
+&lt;p>Write a Golang function that takes path.URL, makes a GET request to that URL, parses the JSON response, and returns
+the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p>&lt;/blockquote>
+&lt;p>ChatGPT o1 model generated the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// FetchAttributesAndData makes a GET request to the provided URL, parses&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// the JSON response, and returns the &amp;#34;attributes&amp;#34; and &amp;#34;data&amp;#34; fields.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">FetchAttributesAndData&lt;/span>(&lt;span style="color:#a6e22e">u&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">url&lt;/span>.&lt;span style="color:#a6e22e">URL&lt;/span>) (&lt;span style="color:#66d9ef">map&lt;/span>[&lt;span style="color:#66d9ef">string&lt;/span>]&lt;span style="color:#66d9ef">interface&lt;/span>{}, &lt;span style="color:#66d9ef">interface&lt;/span>{}, &lt;span style="color:#66d9ef">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">resp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#a6e22e">u&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>())
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">defer&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>.&lt;span style="color:#a6e22e">Close&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// You may also check resp.StatusCode for error handling if desired&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">StatusCode&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">http&lt;/span>.&lt;span style="color:#a6e22e">StatusOK&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Errorf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;unexpected status code: %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">StatusCode&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Define a struct to capture the JSON structure&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">result&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Attributes&lt;/span> &lt;span style="color:#66d9ef">map&lt;/span>[&lt;span style="color:#66d9ef">string&lt;/span>]&lt;span style="color:#66d9ef">interface&lt;/span>{} &lt;span style="color:#e6db74">`json:&amp;#34;attributes&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Data&lt;/span> &lt;span style="color:#66d9ef">interface&lt;/span>{} &lt;span style="color:#e6db74">`json:&amp;#34;data&amp;#34;`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Body&lt;/span>).&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">result&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">result&lt;/span>.&lt;span style="color:#a6e22e">Attributes&lt;/span>, &lt;span style="color:#a6e22e">result&lt;/span>.&lt;span style="color:#a6e22e">Data&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>ChatGPT also provided some documentation and a usage example.&lt;/p>
+&lt;p>Previously, software engineers would accomplish this task by searching Google or StackOverflow for similar code
+snippets. Now, they can use AI chatbots to generate this code. This approach is most useful when you need to generate
+code that&amp;rsquo;s not your area of expertise.&lt;/p>
+&lt;p>Some programming languages have dedicated AI code-generation tools. For example, you can create Go functions and
+packages online with &lt;a class="link" href="https://sketch.dev/" target="_blank" rel="noopener"
+>sketch.dev&lt;/a>.&lt;/p>
+&lt;h2 id="summarizing-or-explaining-code">&lt;a href="#summarizing-or-explaining-code" class="header-anchor">&lt;/a>Summarizing or explaining code
+&lt;/h2>&lt;p>When software engineers work on a large codebase, they often need to understand code written by other engineers, some of
+whom may have left the company, and they may also need to find a specific piece of code in the codebase.&lt;/p>
+&lt;p>AI can help by reading the codebase and adding it to its context. This is an example of Retrieval-Augmented Generation
+(RAG), where AI combines its general knowledge with the specific context of the codebase.&lt;/p>
+&lt;p>To understand the codebase, the AI tool needs to add the code to its context or to index the codebase. Then, the tool
+can use a combination of AI and deterministic search to find the relevant code. Below is an example of a question we
+asked &lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
+>Cursor&lt;/a> IDE about our codebase:&lt;/p>
+&lt;blockquote>
+&lt;p>In which Go files is macOS disk encryption code located?&lt;/p>&lt;/blockquote>
+&lt;p>Cursor provided a list of files and additional information on the top hits.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/cursor-example.png">&lt;figcaption>
+&lt;h4>Cursor codebase search example&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Codebase-wide queries are a great way to find information yourself before asking the broader team. They are also a
+decent way to learn the codebase.&lt;/p>
+&lt;h2 id="agentic-coding">&lt;a href="#agentic-coding" class="header-anchor">&lt;/a>Agentic coding
+&lt;/h2>&lt;p>Agentic coding refers to using an AI agent to write code and perform tasks on your behalf. Using agents is a more
+advanced use case, requiring you to know the AI tools, processes, and LLMs well. A good AI agent can:&lt;/p>
+&lt;ul>
+&lt;li>Write code, including creating and moving files&lt;/li>
+&lt;li>Write and run tests, including Browser UI tests&lt;/li>
+&lt;li>Write, read, and follow documentation&lt;/li>
+&lt;li>Do terminal operations such as installing applications&lt;/li>
+&lt;li>Do Git operations such as pushing&lt;/li>
+&lt;li>Connect to other servers with SSH&lt;/li>
+&lt;/ul>
+&lt;p>Currently, the top agentic coding tools are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/RooVetGit/Roo-Code" target="_blank" rel="noopener"
+>Roo Code&lt;/a> (VSCode plugin)&lt;/li>
+&lt;li>&lt;a class="link" href="https://cline.bot/" target="_blank" rel="noopener"
+>Cline&lt;/a> (VSCode plugin)&lt;/li>
+&lt;li>&lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
+>Cursor&lt;/a> (IDE built on top of VSCode)&lt;/li>
+&lt;/ul>
+&lt;p>There are many other tools and platforms available. GitHub Copilot also announced Agent mode, which is available in
+preview as of this writing. JetBrains has announced &lt;a class="link" href="https://www.jetbrains.com/junie/" target="_blank" rel="noopener"
+>Junie&lt;/a>, which is only available
+via the Early Access Program.&lt;/p>
+&lt;p>As the agentic coding tools are still in their early stages, changing rapidly, and require a lot of handholding, it is
+reasonable to wait 6 to 12 months before revisiting them.&lt;/p>
+&lt;h3 id="ai-coding-agent-workflows">&lt;a href="#ai-coding-agent-workflows" class="header-anchor">&lt;/a>AI coding agent workflows
+&lt;/h3>&lt;p>The following are some workflow suggestions for using an AI coding agent to create a small application.&lt;/p>
+&lt;p>First, start with some context regarding what you want to build. Create a README or a plan outlining how you want to
+structure the application and the steps to implement it. You can use another general-purse AI, such as ChatGPT, to help
+you create the high-level plan.&lt;/p>
+&lt;p>For example, we asked ChatGPT to create a high-level plan with the following prompt:&lt;/p>
+&lt;blockquote>
+&lt;p>We want to create a mock Google Android Management API server using an AI agent. The server is written in Golang and
+will interact with our MDM solution during testing. It should hold the state for enterprises, profiles, and fake
+devices enrolled in it. The server should have a mock PubSub webhook that will push notifications regarding ENROLLMENT
+and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p>&lt;/blockquote>
+&lt;p>Next, ask the AI agent to read the plan, update it, and create a more detailed plan. It may make sense to break the plan
+into smaller parts and treat each part as a separate project. In effect, you act as the AI agent&amp;rsquo;s project manager.&lt;/p>
+&lt;p>Make sure to have documentation and have the AI agent update it regularly. In addition to the README, you can have API
+specs, secrets, and other documentation files.&lt;/p>
+&lt;p>Tell the AI agent to initialize a git repo, create the project structure, and start implementing the plan. For each
+step, ask the AI agent to create tests. After each step, ask the AI agent to update the documentation and commit the
+changes. This way, you can easily rollback if the AI agent gets stuck or goes off the rails.&lt;/p>
+&lt;p>Try to be as precise as possible in your prompts.&lt;/p>
+&lt;p>When adding a new feature, you can start a new session with the AI agent and ask it to read all the documentation. This
+will &amp;ldquo;initialize&amp;rdquo; the AI agent with the project context.&lt;/p>
+&lt;p>Work in small development iterations with your AI agent.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-agent-workflow.png">&lt;figcaption>
+&lt;h4>AI agent workflow&lt;/h4>
+&lt;/figcaption>
+&lt;/figure>
+&lt;p>Learn about your AI agent&amp;rsquo;s specific features to level up your skills. Often, there are ways to provide context to the
+agent or give special meaning to certain words or files.&lt;/p>
+&lt;p>At some point, you may want to take over the maintenance of the code from the AI agent. For example, check the code into
+your main repository and maintain it as any other human-written code.&lt;/p>
+&lt;h3 id="ai-coding-agent-issues">&lt;a href="#ai-coding-agent-issues" class="header-anchor">&lt;/a>AI coding agent issues
+&lt;/h3>&lt;p>The main issue with AI coding agents is that they make mistakes. If you spot their mistake, you can tell them about it,
+and they will generally correct it. However, if you can&amp;rsquo;t spot their mistake, the agent may end up in a loop where it
+keeps trying to fix the issue, but your application still doesn&amp;rsquo;t work. That is why it is essential to work in small
+iterations where you can roll back and start over.&lt;/p>
+&lt;p>The other issue is that AI agents are slow. Often, they need to take several steps to make progress, and the human is
+left waiting—being there just in case they need help or go off track. Theoretically, a single human could manage
+multiple AI agents, but in practice, it is hard for people to frequently switch between multiple cognitively demanding
+tasks.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>We recently discussed
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with incremental design&lt;/a>.&lt;/li>
+&lt;li>We also wrote about &lt;a class="link" href="../readable-code/" >the importance of readable code&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-how-to-use-ai-for-software-development">&lt;a href="#watch-how-to-use-ai-for-software-development" class="header-anchor">&lt;/a>Watch how to use AI for software development
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/PVdqwcwc2_o"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" />&lt;p>Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
 code changes cause an unexpectedly long recompile time. In this article, we show how to analyze your compilation times
 and take steps to improve them.&lt;/p>
 &lt;h2 id="turn-on-the-go-build-cache">&lt;a href="#turn-on-the-go-build-cache" class="header-anchor">&lt;/a>Turn on the Go build cache
@@ -474,6 +646,7 @@ below.&lt;/p>
 &lt;a class="link" href="../github-code-review-issues/" >the most significant issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
 &lt;li>We also showed &lt;a class="link" href="../go-package-dependencies/" >how to create an architectural test that finds Go package dependencies&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../common-refactorings/" >the common code refactorings to improve code readability&lt;/a>.&lt;/li>
+&lt;li>In addition, we summarized &lt;a class="link" href="../ai-for-software-developers/" >what every software engineer should know about AI&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-scale-your-codebase-with-evolutionary-architecture">&lt;a href="#watch-how-to-scale-your-codebase-with-evolutionary-architecture" class="header-anchor">&lt;/a>Watch how to scale your codebase with evolutionary architecture
 &lt;/h2>&lt;div class="video-wrapper">
@@ -673,6 +846,7 @@ nested functions to be defined at the end of the function after the primary impl
 &lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
 &lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
 &lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
+&lt;li>We also covered &lt;a class="link" href="../ai-for-software-developers/" >the common use cases of AI for today&amp;rsquo;s software developers&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
 &lt;/h2>&lt;div class="video-wrapper">
