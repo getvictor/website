@@ -137,6 +137,12 @@ Run the Go program to generate a signed URL:
 
 The signed URL will expire in 1 hour.
 
+## Potential issues
+
+- Server side encryption (SSE) may be an issue.
+  [AWS-managed KMS keys are not supported by CloudFront](https://arpadt.com/articles/kms-encrypted-objects-via-cloudfront#32-sse-kms).
+  One solution is to switch to a customer-managed KMS key.
+
 ## Further reading
 
 - Recently, we explained [launchd agents and daemons on macOS](../macos-launchd-agents-and-daemons/).
