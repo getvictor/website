@@ -253,6 +253,13 @@ We will show an example using the Go SDK.&lt;/p>
 &lt;p>Run the Go program to generate a signed URL:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672">=&lt;/span>1736178766&amp;amp;Signature&lt;span style="color:#f92672">=&lt;/span>HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672">=&lt;/span>K1HFGXOMBB6TFF
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The signed URL will expire in 1 hour.&lt;/p>
+&lt;h2 id="potential-issues">&lt;a href="#potential-issues" class="header-anchor">&lt;/a>Potential issues
+&lt;/h2>&lt;ul>
+&lt;li>Server side encryption (SSE) may be an issue.
+&lt;a class="link" href="https://arpadt.com/articles/kms-encrypted-objects-via-cloudfront#32-sse-kms" target="_blank" rel="noopener"
+>AWS-managed KMS keys are not supported by CloudFront&lt;/a>.
+One solution is to switch to a customer-managed KMS key.&lt;/li>
+&lt;/ul>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we explained &lt;a class="link" href="../macos-launchd-agents-and-daemons/" >launchd agents and daemons on macOS&lt;/a>.&lt;/li>
