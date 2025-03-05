@@ -1,4 +1,116 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Feb 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to use AI for software development (2025)</title><link>https://victoronsoftware.com/posts/ai-for-software-developers/</link><pubDate>Wed, 26 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/ai-for-software-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-building-software.png" alt="Featured image of post How to use AI for software development (2025)" />&lt;p>The AI landscape is changing rapidly. A new tool seems to come out weekly, or we hear about a breakthrough. As a
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="../readable-code/" >Ways to improve your code for readability&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >How to scale a codebase with evolutionary architecture&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="intro-to-code-complexity-metrics">&lt;a href="#intro-to-code-complexity-metrics" class="header-anchor">&lt;/a>Intro to code complexity metrics
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="#code-style" >Code style&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#code-size" >Code size&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#cyclomatic-complexity" >Cyclomatic complexity&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#cognitive-complexity" >Cognitive complexity&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>In the previous article on &lt;a class="link" href="../readable-code/" >readable code&lt;/a>, we discussed a few metrics for measuring unreadable code.
+In this article, we will expand on some of those ideas and specifically focus on code complexity.&lt;/p>
+&lt;p>Code complexity primarily refers to the difficulty of understanding a piece of code or a piece of the codebase, such as
+a module. Complex code is difficult to modify because engineers must spend considerable mental energy to understand it.
+Frequently, engineers will not understand the code well enough, so they&amp;rsquo;ll make a change to fix a bug, and the change
+will introduce a new bug somewhere else. Lack of understanding also leads to
+&lt;a class="link" href="https://victoronsoftware.com/posts/common-refactorings/#why-are-engineers-afraid-of-refactoring" target="_blank" rel="noopener"
+>a fear of refactoring&lt;/a>,
+because engineers don&amp;rsquo;t want to break the codebase.&lt;/p>
+&lt;h2 id="code-complexity-metrics">&lt;a href="#code-complexity-metrics" class="header-anchor">&lt;/a>Code complexity metrics
+&lt;/h2>&lt;p>Many code complexity measures overlap since they all try to measure the same thing.&lt;/p>
+&lt;h3 id="code-style">&lt;a href="#code-style" class="header-anchor">&lt;/a>Code style
+&lt;/h3>&lt;p>A standard code style is helpful for readability. For example, if I opened a file and saw that it had no indentation,
+the max line length was 20, and somebody named all the variables with a leading &lt;code>iwuzhere&lt;/code>, I would be confused. I would
+have to stop and carefully process the file. I would not have to slow down if the code style were consistent.&lt;/p>
+&lt;p>The metric to track is the number of code style violations or the number of files violating the code style. Most
+companies enforce a code style with their CI pipeline. Modern tooling can automatically reformat code to match the
+agreed-upon code style, so code style should no longer be a complexity or readability issue.&lt;/p>
+&lt;h3 id="code-size">&lt;a href="#code-size" class="header-anchor">&lt;/a>Code size
+&lt;/h3>&lt;p>How much code is there? The more code there is, the longer it takes to read and understand it. The common metrics are:&lt;/p>
+&lt;ul>
+&lt;li>program size or lines of code (LOC)
+&lt;ul>
+&lt;li>in a function&lt;/li>
+&lt;li>in a file&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>number of functions/classes/modules/files&lt;/li>
+&lt;/ul>
+&lt;p>The motivation for tracking these metrics is to help engineers split their functions/files/projects into smaller, more
+manageable pieces. James Lewis from ThoughtWorks said that &amp;ldquo;a microservice should be as big as my head.&amp;rdquo; His idea is
+that one person should be able to understand the entire codebase. The smaller the piece of code, the easier it is to
+understand.&lt;/p>
+&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
+>Halstead introduced a set of software complexity measures&lt;/a>
+in 1977, and one of his metrics was the Halstead volume, which is directly related to code size. We can approximate the
+Halstead volume by ignoring all comments and whitespace, then multiplying the average code line length by the number of
+lines of code. This approximation is a good enough metric for our purposes.&lt;/p>
+&lt;h3 id="cyclomatic-complexity">&lt;a href="#cyclomatic-complexity" class="header-anchor">&lt;/a>Cyclomatic complexity
+&lt;/h3>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
+>Cyclomatic complexity&lt;/a> measures the number of linearly independent
+paths through a program&amp;rsquo;s source code. It is often used as the master metric for code complexity, uncovering
+maintainability and hard-to-test parts of the codebase.&lt;/p>
+&lt;p>A typical calculation of cyclomatic complexity is as follows:&lt;/p>
+&lt;ul>
+&lt;li>1 is the base complexity for a function&lt;/li>
+&lt;li>for each &lt;code>if&lt;/code>, &lt;code>case&lt;/code>, &lt;code>while&lt;/code>, &lt;code>for&lt;/code>, or other branching statement, add 1&lt;/li>
+&lt;/ul>
+&lt;p>A good cyclomatic complexity is 10 or less. A score of 20 or more is generally considered difficult to understand. This
+metric encourages us to write smaller functions.&lt;/p>
+&lt;h3 id="cognitive-complexity">&lt;a href="#cognitive-complexity" class="header-anchor">&lt;/a>Cognitive complexity
+&lt;/h3>&lt;p>An alternative to cyclomatic complexity is
+&lt;a class="link" href="https://www.sonarsource.com/docs/CognitiveComplexity.pdf" target="_blank" rel="noopener"
+>cognitive complexity&lt;/a>. This metric tries to adjust the
+cyclomatic complexity metric to focus on the human reader&amp;rsquo;s mental load &amp;ndash; on the maintainability, and not on the
+testability, of the code.&lt;/p>
+&lt;p>The key differences in the calculation are:&lt;/p>
+&lt;ul>
+&lt;li>for nested structures, extra incremental penalties are added&lt;/li>
+&lt;li>recursion is penalized&lt;/li>
+&lt;li>jumps to labels, such as &lt;code>goto LABEL&lt;/code>, are penalized&lt;/li>
+&lt;li>&lt;code>switch&lt;/code> is preferred over nested &lt;code>if&lt;/code>&lt;/li>
+&lt;li>groups of similar logical operators are NOT penalized
+&lt;ul>
+&lt;li>for example, &lt;code>a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c &amp;amp;&amp;amp; d&lt;/code> is easier to understand than &lt;code>a &amp;amp;&amp;amp; b || c &amp;amp;&amp;amp; d&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>This metric is more difficult to calculate than cyclomatic complexity, but it is generally considered a better
+approximation of code complexity. Many companies are adopting this metric.&lt;/p>
+&lt;h2 id="tool-and-language-specific-considerations">&lt;a href="#tool-and-language-specific-considerations" class="header-anchor">&lt;/a>Tool and language-specific considerations
+&lt;/h2>&lt;p>Modern tools can help with code maintainability issues. For example, AI tools that index the codebase can help explain
+how a piece of code (or a feature) works. IDEs can also help by collapsing boilerplate code or improving readability in
+other ways.&lt;/p>
+&lt;p>In the Go programming language, the idiomatic way to check for errors is:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code is repeated everywhere and is typically collapsed by modern IDEs. However, cyclomatic complexity and
+cognitive complexity metrics penalize it.&lt;/p>
+&lt;p>We need a complexity tool where the user can adjust the penalties. This way, an engineering team can agree on what is
+considered complex code based on their experience, language, and code style.&lt;/p>
+&lt;h3 id="go-complexity-metrics">&lt;a href="#go-complexity-metrics" class="header-anchor">&lt;/a>Go complexity metrics
+&lt;/h3>&lt;p>For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
+>gocyclo&lt;/a>. For measuring cognitive
+complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocognit" target="_blank" rel="noopener"
+>gocognit&lt;/a>.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics">&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor">&lt;/a>Watch us discuss and show examples of code complexity metrics
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/HzZQqrhX3cg"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to use AI for software development (2025)</title><link>https://victoronsoftware.com/posts/ai-for-software-developers/</link><pubDate>Wed, 26 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/ai-for-software-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-building-software.png" alt="Featured image of post How to use AI for software development (2025)" />&lt;p>The AI landscape is changing rapidly. A new tool seems to come out weekly, or we hear about a breakthrough. As a
 software engineer, it is hard to keep up with all the latest developments and even harder to figure out what is relevant
 to your day-to-day work. Many tech leaders claim that AI is helping them achieve greater engineering velocity, improving
 the quality of their code, and enhancing the engineering experience, to name a few. But how can you leverage AI to
@@ -639,6 +751,9 @@ below.&lt;/p>
 &lt;p>Link to the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/compare/main...victor/feature-set-up" target="_blank" rel="noopener"
 >source code example decoupling a new backend feature from the rest of the codebase&lt;/a>.&lt;/p>
+&lt;h2 id="track-code-complexity-metrics">&lt;a href="#track-code-complexity-metrics" class="header-anchor">&lt;/a>Track code complexity metrics
+&lt;/h2>&lt;p>In the next article of this &lt;strong>technical debt&lt;/strong> series, we
+&lt;a class="link" href="../code-complexity-metrics/" >go over the top code complexity metrics every software engineer should know&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we covered &lt;a class="link" href="../track-engineering-metrics/" >how to easily track engineering metrics&lt;/a>.&lt;/li>
@@ -2450,6 +2565,7 @@ the video below for more details.&lt;/p>
 &lt;p>We will enable it in our CI/CD pipeline and continue to use it in our project.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
+&lt;li>See &lt;a class="link" href="../code-complexity-metrics/" >how to use linting to improve Go code complexity&lt;/a>.&lt;/li>
 &lt;li>Recently, we wrote about
 &lt;a class="link" href="../opentelemetry-with-jaeger/" >finding performance issues with OpenTelemetry and Jaeger in your Go project&lt;/a>.&lt;/li>
 &lt;li>We also wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" >optimizing the performance of your Go code&lt;/a>.&lt;/li>
