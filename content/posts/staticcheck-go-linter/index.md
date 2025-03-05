@@ -211,6 +211,7 @@ We will enable it in our CI/CD pipeline and continue to use it in our project.
 
 ## Further reading
 
+- See [how to use linting to improve Go code complexity](../code-complexity-metrics/).
 - Recently, we wrote about
   [finding performance issues with OpenTelemetry and Jaeger in your Go project](../opentelemetry-with-jaeger/).
 - We also wrote about [optimizing the performance of your Go code](../optimizing-performance-of-go-app/).

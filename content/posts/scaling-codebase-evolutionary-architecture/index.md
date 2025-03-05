@@ -148,6 +148,11 @@ below.
 Link to the
 [source code example decoupling a new backend feature from the rest of the codebase](https://github.com/fleetdm/fleet/compare/main...victor/feature-set-up).
 
+## Track code complexity metrics
+
+In the next article of this **technical debt** series, we
+[go over the top code complexity metrics every software engineer should know](../code-complexity-metrics/).
+
 ## Further reading
 
 - Recently, we covered [how to easily track engineering metrics](../track-engineering-metrics/).
