@@ -1,4 +1,134 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 12 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>6 lessons from literate programming</title><link>https://victoronsoftware.com/posts/literate-programming-lessons/</link><pubDate>Wed, 12 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/literate-programming-lessons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/literate-programming-lessons/literate-programming-headline.png" alt="Featured image of post 6 lessons from literate programming" />&lt;p>This article examines the literate programming paradigm introduced in 1984 by
+&lt;a class="link" href="https://en.wikipedia.org/wiki/Donald_Knuth" target="_blank" rel="noopener"
+>Donald Knuth&lt;/a>. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
+lessons relevant to making today&amp;rsquo;s software more readable and maintainable.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#literate-programming-hello-world-example" >Literate programming example&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#key-takeaways-from-literate-programming" >Key takeaways from literate programming&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-literate-programming">&lt;a href="#what-is-literate-programming" class="header-anchor">&lt;/a>What is literate programming
+&lt;/h2>&lt;p>Literate programming is a paradigm in which a computer program is written in a natural language, such as English. The
+programming language source code is embedded into the program&amp;rsquo;s description. The aim was to create an artifact that a
+human can easily read without jumping back and forth between different sections of the code file. The writer completely
+controls the flow of the document, which can be reorganized in any fashion.&lt;/p>
+&lt;p>Knuth called his implementation of literate programming &lt;a class="link" href="https://en.wikipedia.org/wiki/Web_%28programming_system%29" target="_blank" rel="noopener"
+>WEB&lt;/a>
+to emphasize that a computer program is built from many different pieces. He picked the name before the World Wide Web
+was prominent. To produce source code, the user runs the &lt;strong>tangle&lt;/strong> command. To create documentation, the user runs the
+&lt;strong>weave&lt;/strong> command.&lt;/p>
+&lt;h2 id="literate-programming-hello-world-example">&lt;a href="#literate-programming-hello-world-example" class="header-anchor">&lt;/a>Literate programming &amp;ldquo;Hello World&amp;rdquo; example
+&lt;/h2>&lt;h3 id="writing-a-literate-program">&lt;a href="#writing-a-literate-program" class="header-anchor">&lt;/a>Writing a literate program
+&lt;/h3>&lt;p>To demonstrate literate programming, we will use the &lt;a class="link" href="https://github.com/nrnrnr/noweb" target="_blank" rel="noopener"
+>noweb&lt;/a> literate programming tool
+to write a simple program in Go.&lt;/p>
+&lt;p>We create a &lt;code>hello.nw&lt;/code> file and start it with:&lt;/p>
+&lt;pre tabindex="0">&lt;code>This program teaches us how to print to the screen using:
+&amp;lt;&amp;lt;print&amp;gt;&amp;gt;=
+fmt.Println(message)
+@
+To print &amp;#34;Hello World&amp;#34;, pass a literal string to the function:
+&amp;lt;&amp;lt;message&amp;gt;&amp;gt;=
+&amp;#34;Hello World&amp;#34;
+@
+&lt;/code>&lt;/pre>&lt;p>We wrote the program in text with embedded code starting with &lt;code>&amp;lt;&amp;lt;name&amp;gt;&amp;gt;=&lt;/code> and ending with &lt;code>@&lt;/code>. The &lt;code>&amp;lt;&amp;lt;name&amp;gt;&amp;gt;&lt;/code> sections
+are macros that we can reuse in other sections of the document, such as:&lt;/p>
+&lt;pre tabindex="0">&lt;code>Now, we can create a function that prints a message:
+&amp;lt;&amp;lt;mypackage_print&amp;gt;&amp;gt;=
+func Print(message string) {
+&amp;lt;&amp;lt;print&amp;gt;&amp;gt;
+}
+@
+Finally, we can call this function from the main function:
+&amp;lt;&amp;lt;main_call&amp;gt;&amp;gt;=
+mypackage.Print(&amp;lt;&amp;lt;message&amp;gt;&amp;gt;)
+@
+&lt;/code>&lt;/pre>&lt;p>See &lt;a class="link" href="https://github.com/getvictor/noweb_example/blob/main/hello.nw" target="_blank" rel="noopener"
+>the complete literate program&lt;/a> on GitHub.&lt;/p>
+&lt;h3 id="generating-code-and-documentation-from-the-literate-program">&lt;a href="#generating-code-and-documentation-from-the-literate-program" class="header-anchor">&lt;/a>Generating code and documentation from the literate program
+&lt;/h3>&lt;p>To install the noweb tool with &lt;code>brew&lt;/code> on macOS, run the following:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install noweb
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To generate the Go source code (tangle):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>notangle -Rgo.mod hello.nw &amp;gt; go.mod
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>mkdir -p mypackage
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>notangle -R&lt;span style="color:#e6db74">&amp;#39;mypackage/mypackage.go&amp;#39;&lt;/span> hello.nw &amp;gt; mypackage/mypackage.go
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>notangle -Rmain.go hello.nw &amp;gt; main.go
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now we can run the program: &lt;code>go run main.go&lt;/code>&lt;/p>
+&lt;p>To generate the HTML documentation (weave):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>noweave -html hello.nw &amp;gt; hello.html
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can open the &lt;code>hello.html&lt;/code> documentation in our web browser.&lt;/p>
+&lt;h2 id="key-takeaways-from-literate-programming">&lt;a href="#key-takeaways-from-literate-programming" class="header-anchor">&lt;/a>Key takeaways from literate programming
+&lt;/h2>&lt;h3 id="1-the-developer-orders-the-code-for-maximum-readability">&lt;a href="#1-the-developer-orders-the-code-for-maximum-readability" class="header-anchor">&lt;/a>1. The developer orders the code for maximum readability
+&lt;/h3>&lt;p>Most of today&amp;rsquo;s programming languages were not designed with readability as their top guiding principle. They often
+require the developer to put code in specific file sections, distracting the reader trying to understand the code. Some
+examples include:&lt;/p>
+&lt;ul>
+&lt;li>imports&lt;/li>
+&lt;li>function and variable declarations, including nested functions&lt;/li>
+&lt;li>error handling&lt;/li>
+&lt;/ul>
+&lt;p>Today&amp;rsquo;s IDEs (Integrated Development Environments) have tried to help with the situation by automatically collapsing
+boilerplate sections. However, we have not seen them take the next step of entirely hiding or virtually relocating
+distracting code. This area is where today&amp;rsquo;s programming languages and IDEs need to improve.&lt;/p>
+&lt;h3 id="2-comments-are-first-class-citizens">&lt;a href="#2-comments-are-first-class-citizens" class="header-anchor">&lt;/a>2. Comments are first-class citizens
+&lt;/h3>&lt;p>In literate programming, comments (natural language) are the main body of the program. Source code, on the other hand,
+is delegated to macros. Comments are easy to write and can be enhanced with additional processing, such as Markdown,
+Mermaid diagrams, etc.&lt;/p>
+&lt;p>Many of today&amp;rsquo;s language toolchains also have processors that generate HTML documentation from the comments. However,
+none can mix arbitrary pieces of code with their documentation.&lt;/p>
+&lt;p>Linting requirements to include comments often lead to meaningless comments that make the code less readable:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// This is a class.&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Today, the closest mainstream approaches to literate programming are computational notebooks such as
+&lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
+>Jupyter&lt;/a> and various online tutorials. These are great for sharing examples and small programs
+with others but not sufficient for larger software projects.&lt;/p>
+&lt;p>Some IDEs support rendering comments in a different style than the rest of the code, including rendering diagrams.
+However, no standard works across IDEs and version control hosting systems like GitHub.&lt;/p>
+&lt;h3 id="3-code-from-multiple-source-files-can-be-present-in-one-place">&lt;a href="#3-code-from-multiple-source-files-can-be-present-in-one-place" class="header-anchor">&lt;/a>3. Code from multiple source files can be present in one place
+&lt;/h3>&lt;p>Literate programming allows us to include arbitrary source files in one program file. This behavior is helpful when you
+want to keep related code in one place, such as an interface (abstract class) and its implementation.&lt;/p>
+&lt;p>Modern IDEs can find all the implementations of an interface and often have a quick shortcut, allowing the developer to
+jump between the two.&lt;/p>
+&lt;p>Developers may also write their own preprocessors that split a single file into several modules or compile units.&lt;/p>
+&lt;p>Although having more code in one file is sometimes useful, today&amp;rsquo;s developers typically have issues with splitting and
+decoupling code files that have become too large and are no longer scalable.&lt;/p>
+&lt;h3 id="4-writing-code-is-more-difficult">&lt;a href="#4-writing-code-is-more-difficult" class="header-anchor">&lt;/a>4. Writing code is more difficult
+&lt;/h3>&lt;p>The main issue with literate programming is that it makes writing code much more difficult for the developer. It
+introduces another level of abstraction and another set of tools and concepts that the software developer must be
+familiar with.&lt;/p>
+&lt;p>This general lesson applies to any system that tries to enhance the coding experience by adding another layer between
+the user and the code. The new system must provide overwhelming benefits for software developers to switch to it.
+TypeScript is an example of a successful layer over JavaScript.&lt;/p>
+&lt;h3 id="5-macros-make-reading-code-more-difficult">&lt;a href="#5-macros-make-reading-code-more-difficult" class="header-anchor">&lt;/a>5. Macros make reading code more difficult
+&lt;/h3>&lt;p>The literate program contains macros with their own names, adding to the namespace of functions and variables already
+present in the computer program. These additional names increase the cognitive load of both reading and creating
+literate programs.&lt;/p>
+&lt;p>Today&amp;rsquo;s standard guidance is to make your variable and function names descriptive so the reader knows what they do
+without additional comments. We can effectively replicate much of literate programming by replacing the literate
+programming macros with our own well-named functions and ordering these functions in a file for maximum comprehension.&lt;/p>
+&lt;h3 id="6-no-tooling-support">&lt;a href="#6-no-tooling-support" class="header-anchor">&lt;/a>6. No tooling support
+&lt;/h3>&lt;p>Since literate programming is not widely used, it has little to no tooling support, syntax highlighting, or IDE support.
+There is also no standard build system. Instead, the literate programming user must maintain their own custom build
+system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flows.&lt;/p>
+&lt;h2 id="see-literate-programming-example-code-on-github">&lt;a href="#see-literate-programming-example-code-on-github" class="header-anchor">&lt;/a>See literate programming example code on GitHub
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="https://github.com/getvictor/noweb_example" target="_blank" rel="noopener"
+>Literate programming example using noweb&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Previously, we explained &lt;a class="link" href="../readable-code/" >what readable code is and why it is important&lt;/a>.&lt;/li>
+&lt;li>We also reviewed &lt;a class="link" href="../code-complexity-metrics/" >the top code complexity metrics&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-the-literate-programming-example-and-takeaways">&lt;a href="#watch-the-literate-programming-example-and-takeaways" class="header-anchor">&lt;/a>Watch the literate programming example and takeaways
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/8cwxxioVbfA"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../readable-code/" >Ways to improve your code for readability&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >How to scale a codebase with evolutionary architecture&lt;/a>&lt;/li>
@@ -99,7 +229,8 @@ complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocogni
 >gocognit&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/li>
+&lt;li>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >showed an example and key takeaways from literate programming&lt;/a>.&lt;/li>
+&lt;li>We also wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics">&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor">&lt;/a>Watch us discuss and show examples of code complexity metrics
 &lt;/h2>&lt;div class="video-wrapper">
@@ -957,7 +1088,8 @@ nested functions to be defined at the end of the function after the primary impl
 &lt;a class="link" href="../scaling-codebase-evolutionary-architecture" >discuss how to make bigger improvements to your codebase with evolutionary architecture&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we
+&lt;li>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >discussed the key takeaways from literate programming&lt;/a>.&lt;/li>
+&lt;li>Before that, we
 &lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
 &lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
 &lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
