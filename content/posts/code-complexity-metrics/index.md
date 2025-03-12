@@ -124,7 +124,8 @@ complexity, there is [gocognit](https://github.com/uudashr/gocognit).
 
 ## Further reading
 
-- Recently, we wrote [an overview of using AI in software development](../ai-for-software-developers/).
+- Recently, we [showed an example and key takeaways from literate programming](../literate-programming-lessons/).
+- We also wrote [an overview of using AI in software development](../ai-for-software-developers/).
 
 ## Watch us discuss and show examples of code complexity metrics
 
