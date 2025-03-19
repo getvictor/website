@@ -122,6 +122,11 @@ considered complex code based on their experience, language, and code style.
 For measuring cyclomatic complexity, Go has [gocyclo](https://github.com/fzipp/gocyclo). For measuring cognitive
 complexity, there is [gocognit](https://github.com/uudashr/gocognit).
 
+### What is modularity and why is it important
+
+In the next article of this **technical debt** series, we
+[explain what is modularity and why it is important for modern scalable software systems](../software-modularity/).
+
 ## Further reading
 
 - Recently, we [showed an example and key takeaways from literate programming](../literate-programming-lessons/).

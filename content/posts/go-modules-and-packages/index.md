@@ -151,6 +151,7 @@ Usually, it is better to use packages within a single module to organize and dec
 ## Further reading
 
 - Read the follow-up article on [how to find package dependencies of a Go package](../go-package-dependencies/).
+- We also [explained why modularity is important in software](../software-modularity/).
 - Recently, we covered [method overriding in Go](../method-overriding-in-go/).
 - We also wrote about [using the staticcheck linter on a large Go project](../staticcheck-go-linter/).
 - Previously, we described [how to use Go to unmarshal JSON null, set, and missing fields](../go-json-unmarshal/).
