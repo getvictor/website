@@ -161,6 +161,7 @@ In the next article of this **technical debt** series, we
 - We also showed [how to create an architectural test that finds Go package dependencies](../go-package-dependencies/).
 - We also published an article on [the common code refactorings to improve code readability](../common-refactorings/).
 - In addition, we summarized [what every software engineer should know about AI](../ai-for-software-developers/).
+- Lastly, we [introduced the top Mermaid diagrams for software developers](../mermaid-intro/).
 
 ## Watch how to scale your codebase with evolutionary architecture
 
