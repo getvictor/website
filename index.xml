@@ -1,4 +1,453 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>6 business benefits of software modularity and cohesion</title><link>https://victoronsoftware.com/posts/software-modularity/</link><pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-modularity/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-modularity/software-modularity-headline.png" alt="Featured image of post 6 business benefits of software modularity and cohesion" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>4 key Mermaid diagrams for software developers</title><link>https://victoronsoftware.com/posts/mermaid-intro/</link><pubDate>Wed, 26 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mermaid-intro/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mermaid-intro/mermaid-intro-headline.png" alt="Featured image of post 4 key Mermaid diagrams for software developers" />&lt;h2 id="importance-of-technical-diagrams">&lt;a href="#importance-of-technical-diagrams" class="header-anchor">&lt;/a>Importance of technical diagrams
+&lt;/h2>&lt;p>Diagrams are an effective way to communicate technical concepts to other engineers or business stakeholders. They even
+help us better understand technical concepts while creating the diagrams. Effective senior engineers frequently use
+diagrams in their documentation and presentations. The top Mermaid diagrams are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#sequence-diagrams" >Sequence diagrams&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#flowcharts" >Flowcharts&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#class-diagrams" >Class diagrams&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#entity-relationship-diagrams-erds" >Entity relationship diagrams (ERDs)&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="what-is-mermaid">&lt;a href="#what-is-mermaid" class="header-anchor">&lt;/a>What is Mermaid
+&lt;/h2>&lt;p>Mermaid is a popular JavaScript-based diagramming tool that allows anyone to create diagrams using a simple text-based
+syntax. Some key reasons for its popularity include:&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>Text-based syntax&lt;/strong>: Mermaid is easy to write and version control, fitting seamlessly into code reviews and
+collaborative workflows.&lt;/li>
+&lt;li>&lt;strong>Integration with Markdown&lt;/strong>: Mermaid works well with Markdown, which is widely used in documentation and static site
+generators.&lt;/li>
+&lt;li>&lt;strong>Integration with GitHub and GitLab&lt;/strong>: These top Git hosting platforms allow you to put Mermaid diagrams almost
+anywhere on their site.&lt;/li>
+&lt;li>&lt;strong>Versatility&lt;/strong>: Mermaid supports various diagram types, from flowcharts and sequence diagrams to ERDs.&lt;/li>
+&lt;li>&lt;strong>Automation-friendly&lt;/strong>: Diagrams can be generated programmatically, enabling dynamic updates and integration with
+CI/CD pipelines.&lt;/li>
+&lt;li>&lt;strong>Accessibility&lt;/strong>: Mermaid does not need specialized software; diagrams can be created and rendered within code
+editors or browsers.&lt;/li>
+&lt;/ul>
+&lt;p>In our experience, Mermaid&amp;rsquo;s text-based syntax is simple enough to be used for ad hoc diagramming, as opposed to the
+proverbial &amp;ldquo;back of the napkin&amp;rdquo; drawing.&lt;/p>
+&lt;p>The above features make Mermaid an invaluable tool for creating maintainable technical diagrams. We recommend creating
+your first diagram on &lt;a class="link" href="https://www.mermaidchart.com/play" target="_blank" rel="noopener"
+>Mermaid Playground&lt;/a> to get started.&lt;/p>
+&lt;h2 id="sequence-diagrams">&lt;a href="#sequence-diagrams" class="header-anchor">&lt;/a>Sequence diagrams
+&lt;/h2>&lt;p>Sequence diagrams depict how users and entities interact with each other over time. They are handy for modeling the flow
+of messages, events, or data and are great for visualizing customer use cases, API interactions, or the behavior of
+distributed systems.&lt;/p>
+&lt;p>We love sequence diagrams because they are clear and consistent. Mermaid displays sequence diagrams consistently, which
+greatly speeds up understanding.&lt;/p>
+&lt;p>Below is a basic sequence diagram, which starts with the keyword &lt;code>sequenceDiagram&lt;/code>.&lt;/p>
+&lt;pre tabindex="0">&lt;code>sequenceDiagram
+UI-&amp;gt;&amp;gt;MDM Server: Upload profile
+MDM Server-&amp;gt;&amp;gt;Apple: Request push notification
+Apple-&amp;gt;&amp;gt;macOS: Push notification
+macOS-&amp;gt;&amp;gt;MDM Server: Request command
+MDM Server-&amp;gt;&amp;gt;macOS: InstallProfile command
+&lt;/code>&lt;/pre>&lt;p>The above Mermaid diagram is rendered as follows:&lt;/p>
+&lt;pre class="mermaid">
+sequenceDiagram
+UI-&amp;gt;&amp;gt;MDM server: Upload profile
+MDM server-&amp;gt;&amp;gt;Apple: Request push notification
+Apple-&amp;gt;&amp;gt;macOS: Push notification
+macOS-&amp;gt;&amp;gt;MDM server: Request command
+MDM server-&amp;gt;&amp;gt;macOS: InstallProfile command
+&lt;/pre>
+&lt;p>The above syntax consists of &lt;code>&amp;lt;entity&amp;gt;-&amp;gt;&amp;gt;&amp;lt;entity&amp;gt;: &amp;lt;description&amp;gt;&lt;/code>. In many cases, that&amp;rsquo;s all that&amp;rsquo;s necessary. We can
+quickly create a simple sequence diagram to explain a flow during a meeting.&lt;/p>
+&lt;p>To add a title to your diagram, add the following at the top:&lt;/p>
+&lt;pre tabindex="0">&lt;code>---
+title: My diagram
+---
+&lt;/code>&lt;/pre>&lt;p>To go beyond the basics, we recommend learning some additional syntax from
+&lt;a class="link" href="https://mermaid.js.org/syntax/sequenceDiagram.html" target="_blank" rel="noopener"
+>sequence diagram docs&lt;/a>:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>actor&lt;/code>: Actors (aka people)&lt;/li>
+&lt;li>Aliases&lt;/li>
+&lt;li>&lt;code>--&amp;gt;&amp;gt;&lt;/code>: Dotted line with arrow for responses&lt;/li>
+&lt;li>&lt;code>--)&lt;/code>: Dotted line with empty arrow for async messages&lt;/li>
+&lt;li>&lt;code>activate &amp;lt;entity&amp;gt;&lt;/code> and &lt;code>deactivate &amp;lt;entity&amp;gt;&lt;/code>: Activations of actors&lt;/li>
+&lt;li>Loops(&lt;code>loop&lt;/code>), alternative paths(&lt;code>alt&lt;/code> and &lt;code>else&lt;/code>), and parallel actions(&lt;code>par&lt;/code>)&lt;/li>
+&lt;li>&lt;code>autonumber&lt;/code>: Sequence numbers&lt;/li>
+&lt;li>Notes&lt;/li>
+&lt;/ul>
+&lt;p>Here is the updated diagram with additional syntax:&lt;/p>
+&lt;pre tabindex="0">&lt;code>---
+title: Upload macOS configuration profile flow
+---
+sequenceDiagram
+autonumber
+actor Admin
+participant mdm as MDM server
+Admin-&amp;gt;&amp;gt;mdm: Upload profile
+activate mdm
+mdm--&amp;gt;&amp;gt;Admin: OK
+deactivate mdm
+Note right of mdm: After 30 seconds max
+mdm-&amp;gt;&amp;gt;Apple: Request push notification
+activate mdm
+activate Apple
+Apple--&amp;gt;&amp;gt;mdm: OK
+deactivate mdm
+Apple--)macOS: Push notification
+deactivate Apple
+activate macOS
+macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
+activate mdm
+mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
+deactivate mdm
+macOS-&amp;gt;&amp;gt;macOS: Install profile
+macOS-&amp;gt;&amp;gt;mdm: Acknowledge
+activate mdm
+mdm--&amp;gt;&amp;gt;macOS: No more commands
+deactivate mdm
+deactivate macOS
+&lt;/code>&lt;/pre>&lt;pre class="mermaid">
+---
+title: Upload macOS configuration profile flow
+---
+sequenceDiagram
+autonumber
+actor Admin
+participant mdm as MDM server
+Admin-&amp;gt;&amp;gt;mdm: Upload profile
+activate mdm
+mdm--&amp;gt;&amp;gt;Admin: OK
+deactivate mdm
+Note right of mdm: After 30 seconds max
+mdm-&amp;gt;&amp;gt;Apple: Request push notification
+activate mdm
+activate Apple
+Apple--&amp;gt;&amp;gt;mdm: OK
+deactivate mdm
+Apple--)macOS: Push notification
+deactivate Apple
+activate macOS
+macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
+activate mdm
+mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
+deactivate mdm
+macOS-&amp;gt;&amp;gt;macOS: Install profile
+macOS-&amp;gt;&amp;gt;mdm: Acknowledge
+activate mdm
+mdm--&amp;gt;&amp;gt;macOS: No more commands
+deactivate mdm
+deactivate macOS
+&lt;/pre>
+&lt;h2 id="flowcharts">&lt;a href="#flowcharts" class="header-anchor">&lt;/a>Flowcharts
+&lt;/h2>&lt;p>Flowcharts are graphical representations of processes, workflows, or decision logic. They use standardized symbols, such
+as rectangles, diamonds, and arrows, to illustrate the flow of steps or tasks visually. Flowcharts are generic diagrams
+that can be adapted to any purpose. They are often used to explain concepts to non-technical stakeholders.&lt;/p>
+&lt;p>Below is a basic flowchart diagram:&lt;/p>
+&lt;pre tabindex="0">&lt;code>flowchart
+Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
+agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
+Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
+Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
+Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
+&lt;/code>&lt;/pre>&lt;p>Which renders as follows:&lt;/p>
+&lt;pre class="mermaid">
+flowchart
+Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
+agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
+Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
+Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
+Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
+&lt;/pre>
+&lt;p>The above example is a simple block diagram that can quickly demonstrate the basic parts of your
+system/container/component. Explore additional syntax at &lt;a class="link" href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" rel="noopener"
+>flowchart docs&lt;/a>.&lt;/p>
+&lt;p>Here is another flowchart example:&lt;/p>
+&lt;pre tabindex="0">&lt;code>flowchart LR
+S([Start])
+PD[Process
+data]
+E([End])
+S --&amp;gt; PD
+PD --&amp;gt; V{Valid data?}
+V -- &amp;#34;No&amp;#34; ---&amp;gt; E
+V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
+W --&amp;gt; E
+&lt;/code>&lt;/pre>&lt;p>Which renders as follows:&lt;/p>
+&lt;pre class="mermaid">
+flowchart LR
+S([Start])
+PD[Process
+data]
+E([End])
+S --&amp;gt; PD
+PD --&amp;gt; V{Valid data?}
+V -- &amp;#34;No&amp;#34; ---&amp;gt; E
+V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
+W --&amp;gt; E
+&lt;/pre>
+&lt;p>We defined some of the elements up front. The &lt;code>Process data&lt;/code> rectangle contains multi-line text.&lt;/p>
+&lt;p>Note the direction of the flowchart is left-to-right, as specified by &lt;code>LR&lt;/code> after &lt;code>flowchart&lt;/code>. The direction options are:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>TB&lt;/code>: Top-to-bottom&lt;/li>
+&lt;li>&lt;code>BT&lt;/code>: Bottom-to-top&lt;/li>
+&lt;li>&lt;code>RL&lt;/code>: Right-to-left&lt;/li>
+&lt;li>&lt;code>LR&lt;/code>: Left-to-right&lt;/li>
+&lt;/ul>
+&lt;h3 id="standard-symbols-used-in-flowcharts">&lt;a href="#standard-symbols-used-in-flowcharts" class="header-anchor">&lt;/a>Standard symbols used in flowcharts
+&lt;/h3>&lt;p>Flowcharts use a variety of standardized symbols to represent different types of actions, processes, and decisions.
+Below are some of the most commonly used symbols:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Terminator (Oval)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents the start or end of a process.&lt;/li>
+&lt;li>Example: &lt;code>([Start])&lt;/code> or &lt;code>([End])&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>&lt;strong>Process (Rectangle)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents a step or task in the process.&lt;/li>
+&lt;li>Example: &lt;code>[Calculate sum]&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;ol start="3">
+&lt;li>&lt;strong>Decision (Diamond)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents a decision point with two or more possible outcomes.&lt;/li>
+&lt;li>Example: &lt;code>{Is user authenticated?}&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;ol start="4">
+&lt;li>&lt;strong>Arrow (Line)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents the flow or direction of the process.&lt;/li>
+&lt;li>Example: Connects steps in a process.&lt;/li>
+&lt;/ul>
+&lt;ol start="5">
+&lt;li>&lt;strong>Input/Output (Parallelogram)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents input to or output from a process.&lt;/li>
+&lt;li>Example: &lt;code>[/User enters credentials/]&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;ol start="6">
+&lt;li>&lt;strong>Database (Cylinder)&lt;/strong>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Represents a data store&lt;/li>
+&lt;li>Example: &lt;code>[(MySQL)]&lt;/code>.&lt;/li>
+&lt;/ul>
+&lt;p>Additional symbols may be used for specialized diagrams or contexts, depending on the needs of the specific workflow.&lt;/p>
+&lt;h2 id="class-diagrams">&lt;a href="#class-diagrams" class="header-anchor">&lt;/a>Class diagrams
+&lt;/h2>&lt;p>A &lt;strong>class diagram&lt;/strong> is one of the core components of the Unified Modeling Language (UML) and is used to visually
+represent the static structure of a system. Traditionally, it models classes, their attributes, operations (methods),
+and the relationships among the classes in the system.&lt;/p>
+&lt;p>However, we found that the most helpful use of class diagrams is to model relationships between higher-level entities.
+We can also model higher-level entities with a flowchart, but the benefit of using a class diagram is the ability to use
+standard relationships.&lt;/p>
+&lt;p>Below is an example diagram modeling some domain concepts:&lt;/p>
+&lt;pre tabindex="0">&lt;code>---
+config:
+class:
+hideEmptyMembersBox: true
+---
+classDiagram
+Fleet o-- Host: &amp;#34;manages&amp;#34;
+Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
+Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
+Host &amp;lt;|-- MacOS
+Host &amp;lt;|-- Windows
+Host &amp;lt;|-- Linux
+Fleet --&amp;gt; Apple: communicates with
+&lt;/code>&lt;/pre>&lt;p>It renders as follows:&lt;/p>
+&lt;pre class="mermaid">
+---
+config:
+class:
+hideEmptyMembersBox: true
+---
+classDiagram
+Fleet o-- Host: &amp;#34;manages&amp;#34;
+Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
+Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
+Host &amp;lt;|-- MacOS
+Host &amp;lt;|-- Windows
+Host &amp;lt;|-- Linux
+Fleet --&amp;gt; Apple: communicates with
+&lt;/pre>
+&lt;p>The syntax is straightforward, as in the basic examples of previous diagrams, and we can quickly throw together this
+type of diagram during a meeting.&lt;/p>
+&lt;p>Six standard types of relationships can be modeled in a class diagram:&lt;/p>
+&lt;ol>
+&lt;li>&lt;strong>Association&lt;/strong>: A &amp;ldquo;uses-a&amp;rdquo; relationship.&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>User --&amp;gt; Order : &amp;quot;places&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>&lt;strong>Inheritance (Generalization)&lt;/strong>: An &amp;ldquo;is-a&amp;rdquo; relationship.&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>Vehicle &amp;lt;|-- Car&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="3">
+&lt;li>&lt;strong>Aggregation&lt;/strong>: A &amp;ldquo;has-a&amp;rdquo; relationship (whole-part with shared ownership).&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>School o-- Student : &amp;quot;contains&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="4">
+&lt;li>&lt;strong>Composition&lt;/strong>: A stronger form of aggregation (whole-part with exclusive ownership).&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>Car *-- Engine: &amp;quot;includes&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="5">
+&lt;li>&lt;strong>Dependency&lt;/strong>: Shows that a class depends on another class.&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>Payment &amp;lt;.. Invoice : &amp;quot;depends on&amp;quot;&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="6">
+&lt;li>&lt;strong>Realization&lt;/strong>: Represents an &amp;ldquo;implements&amp;rdquo; relationship.&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Example: &lt;code>Interface &amp;lt;|.. Class&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>Class diagrams can also include data members and methods. This amount of detail is generally too much to maintain in a
+diagram. We recommend only adding this detail when presenting a snapshot or a one-time proposal.&lt;/p>
+&lt;p>Here is an example of a class diagram which includes data members and methods:&lt;/p>
+&lt;pre tabindex="0">&lt;code>classDiagram
+class Person {
+- name: String
+- age: Integer
++ getName(): String
++ setName(name: String): void
+}
+class Student {
+- studentId: Integer
++ enroll(course: Course): void
+}
+class Course {
+- courseName: String
+- courseCode: String
++ getDetails(): String
+}
+Person &amp;lt;|-- Student
+Student *-- Course
+&lt;/code>&lt;/pre>&lt;p>The diagram is rendered as follows:&lt;/p>
+&lt;pre class="mermaid">
+classDiagram
+class Person {
+- name: String
+- age: Integer
++ getName(): String
++ setName(name: String): void
+}
+class Student {
+- studentId: Integer
++ enroll(course: Course): void
+}
+class Course {
+- courseName: String
+- courseCode: String
++ getDetails(): String
+}
+Person &amp;lt;|-- Student
+Student *-- Course
+&lt;/pre>
+&lt;h2 id="entity-relationship-diagrams-erds">&lt;a href="#entity-relationship-diagrams-erds" class="header-anchor">&lt;/a>Entity relationship diagrams (ERDs)
+&lt;/h2>&lt;p>An &lt;strong>Entity-Relationship Diagram (ERD)&lt;/strong> is a type of diagram used for visualizing the structure of a database. There
+are tools for automatically creating Mermaid ERD diagrams from database schemas. In our experience, ER diagrams are
+helpful in proposing changes or examining a snapshot in time. You should not actively maintain ERDs to always match the
+current database schema.&lt;/p>
+&lt;p>Below is an example schema change proposal:&lt;/p>
+&lt;pre tabindex="0">&lt;code>erDiagram
+HOST_SCIM {
+host_id uint PK
+scim_user_id uint FK
+}
+SCIM_USERS {
+id string PK
+user_name string
+first_name string
+middle_name string
+family_name string
+active bool
+}
+SCIM_USER_EMAILS {
+scim_user_id string PK
+email string PK
+primary bool
+type string
+}
+SCIM_USER_GROUPS {
+scim_user_id string PK &amp;#34;FK&amp;#34;
+group_id uint PK &amp;#34;FK&amp;#34;
+}
+SCIM_GROUPS {
+id uint PK
+name string &amp;#34;Unique&amp;#34;
+}
+HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
+SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
+SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
+SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
+&lt;/code>&lt;/pre>&lt;p>It renders as follows:&lt;/p>
+&lt;pre class="mermaid">
+erDiagram
+HOST_SCIM {
+host_id uint PK
+scim_user_id uint FK
+}
+SCIM_USERS {
+id string PK
+user_name string
+first_name string
+middle_name string
+family_name string
+active bool
+}
+SCIM_USER_EMAILS {
+scim_user_id string PK
+email string PK
+primary bool
+type string
+}
+SCIM_USER_GROUPS {
+scim_user_id string PK &amp;#34;FK&amp;#34;
+group_id uint PK &amp;#34;FK&amp;#34;
+}
+SCIM_GROUPS {
+id uint PK
+name string &amp;#34;Unique&amp;#34;
+}
+HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
+SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
+SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
+SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
+&lt;/pre>
+&lt;p>In Mermaid diagrams, cardinality defines the numerical relationship between entities. It specifies how many instances of
+one entity can be related to instances of another. Commonly used cardinality syntax in ER diagrams is:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>||--||&lt;/code> means &amp;ldquo;one-to-one&amp;rdquo;&lt;/li>
+&lt;li>&lt;code>||--o{&lt;/code> means &amp;ldquo;zero-to-many&amp;rdquo;&lt;/li>
+&lt;li>&lt;code>||--|{&lt;/code> means &amp;ldquo;one-to-many&amp;rdquo;&lt;/li>
+&lt;li>&lt;code>}|--|{&lt;/code> means &amp;ldquo;many-to-many&amp;rdquo;&lt;/li>
+&lt;/ul>
+&lt;p>The left and right parts of the above cardinality examples can be flipped as needed.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>Recently, we explained &lt;a class="link" href="../software-modularity/" >the business benefits of software modularity and cohesion&lt;/a>.&lt;/li>
+&lt;li>We also discussed
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with evolutionary architecture&lt;/a>.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-us">&lt;a href="#watch-us" class="header-anchor">&lt;/a>Watch us
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/aMMDMQvSzmc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>6 business benefits of software modularity and cohesion</title><link>https://victoronsoftware.com/posts/software-modularity/</link><pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-modularity/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-modularity/software-modularity-headline.png" alt="Featured image of post 6 business benefits of software modularity and cohesion" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a class="link" href="../readable-code/" >Why readable code is essential&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >Incrementally scaling a codebase with evolutionary architecture&lt;/a>&lt;/li>
@@ -94,6 +543,7 @@ independent can require extra thought and coordination.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Check out our other articles in the &lt;strong>technical debt&lt;/strong> series. Links are at the top of this article.&lt;/li>
+&lt;li>Recently, examined &lt;a class="link" href="../mermaid-intro/" >the 4 key Mermaid diagrams for software developers&lt;/a>.&lt;/li>
 &lt;li>Previously, we &lt;a class="link" href="../go-modules-and-packages/" >explained the difference between Go modules and Go packages&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-explain-the-business-benefits-of-software-modularity">&lt;a href="#watch-us-explain-the-business-benefits-of-software-modularity" class="header-anchor">&lt;/a>Watch us explain the business benefits of software modularity
@@ -1003,6 +1453,7 @@ below.&lt;/p>
 &lt;li>We also showed &lt;a class="link" href="../go-package-dependencies/" >how to create an architectural test that finds Go package dependencies&lt;/a>.&lt;/li>
 &lt;li>We also published an article on &lt;a class="link" href="../common-refactorings/" >the common code refactorings to improve code readability&lt;/a>.&lt;/li>
 &lt;li>In addition, we summarized &lt;a class="link" href="../ai-for-software-developers/" >what every software engineer should know about AI&lt;/a>.&lt;/li>
+&lt;li>Lastly, we &lt;a class="link" href="../mermaid-intro/" >introduced the top Mermaid diagrams for software developers&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-scale-your-codebase-with-evolutionary-architecture">&lt;a href="#watch-how-to-scale-your-codebase-with-evolutionary-architecture" class="header-anchor">&lt;/a>Watch how to scale your codebase with evolutionary architecture
 &lt;/h2>&lt;div class="video-wrapper">

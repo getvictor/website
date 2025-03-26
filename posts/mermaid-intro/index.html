@@ -1,0 +1,295 @@
+<!doctype html><html lang=en-us dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Introduction to diagramming with Mermaid for software engineers"><title>4 key Mermaid diagrams for software developers</title>
+<link rel=canonical href=https://victoronsoftware.com/posts/mermaid-intro/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="4 key Mermaid diagrams for software developers"><meta property='og:description' content="Introduction to diagramming with Mermaid for software engineers"><meta property='og:url' content='https://victoronsoftware.com/posts/mermaid-intro/'><meta property='og:site_name' content='Victor on Software'><meta property='og:type' content='article'><meta property='article:section' content='Posts'><meta property='article:tag' content='Software Architecture'><meta property='article:tag' content='Hello World'><meta property='article:published_time' content='2025-03-26T00:00:00+00:00'><meta property='article:modified_time' content='2025-03-26T00:00:00+00:00'><meta property='og:image' content='https://victoronsoftware.com/posts/mermaid-intro/mermaid-intro-headline.png'><meta property='article:author' content='Victor Lyuboslavsky'><meta name=twitter:title content="4 key Mermaid diagrams for software developers"><meta name=twitter:description content="Introduction to diagramming with Mermaid for software engineers"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://victoronsoftware.com/posts/mermaid-intro/mermaid-intro-headline.png'><script async src="https://www.googletagmanager.com/gtag/js?id=G-1XV381YSQ8"></script><script>var dnt,doNotTrack=!1;if(!1&&(dnt=navigator.doNotTrack||window.doNotTrack||navigator.msDoNotTrack,doNotTrack=dnt=="1"||dnt=="yes"),!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-1XV381YSQ8")}</script></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu_ef16a31ddbe86d54.png width=300 height=297 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>Victor on Software</a></h1><h2 class=site-description>Software engineering, security, and related topics</h2></div></header><ol class=menu-social><li><a href=https://fleetdm.com target=_blank title=Fleet rel=me><svg width="58.219mm" height="58.202mm" viewBox="0 0 58.219 58.202"><g stroke-width=".26458"><path d="m7.5963 14.823c3.954.0 7.1594-3.2053 7.1594-7.1594.0-3.954-3.2054-7.1594-7.1594-7.1594-3.954.0-7.1594 3.2053-7.1594 7.1594.0 3.954 3.2053 7.1594 7.1594 7.1594z" fill="#63c740"/><path d="m29.075 14.823c3.9539.0 7.1594-3.2053 7.1594-7.1594.0-3.954-3.2054-7.1594-7.1594-7.1594-3.9541.0-7.1595 3.2053-7.1595 7.1594.0 3.954 3.2054 7.1594 7.1595 7.1594z" fill="#5cabdf"/><path d="m50.552 14.823c3.9542.0 7.1594-3.2053 7.1594-7.1594.0-3.954-3.2052-7.1594-7.1594-7.1594-3.9539.0-7.1594 3.2053-7.1594 7.1594.0 3.954 3.2054 7.1594 7.1594 7.1594z" fill="#d66c7b"/><path d="m7.5963 36.301c3.954.0 7.1594-3.2054 7.1594-7.1594.0-3.9541-3.2054-7.1595-7.1594-7.1595-3.954.0-7.1594 3.2054-7.1594 7.1595.0 3.9539 3.2053 7.1594 7.1594 7.1594z" fill="#c98def"/><path d="m29.075 36.301c3.9539.0 7.1594-3.2054 7.1594-7.1594.0-3.9541-3.2054-7.1595-7.1594-7.1595-3.9541.0-7.1595 3.2054-7.1595 7.1595.0 3.9539 3.2054 7.1594 7.1595 7.1594z" fill="#faa669"/><path d="m7.5963 57.779c3.954.0 7.1594-3.2052 7.1594-7.1594.0-3.9539-3.2054-7.1594-7.1594-7.1594-3.954.0-7.1594 3.2054-7.1594 7.1594.0 3.9542 3.2053 7.1594 7.1594 7.1594z" fill="#3aefc4"/></g></svg></a></li><li><a href=https://github.com/getvictor target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://www.linkedin.com/in/lyuboslavsky/ target=_blank title=LinkedIn rel=me><svg width="16" height="16" fill="currentcolor" class="bi bi-linkedin" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526.0 1.175.0h13.65C15.474.0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487.0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401m-1.2-8.212c.837.0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822.0-1.359.54-1.359 1.248.0.694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869.0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274.0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54.0 01.016-.025V6.169h-2.4c.03.678.0 7.225.0 7.225h2.4"/></svg></a></li><li><a href=http://www.youtube.com/@VictorOnSoftware target=_blank title=YouTube rel=me><svg height="800" width="800" id="Layer_1" viewBox="0 0 461.001 461.001"><g><path style="fill:#f61c0d" d="M365.257 67.393H95.744C42.866 67.393.0 110.259.0 163.137v134.728c0 52.878 42.866 95.744 95.744 95.744h269.513c52.878.0 95.744-42.866 95.744-95.744V163.137c0-52.878-42.866-95.744-95.744-95.744zM300.506 237.056l-126.06 60.123c-3.359 1.602-7.239-.847-7.239-4.568V168.607c0-3.774 3.982-6.22 7.348-4.514l126.06 63.881C304.363 229.873 304.298 235.248 300.506 237.056z"/></g></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/page/tools/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Software tools</span></a></li><li><a href=/page/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/page/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/posts/mermaid-intro/><img src=/posts/mermaid-intro/mermaid-intro-headline_hu_ba1a2c2f6de98cb6.png srcset="/posts/mermaid-intro/mermaid-intro-headline_hu_ba1a2c2f6de98cb6.png 800w, /posts/mermaid-intro/mermaid-intro-headline_hu_3d5d15e161105b88.png 1600w" width=800 height=419 loading=lazy alt="Featured image of post 4 key Mermaid diagrams for software developers"></a></div><div class=article-details><header class=article-category><a href=/categories/software-development/>Software Development</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/posts/mermaid-intro/>4 key Mermaid diagrams for software developers</a></h2><h3 class=article-subtitle>Introduction to diagramming with Mermaid for software engineers</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Mar 26, 2025</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>9 minute read</time></div></footer></div></header><section class=article-content><h2 id=importance-of-technical-diagrams><a href=#importance-of-technical-diagrams class=header-anchor></a>Importance of technical diagrams</h2><p>Diagrams are an effective way to communicate technical concepts to other engineers or business stakeholders. They even
+help us better understand technical concepts while creating the diagrams. Effective senior engineers frequently use
+diagrams in their documentation and presentations. The top Mermaid diagrams are:</p><ul><li><a class=link href=#sequence-diagrams>Sequence diagrams</a></li><li><a class=link href=#flowcharts>Flowcharts</a></li><li><a class=link href=#class-diagrams>Class diagrams</a></li><li><a class=link href=#entity-relationship-diagrams-erds>Entity relationship diagrams (ERDs)</a></li></ul><h2 id=what-is-mermaid><a href=#what-is-mermaid class=header-anchor></a>What is Mermaid</h2><p>Mermaid is a popular JavaScript-based diagramming tool that allows anyone to create diagrams using a simple text-based
+syntax. Some key reasons for its popularity include:</p><ul><li><strong>Text-based syntax</strong>: Mermaid is easy to write and version control, fitting seamlessly into code reviews and
+collaborative workflows.</li><li><strong>Integration with Markdown</strong>: Mermaid works well with Markdown, which is widely used in documentation and static site
+generators.</li><li><strong>Integration with GitHub and GitLab</strong>: These top Git hosting platforms allow you to put Mermaid diagrams almost
+anywhere on their site.</li><li><strong>Versatility</strong>: Mermaid supports various diagram types, from flowcharts and sequence diagrams to ERDs.</li><li><strong>Automation-friendly</strong>: Diagrams can be generated programmatically, enabling dynamic updates and integration with
+CI/CD pipelines.</li><li><strong>Accessibility</strong>: Mermaid does not need specialized software; diagrams can be created and rendered within code
+editors or browsers.</li></ul><p>In our experience, Mermaid&rsquo;s text-based syntax is simple enough to be used for ad hoc diagramming, as opposed to the
+proverbial &ldquo;back of the napkin&rdquo; drawing.</p><p>The above features make Mermaid an invaluable tool for creating maintainable technical diagrams. We recommend creating
+your first diagram on <a class=link href=https://www.mermaidchart.com/play target=_blank rel=noopener>Mermaid Playground</a> to get started.</p><h2 id=sequence-diagrams><a href=#sequence-diagrams class=header-anchor></a>Sequence diagrams</h2><p>Sequence diagrams depict how users and entities interact with each other over time. They are handy for modeling the flow
+of messages, events, or data and are great for visualizing customer use cases, API interactions, or the behavior of
+distributed systems.</p><p>We love sequence diagrams because they are clear and consistent. Mermaid displays sequence diagrams consistently, which
+greatly speeds up understanding.</p><p>Below is a basic sequence diagram, which starts with the keyword <code>sequenceDiagram</code>.</p><pre tabindex=0><code>sequenceDiagram
+  UI-&gt;&gt;MDM Server: Upload profile
+  MDM Server-&gt;&gt;Apple: Request push notification
+  Apple-&gt;&gt;macOS: Push notification
+  macOS-&gt;&gt;MDM Server: Request command
+  MDM Server-&gt;&gt;macOS: InstallProfile command
+</code></pre><p>The above Mermaid diagram is rendered as follows:</p><pre class=mermaid>
+  sequenceDiagram
+  UI-&gt;&gt;MDM server: Upload profile
+  MDM server-&gt;&gt;Apple: Request push notification
+  Apple-&gt;&gt;macOS: Push notification
+  macOS-&gt;&gt;MDM server: Request command
+  MDM server-&gt;&gt;macOS: InstallProfile command
+</pre><p>The above syntax consists of <code>&lt;entity>->>&lt;entity>: &lt;description></code>. In many cases, that&rsquo;s all that&rsquo;s necessary. We can
+quickly create a simple sequence diagram to explain a flow during a meeting.</p><p>To add a title to your diagram, add the following at the top:</p><pre tabindex=0><code>---
+title: My diagram
+---
+</code></pre><p>To go beyond the basics, we recommend learning some additional syntax from
+<a class=link href=https://mermaid.js.org/syntax/sequenceDiagram.html target=_blank rel=noopener>sequence diagram docs</a>:</p><ul><li><code>actor</code>: Actors (aka people)</li><li>Aliases</li><li><code>-->></code>: Dotted line with arrow for responses</li><li><code>--)</code>: Dotted line with empty arrow for async messages</li><li><code>activate &lt;entity></code> and <code>deactivate &lt;entity></code>: Activations of actors</li><li>Loops(<code>loop</code>), alternative paths(<code>alt</code> and <code>else</code>), and parallel actions(<code>par</code>)</li><li><code>autonumber</code>: Sequence numbers</li><li>Notes</li></ul><p>Here is the updated diagram with additional syntax:</p><pre tabindex=0><code>---
+title: Upload macOS configuration profile flow
+---
+sequenceDiagram
+  autonumber
+  actor Admin
+  participant mdm as MDM server
+  Admin-&gt;&gt;mdm: Upload profile
+  activate mdm
+  mdm--&gt;&gt;Admin: OK
+  deactivate mdm
+  Note right of mdm: After 30 seconds max
+  mdm-&gt;&gt;Apple: Request push notification
+  activate mdm
+  activate Apple
+  Apple--&gt;&gt;mdm: OK
+  deactivate mdm
+  Apple--)macOS: Push notification
+  deactivate Apple
+  activate macOS
+  macOS-&gt;&gt;mdm: Request command (Idle)
+  activate mdm
+  mdm--&gt;&gt;macOS: InstallProfile command
+  deactivate mdm
+  macOS-&gt;&gt;macOS: Install profile
+  macOS-&gt;&gt;mdm: Acknowledge
+  activate mdm
+  mdm--&gt;&gt;macOS: No more commands
+  deactivate mdm
+  deactivate macOS
+</code></pre><pre class=mermaid>
+  ---
+title: Upload macOS configuration profile flow
+---
+sequenceDiagram
+  autonumber
+  actor Admin
+  participant mdm as MDM server
+  Admin-&gt;&gt;mdm: Upload profile
+  activate mdm
+  mdm--&gt;&gt;Admin: OK
+  deactivate mdm
+  Note right of mdm: After 30 seconds max
+  mdm-&gt;&gt;Apple: Request push notification
+  activate mdm
+  activate Apple
+  Apple--&gt;&gt;mdm: OK
+  deactivate mdm
+  Apple--)macOS: Push notification
+  deactivate Apple
+  activate macOS
+  macOS-&gt;&gt;mdm: Request command (Idle)
+  activate mdm
+  mdm--&gt;&gt;macOS: InstallProfile command
+  deactivate mdm
+  macOS-&gt;&gt;macOS: Install profile
+  macOS-&gt;&gt;mdm: Acknowledge
+  activate mdm
+  mdm--&gt;&gt;macOS: No more commands
+  deactivate mdm
+  deactivate macOS
+</pre><h2 id=flowcharts><a href=#flowcharts class=header-anchor></a>Flowcharts</h2><p>Flowcharts are graphical representations of processes, workflows, or decision logic. They use standardized symbols, such
+as rectangles, diamonds, and arrows, to illustrate the flow of steps or tasks visually. Flowcharts are generic diagrams
+that can be adapted to any purpose. They are often used to explain concepts to non-technical stakeholders.</p><p>Below is a basic flowchart diagram:</p><pre tabindex=0><code>flowchart
+  Admin-- &#34;Uses&#34; ---&gt;Server
+  agent-- &#34;Checks in&#34; ---&gt;Server
+  Server-- &#34;Accesses&#34; ---&gt;MySQL
+  Server-- &#34;Accesses&#34; ---&gt;Redis
+  Server-- &#34;Upload analytics&#34; ---&gt;fleetdm.com
+</code></pre><p>Which renders as follows:</p><pre class=mermaid>
+  flowchart
+  Admin-- &#34;Uses&#34; ---&gt;Server
+  agent-- &#34;Checks in&#34; ---&gt;Server
+  Server-- &#34;Accesses&#34; ---&gt;MySQL
+  Server-- &#34;Accesses&#34; ---&gt;Redis
+  Server-- &#34;Upload analytics&#34; ---&gt;fleetdm.com
+</pre><p>The above example is a simple block diagram that can quickly demonstrate the basic parts of your
+system/container/component. Explore additional syntax at <a class=link href=https://mermaid.js.org/syntax/flowchart.html target=_blank rel=noopener>flowchart docs</a>.</p><p>Here is another flowchart example:</p><pre tabindex=0><code>flowchart LR
+  S([Start])
+  PD[Process
+  data]
+  E([End])
+  S --&gt; PD
+  PD --&gt; V{Valid data?}
+  V -- &#34;No&#34; ---&gt; E
+  V -- &#34;Yes&#34; ---&gt; W[Send webhook]
+  W --&gt; E
+</code></pre><p>Which renders as follows:</p><pre class=mermaid>
+  flowchart LR
+  S([Start])
+  PD[Process
+  data]
+  E([End])
+  S --&gt; PD
+  PD --&gt; V{Valid data?}
+  V -- &#34;No&#34; ---&gt; E
+  V -- &#34;Yes&#34; ---&gt; W[Send webhook]
+  W --&gt; E
+</pre><p>We defined some of the elements up front. The <code>Process data</code> rectangle contains multi-line text.</p><p>Note the direction of the flowchart is left-to-right, as specified by <code>LR</code> after <code>flowchart</code>. The direction options are:</p><ul><li><code>TB</code>: Top-to-bottom</li><li><code>BT</code>: Bottom-to-top</li><li><code>RL</code>: Right-to-left</li><li><code>LR</code>: Left-to-right</li></ul><h3 id=standard-symbols-used-in-flowcharts><a href=#standard-symbols-used-in-flowcharts class=header-anchor></a>Standard symbols used in flowcharts</h3><p>Flowcharts use a variety of standardized symbols to represent different types of actions, processes, and decisions.
+Below are some of the most commonly used symbols:</p><ol><li><strong>Terminator (Oval)</strong></li></ol><ul><li>Represents the start or end of a process.</li><li>Example: <code>([Start])</code> or <code>([End])</code>.</li></ul><ol start=2><li><strong>Process (Rectangle)</strong></li></ol><ul><li>Represents a step or task in the process.</li><li>Example: <code>[Calculate sum]</code>.</li></ul><ol start=3><li><strong>Decision (Diamond)</strong></li></ol><ul><li>Represents a decision point with two or more possible outcomes.</li><li>Example: <code>{Is user authenticated?}</code>.</li></ul><ol start=4><li><strong>Arrow (Line)</strong></li></ol><ul><li>Represents the flow or direction of the process.</li><li>Example: Connects steps in a process.</li></ul><ol start=5><li><strong>Input/Output (Parallelogram)</strong></li></ol><ul><li>Represents input to or output from a process.</li><li>Example: <code>[/User enters credentials/]</code>.</li></ul><ol start=6><li><strong>Database (Cylinder)</strong></li></ol><ul><li>Represents a data store</li><li>Example: <code>[(MySQL)]</code>.</li></ul><p>Additional symbols may be used for specialized diagrams or contexts, depending on the needs of the specific workflow.</p><h2 id=class-diagrams><a href=#class-diagrams class=header-anchor></a>Class diagrams</h2><p>A <strong>class diagram</strong> is one of the core components of the Unified Modeling Language (UML) and is used to visually
+represent the static structure of a system. Traditionally, it models classes, their attributes, operations (methods),
+and the relationships among the classes in the system.</p><p>However, we found that the most helpful use of class diagrams is to model relationships between higher-level entities.
+We can also model higher-level entities with a flowchart, but the benefit of using a class diagram is the ability to use
+standard relationships.</p><p>Below is an example diagram modeling some domain concepts:</p><pre tabindex=0><code>---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+  Fleet o-- Host: &#34;manages&#34;
+  Fleet o-- Policy: &#34;checks (may enforce)&#34;
+  Host o-- IdPUser: &#34;assigned to&#34;
+  Host &lt;|-- MacOS
+  Host &lt;|-- Windows
+  Host &lt;|-- Linux
+  Fleet --&gt; Apple: communicates with
+</code></pre><p>It renders as follows:</p><pre class=mermaid>
+  ---
+config:
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+  Fleet o-- Host: &#34;manages&#34;
+  Fleet o-- Policy: &#34;checks (may enforce)&#34;
+  Host o-- IdPUser: &#34;assigned to&#34;
+  Host &lt;|-- MacOS
+  Host &lt;|-- Windows
+  Host &lt;|-- Linux
+  Fleet --&gt; Apple: communicates with
+</pre><p>The syntax is straightforward, as in the basic examples of previous diagrams, and we can quickly throw together this
+type of diagram during a meeting.</p><p>Six standard types of relationships can be modeled in a class diagram:</p><ol><li><strong>Association</strong>: A &ldquo;uses-a&rdquo; relationship.</li></ol><ul><li>Example: <code>User --> Order : "places"</code></li></ul><ol start=2><li><strong>Inheritance (Generalization)</strong>: An &ldquo;is-a&rdquo; relationship.</li></ol><ul><li>Example: <code>Vehicle &lt;|-- Car</code></li></ul><ol start=3><li><strong>Aggregation</strong>: A &ldquo;has-a&rdquo; relationship (whole-part with shared ownership).</li></ol><ul><li>Example: <code>School o-- Student : "contains"</code></li></ul><ol start=4><li><strong>Composition</strong>: A stronger form of aggregation (whole-part with exclusive ownership).</li></ol><ul><li>Example: <code>Car *-- Engine: "includes"</code></li></ul><ol start=5><li><strong>Dependency</strong>: Shows that a class depends on another class.</li></ol><ul><li>Example: <code>Payment &lt;.. Invoice : "depends on"</code></li></ul><ol start=6><li><strong>Realization</strong>: Represents an &ldquo;implements&rdquo; relationship.</li></ol><ul><li>Example: <code>Interface &lt;|.. Class</code></li></ul><p>Class diagrams can also include data members and methods. This amount of detail is generally too much to maintain in a
+diagram. We recommend only adding this detail when presenting a snapshot or a one-time proposal.</p><p>Here is an example of a class diagram which includes data members and methods:</p><pre tabindex=0><code>classDiagram
+  class Person {
+    - name: String
+    - age: Integer
+    + getName(): String
+    + setName(name: String): void
+  }
+
+  class Student {
+    - studentId: Integer
+    + enroll(course: Course): void
+  }
+
+  class Course {
+    - courseName: String
+    - courseCode: String
+    + getDetails(): String
+  }
+
+  Person &lt;|-- Student
+  Student *-- Course
+</code></pre><p>The diagram is rendered as follows:</p><pre class=mermaid>
+  classDiagram
+  class Person {
+    - name: String
+    - age: Integer
+    + getName(): String
+    + setName(name: String): void
+  }
+
+  class Student {
+    - studentId: Integer
+    + enroll(course: Course): void
+  }
+
+  class Course {
+    - courseName: String
+    - courseCode: String
+    + getDetails(): String
+  }
+
+  Person &lt;|-- Student
+  Student *-- Course
+</pre><h2 id=entity-relationship-diagrams-erds><a href=#entity-relationship-diagrams-erds class=header-anchor></a>Entity relationship diagrams (ERDs)</h2><p>An <strong>Entity-Relationship Diagram (ERD)</strong> is a type of diagram used for visualizing the structure of a database. There
+are tools for automatically creating Mermaid ERD diagrams from database schemas. In our experience, ER diagrams are
+helpful in proposing changes or examining a snapshot in time. You should not actively maintain ERDs to always match the
+current database schema.</p><p>Below is an example schema change proposal:</p><pre tabindex=0><code>erDiagram
+  HOST_SCIM {
+      host_id uint PK
+      scim_user_id uint FK
+  }
+  SCIM_USERS {
+      id string PK
+      user_name string
+      first_name string
+      middle_name string
+      family_name string
+      active bool
+  }
+  SCIM_USER_EMAILS {
+      scim_user_id string PK
+      email string PK
+      primary bool
+      type string
+  }
+  SCIM_USER_GROUPS {
+      scim_user_id string PK &#34;FK&#34;
+      group_id uint PK &#34;FK&#34;
+  }
+  SCIM_GROUPS {
+      id uint PK
+      name string &#34;Unique&#34;
+  }
+  HOST_SCIM }|--|| SCIM_USERS : &#34;multiple hosts can have the same SCIM user&#34;
+  SCIM_USERS ||--o{ SCIM_USER_GROUPS: &#34;zero-to-many&#34;
+  SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &#34;one-to-many&#34;
+  SCIM_USERS ||--o{ SCIM_USER_EMAILS: &#34;zero-to-many&#34;
+</code></pre><p>It renders as follows:</p><pre class=mermaid>
+  erDiagram
+  HOST_SCIM {
+      host_id uint PK
+      scim_user_id uint FK
+  }
+  SCIM_USERS {
+      id string PK
+      user_name string
+      first_name string
+      middle_name string
+      family_name string
+      active bool
+  }
+  SCIM_USER_EMAILS {
+      scim_user_id string PK
+      email string PK
+      primary bool
+      type string
+  }
+  SCIM_USER_GROUPS {
+      scim_user_id string PK &#34;FK&#34;
+      group_id uint PK &#34;FK&#34;
+  }
+  SCIM_GROUPS {
+      id uint PK
+      name string &#34;Unique&#34;
+  }
+  HOST_SCIM }|--|| SCIM_USERS : &#34;multiple hosts can have the same SCIM user&#34;
+  SCIM_USERS ||--o{ SCIM_USER_GROUPS: &#34;zero-to-many&#34;
+  SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &#34;one-to-many&#34;
+  SCIM_USERS ||--o{ SCIM_USER_EMAILS: &#34;zero-to-many&#34;
+</pre><p>In Mermaid diagrams, cardinality defines the numerical relationship between entities. It specifies how many instances of
+one entity can be related to instances of another. Commonly used cardinality syntax in ER diagrams is:</p><ul><li><code>||--||</code> means &ldquo;one-to-one&rdquo;</li><li><code>||--o{</code> means &ldquo;zero-to-many&rdquo;</li><li><code>||--|{</code> means &ldquo;one-to-many&rdquo;</li><li><code>}|--|{</code> means &ldquo;many-to-many&rdquo;</li></ul><p>The left and right parts of the above cardinality examples can be flipped as needed.</p><h2 id=further-reading><a href=#further-reading class=header-anchor></a>Further reading</h2><ul><li>Recently, we explained <a class=link href=../software-modularity/>the business benefits of software modularity and cohesion</a>.</li><li>We also discussed
+<a class=link href=../scaling-codebase-evolutionary-architecture/>how to scale your codebase with evolutionary architecture</a>.</li></ul><h2 id=watch-us><a href=#watch-us class=header-anchor></a>Watch us</h2><div class=video-wrapper><iframe loading=lazy src=https://www.youtube.com/embed/aMMDMQvSzmc allowfullscreen title="YouTube Video"></iframe></div><p><em>Note:</em> If you want to comment on this article, please do so on the YouTube video.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/software-architecture/>Software Architecture</a>
+<a href=/tags/hello-world/>Hello World</a></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/posts/software-modularity/><div class=article-image><img src=/posts/software-modularity/software-modularity-headline.bfe925c2f51c5862c6f19bcb2f7c3022_hu_7fde084caf184f79.png width=250 height=150 loading=lazy alt="Featured image of post 6 business benefits of software modularity and cohesion" data-hash="md5-v+klwvUcWGLG8ZvLL3wwIg=="></div><div class=article-details><h2 class=article-title>6 business benefits of software modularity and cohesion</h2></div></a></article><article class=has-image><a href=/posts/literate-programming-lessons/><div class=article-image><img src=/posts/literate-programming-lessons/literate-programming-headline.848d4e5c092f3a5599397046593c857f_hu_54fc2e8d46cd3a54.png width=250 height=150 loading=lazy alt="Featured image of post 6 lessons from literate programming" data-hash="md5-hI1OXAkvOlWZOXBGWTyFfw=="></div><div class=article-details><h2 class=article-title>6 lessons from literate programming</h2></div></a></article><article class=has-image><a href=/posts/go-package-dependencies/><div class=article-image><img src=/posts/go-package-dependencies/go-dependencies-headline.5b98aa5d1633408c72b8ea3bc653a503_hu_83e01245d284a0d1.png width=250 height=150 loading=lazy alt="Featured image of post How to find package dependencies of a Go package" data-hash="md5-W5iqXRYzQIxyuOo7xlOlAw=="></div><div class=article-details><h2 class=article-title>How to find package dependencies of a Go package</h2></div></a></article><article class=has-image><a href=/posts/scaling-codebase-evolutionary-architecture/><div class=article-image><img src=/posts/scaling-codebase-evolutionary-architecture/evolutionary-architecture-headline.0294abfc9580dc6be68388bfd3992dbf_hu_890053f752f5979e.png width=250 height=150 loading=lazy alt="Featured image of post How to scale your codebase with evolutionary architecture" data-hash="md5-ApSr/JWA3Gvmg4i/05ktvw=="></div><div class=article-details><h2 class=article-title>How to scale your codebase with evolutionary architecture</h2></div></a></article><article class=has-image><a href=/posts/create-chrome-extension/><div class=article-image><img src=/posts/create-chrome-extension/chrome-extension-headline.3273b29c8adcab44a403177e65c9cd3c_hu_5f3bf70a977d7f0b.png width=250 height=150 loading=lazy alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" data-hash="md5-MnOynIrcq0SkAxd+ZcnNPA=="></div><div class=article-details><h2 class=article-title>Create a Chrome extension from scratch step-by-step (2024)</h2></div></a></article></div></div></aside><footer class=site-footer><section class=copyright>&copy;
+2025 Victor on Software</section><section class=powerby></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html><script type=module>
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+</script>
