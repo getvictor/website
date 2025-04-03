@@ -497,7 +497,7 @@ The left and right parts of the above cardinality examples can be flipped as nee
 - We also discussed
   [how to scale your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/).
 
-## Watch us
+## Watch the intro to the key Mermaid diagrams
 
 {{< youtube aMMDMQvSzmc >}}
 
