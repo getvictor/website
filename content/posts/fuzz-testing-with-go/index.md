@@ -142,6 +142,7 @@ GitHub gist: {{< gist getvictor 24baadcc9cf08e7d7a6028ad54ff2aba >}}
 
 - [Benchmarking performance with Go](../optimizing-performance-of-go-app)
 - [Measure Go test execution time](../go-test-execution-time)
+- [Speed up Go CI tests by breaking them apart](../large-go-test-suite/).
 - [Unit testing a Chrome Extension](../add-unit-tests-to-chrome-extension)
 
 ## Go fuzz testing video

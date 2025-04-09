@@ -205,7 +205,8 @@ There is no official documentation for the above debug flags. However, they can 
 
 ## Further reading
 
-- Previously, we explained [how to accurately measure the execution time of Go tests](../go-test-execution-time/).
+- Previously, we explained [how to accurately measure the execution time of Go tests](../go-test-execution-time/) and
+  [how to break apart a large Go test suite](../large-go-test-suite/).
 - We also [demonstrated some common code refactorings that can be done with your IDE](../common-refactorings/).
 
 ## Watch how to analyze Go builds
