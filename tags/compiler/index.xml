@@ -148,7 +148,8 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a> and
+&lt;a class="link" href="../large-go-test-suite/" >how to break apart a large Go test suite&lt;/a>.&lt;/li>
 &lt;li>We also &lt;a class="link" href="../common-refactorings/" >demonstrated some common code refactorings that can be done with your IDE&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-analyze-go-builds">&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor">&lt;/a>Watch how to analyze Go builds

@@ -1,4 +1,121 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>4 key Mermaid diagrams for software developers</title><link>https://victoronsoftware.com/posts/mermaid-intro/</link><pubDate>Wed, 26 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mermaid-intro/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mermaid-intro/mermaid-intro-headline.png" alt="Featured image of post 4 key Mermaid diagrams for software developers" />&lt;h2 id="importance-of-technical-diagrams">&lt;a href="#importance-of-technical-diagrams" class="header-anchor">&lt;/a>Importance of technical diagrams
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
+give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
+changes, slow tests can become a bottleneck, delaying deployments.&lt;/p>
+&lt;p>Previously, we covered &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>. This
+article will demonstrate one approach to breaking apart a large Go test suite and running each part in parallel. This
+approach should reduce the CI cycle time, benefitting developers and the organization.&lt;/p>
+&lt;ul>
+&lt;li>&lt;a class="link" href="#split-up-the-go-test-suite" >Split up the Go test suite&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#create-parallel-go-test-jobs-in-ci" >Create parallel Go test jobs in CI&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="understanding-your-go-test-suite">&lt;a href="#understanding-your-go-test-suite" class="header-anchor">&lt;/a>Understanding your Go test suite
+&lt;/h2>&lt;p>The standard way to run all the tests in your Go project is with the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test ./...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will compile all the Go packages and their tests, each compiling to a separate binary. The Go toolchain
+will then run each binary in parallel. The &lt;code>-p&lt;/code> flag controls this parallel test behavior, which defaults to the number
+of CPUs on your machine.&lt;/p>
+&lt;p>Splitting up the test suite makes sense if you have a lot of packages to test. If you have few packages or if you have 1
+or 2 packages that dominate your project&amp;rsquo;s test run time, then a simple split may not help much. You may need to
+refactor your code or split the tests in a single Go package across multiple CI jobs. Splitting a single package is
+generally inefficient since each CI job must compile the same package separately, and we will not cover this approach.&lt;/p>
+&lt;p>To find all the packages in your project, you can list them with the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list ./...
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To identify time-consuming packages, you can run your test suite with the &lt;code>-json&lt;/code> switch and save the results. Then,
+find the elapsed time of each package and sort the times. This operation can be done with &lt;a class="link" href="https://jqlang.org/" target="_blank" rel="noopener"
+>jq&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>cat test-result.json | jq -s &lt;span style="color:#e6db74">&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="split-up-the-go-test-suite">&lt;a href="#split-up-the-go-test-suite" class="header-anchor">&lt;/a>Split up the Go test suite
+&lt;/h2>&lt;p>You can specify the packages at the end of the &lt;code>go test&lt;/code> command to run a subset of packages in a CI job. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test ./cmd/fleetctl/... ./server/service
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, manually create groups of packages and identify them with a name.&lt;/p>
+&lt;p>To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
+&lt;a class="link" href="https://linux.die.net/man/1/comm" target="_blank" rel="noopener"
+>comm&lt;/a> command to generate the remaining packages. For example:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>comm -23 &amp;lt;&lt;span style="color:#f92672">(&lt;/span>go list ./... | sort&lt;span style="color:#f92672">)&lt;/span> &amp;lt;&lt;span style="color:#f92672">({&lt;/span> go list ./cmd/fleetctl/... &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> go list ./server/service/... ;&lt;span style="color:#f92672">}&lt;/span> | sort&lt;span style="color:#f92672">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above command returns the packages unique to the first list, which includes all the packages (&lt;code>./...&lt;/code>).&lt;/p>
+&lt;p>The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Makefile" data-lang="Makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Set up packages for CI testing.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>DEFAULT_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./cmd/... ./ee/... ./orbit/pkg/... ./orbit/cmd/orbit ./pkg/... ./server/... ./tools/...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># fast tests are quick and do not require out-of-process dependencies (such as MySQL, etc.)
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>FAST_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./ee/tools/mdm &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/cryptoinfo &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/dataflatten &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/keystore &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/goose &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/apple/appmanifest &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/lifecycle &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/scep/challenge &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/scep/x509util &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/policies
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLEETCTL_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./cmd/fleetctl/...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>MYSQL_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/datastore/mysql/... ./server/mdm/android/mysql
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SCRIPTS_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./orbit/pkg/scripts
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SERVICE_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/service
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>VULN_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/vulnerabilities/...
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">main)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># This is the bucket of all the tests that are not in a specific group. We take a diff between DEFAULT_PKG_TO_TEST and all the specific *_PKGS_TO_TEST.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>shell /bin/bash -c &lt;span style="color:#e6db74">&amp;#34;comm -23 &amp;lt;(go list &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>DEFAULT_PKGS_TO_TEST&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74"> | sort) &amp;lt;({ \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> \
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> ;} | sort)&amp;#34;&lt;/span>&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">fast)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">fleetctl)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">mysql)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">scripts)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">service)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">vuln)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>DEFAULT_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">endif&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-parallel-go-test-jobs-in-ci">&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor">&lt;/a>Create parallel Go test jobs in CI
+&lt;/h2>&lt;p>The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
+&lt;a class="link" href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow" target="_blank" rel="noopener"
+>matrix strategy&lt;/a>.&lt;/p>
+&lt;p>In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">test-go&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">strategy&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">matrix&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">suite&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;fast&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleetctl&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;main&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;mysql&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;service&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;vuln&amp;#34;&lt;/span>]
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">os&lt;/span>: [&lt;span style="color:#ae81ff">ubuntu-latest]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">${{ matrix.os }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout Code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9&lt;/span> &lt;span style="color:#75715e"># v3.5.3&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Install Go&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32&lt;/span> &lt;span style="color:#75715e"># v5.0.2&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run Go Tests&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">CI_TEST_PKG=${{ matrix.suite }} make test-go&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above workflow runs our test suites in parallel, speeding up our overall CI cycle time.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../analyze-go-build/" >analyzing Go build times&lt;/a>.&lt;/p>
+&lt;p>In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" >the state of fuzz testing in Go&lt;/a>.&lt;/p>
+&lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite">&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor">&lt;/a>Watch how to break apart a large Go test suite
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/AFVlbf5LZwc"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>4 key Mermaid diagrams for software developers</title><link>https://victoronsoftware.com/posts/mermaid-intro/</link><pubDate>Wed, 26 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mermaid-intro/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mermaid-intro/mermaid-intro-headline.png" alt="Featured image of post 4 key Mermaid diagrams for software developers" />&lt;h2 id="importance-of-technical-diagrams">&lt;a href="#importance-of-technical-diagrams" class="header-anchor">&lt;/a>Importance of technical diagrams
 &lt;/h2>&lt;p>Diagrams are an effective way to communicate technical concepts to other engineers or business stakeholders. They even
 help us better understand technical concepts while creating the diagrams. Effective senior engineers frequently use
 diagrams in their documentation and presentations. The top Mermaid diagrams are:&lt;/p>
@@ -1123,7 +1240,8 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cmd&lt;/span>.&lt;span style="color:#a6e22e">Flag&lt;/span>.&lt;span style="color:#a6e22e">StringVar&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">DebugTrace&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;debug-trace&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>.&lt;/li>
+&lt;li>Previously, we explained &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a> and
+&lt;a class="link" href="../large-go-test-suite/" >how to break apart a large Go test suite&lt;/a>.&lt;/li>
 &lt;li>We also &lt;a class="link" href="../common-refactorings/" >demonstrated some common code refactorings that can be done with your IDE&lt;/a>.&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-analyze-go-builds">&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor">&lt;/a>Watch how to analyze Go builds
@@ -9861,6 +9979,7 @@ such as database accesses. I will report my findings in a future post.&lt;/p>
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="../go-test-execution-time" >Measure Go test execution time&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="../large-go-test-suite/" >Speed up Go CI tests by breaking them apart&lt;/a>.&lt;/li>
 &lt;li>&lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Unit testing a Chrome Extension&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="go-fuzz-testing-video">&lt;a href="#go-fuzz-testing-video" class="header-anchor">&lt;/a>Go fuzz testing video
