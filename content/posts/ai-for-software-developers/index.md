@@ -196,6 +196,7 @@ tasks.
 
 ## Further reading
 
+- We just published [our lessons learned from building an AI-driven MCP server](../introducing-mcp/).
 - We recently discussed
   [how to scale your codebase with incremental design](../scaling-codebase-evolutionary-architecture/).
 - We also wrote about [the importance of readable code](../readable-code/).
