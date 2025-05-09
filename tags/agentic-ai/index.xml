@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agentic AI on Victor on Software</title><link>https://victoronsoftware.com/tags/agentic-ai/</link><description>Recent content in Agentic AI on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 08 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/agentic-ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Introducing MCP: Lessons from building an AI-driven server</title><link>https://victoronsoftware.com/posts/introducing-mcp/</link><pubDate>Thu, 08 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/introducing-mcp/</guid><description>&lt;img src="https://victoronsoftware.com/posts/introducing-mcp/introducing-mcp-headline.png" alt="Featured image of post Introducing MCP: Lessons from building an AI-driven server" />&lt;p>Recently, we developed a proof of concept using an MCP(Model Context Protocol) server to control
+&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
+>Fleet&amp;rsquo;s device management server&lt;/a>. This server made a successful
+&lt;a class="link" href="https://youtu.be/eKoOvT-fr2I" target="_blank" rel="noopener"
+>demo video&lt;/a>. The takeaways from the video were:&lt;/p>
+&lt;ul>
+&lt;li>🧠 Natural language understanding — no commands to memorize&lt;/li>
+&lt;li>🤖 Actionable context awareness — the AI remembers what you&amp;rsquo;re asking about&lt;/li>
+&lt;li>🔗 Tool selection and orchestration — chooses the proper action automatically&lt;/li>
+&lt;/ul>
+&lt;p>In this article, we&amp;rsquo;ll talk about our process for integrating our API with agentic AI, mistakes made, and lessons
+learned.&lt;/p>
+&lt;h2 id="what-is-mcp-and-why-do-i-need-one">&lt;a href="#what-is-mcp-and-why-do-i-need-one" class="header-anchor">&lt;/a>What is MCP, and why do I need one?
+&lt;/h2>&lt;p>MCP (Model Context Protocol) is a client-server framework that enables AI agents to interact with your tools and APIs
+through natural language. MCP was introduced by &lt;a class="link" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener"
+>Anthropic&lt;/a> in
+November 2024. Its primary use case was to use local tools available on your local machine, such as databases.&lt;/p>
+&lt;p>But, some may ask why we need another framework—aren&amp;rsquo;t AI agents good enough to use those tools directly? Yes, it is
+true that by providing AI agents with instructions on how to use an arbitrary tool, the AI agent should be able to use
+it. However, MCP standardizes this approach. Thus, an MCP server created for one tool can be reused by many developers
+and by many AI agents.&lt;/p>
+&lt;p>Instead of telling your AI agent about every tool, imagine that the AI agent has access to a library of MCP servers that
+it can install whenever you want to &amp;ldquo;teach&amp;rdquo; it about a tool. Think of MCP as an intelligent middleware that allows AI
+agents to understand and use your system&amp;rsquo;s capabilities appropriately. With MCP, the AI can dynamically learn and adapt
+to your system&amp;rsquo;s interface.&lt;/p>
+&lt;h3 id="the-mcp-protocol">&lt;a href="#the-mcp-protocol" class="header-anchor">&lt;/a>The MCP protocol
+&lt;/h3>&lt;p>The MCP protocol consists of several key components:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>Tools: These are functions or actions that can be performed. Tools are defined by name, description, and parameters
+they accept. They represent the capabilities your system provides to AI agents.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Resources: These are data objects that tools can operate on. Resources have properties and relationships with other
+resources. For example, a &lt;code>User&lt;/code> resource might have properties like name and email.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Prompts: These are reusable prompt templates and workflows intended to standardize common LLM interactions.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Schema Definition: The protocol uses a schema to describe available tools and resources, making it easy for AI agents
+to understand possible actions.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;p>The main distinction between tools and resources is that tools are actions (verbs), while resources are objects (nouns)
+on which these actions may operate. For example, a &lt;code>createUser&lt;/code> tool might operate on a &lt;code>User&lt;/code> resource. In practice,
+however, you can create a &lt;code>User&lt;/code> tool that returns a user and not worry about associating it with a resource. The
+semantics of tools are simpler than those of resources, so it might be faster only to use tools if your goal is to get
+something working quickly.&lt;/p>
+&lt;h2 id="building-an-mcp-server-with-agentic-ai">&lt;a href="#building-an-mcp-server-with-agentic-ai" class="header-anchor">&lt;/a>Building an MCP server with agentic AI
+&lt;/h2>&lt;p>Our biggest mistake was asking our AI agent (&lt;a class="link" href="https://roocode.com/" target="_blank" rel="noopener"
+>Roo Code&lt;/a>) to build an MCP server without fully
+understanding the MCP details ourselves. To summarize, this process was not successful.&lt;/p>
+&lt;p>MCP has SDKs available for multiple languages. We decided to build our MCP server with TypeScript. Our AI agent pulled
+in the right &lt;a class="link" href="https://github.com/modelcontextprotocol/typescript-sdk" target="_blank" rel="noopener"
+>TypeScript MCP SDK&lt;/a>. However, it couldn&amp;rsquo;t get the
+compile to work, so it removed the SDK and implemented the MCP protocol from scratch. We allowed our agent to proceed
+since we didn&amp;rsquo;t know any better.&lt;/p>
+&lt;p>After implementing a basic tool, we couldn&amp;rsquo;t get the MCP server to work reliably. It worked using &lt;code>curl&lt;/code>, but the
+&lt;a class="link" href="https://github.com/modelcontextprotocol/inspector" target="_blank" rel="noopener"
+>MCP inspector&lt;/a> debug tool couldn&amp;rsquo;t connect to our MCP server.
+Another mistake we made was not telling the AI agent to use liberal debug messages up front, which would have sped up
+the debug effort.&lt;/p>
+&lt;p>After letting our AI agent waste our API credits for too long, we told it to rewrite the code using the TypeScript SDK.
+We copied and pasted the examples that our agent could reference. After that, things went smoothly.&lt;/p>
+&lt;p>Another engineer suggested that using the Python SDK would have been more effective and required less handholding.&lt;/p>
+&lt;p>Our proof of concept &lt;a class="link" href="https://github.com/getvictor/fleet-mcp" target="_blank" rel="noopener"
+>MCP server for Fleet API&lt;/a> is on GitHub. Here&amp;rsquo;s a code
+example for the &lt;code>install_software&lt;/code> tool:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Register the install_software tool
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">mcpServer&lt;/span>.&lt;span style="color:#a6e22e">tool&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;install_software&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Install software on a host managed by Fleet&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">host_id&lt;/span>: &lt;span style="color:#66d9ef">z.string&lt;/span>().&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Required. The host ID&amp;#39;&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">software_id&lt;/span>: &lt;span style="color:#66d9ef">z.string&lt;/span>().&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Required. The software title ID&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">async&lt;/span> (&lt;span style="color:#a6e22e">params&lt;/span>&lt;span style="color:#f92672">:&lt;/span> { &lt;span style="color:#a6e22e">host_id&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>; &lt;span style="color:#a6e22e">software_id&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span> }) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">`Installing software ID &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">software_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74"> on host ID &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">host_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">`&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">`/api/v1/fleet/hosts/&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">host_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">/software/&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">software_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">/install`&lt;/span>;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">await&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">axiosInstance&lt;/span>.&lt;span style="color:#a6e22e">post&lt;/span>(&lt;span style="color:#a6e22e">url&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Fleet API install request successful&amp;#39;&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;text&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">text&lt;/span>: &lt;span style="color:#66d9ef">JSON.stringify&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#66d9ef">null&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">catch&lt;/span> (&lt;span style="color:#a6e22e">error&lt;/span>) {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">error&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Fleet API error:&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">error&lt;/span>);
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">throw&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">code&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;internal_error&amp;#39;&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">message&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">`Fleet API error: &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">error&lt;/span> &lt;span style="color:#66d9ef">instanceof&lt;/span> Error &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#a6e22e">error.message&lt;/span> : &lt;span style="color:#66d9ef">String&lt;/span>(&lt;span style="color:#a6e22e">error&lt;/span>)&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">`&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can see above, the code is pretty straightforward. We&amp;rsquo;re simply wrapping an existing API call with an MCP tool.&lt;/p>
+&lt;h3 id="overall-impressions">&lt;a href="#overall-impressions" class="header-anchor">&lt;/a>Overall impressions
+&lt;/h3>&lt;p>AI agent interactions with our MCP server are complex to test and challenging to debug. First, as an MCP server
+developer, you must be familiar with AI agents, MCP protocol, and the tool interface you&amp;rsquo;re trying to use. For example,
+in one case, the AI agent didn&amp;rsquo;t use the proper parameter to call the tool and came up with wrong conclusions. Since we
+are dealing with AI, it is hard to tell how often such mistakes will happen and also hard to fix or prevent them. Also,
+we don&amp;rsquo;t know exactly how customers may use the MCP server, so the QA test space is quite large.&lt;/p>
+&lt;p>Our product already has an API, a CLI, and a UI interface. Adding MCP to the mix feels hard to justify—are customers
+going to use all these ways to interact with our product? For a small product team, investing in MCP support might not
+make sense until a customer is ready to pay for it.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;p>We recently covered &lt;a class="link" href="../ai-for-software-developers/" >what every software engineer needs to know about AI right now&lt;/a>.&lt;/p>
+&lt;h2 id="watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp">&lt;a href="#watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp" class="header-anchor">&lt;/a>Watch how we taught an AI agent to use our product with MCP
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/1RLh3SpfytQ"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
