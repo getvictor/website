@@ -180,6 +180,9 @@ This operation will create a one-way link from Google Sheets to the document. Yo
 
 ## Further reading
 
+- [Free, flexible, and insightful: engineering metrics done right](../engineering-metrics-no-cost/)  
+  Discover how to monitor and visualize your dev team's performance with Grafana and an analytical database.
+
 - Recently, we explained [how to measure unreadable code and turn it into clean code](../readable-code/), as well as
   [how to make incremental improvements to your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/).
 - Previously, we showed [how to reuse workflows and steps in GitHub Actions](../github-reusable-workflows-and-steps/).

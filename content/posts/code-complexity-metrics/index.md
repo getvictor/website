@@ -129,6 +129,9 @@ In the next article of this **technical debt** series, we
 
 ## Further reading
 
+- [Track your team’s engineering performance with open-source tools](../engineering-metrics-no-cost/)  
+  A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.
+
 - Recently, we [showed an example and key takeaways from literate programming](../literate-programming-lessons/).
 - We also wrote [an overview of using AI in software development](../ai-for-software-developers/).
 

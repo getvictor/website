@@ -244,6 +244,9 @@ In the following article, we
 
 ## Further reading
 
+- [Build beautiful engineering dashboards—without paying a dime](../engineering-metrics-no-cost/)  
+  Learn how to use GitHub, Grafana, and SQL to create powerful, drill-down metrics using only free tools.
+
 - Recently, we [discussed the key takeaways from literate programming](../literate-programming-lessons/).
 - Before that, we
   [showed how to easily track engineering metrics with GitHub Actions and Google APIs](../track-engineering-metrics/).
