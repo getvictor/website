@@ -1,4 +1,305 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 08 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Introducing MCP: Lessons from building an AI-driven server</title><link>https://victoronsoftware.com/posts/introducing-mcp/</link><pubDate>Thu, 08 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/introducing-mcp/</guid><description>&lt;img src="https://victoronsoftware.com/posts/introducing-mcp/introducing-mcp-headline.png" alt="Featured image of post Introducing MCP: Lessons from building an AI-driven server" />&lt;p>Recently, we developed a proof of concept using an MCP(Model Context Protocol) server to control
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Software Development on Victor on Software</title><link>https://victoronsoftware.com/categories/software-development/</link><description>Recent content in Software Development on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 16 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/categories/software-development/index.xml" rel="self" type="application/rss+xml"/><item><title>Full-featured engineering metrics—for free</title><link>https://victoronsoftware.com/posts/engineering-metrics-no-cost/</link><pubDate>Fri, 16 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-metrics-no-cost/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/engineering-metrics-headline.png" alt="Featured image of post Full-featured engineering metrics—for free" />&lt;p>Tracking engineering metrics doesn&amp;rsquo;t have to mean signing up for another expensive SaaS tool. This guide will show you
+how to build a flexible, powerful, and completely free metrics dashboard using open-source tools like Grafana and a fast
+analytical database. Whether you&amp;rsquo;re monitoring cycle time, bug fix velocity, or pull request activity, this setup gives
+you deep visibility that your team will actually want to look at.&lt;/p>
+&lt;p>In our previous &lt;a class="link" href="../track-engineering-metrics/" >engineering metrics guide&lt;/a>, we showed a basic way to track metrics using
+GitHub Actions and the Google Sheets API. The data in Google Sheets can be visualized using a tool like
+&lt;a class="link" href="https://lookerstudio.google.com/" target="_blank" rel="noopener"
+>Google&amp;rsquo;s Looker Studio&lt;/a>. However, we wanted more powerful visualizations that could
+be dynamically sliced, diced, and drilled down into. Also, we wanted the tools to be free so we wouldn&amp;rsquo;t need to justify
+the costs to our management.&lt;/p>
+&lt;h2 id="the-free-engineering-benchmarks-stack">&lt;a href="#the-free-engineering-benchmarks-stack" class="header-anchor">&lt;/a>The free engineering benchmarks stack
+&lt;/h2>&lt;p>As in our previous example, we used &lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
+>GitHub Actions&lt;/a> to schedule our metrics
+collection and compute the data we wanted to track.&lt;/p>
+&lt;p>For visualizations, we decided on &lt;a class="link" href="https://grafana.com/oss/grafana/" target="_blank" rel="noopener"
+>Grafana&lt;/a>. Grafana is a leader in visualizing data,
+is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
+up any infrastructure ourselves.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
+alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users.">
+&lt;/figure>
+&lt;p>However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
+compare our engineering metrics year over year. Due to its generous free tier, we decided to use
+&lt;a class="link" href="https://cloud.google.com/bigquery?hl=en" target="_blank" rel="noopener"
+>Google&amp;rsquo;s BigQuery&lt;/a> analytics database.&lt;/p>
+&lt;ul>
+&lt;li>Storage: The first 10 GiB per month is free.&lt;/li>
+&lt;li>Queries: The first 1 TiB of query data processed per month is free.&lt;/li>
+&lt;/ul>
+&lt;p>We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
+roles, and created a JWT key for the service account to use with our app.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
+alt="Roles for the BigQuery service account.">
+&lt;/figure>
+&lt;p>&lt;em>Note:&lt;/em> BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
+recommend enabling billing on the account and monitoring your usage to ensure you stay within the free limits.&lt;/p>
+&lt;h2 id="picking-the-metric-to-track-pickup-time">&lt;a href="#picking-the-metric-to-track-pickup-time" class="header-anchor">&lt;/a>Picking the metric to track: pickup time
+&lt;/h2>&lt;p>There are many engineering benchmark metrics we could have started with, but we decided to start with one that we&amp;rsquo;ve
+been keenly aware of at many points in our development life. When developers finish implementing and testing their
+feature and put it up for review, sometimes the PR sits there for days at a time. This waiting time is a frustrating
+experience for developers, especially if they or others depend on those changes to make progress in their work. This
+time to review has a direct impact on engineering velocity.&lt;/p>
+&lt;p>We define pickup time as the time from when the PR is marked as ready for review until the code review is done. The
+reviewer does not need to approve the change; they can also reject or simply comment on it. We are measuring the time
+from when the developer finishes their work until they get feedback on their work.&lt;/p>
+&lt;h2 id="implementing-metrics-gathering">&lt;a href="#implementing-metrics-gathering" class="header-anchor">&lt;/a>Implementing metrics gathering
+&lt;/h2>&lt;p>Since we knew our code would run in a GitHub Actions workflow, we implemented it as a
+&lt;a class="link" href="../github-reusable-workflows-and-steps/#reusable-steps-composite-action" >reusable GitHub action&lt;/a>. We decided to use
+JavaScript (not TypeScript) to simplify the action.&lt;/p>
+&lt;p>We used the &lt;a class="link" href="https://github.com/octokit/octokit.js" target="_blank" rel="noopener"
+>octokit.js GitHub API client&lt;/a> to fetch the pull requests from our
+repo, extract the timeline events and review events from the PRs, and calculate the pickup time.&lt;/p>
+&lt;p>In our initial review of the data, we noticed occasional spikes in pickup time on Mondays. That&amp;rsquo;s because pull requests
+created on Friday were sitting around over the weekend until being reviewed on Monday. Since we don&amp;rsquo;t expect our
+software developers to work weekends, we removed weekends from our calculations. Removing weekends was one of the most
+time-consuming implementation details. We created a unit test to make sure we got the details right.&lt;/p>
+&lt;p>We added a &lt;code>--print-only&lt;/code> option to our program to manually examine the data before we uploaded it to the analytical
+database.&lt;/p>
+&lt;p>To interface with BigQuery, we used &lt;a class="link" href="https://github.com/googleapis/nodejs-bigquery" target="_blank" rel="noopener"
+>Google&amp;rsquo;s BigQuery Node.js client&lt;/a>.
+Our table schema was:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fields&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;review_date&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;DATE&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;pr_creator&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;STRING&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;pr_url&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;STRING&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;pickup_time_seconds&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;INTEGER&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;repository&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;STRING&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;pr_number&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;INTEGER&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;target_branch&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;STRING&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;ready_time&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;TIMESTAMP&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> { &lt;span style="color:#a6e22e">name&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;first_review_time&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;TIMESTAMP&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">mode&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;REQUIRED&amp;#39;&lt;/span> }
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>]
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>pr_number&lt;/code> was the primary key. Once we calculate and save the pickup time for a PR, we do not update it on future
+runs.&lt;/p>
+&lt;h2 id="creating-grafana-chart">&lt;a href="#creating-grafana-chart" class="header-anchor">&lt;/a>Creating Grafana chart
+&lt;/h2>&lt;p>In Grafana, we created a data source connected to our BigQuery database. Then, we created a new dashboard with a new
+pickup time chart. We had to decide how to visualize the data. We decided on:&lt;/p>
+&lt;ul>
+&lt;li>7-day moving average&lt;/li>
+&lt;li>filter by time range&lt;/li>
+&lt;li>filter by GitHub username&lt;/li>
+&lt;li>filter by user group (e.g., engineering)&lt;/li>
+&lt;li>include the PR numbers for each data point for drill down&lt;/li>
+&lt;/ul>
+&lt;p>We created Grafana variables to filter by username/group.&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
+alt="List of Grafana dashboard variables, including user and user_group.">
+&lt;/figure>
+&lt;p>Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
+Below is the query we came up with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WITH&lt;/span> daily &lt;span style="color:#66d9ef">AS&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DATE(first_review_time, &lt;span style="color:#e6db74">&amp;#34;America/Chicago&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">AS&lt;/span> &lt;span style="color:#66d9ef">day&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#66d9ef">AS&lt;/span> pr_count,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SUM&lt;/span>(pickup_time_seconds) &lt;span style="color:#66d9ef">AS&lt;/span> total_seconds
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>engineering&lt;span style="color:#f92672">-&lt;/span>metrics&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">123456&lt;/span>.github_metrics.pr_pickup_time&lt;span style="color:#f92672">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> first_review_time &lt;span style="color:#66d9ef">BETWEEN&lt;/span> TIMESTAMP_SUB(TIMESTAMP_MILLIS(&lt;span style="color:#960050;background-color:#1e0010">$&lt;/span>__from), INTERVAL &lt;span style="color:#ae81ff">6&lt;/span> &lt;span style="color:#66d9ef">DAY&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> TIMESTAMP_MILLIS(&lt;span style="color:#960050;background-color:#1e0010">$&lt;/span>__to)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- No filters selected: show all
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Only user filter applied
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;,&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Only user_group filter applied
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;;&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Both filters applied → take intersection
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> val &lt;span style="color:#66d9ef">FROM&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;,&amp;#39;&lt;/span>)) val
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INTERSECT&lt;/span> &lt;span style="color:#66d9ef">DISTINCT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> val &lt;span style="color:#66d9ef">FROM&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;;&amp;#39;&lt;/span>)) val
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">day&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>calendar &lt;span style="color:#66d9ef">AS&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Build list of days in the visible Grafana range
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">day&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GENERATE_DATE_ARRAY(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DATE(TIMESTAMP_MILLIS(&lt;span style="color:#960050;background-color:#1e0010">$&lt;/span>__from)),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DATE(TIMESTAMP_MILLIS(&lt;span style="color:#960050;background-color:#1e0010">$&lt;/span>__to))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> &lt;span style="color:#66d9ef">day&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rolling_avg &lt;span style="color:#66d9ef">AS&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">TIMESTAMP&lt;/span>(CONCAT(&lt;span style="color:#66d9ef">CAST&lt;/span>(&lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span> &lt;span style="color:#66d9ef">AS&lt;/span> STRING), &lt;span style="color:#e6db74">&amp;#39; 12:00:00&amp;#39;&lt;/span>)) &lt;span style="color:#66d9ef">AS&lt;/span> time,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- True 7-day weighted average
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SUM&lt;/span>(d.total_seconds)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> daily d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> d.&lt;span style="color:#66d9ef">day&lt;/span> &lt;span style="color:#66d9ef">BETWEEN&lt;/span> DATE_SUB(&lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span>, INTERVAL &lt;span style="color:#ae81ff">6&lt;/span> &lt;span style="color:#66d9ef">DAY&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#f92672">/&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SUM&lt;/span>(d.pr_count)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> daily d
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> d.&lt;span style="color:#66d9ef">day&lt;/span> &lt;span style="color:#66d9ef">BETWEEN&lt;/span> DATE_SUB(&lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span>, INTERVAL &lt;span style="color:#ae81ff">6&lt;/span> &lt;span style="color:#66d9ef">DAY&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#66d9ef">c&lt;/span>.&lt;span style="color:#66d9ef">day&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#f92672">/&lt;/span> &lt;span style="color:#ae81ff">3600&lt;/span> &lt;span style="color:#66d9ef">AS&lt;/span> moving_avg_hours
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> calendar &lt;span style="color:#66d9ef">c&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r.time,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r.moving_avg_hours,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Optional: attach PR numbers per window
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">SELECT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ARRAY_AGG(&lt;span style="color:#66d9ef">DISTINCT&lt;/span> pr_number)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>engineering&lt;span style="color:#f92672">-&lt;/span>metrics&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">459517&lt;/span>.github_metrics.pr_pickup_time&lt;span style="color:#f92672">`&lt;/span> p
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> DATE(p.first_review_time, &lt;span style="color:#e6db74">&amp;#34;America/Chicago&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">BETWEEN&lt;/span> DATE(DATE_SUB(r.time, INTERVAL &lt;span style="color:#ae81ff">6&lt;/span> &lt;span style="color:#66d9ef">DAY&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> DATE(r.time)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- No filters selected: show all
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Only user filter applied
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;,&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Only user_group filter applied
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">OR&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;;&amp;#39;&lt;/span>))
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">OR&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">-- Both filters applied → take intersection
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> (&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;__all&amp;#39;&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> &lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#e6db74">&amp;#39;&amp;#39;&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">AND&lt;/span> pr_creator &lt;span style="color:#66d9ef">IN&lt;/span> (
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> val &lt;span style="color:#66d9ef">FROM&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;,&amp;#39;&lt;/span>)) val
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INTERSECT&lt;/span> &lt;span style="color:#66d9ef">DISTINCT&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> val &lt;span style="color:#66d9ef">FROM&lt;/span> &lt;span style="color:#66d9ef">UNNEST&lt;/span>(SPLIT(&lt;span style="color:#e6db74">&amp;#39;${user_group:csv}&amp;#39;&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;;&amp;#39;&lt;/span>)) val
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> pr_numbers_window
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">FROM&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> rolling_avg r
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ORDER&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> r.time
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the above query, we used Grafana-specific variables such as &lt;code>$__from&lt;/code>, &lt;code>$__to&lt;/code>, &lt;code>${user:csv}&lt;/code>, etc.&lt;/p>
+&lt;p>We also had to deal with the timestamp shift problem, where the chart data was off by 1 day, since we were stripping the
+time from &lt;code>first_review_time&lt;/code> but displaying the data in local time (the day before UTC midnight). This statement
+attempts to fix the problem by changing the time to noon: &lt;code>TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code>&lt;/p>
+&lt;p>The final chart looked like this:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
+alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team.">
+&lt;/figure>
+&lt;p>We can inspect the data to drill down into the PR numbers for each data point:&lt;/p>
+&lt;figure>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
+alt="Raw data from the database query, including PR numbers.">
+&lt;/figure>
+&lt;p>With the PR numbers, we can explore our data using the following query:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- Sample query to dig into the details. Replace the PR numbers list.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">FROM&lt;/span> &lt;span style="color:#f92672">`&lt;/span>engineering&lt;span style="color:#f92672">-&lt;/span>metrics&lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#ae81ff">123456&lt;/span>.github_metrics.pr_pickup_time&lt;span style="color:#f92672">`&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WHERE&lt;/span> pr_number &lt;span style="color:#66d9ef">IN&lt;/span> (&lt;span style="color:#ae81ff">28625&lt;/span>,&lt;span style="color:#ae81ff">28570&lt;/span>,&lt;span style="color:#ae81ff">28417&lt;/span>,&lt;span style="color:#ae81ff">28658&lt;/span>,&lt;span style="color:#ae81ff">28382&lt;/span>,&lt;span style="color:#ae81ff">28538&lt;/span>,&lt;span style="color:#ae81ff">28608&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ORDER&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> pickup_time_seconds &lt;span style="color:#66d9ef">DESC&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="creating-the-github-actions-workflow">&lt;a href="#creating-the-github-actions-workflow" class="header-anchor">&lt;/a>Creating the GitHub Actions workflow
+&lt;/h2>&lt;p>Once everything worked, we set up a GitHub workflow to run daily and automatically update the metrics.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Collect PR Pickup Time Metrics&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">schedule&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">cron&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;0 9 * * *&amp;#39;&lt;/span> &lt;span style="color:#75715e"># Run at 4am CDT (9am UTC)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">workflow_dispatch&lt;/span>: &lt;span style="color:#75715e"># Allow manual triggering&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">collect-metrics&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout code&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Set up Node.js&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-node@v4&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">node-version&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;16&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cache&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;npm&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Install dependencies&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">npm ci&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Create service account key file&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> echo &amp;#39;${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}&amp;#39; &amp;gt; service-account-key.json
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> # Verify the file is valid JSON
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> cat service-account-key.json | jq . &amp;gt; /dev/null&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Collect and upload metrics&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">./&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">github-token&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">config-path&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;./config.json&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bigquery-project&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.BIGQUERY_PROJECT_ID }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bigquery-dataset&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;github_metrics&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">bigquery-table&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;pr_pickup_time&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">target-branch&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;main&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">lookback-days&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;30&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">print-only&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;false&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">env&lt;/span>:
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">GITHUB_TOKEN&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">BIGQUERY_PROJECT_ID&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.BIGQUERY_PROJECT_ID }}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">SERVICE_ACCOUNT_KEY_PATH&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;./service-account-key.json&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="code-on-github">&lt;a href="#code-on-github" class="header-anchor">&lt;/a>Code on GitHub
+&lt;/h2>&lt;p>Our code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/pickup-time" target="_blank" rel="noopener"
+>https://github.com/getvictor/pickup-time&lt;/a>&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>&lt;a class="link" href="../code-complexity-metrics/" >How to spot and reduce code complexity&lt;/a>&lt;br>
+A practical guide to the most useful metrics for understanding and improving code structure and maintainability.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="../readable-code/" >Turning messy code into clean, readable systems&lt;/a>&lt;br>
+Why code readability matters—and how to measure and improve it for long-term productivity.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/okYOm8IPeKM"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Introducing MCP: Lessons from building an AI-driven server</title><link>https://victoronsoftware.com/posts/introducing-mcp/</link><pubDate>Thu, 08 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/introducing-mcp/</guid><description>&lt;img src="https://victoronsoftware.com/posts/introducing-mcp/introducing-mcp-headline.png" alt="Featured image of post Introducing MCP: Lessons from building an AI-driven server" />&lt;p>Recently, we developed a proof of concept using an MCP(Model Context Protocol) server to control
 &lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
 >Fleet&amp;rsquo;s device management server&lt;/a>. This server made a successful
 &lt;a class="link" href="https://youtu.be/eKoOvT-fr2I" target="_blank" rel="noopener"
@@ -1029,8 +1330,16 @@ complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocogni
 &lt;a class="link" href="../software-modularity/" >explain what is modularity and why it is important for modern scalable software systems&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >showed an example and key takeaways from literate programming&lt;/a>.&lt;/li>
-&lt;li>We also wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="../engineering-metrics-no-cost/" >Track your team’s engineering performance with open-source tools&lt;/a>&lt;br>
+A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >showed an example and key takeaways from literate programming&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics">&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor">&lt;/a>Watch us discuss and show examples of code complexity metrics
 &lt;/h2>&lt;div class="video-wrapper">
@@ -1891,12 +2200,26 @@ nested functions to be defined at the end of the function after the primary impl
 &lt;a class="link" href="../scaling-codebase-evolutionary-architecture" >discuss how to make bigger improvements to your codebase with evolutionary architecture&lt;/a>.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >discussed the key takeaways from literate programming&lt;/a>.&lt;/li>
-&lt;li>Before that, we
-&lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/li>
-&lt;li>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/li>
-&lt;li>We also covered &lt;a class="link" href="../ai-for-software-developers/" >the common use cases of AI for today&amp;rsquo;s software developers&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="../engineering-metrics-no-cost/" >Build beautiful engineering dashboards—without paying a dime&lt;/a>&lt;br>
+Learn how to use GitHub, Grafana, and SQL to create powerful, drill-down metrics using only free tools.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >discussed the key takeaways from literate programming&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Before that, we
+&lt;a class="link" href="../track-engineering-metrics/" >showed how to easily track engineering metrics with GitHub Actions and Google APIs&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >measuring and improving the execution time of Go tests&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>In addition, we &lt;a class="link" href="../github-code-review-issues/" >pointed out the issues with GitHub&amp;rsquo;s code review process&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also covered &lt;a class="link" href="../ai-for-software-developers/" >the common use cases of AI for today&amp;rsquo;s software developers&lt;/a>.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
 &lt;/h2>&lt;div class="video-wrapper">
@@ -2319,11 +2642,23 @@ alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is:
 &lt;/figure>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we explained &lt;a class="link" href="../readable-code/" >how to measure unreadable code and turn it into clean code&lt;/a>, as well as
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to make incremental improvements to your codebase with evolutionary architecture&lt;/a>.&lt;/li>
-&lt;li>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/li>
-&lt;li>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/li>
-&lt;li>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>&lt;a class="link" href="../engineering-metrics-no-cost/" >Free, flexible, and insightful: engineering metrics done right&lt;/a>&lt;br>
+Discover how to monitor and visualize your dev team&amp;rsquo;s performance with Grafana and an analytical database.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Recently, we explained &lt;a class="link" href="../readable-code/" >how to measure unreadable code and turn it into clean code&lt;/a>, as well as
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to make incremental improvements to your codebase with evolutionary architecture&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="code-on-github">&lt;a href="#code-on-github" class="header-anchor">&lt;/a>Code on GitHub
 &lt;/h2>&lt;p>For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
