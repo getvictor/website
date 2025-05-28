@@ -244,6 +244,8 @@ In the following article, we
 
 ## Further reading
 
+- I gave my first conference talk on this topic. [My first conference talk experience](../first-conference-talk/).
+
 - [Build beautiful engineering dashboards—without paying a dime](../engineering-metrics-no-cost/)  
   Learn how to use GitHub, Grafana, and SQL to create powerful, drill-down metrics using only free tools.
 
