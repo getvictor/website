@@ -247,6 +247,14 @@ conversations with [Dmytro Sukhariev](https://www.linkedin.com/in/dmytro-sukhari
 
 The original article the talk was based on: [Readable code](../readable-code/)
 
+## Keynote | Readable Code: The Secret to Clean, Productive Software
+
+{{< youtube lQBYQvyGPLE >}}
+
+## Panel Discussion | Building the Future: Trends in Modern Application Architecture
+
+{{< youtube w31U6TkYbgw >}}
+
 ## Watch me discuss my first conference talk experience
 
 {{< youtube IaY9oT0Mr68 >}}
