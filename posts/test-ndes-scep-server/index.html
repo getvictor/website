@@ -28,7 +28,7 @@ command:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-
 </span></span></code></pre></div><p>After building the client, obtain a new enrollment challenge password and run the following command to request a
 certificate from the NDES server:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>mkdir test
 </span></span><span style=display:flex><span>cd test
-</span></span><span style=display:flex><span>../scepclient-darwin-arm64 -key-encipherment-selector -cn <span style=color:#e6db74>&#34;ScepClient&#34;</span> -challenge <span style=color:#e6db74>&#34;ABBFE34CF11C2C04&#34;</span> -server-url <span style=color:#e6db74>&#34;https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll&#34;</span> -debug -private-key ./ndes-pk
+</span></span><span style=display:flex><span>../scepclient-darwin-arm64 -key-encipherment-selector -cn <span style=color:#e6db74>&#34;ScepClient&#34;</span> -challenge <span style=color:#e6db74>&#34;ABBFE34CF11C2C04&#34;</span> -server-url <span style=color:#e6db74>&#34;https://my-ndes.com/certsrv/mscep/mscep.dll&#34;</span> -debug -private-key ./ndes-pk
 </span></span></code></pre></div><p><strong>Note:</strong> We recommend running the above command in a separate directory because the SCEP client generates several
 intermediate files during the certificate request process. If you don&rsquo;t clean them up, the client may reuse them instead
 of generating new ones from the command line flags.</p><p>The above command will generate a new certificate request and send it to the NDES server. The server will respond with a
@@ -74,7 +74,7 @@ NDES server&rsquo;s URL and the challenge password. Then, assign the SCEP payloa
 </span></span><span style=display:flex><span>            <span style=color:#f92672>&lt;/array&gt;</span>
 </span></span><span style=display:flex><span>          <span style=color:#f92672>&lt;/array&gt;</span>
 </span></span><span style=display:flex><span>      <span style=color:#f92672>&lt;key&gt;</span>URL<span style=color:#f92672>&lt;/key&gt;</span>
-</span></span><span style=display:flex><span>      <span style=color:#f92672>&lt;string&gt;</span>https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll<span style=color:#f92672>&lt;/string&gt;</span>
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&lt;string&gt;</span>https://my-ndes.com/certsrv/mscep/mscep.dll<span style=color:#f92672>&lt;/string&gt;</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;/dict&gt;</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;key&gt;</span>PayloadDisplayName<span style=color:#f92672>&lt;/key&gt;</span>
 </span></span><span style=display:flex><span>    <span style=color:#f92672>&lt;string&gt;</span>SCEP #1<span style=color:#f92672>&lt;/string&gt;</span>

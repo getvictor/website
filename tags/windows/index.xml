@@ -170,7 +170,7 @@ command:&lt;/p>
 certificate from the NDES server:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir test
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd test
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>../scepclient-darwin-arm64 -key-encipherment-selector -cn &lt;span style="color:#e6db74">&amp;#34;ScepClient&amp;#34;&lt;/span> -challenge &lt;span style="color:#e6db74">&amp;#34;ABBFE34CF11C2C04&amp;#34;&lt;/span> -server-url &lt;span style="color:#e6db74">&amp;#34;https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll&amp;#34;&lt;/span> -debug -private-key ./ndes-pk
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>../scepclient-darwin-arm64 -key-encipherment-selector -cn &lt;span style="color:#e6db74">&amp;#34;ScepClient&amp;#34;&lt;/span> -challenge &lt;span style="color:#e6db74">&amp;#34;ABBFE34CF11C2C04&amp;#34;&lt;/span> -server-url &lt;span style="color:#e6db74">&amp;#34;https://my-ndes.com/certsrv/mscep/mscep.dll&amp;#34;&lt;/span> -debug -private-key ./ndes-pk
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Note:&lt;/strong> We recommend running the above command in a separate directory because the SCEP client generates several
 intermediate files during the certificate request process. If you don&amp;rsquo;t clean them up, the client may reuse them instead
 of generating new ones from the command line flags.&lt;/p>
@@ -223,7 +223,7 @@ NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP pa
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>URL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>https://my-ndes.com/certsrv/mscep/mscep.dll&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadDisplayName&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>SCEP #1&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
