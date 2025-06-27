@@ -91,7 +91,7 @@ certificate from the NDES server:
 ```shell
 mkdir test
 cd test
-../scepclient-darwin-arm64 -key-encipherment-selector -cn "ScepClient" -challenge "ABBFE34CF11C2C04" -server-url "https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll" -debug -private-key ./ndes-pk
+../scepclient-darwin-arm64 -key-encipherment-selector -cn "ScepClient" -challenge "ABBFE34CF11C2C04" -server-url "https://my-ndes.com/certsrv/mscep/mscep.dll" -debug -private-key ./ndes-pk
 ```
 
 **Note:** We recommend running the above command in a separate directory because the SCEP client generates several
@@ -155,7 +155,7 @@ NDES server's URL and the challenge password. Then, assign the SCEP payload to y
             </array>
           </array>
       <key>URL</key>
-      <string>https://victor-ndes.ngrok.app/certsrv/mscep/mscep.dll</string>
+      <string>https://my-ndes.com/certsrv/mscep/mscep.dll</string>
     </dict>
     <key>PayloadDisplayName</key>
     <string>SCEP #1</string>
