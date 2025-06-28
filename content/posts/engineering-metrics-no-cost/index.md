@@ -327,7 +327,7 @@ Our code is available on GitHub at: https://github.com/getvictor/pickup-time
 - [Turning messy code into clean, readable systems](../readable-code/)  
   Why code readability matters—and how to measure and improve it for long-term productivity.
 
-## Watch
+## Watch how to set up free engineering metrics
 
 {{< youtube okYOm8IPeKM >}}
 
