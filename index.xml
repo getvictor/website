@@ -1,4 +1,358 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 28 May 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>My first conference talk experience</title><link>https://victoronsoftware.com/posts/first-conference-talk/</link><pubDate>Wed, 28 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/first-conference-talk/</guid><description>&lt;img src="https://victoronsoftware.com/posts/first-conference-talk/devdays-talk-headline.jpg" alt="Featured image of post My first conference talk experience" />&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Victor on Software</title><link>https://victoronsoftware.com/</link><description>Recent content on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 02 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/index.xml" rel="self" type="application/rss+xml"/><item><title>How to use TPM 2.0 to secure private keys</title><link>https://victoronsoftware.com/posts/how-to-use-tpm/</link><pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/how-to-use-tpm/</guid><description>&lt;img src="https://victoronsoftware.com/posts/how-to-use-tpm/tpm-key-hierarchy-headline.png" alt="Featured image of post How to use TPM 2.0 to secure private keys" />&lt;ul>
+&lt;li>&lt;a class="link" href="#tpm-architecture" >TPM architecture&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#tpm-key-storage" >TPM key storage&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#tpm-key-hierarchy-model" >TPM key hierarchy model&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#tpm-signing" >TPM signing&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>Trusted Platform Module (TPM) is a secure cryptoprocessor for many security applications requiring strong device
+identity, data protection, and platform integrity. Some uses include:&lt;/p>
+&lt;ul>
+&lt;li>Device identity and attestation&lt;/li>
+&lt;li>Secure boot&lt;/li>
+&lt;li>Key storage&lt;/li>
+&lt;li>Disk encryption&lt;/li>
+&lt;li>Digital signatures&lt;/li>
+&lt;/ul>
+&lt;p>TPM 1.2 was standardized in 2009 as ISO/IEC 11889:2009. TPM 2.0, the most common today, came out in 2015 with the
+&lt;a class="link" href="https://www.iso.org/standard/66510.html" target="_blank" rel="noopener"
+>ISO/IEC 11889:2015 standard&lt;/a>. The link is for part 1 of the standard (out of
+4).&lt;/p>
+&lt;p>Although many people think of TPM as a hardware chip, it has many possible implementations. They are:&lt;/p>
+&lt;ul>
+&lt;li>A dedicated TPM chip&lt;/li>
+&lt;li>Integrated TPM as part of another chip (e.g., an ARM-based SoC)&lt;/li>
+&lt;li>Firmware TPMs (fTPMs) that run in the CPU&amp;rsquo;s trusted execution environment&lt;/li>
+&lt;li>Virtual TPMs (vTPMs) are provided by hypervisors to provide security to virtual environments&lt;/li>
+&lt;li>Software TPMs are emulators of TPMs. They are helpful for development purposes&lt;/li>
+&lt;/ul>
+&lt;p>In this article, we will focus on the use case of storing a private key in TPM 2.0.&lt;/p>
+&lt;h2 id="tpm-architecture">&lt;a href="#tpm-architecture" class="header-anchor">&lt;/a>TPM architecture
+&lt;/h2>&lt;pre class="mermaid">
+graph TD
+subgraph TPM
+subgraph Memory
+VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
+NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
+end
+subgraph Crypto engine
+CC[Cryptographic Coprocessor]
+RNG[Random Number Generator]
+KGEN[Key Generation Logic]
+CC --&amp;gt;|Uses| RNG
+KGEN --&amp;gt;|Uses| RNG
+CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
+CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
+end
+subgraph Control logic
+PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
+MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
+end
+end
+style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
+style CC fill:#1f4e79,stroke:#fff,color:#fff
+style KGEN fill:#1f4e79,stroke:#fff,color:#fff
+style RNG fill:#2e7d32,stroke:#fff,color:#fff
+style NV fill:#5d4037,stroke:#fff,color:#fff
+style VM fill:#5d4037,stroke:#fff,color:#fff
+style PCR fill:#7b1fa2,stroke:#fff,color:#fff
+style MM fill:#37474f,stroke:#fff,color:#fff
+style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+&lt;/pre>
+&lt;p>This TPM architecture diagram illustrates the internal components of a Trusted Platform Module, highlighting its secure
+cryptographic engine, non-volatile and volatile memory, and control subsystems. Key elements include the cryptographic
+coprocessor, random number generator, and key generation logic, all operating within a hardware-isolated boundary. The
+platform configuration registers (PCRs) and command processing engine manage system state and policy enforcement, while
+non-volatile memory stores persistent keys and metadata. Non-volatile storage includes the Endorsement Key (EK), a
+unique, factory-installed identity key, and the Storage Root Key (SRK), which anchors the TPM&amp;rsquo;s key hierarchy.&lt;/p>
+&lt;h2 id="tpm-key-storage">&lt;a href="#tpm-key-storage" class="header-anchor">&lt;/a>TPM key storage
+&lt;/h2>&lt;p>TPM defines four main authorization hierarchies, each rooted in a different seed and intended for various use cases:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Hierarchy&lt;/th>
+&lt;th>Seed Used&lt;/th>
+&lt;th>Purpose&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Owner&lt;/strong>&lt;/td>
+&lt;td>&lt;em>Storage Seed&lt;/em>&lt;/td>
+&lt;td>Storage keys, general-purpose keys&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Endorsement&lt;/strong>&lt;/td>
+&lt;td>&lt;em>Endorsement Seed&lt;/em>&lt;/td>
+&lt;td>Identity, attestation (e.g. EK)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Platform&lt;/strong>&lt;/td>
+&lt;td>&lt;em>Platform Seed&lt;/em>&lt;/td>
+&lt;td>Firmware-level trust &amp;amp; control&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Null&lt;/strong>&lt;/td>
+&lt;td>&lt;em>(None)&lt;/em>&lt;/td>
+&lt;td>Ephemeral keys not tied to any seed&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Each hierarchy has:&lt;/p>
+&lt;ul>
+&lt;li>Its own &lt;strong>seed&lt;/strong>&lt;/li>
+&lt;li>Its own &lt;strong>authorization policy&lt;/strong> (e.g., owner password)&lt;/li>
+&lt;li>Its own &lt;strong>logical namespace&lt;/strong> for creating keys&lt;/li>
+&lt;/ul>
+&lt;p>We will focus on the &lt;strong>Owner&lt;/strong> hierarchy.&lt;/p>
+&lt;p>While TPMs are capable of securely storing cryptographic keys, most applications avoid storing keys directly in the TPM
+in practice. This is because the amount of available non-volatile storage varies significantly between TPM models and is
+often limited. Instead, keys are typically generated or loaded temporarily into the TPM or stored externally in
+encrypted form and only used inside the TPM when needed.&lt;/p>
+&lt;h2 id="tpm-key-hierarchy-model">&lt;a href="#tpm-key-hierarchy-model" class="header-anchor">&lt;/a>TPM key hierarchy model
+&lt;/h2>&lt;p>In addition to the authorization hierarchies, the TPM organizes keys in a hierarchy. This model helps balance
+performance, security, and the TPM&amp;rsquo;s limited storage.&lt;/p>
+&lt;p>Storage Seed → Parent Key → Child Key&lt;/p>
+&lt;h3 id="storage-seed-owner">&lt;a href="#storage-seed-owner" class="header-anchor">&lt;/a>Storage seed (Owner)
+&lt;/h3>&lt;p>The seed is a non-exportable, hardware-internal value that acts as the TPM&amp;rsquo;s true root key. You can&amp;rsquo;t access it, but you
+can use it indirectly. &lt;strong>The storage seed cannot be modified.&lt;/strong>&lt;/p>
+&lt;h3 id="parent-key">&lt;a href="#parent-key" class="header-anchor">&lt;/a>Parent key
+&lt;/h3>&lt;p>Parent keys are stored persistently in TPM non-volatile memory or reloaded as needed. A parent key is any key used to
+encrypt (wrap) one or more child keys. The parent key must be already loaded in the TPM to load/use any of its children.&lt;/p>
+&lt;p>When creating a parent key, the TPM &lt;strong>does not randomly generate&lt;/strong> the key unless you explicitly ask it to. Instead, if
+you provide:&lt;/p>
+&lt;ul>
+&lt;li>The same hierarchy (e.g., the Owner ties it to the storage seed)&lt;/li>
+&lt;li>The same key template (same attributes, algorithms, policy)&lt;/li>
+&lt;li>The same authorization (e.g., null password)&lt;/li>
+&lt;/ul>
+&lt;p>&amp;hellip; then the TPM will derive &lt;strong>the exact same key&lt;/strong> every time.&lt;/p>
+&lt;p>The TPM uses a deterministic KDF (key derivation function). This determinism means the application does not need to
+store the parent key explicitly. It can be recreated when needed.&lt;/p>
+&lt;h4 id="create-a-parent-key-example">&lt;a href="#create-a-parent-key-example" class="header-anchor">&lt;/a>Create a parent key example
+&lt;/h4>&lt;p>&lt;a class="link" href="https://github.com/tpm2-software/tpm2-tools" target="_blank" rel="noopener"
+>tpm2-tools&lt;/a> is the official CLI toolset for interacting with TPM 2.0 via
+the TPM2 Software Stack (tss). Install it on Ubuntu/Debian like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt update
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install tpm2-tools
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>tpm2-tss&lt;/code> should already be installed or pulled in as part of &lt;code>tpm2-tools&lt;/code> installation. You can check for these
+libraries with: &lt;code>dpkg -l | grep libtss2&lt;/code>&lt;/p>
+&lt;p>To interact with the TPM device using &lt;code>tpm2-tools&lt;/code>, the user must either be root or a member of the &lt;code>tss&lt;/code> group, which
+has access to &lt;code>/dev/tpmrm0&lt;/code>. To add the user to the &lt;code>tss&lt;/code> group, you can:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo usermod -aG tss $USER
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then &lt;strong>log out and log back in&lt;/strong> for the group change to take effect.&lt;/p>
+&lt;p>Our examples use &lt;code>tpm2-tools&lt;/code> version 5.6. See
+&lt;a class="link" href="https://tpm2-tools.readthedocs.io/en/latest/" target="_blank" rel="noopener"
+>the tpm2-tools documentation&lt;/a> for details. To create a transient parent
+key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code>tpm2_createprimary&lt;/code> command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tpm2_createprimary &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --hierarchy&lt;span style="color:#f92672">=&lt;/span>owner &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --key-algorithm&lt;span style="color:#f92672">=&lt;/span>rsa &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --hash-algorithm&lt;span style="color:#f92672">=&lt;/span>sha256 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --attributes&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|restricted&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --key-context&lt;span style="color:#f92672">=&lt;/span>parent.ctx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command creates the &lt;code>parent.ctx&lt;/code> context file, which can be used in later commands.&lt;/p>
+&lt;p>Below is an equivalent example of creating the parent key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
+>go-tpm&lt;/a> library:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Create a parent key template with the required attributes&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">parentTemplate&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">New2B&lt;/span>(&lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMTPublic&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Type&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgRSA&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">NameAlg&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgSHA256&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ObjectAttributes&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAObject&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">FixedTPM&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// bound to TPM that created it&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">FixedParent&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Required&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SensitiveDataOrigin&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// key material generated internally&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">UserWithAuth&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Required, even if we use nil password&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Decrypt&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Allows key to be used for decryption/unwrapping&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Restricted&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Limits use to decryption of child keys&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Parameters&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">NewTPMUPublicParms&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgRSA&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMSRSAParms&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">KeyBits&lt;/span>: &lt;span style="color:#ae81ff">2048&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Symmetric&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMTSymDefObject&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Algorithm&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgAES&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">KeyBits&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">NewTPMUSymKeyBits&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgAES&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMKeyBits&lt;/span>(&lt;span style="color:#ae81ff">128&lt;/span>),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Mode&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">NewTPMUSymMode&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgAES&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgCFB&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">primaryKey&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">CreatePrimary&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">PrimaryHandle&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMRHOwner&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">InPublic&lt;/span>: &lt;span style="color:#a6e22e">parentTemplate&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>.&lt;span style="color:#a6e22e">device&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="child-key">&lt;a href="#child-key" class="header-anchor">&lt;/a>Child key
+&lt;/h3>&lt;p>A &lt;strong>child key&lt;/strong> in TPM 2.0 is created &lt;strong>under a parent key&lt;/strong> (which must already exist or be loaded). The child key is
+&lt;strong>wrapped (encrypted)&lt;/strong> by the parent key and is not usable on its own—it must be &lt;strong>unwrapped (loaded)&lt;/strong> by the TPM
+using the correct parent key.&lt;/p>
+&lt;p>To create a child ECC key using &lt;code>tpm2-tools&lt;/code>, use the &lt;code>tpm2-create&lt;/code> command, like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tpm2_create &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --parent-context&lt;span style="color:#f92672">=&lt;/span>parent.ctx &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --key-algorithm&lt;span style="color:#f92672">=&lt;/span>ecc_nist_p256 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --hash-algorithm&lt;span style="color:#f92672">=&lt;/span>sha256 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --attributes&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;fixedtpm|fixedparent|sensitivedataorigin|userwithauth|sign|decrypt&amp;#34;&lt;/span> &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --public&lt;span style="color:#f92672">=&lt;/span>child.pub &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --private&lt;span style="color:#f92672">=&lt;/span>child.priv
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command creates the &lt;code>child.pub&lt;/code> and &lt;code>child.priv&lt;/code> files which can be used in later commands.&lt;/p>
+&lt;p>To load the child key into the TPM using &lt;code>tpm2-tools&lt;/code>, use the &lt;code>tpm2_load&lt;/code> command, like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>tpm2_load &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --parent-context&lt;span style="color:#f92672">=&lt;/span>parent.ctx &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --public&lt;span style="color:#f92672">=&lt;/span>child.pub &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --private&lt;span style="color:#f92672">=&lt;/span>child.priv &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --key-context&lt;span style="color:#f92672">=&lt;/span>child.ctx
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command creates the &lt;code>child.ctx&lt;/code> context file which can be used later.&lt;/p>
+&lt;p>Below is an equivalent example of creating the child key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
+>go-tpm&lt;/a> library,
+loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Create an ECC key template for the child key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">eccTemplate&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">New2B&lt;/span>(&lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMTPublic&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Type&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgECC&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">NameAlg&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgSHA256&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ObjectAttributes&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAObject&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">FixedTPM&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">FixedParent&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SensitiveDataOrigin&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">UserWithAuth&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>, &lt;span style="color:#75715e">// Required even if the password is nil&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SignEncrypt&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Decrypt&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Parameters&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">NewTPMUPublicParms&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgECC&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMSECCParms&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">CurveID&lt;/span>: &lt;span style="color:#a6e22e">curveID&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Create the key under the transient parent&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">createKey&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">Create&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ParentHandle&lt;/span>: &lt;span style="color:#a6e22e">parentKeyHandle&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">InPublic&lt;/span>: &lt;span style="color:#a6e22e">eccTemplate&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>.&lt;span style="color:#a6e22e">device&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Load the key&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">loadedKey&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">Load&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ParentHandle&lt;/span>: &lt;span style="color:#a6e22e">parentKeyHandle&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">InPrivate&lt;/span>: &lt;span style="color:#a6e22e">createKey&lt;/span>.&lt;span style="color:#a6e22e">OutPrivate&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">InPublic&lt;/span>: &lt;span style="color:#a6e22e">createKey&lt;/span>.&lt;span style="color:#a6e22e">OutPublic&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>.&lt;span style="color:#a6e22e">device&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Save the key context&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">keyContext&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">ContextSave&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">SaveHandle&lt;/span>: &lt;span style="color:#a6e22e">loadedKey&lt;/span>.&lt;span style="color:#a6e22e">ObjectHandle&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span>.&lt;span style="color:#a6e22e">device&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="-where-can-a-child-key-be-persisted">&lt;a href="#-where-can-a-child-key-be-persisted" class="header-anchor">&lt;/a>📁 Where can a child key be persisted?
+&lt;/h4>&lt;p>The most common approach is to persist the child keys outside the TPM.&lt;/p>
+&lt;ul>
+&lt;li>You store the child&amp;rsquo;s public key and private key blob on a disk, in a secure database, or in a file system.&lt;/li>
+&lt;li>When you need to use the key, you &lt;strong>load it into the TPM&lt;/strong>&lt;/li>
+&lt;/ul>
+&lt;p>This storage approach is safe because:&lt;/p>
+&lt;ul>
+&lt;li>The private key is always encrypted with the TPM&amp;rsquo;s parent key&lt;/li>
+&lt;li>Only the correct TPM with the correct parent key can decrypt/use it&lt;/li>
+&lt;/ul>
+&lt;p>There is also a de facto standard for
+&lt;a class="link" href="https://www.hansenpartnership.com/draft-bottomley-tpm2-keys.html" target="_blank" rel="noopener"
+>storing TPM 2.0 key files using ASN.1 structure&lt;/a>.
+OpenConnect VPN and several other tools use this standard.&lt;/p>
+&lt;h2 id="tpm-signing">&lt;a href="#tpm-signing" class="header-anchor">&lt;/a>TPM signing
+&lt;/h2>&lt;p>TPM can sign data using the child key. The output signature is in raw binary.&lt;/p>
+&lt;p>To sign using &lt;code>tpm2-tools&lt;/code>, use the &lt;code>tpm2_sign&lt;/code> command, like:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Create dummy data and a dummy digest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>echo &lt;span style="color:#e6db74">&amp;#34;hello world&amp;#34;&lt;/span> &amp;gt; data.in.raw
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cat data.in.raw | openssl dgst -sha256 -binary &amp;gt; digest.bin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Sign the digest&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tpm2_sign &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --key-context&lt;span style="color:#f92672">=&lt;/span>child.ctx &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --hash-algorithm&lt;span style="color:#f92672">=&lt;/span>sha256 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --digest &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --format&lt;span style="color:#f92672">=&lt;/span>plain &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --signature&lt;span style="color:#f92672">=&lt;/span>signature.plain digest.bin
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Now we will verify the signature using openssl.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># First, we need the child public key in PEM format.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>tpm2_readpublic &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --object-context&lt;span style="color:#f92672">=&lt;/span>child.ctx &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --output&lt;span style="color:#f92672">=&lt;/span>child.pem &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> --format&lt;span style="color:#f92672">=&lt;/span>pem
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Now, we can verify the signature.&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>openssl dgst &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -sha256 &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -verify&lt;span style="color:#f92672">=&lt;/span>child.pem &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -keyform&lt;span style="color:#f92672">=&lt;/span>pem &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -signature&lt;span style="color:#f92672">=&lt;/span>signature.plain &lt;span style="color:#ae81ff">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> data.in.raw
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Below is an example of signing using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
+>go-tpm&lt;/a> library:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">sign&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">Sign&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">KeyHandle&lt;/span>: &lt;span style="color:#a6e22e">childKeyHandle&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Digest&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPM2BDigest&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Buffer&lt;/span>: &lt;span style="color:#a6e22e">digest&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">InScheme&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMTSigScheme&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Scheme&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgECDSA&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Details&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">NewTPMUSigScheme&lt;/span>(
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMAlgECDSA&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMSSchemeHash&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">HashAlg&lt;/span>: &lt;span style="color:#a6e22e">hashAlg&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ),
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Validation&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMTTKHashCheck&lt;/span>{
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Tag&lt;/span>: &lt;span style="color:#a6e22e">tpm2&lt;/span>.&lt;span style="color:#a6e22e">TPMSTHashCheck&lt;/span>,
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">rsp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">sign&lt;/span>.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#a6e22e">tpm&lt;/span>)
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Get the ECDSA signature&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ecdsaSig&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">rsp&lt;/span>.&lt;span style="color:#a6e22e">Signature&lt;/span>.&lt;span style="color:#a6e22e">Signature&lt;/span>.&lt;span style="color:#a6e22e">ECDSA&lt;/span>()
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>&lt;strong>&lt;a class="link" href="../mtls-hello-world/" >Mutual TLS intro and hands-on example: mTLS Hello World&lt;/a>&lt;/strong> &lt;em>A quick and practical
+introduction to mutual TLS (mTLS), including how client certificate authentication works and how to try it with a
+simple example.&lt;/em>&lt;/li>
+&lt;/ul>
+&lt;ul>
+&lt;li>&lt;strong>&lt;a class="link" href="../why-you-need-vlan/" >What is a VLAN and why you need it in your home network&lt;/a>&lt;/strong> &lt;em>Learn how VLANs isolate devices
+to improve home network security and what you need to configure on your router, switch, and access points.&lt;/em>&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm">&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor">&lt;/a>Watch the explanation of securing private keys with TPM
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/zwnznp5KeQs"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>My first conference talk experience</title><link>https://victoronsoftware.com/posts/first-conference-talk/</link><pubDate>Wed, 28 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/first-conference-talk/</guid><description>&lt;img src="https://victoronsoftware.com/posts/first-conference-talk/devdays-talk-headline.jpg" alt="Featured image of post My first conference talk experience" />&lt;ul>
 &lt;li>&lt;a class="link" href="#monday-arrival" >Monday: Arrival&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#tuesday-speakers-dinner" >Tuesday: Speaker&amp;rsquo;s dinner&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#wednesday-panel-discussion" >Wednesday: Panel discussion&lt;/a>&lt;/li>
@@ -3758,8 +4112,16 @@ reviewing the settings on our router and switch, we found that our settings did 
 reload your settings after making changes to ensure they stick.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>In the past, we discussed &lt;a class="link" href="../setting-up-a-virtual-router/" >how to set up a virtual router&lt;/a>.&lt;/li>
-&lt;li>We also covered &lt;a class="link" href="../create-ipv6-only-linux-server/" >how to create an IPv6-only linux server&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>In the past, we discussed &lt;a class="link" href="../setting-up-a-virtual-router/" >how to set up a virtual router&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>We also covered &lt;a class="link" href="../create-ipv6-only-linux-server/" >how to create an IPv6-only linux server&lt;/a>.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../how-to-use-tpm/" >Securing Private Keys with TPM 2.0: A Developer’s Guide&lt;/a>&lt;/strong> &lt;em>A hands-on walkthrough of using TPM
+2.0 for hardware-backed key protection, featuring code examples and practical usage patterns.&lt;/em>&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network">&lt;a href="#watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network" class="header-anchor">&lt;/a>Watch us discuss what is a VLAN and why you need it in your home network
 &lt;/h2>&lt;div class="video-wrapper">
@@ -10267,9 +10629,15 @@ title="YouTube Video"
 &lt;/iframe>
 &lt;/div>
 &lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" />&lt;h2 id="what-is-mtls-mutual-tls">&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor">&lt;/a>What is mTLS (mutual TLS)?
-&lt;/h2>&lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
-&lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server knows very little about the client. Instead, web applications use other client authentication methods, such as passwords, cookies, and session tokens.&lt;/p>
-&lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as client certificate authentication. In addition to the server authenticating itself to the client, the client also authenticates itself to the server.&lt;/p>
+&lt;/h2>&lt;p>TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between
+two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p>
+&lt;p>In ordinary (non-mutual) TLS, the client authenticates the server, but the server does not authenticate the client. Most
+websites use regular TLS. The client (web browser) knows it is talking to the correct server (website), but the server
+knows very little about the client. Instead, web applications use other client authentication methods, such as
+passwords, cookies, and session tokens.&lt;/p>
+&lt;p>Mutual TLS (mTLS) is a way to authenticate both the client and the server in a TLS connection. It is also known as
+client certificate authentication. In addition to the server authenticating itself to the client, the client also
+authenticates itself to the server.&lt;/p>
 &lt;p>mTLS is helpful as an additional layer of security. It is used in many applications, including:&lt;/p>
 &lt;ul>
 &lt;li>VPNs&lt;/li>
@@ -10280,22 +10648,34 @@ title="YouTube Video"
 &lt;/ul>
 &lt;h2 id="how-does-fleet-device-management-use-mtls">&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor">&lt;/a>How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
 >Fleet Device Management&lt;/a> use mTLS?
-&lt;/h2>&lt;p>Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects information about the host and sends it to the Fleet server.&lt;/p>
+&lt;/h2>&lt;p>Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet
+agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects
+information about the host and sends it to the Fleet server.&lt;/p>
 &lt;h2 id="how-does-mtls-work">&lt;a href="#how-does-mtls-work" class="header-anchor">&lt;/a>How does mTLS work?
-&lt;/h2>&lt;p>TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only go over the basics to understand how mTLS works.&lt;/p>
-&lt;p>TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between the client and the server.&lt;/p>
+&lt;/h2>&lt;p>TLS is a complex protocol with multiple versions (1.2, 1.3, etc.). We will only go over the basics to understand how
+mTLS works.&lt;/p>
+&lt;p>TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between
+the client and the server.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
 alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/figure>
-&lt;p>The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p>
-&lt;p>The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate is valid and has not expired. The client also checks that the server&amp;rsquo;s hostname matches the hostname in the certificate.&lt;/p>
-&lt;p>The client uses the server&amp;rsquo;s public key to encrypt the messages sent to the server, including the session key and its certificate. The server decrypts these messages with its private key.&lt;/p>
-&lt;p>The client also sends a digital signature, encrypted with its private key, to the server. The server verifies the signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p>
-&lt;p>At this point, both the client and the server have verified each other&amp;rsquo;s identity. They complete the TLS handshake and can exchange encrypted messages using a symmetric session key.&lt;/p>
+&lt;p>The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its
+certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p>
+&lt;p>The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate
+is valid and has not expired. The client also checks that the server&amp;rsquo;s hostname matches the hostname in the certificate.&lt;/p>
+&lt;p>The client uses the server&amp;rsquo;s public key to encrypt the messages sent to the server, including the session key and its
+certificate. The server decrypts these messages with its private key.&lt;/p>
+&lt;p>The client also sends a digital signature, encrypted with its private key, to the server. The server verifies the
+signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p>
+&lt;p>At this point, both the client and the server have verified each other&amp;rsquo;s identity. They complete the TLS handshake and
+can exchange encrypted messages using a symmetric session key.&lt;/p>
 &lt;h2 id="generate-certificates-and-keys">&lt;a href="#generate-certificates-and-keys" class="header-anchor">&lt;/a>Generate certificates and keys
 &lt;/h2>&lt;p>We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
->OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular open-source library for TLS and SSL protocols.&lt;/p>
-&lt;p>The following script generates the certificates and keys for the client and the server. It also creates two certificate authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the certificates, but we will use separate CAs for this example.&lt;/p>
+>OpenSSL&lt;/a> command line tool to generate the certificates. OpenSSL is a popular
+open-source library for TLS and SSL protocols.&lt;/p>
+&lt;p>The following script generates the certificates and keys for the client and the server. It also creates two certificate
+authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the
+certificates, but we will use separate CAs for this example.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">#!/bin/bash
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This script generates files needed for mTLS.&lt;/span>
@@ -10321,7 +10701,8 @@ alt="Mutual TLS (mTLS) handshake diagram">
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Clean up&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/server.req
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>rm certs/client.req
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>localhost.ext&lt;/code> file is used to specify the hostname for the server certificate. In our example, we will use &lt;code>localhost&lt;/code>. The file contains the following:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>localhost.ext&lt;/code> file is used to specify the hostname for the server certificate. In our example, we will use
+&lt;code>localhost&lt;/code>. The file contains the following:&lt;/p>
 &lt;pre tabindex="0">&lt;code>authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
@@ -10331,7 +10712,8 @@ DNS.1 = localhost
 &lt;/code>&lt;/pre>&lt;h2 id="run-the-mtls-server">&lt;a href="#run-the-mtls-server" class="header-anchor">&lt;/a>Run the mTLS server
 &lt;/h2>&lt;p>We will use &lt;a class="link" href="https://www.nginx.com/" target="_blank" rel="noopener"
 >nginx&lt;/a> as our mTLS server. nginx is a popular open-source web server.&lt;/p>
-&lt;p>Using &lt;code>docker compose&lt;/code>, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We will use the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
+&lt;p>Using &lt;code>docker compose&lt;/code>, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We
+will use the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>---
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2&amp;#34;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">services&lt;/span>:
@@ -10383,19 +10765,28 @@ root /www/data;
 &lt;h2 id="connect-to-the-mtls-server-with-curl-client">&lt;a href="#connect-to-the-mtls-server-with-curl-client" class="header-anchor">&lt;/a>Connect to the mTLS server with curl client
 &lt;/h2>&lt;p>We can connect to the mTLS server with the &lt;code>curl&lt;/code> command line tool. We will use the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8889/hello-world.txt --cacert ./certs/server-ca.crt --cert ./certs/client.crt --key ./certs/client.key
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--cacert&lt;/code> option specifies the CA certificate that signed the server certificate. The &lt;code>--cert&lt;/code> and &lt;code>--key&lt;/code> options select the client certificate and key.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>--cacert&lt;/code> option specifies the CA certificate that signed the server certificate. The &lt;code>--cert&lt;/code> and &lt;code>--key&lt;/code> options
+select the client certificate and key.&lt;/p>
 &lt;p>To connect to the ordinary TLS server, we do not need to specify the client certificate and key:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl https://localhost:8888/hello-world.txt --cacert ./certs/server-ca.crt
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Curl can use &lt;code>--insecure&lt;/code> to ignore the server certificate:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>curl --insecure https://localhost:8888/hello-world.txt
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, it is impossible to ignore the client certificate for mTLS. The server will reject the connection if the client does not provide a valid certificate.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, it is impossible to ignore the client certificate for mTLS. The server will reject the connection if the client
+does not provide a valid certificate.&lt;/p>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
 >https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a>&lt;/p>
 &lt;h2 id="securing-mtls-certificates-and-keys">&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor">&lt;/a>Securing mTLS certificates and keys
-&lt;/h2>&lt;p>In the next article, we will &lt;a class="link" href="../mtls-with-apple-keychain" >secure the mTLS certificates and keys with the macOS keychain&lt;/a>.&lt;/p>
-&lt;p>In a later article, we also &lt;a class="link" href="../mtls-with-windows" >secure the mTLS certificates and keys with the Windows certificate store&lt;/a>.&lt;/p>
+&lt;/h2>&lt;p>In the next article, we will
+&lt;a class="link" href="../mtls-with-apple-keychain" >secure the mTLS certificates and keys with the macOS keychain&lt;/a>.&lt;/p>
+&lt;p>In a later article, we also
+&lt;a class="link" href="../mtls-with-windows" >secure the mTLS certificates and keys with the Windows certificate store&lt;/a>.&lt;/p>
 &lt;p>This article is part of a series on &lt;a class="link" href="../mtls" >mTLS&lt;/a>.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>&lt;strong>&lt;a class="link" href="../how-to-use-tpm/" >How to Use TPM 2.0 to Secure Private Keys&lt;/a>&lt;/strong> &lt;em>Learn how to create, manage, and use TPM-backed
+keys, including parent/child key hierarchies and secure signing.&lt;/em>&lt;/li>
+&lt;/ul>
 &lt;h2 id="mtls-hello-world-video">&lt;a href="#mtls-hello-world-video" class="header-anchor">&lt;/a>mTLS Hello World video
 &lt;/h2>&lt;div class="video-wrapper">
 &lt;iframe loading="lazy"
