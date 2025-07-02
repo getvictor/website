@@ -141,6 +141,9 @@ reload your settings after making changes to ensure they stick.
 - In the past, we discussed [how to set up a virtual router](../setting-up-a-virtual-router/).
 - We also covered [how to create an IPv6-only linux server](../create-ipv6-only-linux-server/).
 
+- **[Securing Private Keys with TPM 2.0: A Developer’s Guide](../how-to-use-tpm/)** _A hands-on walkthrough of using TPM
+  2.0 for hardware-backed key protection, featuring code examples and practical usage patterns._
+
 ## Watch us discuss what is a VLAN and why you need it in your home network
 
 {{< youtube R8vq50uRxik >}}
