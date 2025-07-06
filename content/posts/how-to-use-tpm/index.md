@@ -389,7 +389,10 @@ if err != nil {
   introduction to mutual TLS (mTLS), including how client certificate authentication works and how to try it with a
   simple example._
 
-* **[What is a VLAN and why you need it in your home network](../why-you-need-vlan/)** _Learn how VLANs isolate devices
+- **[Comparing mTLS and HTTP signatures](../mtls-vs-http-signature/)** A practical guide to securing HTTP requests with
+  transport-layer or application-layer authentication.
+
+- **[What is a VLAN and why you need it in your home network](../why-you-need-vlan/)** _Learn how VLANs isolate devices
   to improve home network security and what you need to configure on your router, switch, and access points._
 
 ## Watch the explanation of securing private keys with TPM
