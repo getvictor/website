@@ -336,13 +336,19 @@ OpenConnect VPN and several other tools use this standard.&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>&lt;strong>&lt;a class="link" href="../mtls-hello-world/" >Mutual TLS intro and hands-on example: mTLS Hello World&lt;/a>&lt;/strong> &lt;em>A quick and practical
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../mtls-hello-world/" >Mutual TLS intro and hands-on example: mTLS Hello World&lt;/a>&lt;/strong> &lt;em>A quick and practical
 introduction to mutual TLS (mTLS), including how client certificate authentication works and how to try it with a
-simple example.&lt;/em>&lt;/li>
-&lt;/ul>
-&lt;ul>
-&lt;li>&lt;strong>&lt;a class="link" href="../why-you-need-vlan/" >What is a VLAN and why you need it in your home network&lt;/a>&lt;/strong> &lt;em>Learn how VLANs isolate devices
-to improve home network security and what you need to configure on your router, switch, and access points.&lt;/em>&lt;/li>
+simple example.&lt;/em>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../mtls-vs-http-signature/" >Comparing mTLS and HTTP signatures&lt;/a>&lt;/strong> A practical guide to securing HTTP requests with
+transport-layer or application-layer authentication.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../why-you-need-vlan/" >What is a VLAN and why you need it in your home network&lt;/a>&lt;/strong> &lt;em>Learn how VLANs isolate devices
+to improve home network security and what you need to configure on your router, switch, and access points.&lt;/em>&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm">&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor">&lt;/a>Watch the explanation of securing private keys with TPM
 &lt;/h2>&lt;div class="video-wrapper">

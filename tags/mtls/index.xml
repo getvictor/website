@@ -1,19 +1,248 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mTLS on Victor on Software</title><link>https://victoronsoftware.com/tags/mtls/</link><description>Recent content in mTLS on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 01 Apr 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/mtls/index.xml" rel="self" type="application/rss+xml"/><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the filesystem.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>mTLS on Victor on Software</title><link>https://victoronsoftware.com/tags/mtls/</link><description>Recent content in mTLS on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/mtls/index.xml" rel="self" type="application/rss+xml"/><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" />&lt;h2 id="table-of-contents">&lt;a href="#table-of-contents" class="header-anchor">&lt;/a>Table of Contents
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="#what-is-mtls" >What is mTLS?&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#mtls-pros-and-cons" >mTLS: pros and cons&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#what-is-an-http-message-signature" >What is an HTTP message signature?&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#http-message-signature-pros-and-cons" >HTTP message signature: pros and cons&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#performance-considerations" >Performance Considerations&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#what-about-replay-attacks" >What about replay attacks?&lt;/a>&lt;/li>
+&lt;li>&lt;a class="link" href="#mtls-vs-http-message-signatures-choosing-the-right-tool" >mTLS vs HTTP message signatures: choosing the right tool&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;p>HTTP is the backbone of modern system communication. It lets your service confirm that it&amp;rsquo;s talking to the device you
+enrolled, not some impostor. It helps your backend recognize a microservice, not a malicious bot. And when it comes to
+protecting those channels, you&amp;rsquo;ve got two popular weapons: mTLS and HTTP Message Signatures.&lt;/p>
+&lt;p>Both are powerful and secure, but they take radically different approaches. One is baked into the TLS handshake, tight
+and deeply integrated. The other is explicit and flexible, wrapping your HTTP messages in cryptographic armor. This post
+is a no-nonsense breakdown covering what they are, where they shine, and where they cause pain.&lt;/p>
+&lt;h3 id="what-is-mtls">&lt;a href="#what-is-mtls" class="header-anchor">&lt;/a>What is mTLS?
+&lt;/h3>&lt;p>In ordinary TLS (Transport Layer Security), only the server presents a certificate to the client. This way, the client
+knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
+server so that the server can verify the client&amp;rsquo;s identity.&lt;/p>
+&lt;figure>&lt;img src="../mtls-hello-world/mtls-handshake.png"
+alt="Mutual TLS (mTLS) handshake diagram">
+&lt;/figure>
+&lt;p>mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
+it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
+mutual authentication is required.&lt;/p>
+&lt;p>We covered mTLS in greater detail in our &lt;a class="link" href="../mtls/" >series on building an mTLS client using the system keystore&lt;/a>.&lt;/p>
+&lt;h3 id="mtls-pros-and-cons">&lt;a href="#mtls-pros-and-cons" class="header-anchor">&lt;/a>mTLS: pros and cons
+&lt;/h3>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Built-in support across OSes, browsers, and web servers.&lt;/li>
+&lt;li>Strong identity baked into the connection itself.&lt;/li>
+&lt;li>No need to change application logic: TLS handles it.&lt;/li>
+&lt;li>Integrates more broadly with native certificate stores (e.g., macOS Keychain), with more substantial support across
+existing OS-level and browser-based applications. However, your specific application may still need to implement its
+own integration to use these certificate stores.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Cons&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Hard to scope by endpoint. You either enforce mTLS on the whole server or not.&lt;/li>
+&lt;li>Requires TLS termination at a layer that understands and enforces client authentication. For example, suppose a load
+balancer terminates the TLS connection (which is standard practice). In that case, it must handle client certificate
+verification and securely pass the authenticated identity to the downstream server.&lt;/li>
+&lt;li>Not great for public APIs. Many clients (e.g., mobile apps, SDKs) don&amp;rsquo;t handle client certificates well, making mTLS
+adoption difficult in heterogeneous environments&lt;/li>
+&lt;/ul>
+&lt;h3 id="what-is-an-http-message-signature">&lt;a href="#what-is-an-http-message-signature" class="header-anchor">&lt;/a>What is an HTTP message signature?
+&lt;/h3>&lt;p>HTTP message signatures are precisely what they sound like: you take an HTTP request, select a few headers (or maybe the
+body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
+from someone it trusts.&lt;/p>
+&lt;pre class="mermaid">
+---
+title: HTTP message signature
+---
+sequenceDiagram
+autonumber
+participant Client
+participant Server
+Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
+Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
+Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
+Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
+Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
+Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
+Server-&amp;gt;&amp;gt;Server: Verify signature with public key
+alt Signature valid
+Server-&amp;gt;&amp;gt;Server: Process request
+else Signature invalid
+Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
+end
+&lt;/pre>
+&lt;p>HTTP signing works at the application layer. It does not replace TLS, but rides on top of it. That means you don&amp;rsquo;t have
+to worry about where TLS is terminated, and the HTTP signature can be verified at the ultimate destination server.&lt;/p>
+&lt;p>Many legacy systems have used their own approaches to HTTP signing. Apple&amp;rsquo;s MDM protocol relies on a detached
+&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc5652" target="_blank" rel="noopener"
+>CMS signature&lt;/a> with a custom header, while GitHub uses HMAC-based
+payload signing with a shared secret for webhooks. These mechanisms take different paths to the same goal: verifying the
+integrity and origin of HTTP messages.&lt;/p>
+&lt;p>Today, more modern systems are beginning to align with &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc9421" target="_blank" rel="noopener"
+>RFC 9421&lt;/a>, a
+proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
+signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
+auditability and control.&lt;/p>
+&lt;h3 id="http-message-signature-pros-and-cons">&lt;a href="#http-message-signature-pros-and-cons" class="header-anchor">&lt;/a>HTTP message signature: pros and cons
+&lt;/h3>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>Fine-grained control: sign specific API paths, select which headers or body fields to include, and decide when to
+apply signing based on context.&lt;/li>
+&lt;li>Signature verification works independently of TLS termination, enabling integrity checks even after a load balancer or
+proxy has terminated the TLS connection.&lt;/li>
+&lt;li>Doesn&amp;rsquo;t require X.509 certificates: keys can be created/exchanged directly, avoiding certificate issuance and renewal
+workflows. However, certificates can still be used if needed.&lt;/li>
+&lt;li>Easier to debug: you can log and inspect the signature.&lt;/li>
+&lt;li>Can integrate with system keystores (e.g., TPM) when supported by the client application.&lt;/li>
+&lt;li>Signing/verification libraries for RFC 9421 are available.&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Cons&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>You must integrate/create the signing logic instead of relying on the OS or framework.&lt;/li>
+&lt;li>You must manage replay attacks with nonce and/or timestamp protection&lt;/li>
+&lt;li>Choosing which headers to sign isn&amp;rsquo;t always obvious and can break interoperability. It can also break backward
+compatibility if header selection changes across client or server updates.&lt;/li>
+&lt;/ul>
+&lt;h3 id="performance-considerations">&lt;a href="#performance-considerations" class="header-anchor">&lt;/a>Performance Considerations
+&lt;/h3>&lt;p>mTLS is fast. The authentication step happens once per connection during the TLS handshake, and it benefits from all the
+TLS acceleration and session reuse magic that your OS and hardware provide.&lt;/p>
+&lt;p>HTTP message signatures happen every time. Every request is signed. Every request is verified. You&amp;rsquo;re layering crypto on
+top of crypto. That means more CPU cycles, especially if your implementation isn&amp;rsquo;t careful or you aren&amp;rsquo;t using the most
+efficient algorithms, such as ECDSA P-256. Performance will take a hit if you canonicalize huge headers or sign things
+unnecessarily.&lt;/p>
+&lt;p>📌 &lt;strong>Important caveat:&lt;/strong> For most APIs, performance is dominated by network and I/O. Unless you operate at a very high
+scale or on constrained devices, the performance difference between mTLS and HTTP signatures might be negligible.&lt;/p>
+&lt;h3 id="what-about-replay-attacks">&lt;a href="#what-about-replay-attacks" class="header-anchor">&lt;/a>What about replay attacks?
+&lt;/h3>&lt;p>A replay attack occurs when a bad actor captures a legitimate request and replays it later to trigger the same action
+again, such as resubmitting a money transfer or resetting a password.&lt;/p>
+&lt;p>&lt;strong>mTLS&lt;/strong> helps mitigate replay attacks by tying authentication to a specific TLS session. An attacker can&amp;rsquo;t simply
+replay a captured request from another machine or session because they won&amp;rsquo;t have access to the client&amp;rsquo;s private key and
+can&amp;rsquo;t establish a valid mTLS session. That said, mTLS alone does not prevent replays of application-layer data if an
+attacker somehow gains access to an active session (extremely unlikely).&lt;/p>
+&lt;p>&lt;strong>HTTP message signatures&lt;/strong> require you to build your own defenses. Because there&amp;rsquo;s no TLS session binding to a client
+key, an attacker who captures a signed request can replay it from any machine. The attacker does not need the private
+key, just the full request and its signature. That usually means you must include a &lt;code>created&lt;/code> timestamp and/or &lt;code>nonce&lt;/code>
+in the signed headers and reject any request that&amp;rsquo;s too old or already used. One way to do that would be:&lt;/p>
+&lt;ul>
+&lt;li>Server checks that &lt;code>created&lt;/code> is within 10 minutes of current server time (since these fields are included in the
+signature, we know they have not been tampered with)&lt;/li>
+&lt;li>Server checks that the &lt;code>nonce&lt;/code> value has not been used within the last 10 minutes (nonce values can be cached with
+expiration in ValKey or Redis)&lt;/li>
+&lt;/ul>
+&lt;h3 id="mtls-vs-http-message-signatures-choosing-the-right-tool">&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor">&lt;/a>mTLS vs HTTP message signatures: choosing the right tool
+&lt;/h3>&lt;p>Here&amp;rsquo;s how they compare:&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>mTLS&lt;/th>
+&lt;th>HTTP Message Signature&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>Identity verification&lt;/td>
+&lt;td>🟢 OS-level with client certs&lt;/td>
+&lt;td>🟡 App-level with public key&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Integrity&lt;/td>
+&lt;td>🟢 Built into TLS&lt;/td>
+&lt;td>🟢 Signature over headers/body&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Granular control&lt;/td>
+&lt;td>🔴 Hard to apply per route&lt;/td>
+&lt;td>🟢 Easy&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Deployment complexity&lt;/td>
+&lt;td>🔴 High (requires certs and mTLS-aware proxies)&lt;/td>
+&lt;td>🟡 Moderate (TLS termination agnostic)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Public API suitability&lt;/td>
+&lt;td>🔴 Poor (inconsistent client certs)&lt;/td>
+&lt;td>🟢 Good (no client certs needed)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Certificate handling&lt;/td>
+&lt;td>🔴 Requires full X.509 cert&lt;/td>
+&lt;td>🟢 Supports raw public keys&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Integration support&lt;/td>
+&lt;td>🟢 Strong OS/browser support&lt;/td>
+&lt;td>🟡 App libraries available&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Replay protection&lt;/td>
+&lt;td>🟡 Tied to TLS session&lt;/td>
+&lt;td>🔴 Requires nonce and/or timestamp&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Performance&lt;/td>
+&lt;td>🟢 Fast (once per connection)&lt;/td>
+&lt;td>🟡 Moderate (on every request with efficient algo)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Debuggability&lt;/td>
+&lt;td>🔴 Opaque handshake&lt;/td>
+&lt;td>🟢 Signature is visible&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>So, which one should you use?&lt;/p>
+&lt;ul>
+&lt;li>Use &lt;strong>mTLS&lt;/strong> when both ends are under your control. It is fast, OS-integrated, and well-supported for internal
+services or environments with managed certificates.&lt;/li>
+&lt;li>Use &lt;strong>HTTP message signatures&lt;/strong> when you need per-request control, flexible client support, or operate in ecosystems
+where certificate management is impractical.&lt;/li>
+&lt;li>If you value &lt;strong>fine-grained control and debuggability&lt;/strong>, HTTP signatures are a better fit 🟢.&lt;/li>
+&lt;li>If you want &lt;strong>high performance and strong identity with minimal app changes&lt;/strong>, mTLS is the clear choice 🟢, as long as
+you can handle the setup 🔴.&lt;/li>
+&lt;li>In some architectures, &lt;strong>combining both&lt;/strong> may offer the best of both worlds: transport-level trust with
+application-level verification.&lt;/li>
+&lt;/ul>
+&lt;p>Different tools for different jobs. Just don&amp;rsquo;t skip authentication.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>&lt;a class="link" href="../how-to-use-tpm/" >Using TPM 2.0 for secure key storage&lt;/a> Store private keys in hardware to protect API credentials,
+signing keys, and more.&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-us-compare-mtls-and-http-message-signatures">&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor">&lt;/a>Watch us compare mTLS and HTTP message signatures
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/aDMdLCzXn1U"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div></description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to
+use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to
+use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the
+filesystem.&lt;/p>
 &lt;p>Here is a summary of the articles in the series:&lt;/p>
 &lt;h3 id="mutual-tls-intro-and-hands-on-example">&lt;a href="#mutual-tls-intro-and-hands-on-example" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-hello-world" >Mutual TLS intro and hands-on example&lt;/a>
 &lt;/h3>&lt;p>An introduction to mTLS and a hands-on example of using an mTLS client to connect to an mTLS server.&lt;/p>
 &lt;h3 id="using-mtls-with-the-macos-keychain">&lt;a href="#using-mtls-with-the-macos-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-apple-keychain" >Using mTLS with the macOS keychain&lt;/a>
-&lt;/h3>&lt;p>A guide on how to use the macOS system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the macOS system keychain to find the mTLS certificates.&lt;/p>
+&lt;/h3>&lt;p>A guide on how to use the macOS system keystore to store your mTLS certificates and keys. We connect to an mTLS server
+with applications that use the macOS system keychain to find the mTLS certificates.&lt;/p>
 &lt;h3 id="create-an-mtls-go-client">&lt;a href="#create-an-mtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client" >Create an mTLS Go client&lt;/a>
-&lt;/h3>&lt;p>We create a standard mTLS client in Go using the &lt;code>crypto/tls&lt;/code> library. This client loads the client certificate and private key from the filesystem.&lt;/p>
+&lt;/h3>&lt;p>We create a standard mTLS client in Go using the &lt;code>crypto/tls&lt;/code> library. This client loads the client certificate and
+private key from the filesystem.&lt;/p>
 &lt;h3 id="add-a-custom-certificate-signer-to-the-mtls-go-client">&lt;a href="#add-a-custom-certificate-signer-to-the-mtls-go-client" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-custom-signer" >Add a custom certificate signer to the mTLS Go client&lt;/a>
-&lt;/h3>&lt;p>We implement a custom &lt;code>crypto.Signer&lt;/code> to sign a client certificate during the mTLS handshake. Thus, we are a step closer to removing our client certificate and private key from the filesystem.&lt;/p>
+&lt;/h3>&lt;p>We implement a custom &lt;code>crypto.Signer&lt;/code> to sign a client certificate during the mTLS handshake. Thus, we are a step closer
+to removing our client certificate and private key from the filesystem.&lt;/p>
 &lt;h3 id="a-complete-mtls-go-client-using-the-macos-keychain">&lt;a href="#a-complete-mtls-go-client-using-the-macos-keychain" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-using-apple-keychain" >A complete mTLS Go client using the macOS keychain&lt;/a>
-&lt;/h3>&lt;p>In this article, we continue the previous article by connecting our custom signer to the macOS keychain using CGO and Apple APIs.&lt;/p>
+&lt;/h3>&lt;p>In this article, we continue the previous article by connecting our custom signer to the macOS keychain using CGO and
+Apple APIs.&lt;/p>
 &lt;h3 id="using-mtls-with-the-windows-certificate-store">&lt;a href="#using-mtls-with-the-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-with-windows" >Using mTLS with the Windows certificate store&lt;/a>
-&lt;/h3>&lt;p>Switching to Windows, we learn how to use the Windows system keystore to store your mTLS certificates and keys. We connect to an mTLS server with applications that use the Windows certificate store to find the mTLS certificates.&lt;/p>
+&lt;/h3>&lt;p>Switching to Windows, we learn how to use the Windows system keystore to store your mTLS certificates and keys. We
+connect to an mTLS server with applications that use the Windows certificate store to find the mTLS certificates.&lt;/p>
 &lt;h3 id="create-an-mtls-go-client-using-the-windows-certificate-store">&lt;a href="#create-an-mtls-go-client-using-the-windows-certificate-store" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-go-client-windows-certificate-store" >Create an mTLS Go client using the Windows certificate store&lt;/a>
-&lt;/h3>&lt;p>Using the software pattern from the previous articles on the macOS keychain, we build an mTLS client in Go integrated with the Windows certificate store to store the mTLS certificates and keys.&lt;/p>
+&lt;/h3>&lt;p>Using the software pattern from the previous articles on the macOS keychain, we build an mTLS client in Go integrated
+with the Windows certificate store to store the mTLS certificates and keys.&lt;/p>
+&lt;h3 id="mtls-vs-http-signature-faceoff-securing-your-apis">&lt;a href="#mtls-vs-http-signature-faceoff-securing-your-apis" class="header-anchor">&lt;/a>&lt;a class="link" href="../mtls-vs-http-signature/" >mTLS vs HTTP signature faceoff: securing your APIs&lt;/a>
+&lt;/h3>&lt;p>Where do mTLS and HTTP message signatures fit, and how to choose the right one for your architecture.&lt;/p>
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist">&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor">&lt;/a>Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
