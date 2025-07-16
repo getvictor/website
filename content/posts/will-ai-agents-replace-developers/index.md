@@ -13,6 +13,15 @@ draft = false
 testing. Productivity gains are real but capped, and engineers must still actively guide and supervise these tools.
 Complete developer replacement is unlikely anytime soon.
 
+- [Requirements gathering](#requirements-gathering)
+- [Design](#design)
+- [Implementation](#implementation)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Maintenance](#maintenance)
+- [AI coding agent impact across the SDLC](#ai-coding-agent-impact-across-the-sdlc)
+- [Will AI coding agents replace software developers?](#will-ai-coding-agents-replace-software-developers)
+
 ## Introduction
 
 AI is no longer just autocomplete. With AI coding agents, it is becoming a collaborator. But what happens when that
