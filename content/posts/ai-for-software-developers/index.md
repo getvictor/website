@@ -196,6 +196,7 @@ tasks.
 
 ## Further reading
 
+- For a deeper look at AI agents' impact on software development, check out [Will AI agents replace software developers?](../will-ai-agents-replace-developers/)
 - We just published [our lessons learned from building an AI-driven MCP server](../introducing-mcp/).
 - We recently discussed
   [how to scale your codebase with incremental design](../scaling-codebase-evolutionary-architecture/).

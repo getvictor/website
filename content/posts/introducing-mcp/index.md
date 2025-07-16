@@ -132,7 +132,8 @@ make sense until a customer is ready to pay for it.
 
 ## Further reading
 
-We recently covered [what every software engineer needs to know about AI right now](../ai-for-software-developers/).
+- We recently covered [the broader implications of AI agents in software development](../will-ai-agents-replace-developers/).
+- Previously, we discussed [what every software engineer needs to know about AI right now](../ai-for-software-developers/).
 
 ## Watch how we taught an AI agent to use our product with MCP
 
