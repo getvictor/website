@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "opentelemetry-with-jaeger-headline.png"
 date = 2024-10-30
 categories = ["Software Development", "DevOps & Infrastructure"]
-tags = ["Telemetry", "DevTools", "Performance", "Golang"]
+tags = ["Telemetry", "Observability", "DevTools", "Performance", "Golang"]
 draft = false
 +++
 
@@ -199,8 +199,14 @@ Jaeger UI.
 
 ## Further reading
 
-- Recently, we listed [the key metrics to gather during software load testing](../software-load-testing/).
-- Previously, we wrote about [benchmarking the performance of your Go code](../optimizing-performance-of-go-app/).
+- **[OpenTelemetry: A developer's best friend for production-ready code](../opentelemetry-for-devs/)**  
+  How we changed our minds about OpenTelemetry and now advocate for developers to use it during development.
+
+- **[Top 5 metrics for software load testing performance](../software-load-testing/)**  
+  Essential metrics to track when evaluating your application's performance under load.
+
+- **[How to benchmark performance of Go serializers](../optimizing-performance-of-go-app/)**  
+  Learn effective techniques for measuring and optimizing Go code performance.
 
 ## Example code on GitHub
 

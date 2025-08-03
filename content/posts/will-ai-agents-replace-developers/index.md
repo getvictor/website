@@ -391,12 +391,14 @@ replace those who don't.
 
 ## Further reading
 
-- **[How to use AI for software development (2025)](../ai-for-software-developers/)** _What every software engineer
-  needs to know about AI right now: code completion, generation, and AI agents._
+- **[How to use AI for software development (2025)](../ai-for-software-developers/)**  
+  _What every software engineer needs to know about AI right now: code completion, generation, and AI agents._
 
-- **[Introducing MCP: Lessons from building an AI-driven server](../introducing-mcp/)** _How we taught an AI agent to
-  use our product with MCP._
+- **[Introducing MCP: Lessons from building an AI-driven server](../introducing-mcp/)**  
+  _How we taught an AI agent to use our product with MCP._
 
 ## Watch us discuss whether AI agents can replace software developers
 
 {{< youtube fdBxpWXajSE >}}
+
+_Note:_ If you want to comment on this article, please do so on the YouTube video.

@@ -172,9 +172,14 @@ retrieves it and receives stale data.
 
 ## Further reading
 
-- Recently, we examined
-  [whether OpenTelemetry is useful for the average software engineer](../opentelemetry-with-jaeger/).
-- We also looked at [benchmarking performance of different Go serializers](../optimizing-performance-of-go-app/).
+- **[OpenTelemetry: A developer's best friend for production-ready code](../opentelemetry-for-devs/)**  
+  See how developers can leverage OpenTelemetry during development to build better instrumented applications.
+
+- **[Is OpenTelemetry useful for the average software developer?](../opentelemetry-with-jaeger/)**  
+  Our initial exploration of OpenTelemetry's practical value for everyday development tasks.
+
+- **[How to benchmark performance of Go serializers](../optimizing-performance-of-go-app/)**  
+  Measure and optimize your Go application's performance with effective benchmarking techniques.
 
 ## Watch us discuss the software load testing performance metrics
 

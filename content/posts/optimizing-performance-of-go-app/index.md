@@ -168,16 +168,23 @@ The complete code is available on GitHub at: https://github.com/getvictor/go-ben
 
 ## Further reading
 
-Beyond benchmarking, you can step up your performance game with
-[OpenTelemetry and Jaeger](../opentelemetry-with-jaeger/).
+- **[OpenTelemetry for developers: From skeptic to advocate](../opentelemetry-for-devs/)**  
+  Learn how using OpenTelemetry during development leads to better production instrumentation.
 
-In addition:
+- **[Is OpenTelemetry useful for the average software developer?](../opentelemetry-with-jaeger/)**  
+  Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.
 
-- Recently, we [listed the top metrics to gather during software load testing](../software-load-testing/).
-- We also wrote about [accurately measuring Go test execution time](../go-test-execution-time/).
-- We discussed how to
-  [use Go to accurately unmashal JSON payloads with null, set, and missing fields](../go-json-unmarshal/).
-- Also, see our previous article on [creating fuzz tests in Go](../fuzz-testing-with-go/).
+- **[Top 5 metrics for software load testing performance](../software-load-testing/)**  
+  Discover the critical metrics to monitor when load testing your applications.
+
+- **[Accurately measuring Go test execution time](../go-test-execution-time/)**  
+  Master techniques for precise test timing measurements in Go projects.
+
+- **[Go JSON unmarshaling with null, set, and missing fields](../go-json-unmarshal/)**  
+  Handle complex JSON payloads effectively in your Go applications.
+
+- **[Creating fuzz tests in Go](../fuzz-testing-with-go/)**  
+  Strengthen your code with automated fuzz testing techniques.
 
 ## Watch how to benchmark Go serializers
 
