@@ -332,15 +332,31 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
 >https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Beyond benchmarking, you can step up your performance game with
-&lt;a class="link" href="../opentelemetry-with-jaeger/" >OpenTelemetry and Jaeger&lt;/a>.&lt;/p>
-&lt;p>In addition:&lt;/p>
-&lt;ul>
-&lt;li>Recently, we &lt;a class="link" href="../software-load-testing/" >listed the top metrics to gather during software load testing&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
-&lt;li>We discussed how to
-&lt;a class="link" href="../go-json-unmarshal/" >use Go to accurately unmashal JSON payloads with null, set, and missing fields&lt;/a>.&lt;/li>
-&lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go/" >creating fuzz tests in Go&lt;/a>.&lt;/li>
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry for developers: From skeptic to advocate&lt;/a>&lt;/strong>&lt;br>
+Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
+Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
+Discover the critical metrics to monitor when load testing your applications.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../go-test-execution-time/" >Accurately measuring Go test execution time&lt;/a>&lt;/strong>&lt;br>
+Master techniques for precise test timing measurements in Go projects.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../go-json-unmarshal/" >Go JSON unmarshaling with null, set, and missing fields&lt;/a>&lt;/strong>&lt;br>
+Handle complex JSON payloads effectively in your Go applications.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../fuzz-testing-with-go/" >Creating fuzz tests in Go&lt;/a>&lt;/strong>&lt;br>
+Strengthen your code with automated fuzz testing techniques.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
 &lt;/h2>&lt;div class="video-wrapper">

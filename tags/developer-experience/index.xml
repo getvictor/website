@@ -357,12 +357,12 @@ replace those who don&amp;rsquo;t.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../ai-for-software-developers/" >How to use AI for software development (2025)&lt;/a>&lt;/strong> &lt;em>What every software engineer
-needs to know about AI right now: code completion, generation, and AI agents.&lt;/em>&lt;/p>
+&lt;p>&lt;strong>&lt;a class="link" href="../ai-for-software-developers/" >How to use AI for software development (2025)&lt;/a>&lt;/strong>&lt;br>
+&lt;em>What every software engineer needs to know about AI right now: code completion, generation, and AI agents.&lt;/em>&lt;/p>
 &lt;/li>
 &lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../introducing-mcp/" >Introducing MCP: Lessons from building an AI-driven server&lt;/a>&lt;/strong> &lt;em>How we taught an AI agent to
-use our product with MCP.&lt;/em>&lt;/p>
+&lt;p>&lt;strong>&lt;a class="link" href="../introducing-mcp/" >Introducing MCP: Lessons from building an AI-driven server&lt;/a>&lt;/strong>&lt;br>
+&lt;em>How we taught an AI agent to use our product with MCP.&lt;/em>&lt;/p>
 &lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers">&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor">&lt;/a>Watch us discuss whether AI agents can replace software developers
@@ -373,7 +373,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
 give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
 changes, slow tests can become a bottleneck, delaying deployments.&lt;/p>
 &lt;p>Previously, we covered &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>. This

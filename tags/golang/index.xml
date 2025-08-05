@@ -358,7 +358,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
 give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
 changes, slow tests can become a bottleneck, delaying deployments.&lt;/p>
 &lt;p>Previously, we covered &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>. This
@@ -1820,8 +1821,18 @@ does not provide a way to trace the transaction lifecycle, and it creates many s
 Jaeger UI.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>Recently, we listed &lt;a class="link" href="../software-load-testing/" >the key metrics to gather during software load testing&lt;/a>.&lt;/li>
-&lt;li>Previously, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" >benchmarking the performance of your Go code&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry: A developer&amp;rsquo;s best friend for production-ready code&lt;/a>&lt;/strong>&lt;br>
+How we changed our minds about OpenTelemetry and now advocate for developers to use it during development.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
+Essential metrics to track when evaluating your application&amp;rsquo;s performance under load.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../optimizing-performance-of-go-app/" >How to benchmark performance of Go serializers&lt;/a>&lt;/strong>&lt;br>
+Learn effective techniques for measuring and optimizing Go code performance.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
 &lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
@@ -2331,15 +2342,31 @@ BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
 >https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Beyond benchmarking, you can step up your performance game with
-&lt;a class="link" href="../opentelemetry-with-jaeger/" >OpenTelemetry and Jaeger&lt;/a>.&lt;/p>
-&lt;p>In addition:&lt;/p>
-&lt;ul>
-&lt;li>Recently, we &lt;a class="link" href="../software-load-testing/" >listed the top metrics to gather during software load testing&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../go-test-execution-time/" >accurately measuring Go test execution time&lt;/a>.&lt;/li>
-&lt;li>We discussed how to
-&lt;a class="link" href="../go-json-unmarshal/" >use Go to accurately unmashal JSON payloads with null, set, and missing fields&lt;/a>.&lt;/li>
-&lt;li>Also, see our previous article on &lt;a class="link" href="../fuzz-testing-with-go/" >creating fuzz tests in Go&lt;/a>.&lt;/li>
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry for developers: From skeptic to advocate&lt;/a>&lt;/strong>&lt;br>
+Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
+Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
+Discover the critical metrics to monitor when load testing your applications.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../go-test-execution-time/" >Accurately measuring Go test execution time&lt;/a>&lt;/strong>&lt;br>
+Master techniques for precise test timing measurements in Go projects.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../go-json-unmarshal/" >Go JSON unmarshaling with null, set, and missing fields&lt;/a>&lt;/strong>&lt;br>
+Handle complex JSON payloads effectively in your Go applications.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../fuzz-testing-with-go/" >Creating fuzz tests in Go&lt;/a>&lt;/strong>&lt;br>
+Strengthen your code with automated fuzz testing techniques.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
 &lt;/h2>&lt;div class="video-wrapper">

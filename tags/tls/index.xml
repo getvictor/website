@@ -216,7 +216,8 @@ allowfullscreen
 title="YouTube Video"
 >
 &lt;/iframe>
-&lt;/div></description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" />&lt;p>We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to
 use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to
 use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the
 filesystem.&lt;/p>
