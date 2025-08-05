@@ -398,3 +398,5 @@ if err != nil {
 ## Watch the explanation of securing private keys with TPM
 
 {{< youtube zwnznp5KeQs >}}
+
+_Note:_ If you want to comment on this article, please do so on the YouTube video.

@@ -197,3 +197,5 @@ Different tools for different jobs. Just don't skip authentication.
 ## Watch us compare mTLS and HTTP message signatures
 
 {{< youtube aDMdLCzXn1U >}}
+
+_Note:_ If you want to comment on this article, please do so on the YouTube video.
