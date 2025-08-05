@@ -589,7 +589,7 @@ title="YouTube Video"
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go">&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor">&lt;/a>How to read program arguments from STDIN with Go
 &lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
 >github.com/kballard/go-shellquote&lt;/a> library and append it to any existing command-line arguments.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
 &lt;h2 id="how-to-integrate-with-a-secret-manager">&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor">&lt;/a>How to integrate with a secret manager
 &lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
 >1Password&lt;/a>. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p>

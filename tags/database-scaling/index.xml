@@ -34,7 +34,7 @@ server reads it and applies the changes to its database.&lt;/p>
 replica database will run on port 3309. Both servers will have the database named &lt;code>test&lt;/code>. We tested these instructions
 on MySQL 8.0.36, MySQL 8.4.3, and MySQL 9.1.0.&lt;/p>
 &lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
 &lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
 &lt;/h2>&lt;p>Replication in MySQL requires a user with the
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.4/en/privileges-provided.html#priv_replication-slave" target="_blank" rel="noopener"

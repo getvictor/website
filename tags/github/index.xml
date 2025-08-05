@@ -894,8 +894,7 @@ the public. For example, secrets can be API keys and database access credentials
 &lt;/h2>&lt;p>Below is an example GitHub Action that does general data processing. It uses API calls to download data from NVD
 (National Vulnerability Database), generates files from this data, and then creates a release. Subsequently, the
 application can download these files and use them directly without making the API calls or processing the data itself.&lt;/p>
-&lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>
-&lt;/p>
+&lt;p>GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>&lt;/p>
 &lt;p>The GitHub Action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files.
 Then, it publishes the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
 &lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be

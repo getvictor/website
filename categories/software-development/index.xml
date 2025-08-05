@@ -3070,7 +3070,7 @@ title="YouTube Video"
 >packages&lt;/a> is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
 >Context.Import method from build package&lt;/a> to recursively find dependencies.&lt;/p>
 &lt;p>Below is an example architecture test you can add to your test suite.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
 &lt;p>The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
 >https://github.com/matthewmcnew/archtest&lt;/a>. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
 >jump to the code example section&lt;/a> of the video below for a full explanation.&lt;/p>
@@ -4053,7 +4053,7 @@ in the &lt;code>Sheet1&lt;/code> sheet of the target spreadsheet.&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To write data to a Google Sheets spreadsheet, use the &lt;code>spreadsheets.Values.Update&lt;/code> and &lt;code>Spreadsheets.BatchUpdate&lt;/code>
 methods. For example, the following modified code inserts a new row above other rows with the current date and an
 incremented value:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
 &lt;p>We can review the spreadsheet to verify that our code added the new row.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
 alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">
@@ -5343,7 +5343,7 @@ title="YouTube Video"
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go">&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor">&lt;/a>How to read program arguments from STDIN with Go
 &lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
 >github.com/kballard/go-shellquote&lt;/a> library and append it to any existing command-line arguments.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
 &lt;h2 id="how-to-integrate-with-a-secret-manager">&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor">&lt;/a>How to integrate with a secret manager
 &lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
 >1Password&lt;/a>. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p>
@@ -8835,8 +8835,7 @@ have a clear idea why.&lt;/p>
 &lt;/code>&lt;/pre>
 &lt;p>That said, understanding the fuzz testing limitation, I’m willing to try fuzz testing for more interesting test cases,
 such as database accesses. I will report my findings in a future post.&lt;/p>
-&lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>
-&lt;/p>
+&lt;p>GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
@@ -8897,7 +8896,7 @@ pointer like you can a nil slice. This code causes a crash:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nullSlice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Crash: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">nullSlice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s the full gist:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" >overriding methods in Go&lt;/a>.&lt;/li>

@@ -155,7 +155,7 @@ alt="Network Device Enrollment Service allows you to obtain certificates for rou
 &lt;/h1>&lt;p>For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p>
 &lt;p>Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
 password.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js">&lt;/script>
 &lt;p>After running the script, check that NDES issued a certificate.&lt;/p>
 &lt;h1 id="test-ndes-using-a-scep-client">&lt;a href="#test-ndes-using-a-scep-client" class="header-anchor">&lt;/a>Test NDES using a SCEP client
 &lt;/h1>&lt;p>For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are

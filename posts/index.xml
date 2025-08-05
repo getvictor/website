@@ -3289,7 +3289,7 @@ title="YouTube Video"
 >packages&lt;/a> is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
 >Context.Import method from build package&lt;/a> to recursively find dependencies.&lt;/p>
 &lt;p>Below is an example architecture test you can add to your test suite.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
 &lt;p>The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
 >https://github.com/matthewmcnew/archtest&lt;/a>. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
 >jump to the code example section&lt;/a> of the video below for a full explanation.&lt;/p>
@@ -3936,7 +3936,7 @@ We will show an example using the Go SDK.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod init cloudfront-signed-urls
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign@v1.8.3
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Copy the &lt;code>private_key.pem&lt;/code> file to the project directory and create a new Go file with the following code:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js">&lt;/script>
 &lt;p>Run the Go program to generate a signed URL:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672">=&lt;/span>1736178766&amp;amp;Signature&lt;span style="color:#f92672">=&lt;/span>HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672">=&lt;/span>K1HFGXOMBB6TFF
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The signed URL will expire in 1 hour.&lt;/p>
@@ -3997,7 +3997,7 @@ server reads it and applies the changes to its database.&lt;/p>
 replica database will run on port 3309. Both servers will have the database named &lt;code>test&lt;/code>. We tested these instructions
 on MySQL 8.0.36, MySQL 8.4.3, and MySQL 9.1.0.&lt;/p>
 &lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
 &lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
 &lt;/h2>&lt;p>Replication in MySQL requires a user with the
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.4/en/privileges-provided.html#priv_replication-slave" target="_blank" rel="noopener"
@@ -4535,7 +4535,7 @@ in the &lt;code>Sheet1&lt;/code> sheet of the target spreadsheet.&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To write data to a Google Sheets spreadsheet, use the &lt;code>spreadsheets.Values.Update&lt;/code> and &lt;code>Spreadsheets.BatchUpdate&lt;/code>
 methods. For example, the following modified code inserts a new row above other rows with the current date and an
 incremented value:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
 &lt;p>We can review the spreadsheet to verify that our code added the new row.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
 alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">
@@ -5959,7 +5959,7 @@ alt="Network Device Enrollment Service allows you to obtain certificates for rou
 &lt;/h1>&lt;p>For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p>
 &lt;p>Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
 password.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js">&lt;/script>
 &lt;p>After running the script, check that NDES issued a certificate.&lt;/p>
 &lt;h1 id="test-ndes-using-a-scep-client">&lt;a href="#test-ndes-using-a-scep-client" class="header-anchor">&lt;/a>Test NDES using a SCEP client
 &lt;/h1>&lt;p>For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
@@ -6822,7 +6822,7 @@ title="YouTube Video"
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go">&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor">&lt;/a>How to read program arguments from STDIN with Go
 &lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
 >github.com/kballard/go-shellquote&lt;/a> library and append it to any existing command-line arguments.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
 &lt;h2 id="how-to-integrate-with-a-secret-manager">&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor">&lt;/a>How to integrate with a secret manager
 &lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
 >1Password&lt;/a>. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p>
@@ -11856,8 +11856,7 @@ the public. For example, secrets can be API keys and database access credentials
 &lt;/h2>&lt;p>Below is an example GitHub Action that does general data processing. It uses API calls to download data from NVD
 (National Vulnerability Database), generates files from this data, and then creates a release. Subsequently, the
 application can download these files and use them directly without making the API calls or processing the data itself.&lt;/p>
-&lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>
-&lt;/p>
+&lt;p>GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/5b708d408ec5508fbc5f1b3487e8f8a9.js">&lt;/script>&lt;/p>
 &lt;p>The GitHub Action does a checkout of our application code and runs a script &lt;em>cmd/cve/generate.go&lt;/em> to generate the files.
 Then, it publishes the generated files as a new release. As a final step, it deletes any old releases.&lt;/p>
 &lt;p>A note of caution. GitHub monitors for cryptocurrency mining and other abusive behavior. So, keep that in mind and be
@@ -11961,8 +11960,7 @@ have a clear idea why.&lt;/p>
 &lt;/code>&lt;/pre>
 &lt;p>That said, understanding the fuzz testing limitation, I’m willing to try fuzz testing for more interesting test cases,
 such as database accesses. I will report my findings in a future post.&lt;/p>
-&lt;p>GitHub gist: &lt;script src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>
-&lt;/p>
+&lt;p>GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
@@ -12122,7 +12120,7 @@ pointer like you can a nil slice. This code causes a crash:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nullSlice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Crash: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">nullSlice&lt;/span>))
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s the full gist:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
 &lt;li>Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" >overriding methods in Go&lt;/a>.&lt;/li>

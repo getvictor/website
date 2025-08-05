@@ -314,7 +314,7 @@ in the &lt;code>Sheet1&lt;/code> sheet of the target spreadsheet.&lt;/p>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To write data to a Google Sheets spreadsheet, use the &lt;code>spreadsheets.Values.Update&lt;/code> and &lt;code>Spreadsheets.BatchUpdate&lt;/code>
 methods. For example, the following modified code inserts a new row above other rows with the current date and an
 incremented value:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
 &lt;p>We can review the spreadsheet to verify that our code added the new row.&lt;/p>
 &lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
 alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">

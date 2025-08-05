@@ -589,7 +589,7 @@ title="YouTube Video"
 >packages&lt;/a> is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code>Load&lt;/code> function to get a list of &lt;code>Package&lt;/code> values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
 >Context.Import method from build package&lt;/a> to recursively find dependencies.&lt;/p>
 &lt;p>Below is an example architecture test you can add to your test suite.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js">&lt;/script>
 &lt;p>The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
 >https://github.com/matthewmcnew/archtest&lt;/a>. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
 >jump to the code example section&lt;/a> of the video below for a full explanation.&lt;/p>

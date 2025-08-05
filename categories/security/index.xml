@@ -684,7 +684,7 @@ We will show an example using the Go SDK.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod init cloudfront-signed-urls
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign@v1.8.3
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Copy the &lt;code>private_key.pem&lt;/code> file to the project directory and create a new Go file with the following code:&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js">&lt;/script>
 &lt;p>Run the Go program to generate a signed URL:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672">=&lt;/span>1736178766&amp;amp;Signature&lt;span style="color:#f92672">=&lt;/span>HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672">=&lt;/span>K1HFGXOMBB6TFF
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The signed URL will expire in 1 hour.&lt;/p>
@@ -720,7 +720,7 @@ title="YouTube Video"
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go">&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor">&lt;/a>How to read program arguments from STDIN with Go
 &lt;/h2>&lt;p>In the code example below, we check if any data is being piped in from STDIN with &lt;code>os.ModeNamedPipe&lt;/code>. Then, we wait to read all the data from STDIN with &lt;code>ioutil.ReadAll&lt;/code>. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
 >github.com/kballard/go-shellquote&lt;/a> library and append it to any existing command-line arguments.&lt;/p>
-&lt;script src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js">&lt;/script>
 &lt;h2 id="how-to-integrate-with-a-secret-manager">&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor">&lt;/a>How to integrate with a secret manager
 &lt;/h2>&lt;p>One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
 >1Password&lt;/a>. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p>
