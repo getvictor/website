@@ -2,6 +2,12 @@ Site deployed at: https://victoronsoftware.com/
 
 This is a [Hugo](https://gohugo.io/) site using [hugo-theme-stack](https://themes.gohugo.io/themes/hugo-theme-stack/).
 
+To update Hugo, run:
+
+```shell
+brew upgrade hugo
+```
+
 To update the theme, run:
 
 ```shell
