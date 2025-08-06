@@ -3,7 +3,7 @@ title = "Why transparency beats everything else in engineering"
 description = "A personal story of how organizational dysfunction nearly broke me, and how transparency transformed everything. Learn why visibility matters more than process, meetings, or roadmaps."
 authors = ["Victor Lyuboslavsky"]
 image = "engineering-transparency-headline.png"
-date = 2025-08-05
+date = 2025-08-06
 categories = ["Software Development"]
 tags = ["Organizational Culture", "Engineering Management", "Developer Experience", "Technical Debt"]
 draft = false
@@ -19,10 +19,10 @@ transparency and accountability.
 ## The weekly dance of non-delivery
 
 Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
-another upstream engineering team. Every week, we’d have a joint meeting with both teams. And every week, I’d ask the
+another upstream engineering team. Every week, we'd have a joint meeting with both teams. And every week, I'd ask the
 same question, trying to keep my tone professional:
 
-> “Hey Alex, any update on that component we need from your side?”
+> "Hey Alex, any update on that component we need from your side?"
 
 And every week, Alex would say:
 
@@ -36,25 +36,25 @@ I was _boiling_ inside.
 
 I kept thinking:
 
-> “Why is no one telling Alex to work on this? Why don't we have a project manager? Who’s making the call on what really
-> matters?”
+> "Why is no one telling Alex to work on this? Why don't we have a project manager? Who's making the call on what really
+> matters?"
 
-We technically had a roadmap. But, let's be honest: people didn't really take it seriously. If something couldn't get
-done, it just quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. And meanwhile, I had to face
-my boss with another non-update, again.
+We technically had a roadmap. But let's be honest: people didn't actually take it seriously. If something couldn't get
+done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
+again with another non-update.
 
 ## Years in the fog
 
-The frustration started eating at me. I'd sit in those meetings and darker thoughts would creep in:
+The frustration started eating at me. I'd sit in those meetings, and darker thoughts would creep in:
 
 > "How did Alex even get promoted? He can't deliver anything."
 
 > "Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day."
 
-> "Should I just get a side gig? At least someone would pay me for work that actually ships."
+> "Maybe I should just get a side gig? At least someone would pay me for work that actually ships."
 
-This wasn't just a few bad weeks. This was years of my life. Years of pretending everything was fine when it wasn't.
-Years of wondering if this was just how companies worked.
+This situation wasn't just a few bad weeks. It was years of my life, years of pretending everything was fine when it
+wasn't, years of wondering if this was just how companies worked.
 
 I'd go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
 how my day was, and I'd just shrug. What was there to say? Another day, another meeting, another non-update.
@@ -73,8 +73,8 @@ company's priorities.
 There is no hiding or pretending. Just reality, laid bare.
 
 That's when it hit me. The problem at my old company wasn't Alex. He wasn't slacking off. He was overwhelmed, like the
-rest of us. Everyone was reacting to noise instead of following signal. No one had the authority, or the clarity, to say
-what actually mattered.
+rest of us. Everyone was reacting to the noise instead of following the signal. No one had the authority or clarity to
+say what actually mattered.
 
 **This wasn't a communication problem. It was a trust and transparency problem.** And the absence of that created a
 frustrating, demoralizing fog. Everyone thought they were doing the right thing, yet nothing moved forward.
@@ -82,7 +82,7 @@ frustrating, demoralizing fog. Everyone thought they were doing the right thing,
 That experience changed my understanding of leadership.
 
 Because here's the truth: Without shared visibility and shared accountability, even the best engineers will lose
-direction. Polite status meetings won’t save you from a broken system.
+direction. Polite status meetings won't save you from a broken system.
 
 As leaders, our job isn't just to set direction. It's to make the invisible visible and to make sure it matters.
 
@@ -131,19 +131,19 @@ graph TD
 
 ## Taking action: What you can do when you have no visibility
 
-At the first level, you need to be aligned with your manager. You need to know what your manager's priorities are, which
-means knowing what your manager knows. You should strive to know about 90% of what your manager knows.
+At the first level, you need to be aligned with your manager. You need to know your manager's priorities, which means
+knowing what your manager knows. You should strive to know about 90% of what your manager knows.
 
-If your manager is attending cross-functional meetings with other managers where priorities and goals are discussed, you
-need to know what's going on at those meetings. There are a few ways to do that:
+If your manager attends cross-functional meetings with other managers where priorities and goals are discussed, you need
+to know what's happening at those meetings. There are a few ways to do that:
 
 - Watch the recordings of those meetings. If they're not recorded, ask if they could be.
-- Read the meeting notes from those meetings. Perhaps your company could employ an AI notetaker?
+- Read the meeting notes from those meetings. Could your company employ an AI notetaker?
 - Ask your manager for a readout from those meetings in your weekly one-on-one.
 
 Once you feel like you're on the same page as your manager, repeat the process with your manager's manager. If you're
-not meeting regularly with your manager's manager, ask for a skip-level meeting, and later extend the ask for a regular
-skip-level meeting.
+not meeting regularly with your manager's manager, ask for a skip-level meeting and afterwards extend the ask for a
+recurring skip-level meeting.
 
 ### How to ask for more visibility
 
@@ -182,7 +182,7 @@ signal because no one had the clarity to say what mattered.
 **You need to know what your manager knows.** Aim for 90% visibility into your manager's context through meeting
 recordings, notes, or regular readouts.
 
-**Leaders must make the invisible visible.** Their job isn't just to set direction. It's to ensure priorities,
+**Leaders must make the invisible visible.** Their job isn't just to set direction. It is to ensure that priorities,
 trade-offs, and blockers are explicit and public.
 
 The fog I worked in for years wasn't inevitable. It was a broken system where politeness trumped progress. You can build
@@ -201,6 +201,6 @@ better systems. You just need to start asking for and creating transparency.
 
 ## Watch us discuss engineering transparency
 
-{{< youtube TODO >}}
+{{< youtube 3oSdwkC7iiI >}}
 
 _Note:_ If you want to comment on this article, please do so on the YouTube video.
