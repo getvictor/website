@@ -9,8 +9,6 @@ tags = ["Application Security", "mTLS", "TLS"]
 draft = false
 +++
 
-## Table of Contents
-
 - [What is mTLS?](#what-is-mtls)
 - [mTLS: pros and cons](#mtls-pros-and-cons)
 - [What is an HTTP message signature?](#what-is-an-http-message-signature)
@@ -27,7 +25,7 @@ Both are powerful and secure, but they take radically different approaches. One 
 and deeply integrated. The other is explicit and flexible, wrapping your HTTP messages in cryptographic armor. This post
 is a no-nonsense breakdown covering what they are, where they shine, and where they cause pain.
 
-### What is mTLS?
+## What is mTLS?
 
 In ordinary TLS (Transport Layer Security), only the server presents a certificate to the client. This way, the client
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
@@ -41,7 +39,7 @@ mutual authentication is required.
 
 We covered mTLS in greater detail in our [series on building an mTLS client using the system keystore](../mtls/).
 
-### mTLS: pros and cons
+## mTLS: pros and cons
 
 **Pros**
 
@@ -61,7 +59,7 @@ We covered mTLS in greater detail in our [series on building an mTLS client usin
 - Not great for public APIs. Many clients (e.g., mobile apps, SDKs) don't handle client certificates well, making mTLS
   adoption difficult in heterogeneous environments
 
-### What is an HTTP message signature?
+## What is an HTTP message signature?
 
 HTTP message signatures are precisely what they sound like: you take an HTTP request, select a few headers (or maybe the
 body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
@@ -104,7 +102,7 @@ proposed IETF standard for HTTP message signatures. The ecosystem is gradually c
 signed HTTP requests. A common standard is beneficial when you don't control the client or want signature-level
 auditability and control.
 
-### HTTP message signature: pros and cons
+## HTTP message signature: pros and cons
 
 **Pros**
 
@@ -125,7 +123,7 @@ auditability and control.
 - Choosing which headers to sign isn't always obvious and can break interoperability. It can also break backward
   compatibility if header selection changes across client or server updates.
 
-### Performance Considerations
+## Performance Considerations
 
 mTLS is fast. The authentication step happens once per connection during the TLS handshake, and it benefits from all the
 TLS acceleration and session reuse magic that your OS and hardware provide.
@@ -138,7 +136,7 @@ unnecessarily.
 📌 **Important caveat:** For most APIs, performance is dominated by network and I/O. Unless you operate at a very high
 scale or on constrained devices, the performance difference between mTLS and HTTP signatures might be negligible.
 
-### What about replay attacks?
+## What about replay attacks?
 
 A replay attack occurs when a bad actor captures a legitimate request and replays it later to trigger the same action
 again, such as resubmitting a money transfer or resetting a password.
@@ -158,7 +156,7 @@ in the signed headers and reject any request that's too old or already used. One
 - Server checks that the `nonce` value has not been used within the last 10 minutes (nonce values can be cached with
   expiration in ValKey or Redis)
 
-### mTLS vs HTTP message signatures: choosing the right tool
+## mTLS vs HTTP message signatures: choosing the right tool
 
 Here's how they compare:
 
