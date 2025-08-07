@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TLS on Victor on Software</title><link>https://victoronsoftware.com/tags/tls/</link><description>Recent content in TLS on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/tls/index.xml" rel="self" type="application/rss+xml"/><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" />&lt;h2 id="table-of-contents">&lt;a href="#table-of-contents" class="header-anchor">&lt;/a>Table of Contents
-&lt;/h2>&lt;ul>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>TLS on Victor on Software</title><link>https://victoronsoftware.com/tags/tls/</link><description>Recent content in TLS on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/tls/index.xml" rel="self" type="application/rss+xml"/><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" />&lt;ul>
 &lt;li>&lt;a class="link" href="#what-is-mtls" >What is mTLS?&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#mtls-pros-and-cons" >mTLS: pros and cons&lt;/a>&lt;/li>
 &lt;li>&lt;a class="link" href="#what-is-an-http-message-signature" >What is an HTTP message signature?&lt;/a>&lt;/li>
@@ -14,8 +13,8 @@ protecting those channels, you&amp;rsquo;ve got two popular weapons: mTLS and HT
 &lt;p>Both are powerful and secure, but they take radically different approaches. One is baked into the TLS handshake, tight
 and deeply integrated. The other is explicit and flexible, wrapping your HTTP messages in cryptographic armor. This post
 is a no-nonsense breakdown covering what they are, where they shine, and where they cause pain.&lt;/p>
-&lt;h3 id="what-is-mtls">&lt;a href="#what-is-mtls" class="header-anchor">&lt;/a>What is mTLS?
-&lt;/h3>&lt;p>In ordinary TLS (Transport Layer Security), only the server presents a certificate to the client. This way, the client
+&lt;h2 id="what-is-mtls">&lt;a href="#what-is-mtls" class="header-anchor">&lt;/a>What is mTLS?
+&lt;/h2>&lt;p>In ordinary TLS (Transport Layer Security), only the server presents a certificate to the client. This way, the client
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
 server so that the server can verify the client&amp;rsquo;s identity.&lt;/p>
 &lt;figure>&lt;img src="../mtls-hello-world/mtls-handshake.png"
@@ -25,8 +24,8 @@ alt="Mutual TLS (mTLS) handshake diagram">
 it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
 mutual authentication is required.&lt;/p>
 &lt;p>We covered mTLS in greater detail in our &lt;a class="link" href="../mtls/" >series on building an mTLS client using the system keystore&lt;/a>.&lt;/p>
-&lt;h3 id="mtls-pros-and-cons">&lt;a href="#mtls-pros-and-cons" class="header-anchor">&lt;/a>mTLS: pros and cons
-&lt;/h3>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
+&lt;h2 id="mtls-pros-and-cons">&lt;a href="#mtls-pros-and-cons" class="header-anchor">&lt;/a>mTLS: pros and cons
+&lt;/h2>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
 &lt;ul>
 &lt;li>Built-in support across OSes, browsers, and web servers.&lt;/li>
 &lt;li>Strong identity baked into the connection itself.&lt;/li>
@@ -44,8 +43,8 @@ verification and securely pass the authenticated identity to the downstream serv
 &lt;li>Not great for public APIs. Many clients (e.g., mobile apps, SDKs) don&amp;rsquo;t handle client certificates well, making mTLS
 adoption difficult in heterogeneous environments&lt;/li>
 &lt;/ul>
-&lt;h3 id="what-is-an-http-message-signature">&lt;a href="#what-is-an-http-message-signature" class="header-anchor">&lt;/a>What is an HTTP message signature?
-&lt;/h3>&lt;p>HTTP message signatures are precisely what they sound like: you take an HTTP request, select a few headers (or maybe the
+&lt;h2 id="what-is-an-http-message-signature">&lt;a href="#what-is-an-http-message-signature" class="header-anchor">&lt;/a>What is an HTTP message signature?
+&lt;/h2>&lt;p>HTTP message signatures are precisely what they sound like: you take an HTTP request, select a few headers (or maybe the
 body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
 from someone it trusts.&lt;/p>
 &lt;pre class="mermaid">
@@ -81,8 +80,8 @@ integrity and origin of HTTP messages.&lt;/p>
 proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
 signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
 auditability and control.&lt;/p>
-&lt;h3 id="http-message-signature-pros-and-cons">&lt;a href="#http-message-signature-pros-and-cons" class="header-anchor">&lt;/a>HTTP message signature: pros and cons
-&lt;/h3>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
+&lt;h2 id="http-message-signature-pros-and-cons">&lt;a href="#http-message-signature-pros-and-cons" class="header-anchor">&lt;/a>HTTP message signature: pros and cons
+&lt;/h2>&lt;p>&lt;strong>Pros&lt;/strong>&lt;/p>
 &lt;ul>
 &lt;li>Fine-grained control: sign specific API paths, select which headers or body fields to include, and decide when to
 apply signing based on context.&lt;/li>
@@ -101,8 +100,8 @@ workflows. However, certificates can still be used if needed.&lt;/li>
 &lt;li>Choosing which headers to sign isn&amp;rsquo;t always obvious and can break interoperability. It can also break backward
 compatibility if header selection changes across client or server updates.&lt;/li>
 &lt;/ul>
-&lt;h3 id="performance-considerations">&lt;a href="#performance-considerations" class="header-anchor">&lt;/a>Performance Considerations
-&lt;/h3>&lt;p>mTLS is fast. The authentication step happens once per connection during the TLS handshake, and it benefits from all the
+&lt;h2 id="performance-considerations">&lt;a href="#performance-considerations" class="header-anchor">&lt;/a>Performance Considerations
+&lt;/h2>&lt;p>mTLS is fast. The authentication step happens once per connection during the TLS handshake, and it benefits from all the
 TLS acceleration and session reuse magic that your OS and hardware provide.&lt;/p>
 &lt;p>HTTP message signatures happen every time. Every request is signed. Every request is verified. You&amp;rsquo;re layering crypto on
 top of crypto. That means more CPU cycles, especially if your implementation isn&amp;rsquo;t careful or you aren&amp;rsquo;t using the most
@@ -110,8 +109,8 @@ efficient algorithms, such as ECDSA P-256. Performance will take a hit if you ca
 unnecessarily.&lt;/p>
 &lt;p>📌 &lt;strong>Important caveat:&lt;/strong> For most APIs, performance is dominated by network and I/O. Unless you operate at a very high
 scale or on constrained devices, the performance difference between mTLS and HTTP signatures might be negligible.&lt;/p>
-&lt;h3 id="what-about-replay-attacks">&lt;a href="#what-about-replay-attacks" class="header-anchor">&lt;/a>What about replay attacks?
-&lt;/h3>&lt;p>A replay attack occurs when a bad actor captures a legitimate request and replays it later to trigger the same action
+&lt;h2 id="what-about-replay-attacks">&lt;a href="#what-about-replay-attacks" class="header-anchor">&lt;/a>What about replay attacks?
+&lt;/h2>&lt;p>A replay attack occurs when a bad actor captures a legitimate request and replays it later to trigger the same action
 again, such as resubmitting a money transfer or resetting a password.&lt;/p>
 &lt;p>&lt;strong>mTLS&lt;/strong> helps mitigate replay attacks by tying authentication to a specific TLS session. An attacker can&amp;rsquo;t simply
 replay a captured request from another machine or session because they won&amp;rsquo;t have access to the client&amp;rsquo;s private key and
@@ -127,8 +126,8 @@ signature, we know they have not been tampered with)&lt;/li>
 &lt;li>Server checks that the &lt;code>nonce&lt;/code> value has not been used within the last 10 minutes (nonce values can be cached with
 expiration in ValKey or Redis)&lt;/li>
 &lt;/ul>
-&lt;h3 id="mtls-vs-http-message-signatures-choosing-the-right-tool">&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor">&lt;/a>mTLS vs HTTP message signatures: choosing the right tool
-&lt;/h3>&lt;p>Here&amp;rsquo;s how they compare:&lt;/p>
+&lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool">&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor">&lt;/a>mTLS vs HTTP message signatures: choosing the right tool
+&lt;/h2>&lt;p>Here&amp;rsquo;s how they compare:&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
