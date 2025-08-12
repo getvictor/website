@@ -321,6 +321,9 @@ Our code is available on GitHub at: https://github.com/getvictor/pickup-time
 
 ## Further reading
 
+- [Why transparency beats everything else in engineering](../engineering-transparency/)  
+  How visibility into priorities and work creates accountability and transforms engineering culture.
+
 - [How to spot and reduce code complexity](../code-complexity-metrics/)  
   A practical guide to the most useful metrics for understanding and improving code structure and maintainability.
 

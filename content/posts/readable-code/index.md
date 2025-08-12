@@ -244,19 +244,31 @@ In the following article, we
 
 ## Further reading
 
-- I gave my first conference talk on this topic. [My first conference talk experience](../first-conference-talk/).
+- **[Why transparency beats everything else in engineering](../engineering-transparency/)**  
+  How making work visible transforms teams from frustrated to high-performing through organizational transparency.
 
-- [Build beautiful engineering dashboards—without paying a dime](../engineering-metrics-no-cost/)  
+- **[My first conference talk experience](../first-conference-talk/)**  
+  Lessons learned from presenting about readable code at a major software engineering conference.
+
+- **[Build beautiful engineering dashboards—without paying a dime](../engineering-metrics-no-cost/)**  
   Learn how to use GitHub, Grafana, and SQL to create powerful, drill-down metrics using only free tools.
 
-- Recently, we [discussed the key takeaways from literate programming](../literate-programming-lessons/).
-- Before that, we
-  [showed how to easily track engineering metrics with GitHub Actions and Google APIs](../track-engineering-metrics/).
-- We also wrote about [measuring and improving the execution time of Go tests](../go-test-execution-time/).
-- In addition, we [pointed out the issues with GitHub's code review process](../github-code-review-issues/).
-- We also covered [the common use cases of AI for today's software developers](../ai-for-software-developers/).
+- **[Key takeaways from literate programming](../literate-programming-lessons/)**  
+  Discover how Donald Knuth's literate programming principles can improve your code documentation practices.
 
-## Watch
+- **[How to easily track engineering metrics with GitHub Actions and Google APIs](../track-engineering-metrics/)**  
+  Build automated systems to measure and visualize your team's engineering performance over time.
+
+- **[Measuring and improving the execution time of Go tests](../go-test-execution-time/)**  
+  Optimize your test suite performance and reduce CI/CD pipeline duration with practical techniques.
+
+- **[Top 3 issues with GitHub's code review process](../github-code-review-issues/)**  
+  Understand the scalability and developer experience problems with GitHub's default review workflow.
+
+- **[Common use cases of AI for today's software developers](../ai-for-software-developers/)**  
+  Explore how AI tools can enhance productivity without replacing the need for readable, maintainable code.
+
+## Watch us discuss why readable code is important
 
 {{< youtube HCGyWuE9zbY >}}
 

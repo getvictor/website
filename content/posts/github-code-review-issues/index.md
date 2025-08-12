@@ -125,12 +125,26 @@ Here is an example [GitHub Action to replace GitHub's pull request review proces
 
 ## Further reading
 
-- [How to track engineering metrics with GitHub Actions](../track-engineering-metrics/)
-- [How git merge works with PRs](../git-merges-and-pull-requests)
-- [How to reuse GitHub workflows and steps](../github-reusable-workflows-and-steps)
-- [What is clean, readable code and why it matters?](../readable-code/)
-- [How to scale your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/)
-- [Set up a remote dev environment](../remote-development-environment)
+- **[Why transparency beats everything else in engineering](../engineering-transparency/)**  
+  How making work visible transforms teams from frustrated to high-performing through organizational transparency.
+
+- **[How to track engineering metrics with GitHub Actions](../track-engineering-metrics/)**  
+  Implement automated tracking of engineering performance metrics using GitHub's built-in tools and APIs.
+
+- **[How git merge works with PRs](../git-merges-and-pull-requests)**  
+  Understand the mechanics behind pull request merges and how to optimize your git workflow.
+
+- **[How to reuse GitHub workflows and steps](../github-reusable-workflows-and-steps)**  
+  Build maintainable CI/CD pipelines by creating reusable components for your GitHub Actions.
+
+- **[What is clean, readable code and why it matters?](../readable-code/)**  
+  Discover why code readability directly impacts team productivity and how to measure it effectively.
+
+- **[How to scale your codebase with evolutionary architecture](../scaling-codebase-evolutionary-architecture/)**  
+  Learn architectural patterns that help teams maintain velocity as codebases and organizations grow.
+
+- **[Set up a remote dev environment](../remote-development-environment)**  
+  Configure development environments that enhance team collaboration and reduce onboarding friction.
 
 ## Watch the top 3 issues with GitHub code reviews
 
