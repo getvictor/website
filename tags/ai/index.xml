@@ -1,4 +1,160 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Victor on Software</title><link>https://victoronsoftware.com/tags/ai/</link><description>Recent content in AI on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 16 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" />&lt;p>&lt;strong>TL;DR:&lt;/strong> AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI on Victor on Software</title><link>https://victoronsoftware.com/tags/ai/</link><description>Recent content in AI on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" />&lt;p>AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
+things. But just because an AI can work in parallel does not mean you should. The real question is: when is it worth
+multitasking, and when will it hurt your results?&lt;/p>
+&lt;p>I&amp;rsquo;m a firm believer that humans cannot multitask. Every popular psychology book I have read, and I have read quite a
+few, says that humans cannot multitask, even though many believe they can. Studies show that when humans do two tasks in
+series, they finish faster and with higher quality than when switching between them.&lt;/p>
+&lt;p>But that&amp;rsquo;s not the whole story. Humans can multitask in particular situations. For example, when driving a car and
+talking on the phone (with a Bluetooth headset, of course), we are clearly multitasking. Would our driving and
+conversational quality be better if we did these tasks separately? Probably. But the difference, depending on the
+person, might not be that big. Driving is habitual for many people, so we can pair it with another cognitive task
+without dramatically dropping performance.&lt;/p>
+&lt;p>What about throwing AI agents in the mix? It is Wednesday morning. You told your AI agent to do a job. You hope it will
+only take one minute, but it might take up to 15 minutes. What do you do now?&lt;/p>
+&lt;p>&lt;em>Note:&lt;/em> We will use the term &amp;ldquo;task&amp;rdquo; to refer to work a human does, and &amp;ldquo;job&amp;rdquo; to refer to work an AI agent does.&lt;/p>
+&lt;h2 id="task-switching">&lt;a href="#task-switching" class="header-anchor">&lt;/a>Task switching
+&lt;/h2>&lt;p>Research from the American Psychological Association suggests that switching between tasks can cost up to 40% of
+someone&amp;rsquo;s productive time. A University of Michigan study found it takes an average of 23 minutes and 15 seconds to
+fully return to a task after an interruption. Even brief mental blocks from shifting between tasks can cost significant
+time.&lt;/p>
+&lt;p>So, if your AI agent is running, can you do something else while waiting to check the results? If you switch to another
+task, such as looking at another bug or feature, you will spend time ramping up on that second task, and then even more
+time switching back to the first. Yes, people do it all the time, but you will not be fully engaged in either task. You
+are more likely to miss something important, like the agent using the wrong method or skipping a critical feature
+requirement. And yes, that happens in real life.&lt;/p>
+&lt;h2 id="when-not-to-task-switch">&lt;a href="#when-not-to-task-switch" class="header-anchor">&lt;/a>When not to task switch
+&lt;/h2>&lt;p>Avoid switching when working on a significant, important feature or bug. You need your full mental capacity in the
+context of that task to deliver the best software.&lt;/p>
+&lt;p>Instead of switching, consider these options.&lt;/p>
+&lt;h3 id="plan-ahead">&lt;a href="#plan-ahead" class="header-anchor">&lt;/a>Plan ahead
+&lt;/h3>&lt;p>After the agent completes its job, what will you do? Will you check the results and then start the next phase? Is that
+next phase directly related to the current one? Can you spin up a parallel environment and have another agent start the
+next step?&lt;/p>
+&lt;p>If waiting for the agent is your bottleneck, parallelize jobs or ensure the agent is always working on something useful.
+Keeping the agent busy may mean reviewing the agent&amp;rsquo;s work while it jumps ahead and works on the next phase.&lt;/p>
+&lt;h3 id="make-sure-the-agent-is-efficient">&lt;a href="#make-sure-the-agent-is-efficient" class="header-anchor">&lt;/a>Make sure the agent is efficient
+&lt;/h3>&lt;p>Watch the agent&amp;rsquo;s progress to make sure it is not doing unnecessary work. If it is trying to find information you
+already know, stop it and provide the answer. If you do not know the answer, you may find it faster than the agent.&lt;/p>
+&lt;p>For example, as of August 2025, Claude Code does not create a vector database of the codebase, making it slower for
+certain queries about the codebase. For example, asking where a specific feature is tested. You might ask Cursor, which
+does a semantic index of the codebase, to find the answer faster and then feed the answer back to Claude Code.&lt;/p>
+&lt;p>Agents can go off track. Many use brute-force approaches, repeatedly trying solutions until something works, even if the
+&amp;ldquo;working solution&amp;rdquo; is not optimal. By monitoring progress, you can redirect the agent when needed.&lt;/p>
+&lt;h3 id="prepare-for-manual-qa">&lt;a href="#prepare-for-manual-qa" class="header-anchor">&lt;/a>Prepare for manual QA
+&lt;/h3>&lt;p>Once the feature is ready for manual testing, is your environment ready? Do you need to populate database data, deploy
+other services, or sign up for cloud accounts? Prepare these ahead of time.&lt;/p>
+&lt;h3 id="fix-ci-and-code-review-issues">&lt;a href="#fix-ci-and-code-review-issues" class="header-anchor">&lt;/a>Fix CI and code review issues
+&lt;/h3>&lt;p>Commit regularly, ideally after each agent job run. This lets you run CI checks and even have AI review your code. Fix
+any lint issues or failing tests, and address review feedback early.&lt;/p>
+&lt;h2 id="when-to-task-switch">&lt;a href="#when-to-task-switch" class="header-anchor">&lt;/a>When to task switch
+&lt;/h2>&lt;p>Task switching is fine for small, low-risk work, such as:&lt;/p>
+&lt;ul>
+&lt;li>Fixing a single failing unit test&lt;/li>
+&lt;li>Resolving a simple bug&lt;/li>
+&lt;li>Addressing straightforward code review comments&lt;/li>
+&lt;li>Minor refactoring&lt;/li>
+&lt;li>Adding logging statements&lt;/li>
+&lt;/ul>
+&lt;p>These tasks require little mental setup, so switching costs are minimal. Any quality issues are easier to spot.&lt;/p>
+&lt;h2 id="work-modes-single-tasking-vs-multitasking">&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor">&lt;/a>Work modes: single-tasking vs multitasking
+&lt;/h2>&lt;p>Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Aspect&lt;/th>
+&lt;th>🎯 Single-Task Mode&lt;/th>
+&lt;th>🔄 Multitask Mode&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>&lt;strong>Focus Level&lt;/strong>&lt;/td>
+&lt;td>🧠 Deep focus required&lt;/td>
+&lt;td>😌 Light mental load&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Task Types&lt;/strong>&lt;/td>
+&lt;td>🏗️ Complex features&lt;/td>
+&lt;td>🔧 Minor refactoring&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>🚨 Production bug fixes&lt;/td>
+&lt;td>📝 Code review comments&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>🏛️ Architecture decisions&lt;/td>
+&lt;td>✅ Simple bug fixes&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;/td>
+&lt;td>⚡ Performance optimization&lt;/td>
+&lt;td>📊 Adding logging&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Context Switching&lt;/strong>&lt;/td>
+&lt;td>❌ Avoid at all costs&lt;/td>
+&lt;td>✅ Switch freely&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Agent Strategy&lt;/strong>&lt;/td>
+&lt;td>🎪 One or more agents on same task&lt;/td>
+&lt;td>🎭 Multiple agents on different tasks&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Monitoring&lt;/strong>&lt;/td>
+&lt;td>👁️ Watch progress closely&lt;/td>
+&lt;td>📱 Check periodically&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Risk Level&lt;/strong>&lt;/td>
+&lt;td>⚠️ High - mistakes costly&lt;/td>
+&lt;td>🟢 Low - easy to spot issues&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Mental Setup&lt;/strong>&lt;/td>
+&lt;td>🏔️ Significant ramp-up time&lt;/td>
+&lt;td>🏃 Quick to start&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Quality Impact&lt;/strong>&lt;/td>
+&lt;td>💎 Quality critical&lt;/td>
+&lt;td>👍 Quality easier to verify&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>&lt;strong>Best For&lt;/strong>&lt;/td>
+&lt;td>🚀 Mission-critical work&lt;/td>
+&lt;td>📋 Routine repeatable work&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>&lt;strong>Single-task mode&lt;/strong> is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
+planning ahead or preparing test environments. Keep your context intact.&lt;/p>
+&lt;p>&lt;strong>Multitask mode&lt;/strong> is for routine, well-defined work. Run multiple AI agent jobs in parallel across different branches.
+Switch freely between these smaller tasks as agents finish.&lt;/p>
+&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
+&lt;/h2>&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../ai-for-software-developers/" >AI for software developers&lt;/a>&lt;/strong>&lt;br>
+Explore how AI tools are changing developer workflows and when to embrace AI assistance versus maintaining human
+control.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../will-ai-agents-replace-developers/" >Will AI agents replace software developers?&lt;/a>&lt;/strong>&lt;br>
+Understand the evolving role of developers in an AI-driven world and why human judgment remains irreplaceable.&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="watch-us-discuss-multitasking-with-ai-agents">&lt;a href="#watch-us-discuss-multitasking-with-ai-agents" class="header-anchor">&lt;/a>Watch us discuss multitasking with AI agents
+&lt;/h2>&lt;div class="video-wrapper">
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/HSDrhYvE3g0"
+allowfullscreen
+title="YouTube Video"
+>
+&lt;/iframe>
+&lt;/div>
+&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" />&lt;p>&lt;strong>TL;DR:&lt;/strong> AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
 testing. Productivity gains are real but capped, and engineers must still actively guide and supervise these tools.
 Complete developer replacement is unlikely anytime soon.&lt;/p>
 &lt;ul>
@@ -364,6 +520,10 @@ replace those who don&amp;rsquo;t.&lt;/p>
 &lt;p>&lt;strong>&lt;a class="link" href="../introducing-mcp/" >Introducing MCP: Lessons from building an AI-driven server&lt;/a>&lt;/strong>&lt;br>
 &lt;em>How we taught an AI agent to use our product with MCP.&lt;/em>&lt;/p>
 &lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../multitasking-with-ai-agents/" >Multitasking with AI agents: When it works and when it fails&lt;/a>&lt;/strong>&lt;br>
+&lt;em>Practical strategies for managing multiple AI agents and avoiding the productivity traps of task switching.&lt;/em>&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers">&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor">&lt;/a>Watch us discuss whether AI agents can replace software developers
 &lt;/h2>&lt;div class="video-wrapper">
@@ -659,11 +819,26 @@ multiple AI agents, but in practice, it is hard for people to frequently switch 
 tasks.&lt;/p>
 &lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
 &lt;/h2>&lt;ul>
-&lt;li>For a deeper look at AI agents&amp;rsquo; impact on software development, check out &lt;a class="link" href="../will-ai-agents-replace-developers/" >Will AI agents replace software developers?&lt;/a>&lt;/li>
-&lt;li>We just published &lt;a class="link" href="../introducing-mcp/" >our lessons learned from building an AI-driven MCP server&lt;/a>.&lt;/li>
-&lt;li>We recently discussed
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to scale your codebase with incremental design&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../readable-code/" >the importance of readable code&lt;/a>.&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../will-ai-agents-replace-developers/" >Will AI agents replace software developers?&lt;/a>&lt;/strong>&lt;br>
+A realistic look at how AI coding agents are reshaping software development and what engineers need to do to stay ahead.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../introducing-mcp/" >Introducing MCP: Lessons from building an AI-driven server&lt;/a>&lt;/strong>&lt;br>
+Our lessons learned from building an AI-driven MCP server and how we taught an AI agent to use our product.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../multitasking-with-ai-agents/" >Multitasking with AI agents: When it works and when it fails&lt;/a>&lt;/strong>&lt;br>
+Practical tips on managing AI agent workflows and balancing focus with efficiency.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >How to scale your codebase with incremental design&lt;/a>&lt;/strong>&lt;br>
+Learn evolutionary architecture patterns that help your codebase grow without becoming unmaintainable.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>&lt;a class="link" href="../readable-code/" >What is readable code and why is it important?&lt;/a>&lt;/strong>&lt;br>
+Understand how code clarity impacts team velocity and why readability should be a priority.&lt;/p>
+&lt;/li>
 &lt;/ul>
 &lt;h2 id="watch-how-to-use-ai-for-software-development">&lt;a href="#watch-how-to-use-ai-for-software-development" class="header-anchor">&lt;/a>Watch how to use AI for software development
 &lt;/h2>&lt;div class="video-wrapper">
