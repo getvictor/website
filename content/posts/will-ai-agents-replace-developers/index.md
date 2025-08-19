@@ -397,6 +397,9 @@ replace those who don't.
 - **[Introducing MCP: Lessons from building an AI-driven server](../introducing-mcp/)**  
   _How we taught an AI agent to use our product with MCP._
 
+- **[Multitasking with AI agents: When it works and when it fails](../multitasking-with-ai-agents/)**  
+  _Practical strategies for managing multiple AI agents and avoiding the productivity traps of task switching._
+
 ## Watch us discuss whether AI agents can replace software developers
 
 {{< youtube fdBxpWXajSE >}}

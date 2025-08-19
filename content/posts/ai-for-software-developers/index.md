@@ -196,11 +196,20 @@ tasks.
 
 ## Further reading
 
-- For a deeper look at AI agents' impact on software development, check out [Will AI agents replace software developers?](../will-ai-agents-replace-developers/)
-- We just published [our lessons learned from building an AI-driven MCP server](../introducing-mcp/).
-- We recently discussed
-  [how to scale your codebase with incremental design](../scaling-codebase-evolutionary-architecture/).
-- We also wrote about [the importance of readable code](../readable-code/).
+- **[Will AI agents replace software developers?](../will-ai-agents-replace-developers/)**  
+  A realistic look at how AI coding agents are reshaping software development and what engineers need to do to stay ahead.
+
+- **[Introducing MCP: Lessons from building an AI-driven server](../introducing-mcp/)**  
+  Our lessons learned from building an AI-driven MCP server and how we taught an AI agent to use our product.
+
+- **[Multitasking with AI agents: When it works and when it fails](../multitasking-with-ai-agents/)**  
+  Practical tips on managing AI agent workflows and balancing focus with efficiency.
+
+- **[How to scale your codebase with incremental design](../scaling-codebase-evolutionary-architecture/)**  
+  Learn evolutionary architecture patterns that help your codebase grow without becoming unmaintainable.
+
+- **[What is readable code and why is it important?](../readable-code/)**  
+  Understand how code clarity impacts team velocity and why readability should be a priority.
 
 ## Watch how to use AI for software development
 
