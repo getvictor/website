@@ -1,185 +1,185 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agentic AI on Victor on Software</title><link>https://victoronsoftware.com/tags/agentic-ai/</link><description>Recent content in Agentic AI on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/agentic-ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" />&lt;p>AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Agentic AI on Victor on Software</title><link>https://victoronsoftware.com/tags/agentic-ai/</link><description>Recent content in Agentic AI on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/agentic-ai/index.xml" rel="self" type="application/rss+xml"/><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
 things. But just because an AI can work in parallel does not mean you should. The real question is: when is it worth
-multitasking, and when will it hurt your results?&lt;/p>
-&lt;p>I&amp;rsquo;m a firm believer that humans cannot multitask. Every popular psychology book I have read, and I have read quite a
+multitasking, and when will it hurt your results?&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m a firm believer that humans cannot multitask. Every popular psychology book I have read, and I have read quite a
 few, says that humans cannot multitask, even though many believe they can. Studies show that when humans do two tasks in
-series, they finish faster and with higher quality than when switching between them.&lt;/p>
-&lt;p>But that&amp;rsquo;s not the whole story. Humans can multitask in particular situations. For example, when driving a car and
+series, they finish faster and with higher quality than when switching between them.&lt;/p&gt;
+&lt;p&gt;But that&amp;rsquo;s not the whole story. Humans can multitask in particular situations. For example, when driving a car and
 talking on the phone (with a Bluetooth headset, of course), we are clearly multitasking. Would our driving and
 conversational quality be better if we did these tasks separately? Probably. But the difference, depending on the
 person, might not be that big. Driving is habitual for many people, so we can pair it with another cognitive task
-without dramatically dropping performance.&lt;/p>
-&lt;p>What about throwing AI agents in the mix? It is Wednesday morning. You told your AI agent to do a job. You hope it will
-only take one minute, but it might take up to 15 minutes. What do you do now?&lt;/p>
-&lt;p>&lt;em>Note:&lt;/em> We will use the term &amp;ldquo;task&amp;rdquo; to refer to work a human does, and &amp;ldquo;job&amp;rdquo; to refer to work an AI agent does.&lt;/p>
-&lt;h2 id="task-switching">&lt;a href="#task-switching" class="header-anchor">&lt;/a>Task switching
-&lt;/h2>&lt;p>Research from the American Psychological Association suggests that switching between tasks can cost up to 40% of
+without dramatically dropping performance.&lt;/p&gt;
+&lt;p&gt;What about throwing AI agents in the mix? It is Wednesday morning. You told your AI agent to do a job. You hope it will
+only take one minute, but it might take up to 15 minutes. What do you do now?&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; We will use the term &amp;ldquo;task&amp;rdquo; to refer to work a human does, and &amp;ldquo;job&amp;rdquo; to refer to work an AI agent does.&lt;/p&gt;
+&lt;h2 id="task-switching"&gt;&lt;a href="#task-switching" class="header-anchor"&gt;&lt;/a&gt;Task switching
+&lt;/h2&gt;&lt;p&gt;Research from the American Psychological Association suggests that switching between tasks can cost up to 40% of
 someone&amp;rsquo;s productive time. A University of Michigan study found it takes an average of 23 minutes and 15 seconds to
 fully return to a task after an interruption. Even brief mental blocks from shifting between tasks can cost significant
-time.&lt;/p>
-&lt;p>So, if your AI agent is running, can you do something else while waiting to check the results? If you switch to another
+time.&lt;/p&gt;
+&lt;p&gt;So, if your AI agent is running, can you do something else while waiting to check the results? If you switch to another
 task, such as looking at another bug or feature, you will spend time ramping up on that second task, and then even more
 time switching back to the first. Yes, people do it all the time, but you will not be fully engaged in either task. You
 are more likely to miss something important, like the agent using the wrong method or skipping a critical feature
-requirement. And yes, that happens in real life.&lt;/p>
-&lt;h2 id="when-not-to-task-switch">&lt;a href="#when-not-to-task-switch" class="header-anchor">&lt;/a>When not to task switch
-&lt;/h2>&lt;p>Avoid switching when working on a significant, important feature or bug. You need your full mental capacity in the
-context of that task to deliver the best software.&lt;/p>
-&lt;p>Instead of switching, consider these options.&lt;/p>
-&lt;h3 id="plan-ahead">&lt;a href="#plan-ahead" class="header-anchor">&lt;/a>Plan ahead
-&lt;/h3>&lt;p>After the agent completes its job, what will you do? Will you check the results and then start the next phase? Is that
+requirement. And yes, that happens in real life.&lt;/p&gt;
+&lt;h2 id="when-not-to-task-switch"&gt;&lt;a href="#when-not-to-task-switch" class="header-anchor"&gt;&lt;/a&gt;When not to task switch
+&lt;/h2&gt;&lt;p&gt;Avoid switching when working on a significant, important feature or bug. You need your full mental capacity in the
+context of that task to deliver the best software.&lt;/p&gt;
+&lt;p&gt;Instead of switching, consider these options.&lt;/p&gt;
+&lt;h3 id="plan-ahead"&gt;&lt;a href="#plan-ahead" class="header-anchor"&gt;&lt;/a&gt;Plan ahead
+&lt;/h3&gt;&lt;p&gt;After the agent completes its job, what will you do? Will you check the results and then start the next phase? Is that
 next phase directly related to the current one? Can you spin up a parallel environment and have another agent start the
-next step?&lt;/p>
-&lt;p>If waiting for the agent is your bottleneck, parallelize jobs or ensure the agent is always working on something useful.
-Keeping the agent busy may mean reviewing the agent&amp;rsquo;s work while it jumps ahead and works on the next phase.&lt;/p>
-&lt;h3 id="make-sure-the-agent-is-efficient">&lt;a href="#make-sure-the-agent-is-efficient" class="header-anchor">&lt;/a>Make sure the agent is efficient
-&lt;/h3>&lt;p>Watch the agent&amp;rsquo;s progress to make sure it is not doing unnecessary work. If it is trying to find information you
-already know, stop it and provide the answer. If you do not know the answer, you may find it faster than the agent.&lt;/p>
-&lt;p>For example, as of August 2025, Claude Code does not create a vector database of the codebase, making it slower for
+next step?&lt;/p&gt;
+&lt;p&gt;If waiting for the agent is your bottleneck, parallelize jobs or ensure the agent is always working on something useful.
+Keeping the agent busy may mean reviewing the agent&amp;rsquo;s work while it jumps ahead and works on the next phase.&lt;/p&gt;
+&lt;h3 id="make-sure-the-agent-is-efficient"&gt;&lt;a href="#make-sure-the-agent-is-efficient" class="header-anchor"&gt;&lt;/a&gt;Make sure the agent is efficient
+&lt;/h3&gt;&lt;p&gt;Watch the agent&amp;rsquo;s progress to make sure it is not doing unnecessary work. If it is trying to find information you
+already know, stop it and provide the answer. If you do not know the answer, you may find it faster than the agent.&lt;/p&gt;
+&lt;p&gt;For example, as of August 2025, Claude Code does not create a vector database of the codebase, making it slower for
 certain queries about the codebase. For example, asking where a specific feature is tested. You might ask Cursor, which
-does a semantic index of the codebase, to find the answer faster and then feed the answer back to Claude Code.&lt;/p>
-&lt;p>Agents can go off track. Many use brute-force approaches, repeatedly trying solutions until something works, even if the
-&amp;ldquo;working solution&amp;rdquo; is not optimal. By monitoring progress, you can redirect the agent when needed.&lt;/p>
-&lt;h3 id="prepare-for-manual-qa">&lt;a href="#prepare-for-manual-qa" class="header-anchor">&lt;/a>Prepare for manual QA
-&lt;/h3>&lt;p>Once the feature is ready for manual testing, is your environment ready? Do you need to populate database data, deploy
-other services, or sign up for cloud accounts? Prepare these ahead of time.&lt;/p>
-&lt;h3 id="fix-ci-and-code-review-issues">&lt;a href="#fix-ci-and-code-review-issues" class="header-anchor">&lt;/a>Fix CI and code review issues
-&lt;/h3>&lt;p>Commit regularly, ideally after each agent job run. This lets you run CI checks and even have AI review your code. Fix
-any lint issues or failing tests, and address review feedback early.&lt;/p>
-&lt;h2 id="when-to-task-switch">&lt;a href="#when-to-task-switch" class="header-anchor">&lt;/a>When to task switch
-&lt;/h2>&lt;p>Task switching is fine for small, low-risk work, such as:&lt;/p>
-&lt;ul>
-&lt;li>Fixing a single failing unit test&lt;/li>
-&lt;li>Resolving a simple bug&lt;/li>
-&lt;li>Addressing straightforward code review comments&lt;/li>
-&lt;li>Minor refactoring&lt;/li>
-&lt;li>Adding logging statements&lt;/li>
-&lt;/ul>
-&lt;p>These tasks require little mental setup, so switching costs are minimal. Any quality issues are easier to spot.&lt;/p>
-&lt;h2 id="work-modes-single-tasking-vs-multitasking">&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor">&lt;/a>Work modes: single-tasking vs multitasking
-&lt;/h2>&lt;p>Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p>
-&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>Aspect&lt;/th>
-&lt;th>🎯 Single-Task Mode&lt;/th>
-&lt;th>🔄 Multitask Mode&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>&lt;strong>Focus Level&lt;/strong>&lt;/td>
-&lt;td>🧠 Deep focus required&lt;/td>
-&lt;td>😌 Light mental load&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Task Types&lt;/strong>&lt;/td>
-&lt;td>🏗️ Complex features&lt;/td>
-&lt;td>🔧 Minor refactoring&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;/td>
-&lt;td>🚨 Production bug fixes&lt;/td>
-&lt;td>📝 Code review comments&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;/td>
-&lt;td>🏛️ Architecture decisions&lt;/td>
-&lt;td>✅ Simple bug fixes&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;/td>
-&lt;td>⚡ Performance optimization&lt;/td>
-&lt;td>📊 Adding logging&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Context Switching&lt;/strong>&lt;/td>
-&lt;td>❌ Avoid at all costs&lt;/td>
-&lt;td>✅ Switch freely&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Agent Strategy&lt;/strong>&lt;/td>
-&lt;td>🎪 One or more agents on same task&lt;/td>
-&lt;td>🎭 Multiple agents on different tasks&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Monitoring&lt;/strong>&lt;/td>
-&lt;td>👁️ Watch progress closely&lt;/td>
-&lt;td>📱 Check periodically&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Risk Level&lt;/strong>&lt;/td>
-&lt;td>⚠️ High - mistakes costly&lt;/td>
-&lt;td>🟢 Low - easy to spot issues&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Mental Setup&lt;/strong>&lt;/td>
-&lt;td>🏔️ Significant ramp-up time&lt;/td>
-&lt;td>🏃 Quick to start&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Quality Impact&lt;/strong>&lt;/td>
-&lt;td>💎 Quality critical&lt;/td>
-&lt;td>👍 Quality easier to verify&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>&lt;strong>Best For&lt;/strong>&lt;/td>
-&lt;td>🚀 Mission-critical work&lt;/td>
-&lt;td>📋 Routine repeatable work&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;p>&lt;strong>Single-task mode&lt;/strong> is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
-planning ahead or preparing test environments. Keep your context intact.&lt;/p>
-&lt;p>&lt;strong>Multitask mode&lt;/strong> is for routine, well-defined work. Run multiple AI agent jobs in parallel across different branches.
-Switch freely between these smaller tasks as agents finish.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../ai-for-software-developers/" >AI for software developers&lt;/a>&lt;/strong>&lt;br>
+does a semantic index of the codebase, to find the answer faster and then feed the answer back to Claude Code.&lt;/p&gt;
+&lt;p&gt;Agents can go off track. Many use brute-force approaches, repeatedly trying solutions until something works, even if the
+&amp;ldquo;working solution&amp;rdquo; is not optimal. By monitoring progress, you can redirect the agent when needed.&lt;/p&gt;
+&lt;h3 id="prepare-for-manual-qa"&gt;&lt;a href="#prepare-for-manual-qa" class="header-anchor"&gt;&lt;/a&gt;Prepare for manual QA
+&lt;/h3&gt;&lt;p&gt;Once the feature is ready for manual testing, is your environment ready? Do you need to populate database data, deploy
+other services, or sign up for cloud accounts? Prepare these ahead of time.&lt;/p&gt;
+&lt;h3 id="fix-ci-and-code-review-issues"&gt;&lt;a href="#fix-ci-and-code-review-issues" class="header-anchor"&gt;&lt;/a&gt;Fix CI and code review issues
+&lt;/h3&gt;&lt;p&gt;Commit regularly, ideally after each agent job run. This lets you run CI checks and even have AI review your code. Fix
+any lint issues or failing tests, and address review feedback early.&lt;/p&gt;
+&lt;h2 id="when-to-task-switch"&gt;&lt;a href="#when-to-task-switch" class="header-anchor"&gt;&lt;/a&gt;When to task switch
+&lt;/h2&gt;&lt;p&gt;Task switching is fine for small, low-risk work, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fixing a single failing unit test&lt;/li&gt;
+&lt;li&gt;Resolving a simple bug&lt;/li&gt;
+&lt;li&gt;Addressing straightforward code review comments&lt;/li&gt;
+&lt;li&gt;Minor refactoring&lt;/li&gt;
+&lt;li&gt;Adding logging statements&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;These tasks require little mental setup, so switching costs are minimal. Any quality issues are easier to spot.&lt;/p&gt;
+&lt;h2 id="work-modes-single-tasking-vs-multitasking"&gt;&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor"&gt;&lt;/a&gt;Work modes: single-tasking vs multitasking
+&lt;/h2&gt;&lt;p&gt;Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Aspect&lt;/th&gt;
+&lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
+&lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;🧠 Deep focus required&lt;/td&gt;
+&lt;td&gt;😌 Light mental load&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;🏗️ Complex features&lt;/td&gt;
+&lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
+&lt;td&gt;📝 Code review comments&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
+&lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;⚡ Performance optimization&lt;/td&gt;
+&lt;td&gt;📊 Adding logging&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
+&lt;td&gt;✅ Switch freely&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
+&lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
+&lt;td&gt;📱 Check periodically&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
+&lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
+&lt;td&gt;🏃 Quick to start&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;💎 Quality critical&lt;/td&gt;
+&lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
+&lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Single-task mode&lt;/strong&gt; is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
+planning ahead or preparing test environments. Keep your context intact.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Multitask mode&lt;/strong&gt; is for routine, well-defined work. Run multiple AI agent jobs in parallel across different branches.
+Switch freely between these smaller tasks as agents finish.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../ai-for-software-developers/" &gt;AI for software developers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
 Explore how AI tools are changing developer workflows and when to embrace AI assistance versus maintaining human
-control.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../will-ai-agents-replace-developers/" >Will AI agents replace software developers?&lt;/a>&lt;/strong>&lt;br>
-Understand the evolving role of developers in an AI-driven world and why human judgment remains irreplaceable.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-us-discuss-multitasking-with-ai-agents">&lt;a href="#watch-us-discuss-multitasking-with-ai-agents" class="header-anchor">&lt;/a>Watch us discuss multitasking with AI agents
-&lt;/h2>&lt;div class="video-wrapper">
+control.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../will-ai-agents-replace-developers/" &gt;Will AI agents replace software developers?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Understand the evolving role of developers in an AI-driven world and why human judgment remains irreplaceable.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-discuss-multitasking-with-ai-agents"&gt;&lt;a href="#watch-us-discuss-multitasking-with-ai-agents" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss multitasking with AI agents
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/HSDrhYvE3g0"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" />&lt;p>&lt;strong>TL;DR:&lt;/strong> AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" /&gt;&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
 testing. Productivity gains are real but capped, and engineers must still actively guide and supervise these tools.
-Complete developer replacement is unlikely anytime soon.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#requirements-gathering" >Requirements gathering&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#design" >Design&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#implementation" >Implementation&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#testing" >Testing&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#deployment" >Deployment&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#maintenance" >Maintenance&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#ai-coding-agent-impact-across-the-sdlc" >AI coding agent impact across the SDLC&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#will-ai-coding-agents-replace-software-developers" >Will AI coding agents replace software developers?&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>AI is no longer just autocomplete. With AI coding agents, it is becoming a collaborator. But what happens when that
+Complete developer replacement is unlikely anytime soon.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#requirements-gathering" &gt;Requirements gathering&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#design" &gt;Design&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#implementation" &gt;Implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#testing" &gt;Testing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#deployment" &gt;Deployment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#maintenance" &gt;Maintenance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#ai-coding-agent-impact-across-the-sdlc" &gt;AI coding agent impact across the SDLC&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#will-ai-coding-agents-replace-software-developers" &gt;Will AI coding agents replace software developers?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
+&lt;/h2&gt;&lt;p&gt;AI is no longer just autocomplete. With AI coding agents, it is becoming a collaborator. But what happens when that
 collaborator starts writing and testing entire chunks of your codebase? Will software engineers become managers of
-fleets of AI agents, or will their jobs evolve in less dramatic ways?&lt;/p>
-&lt;p>Our previous article covered the &lt;a class="link" href="../ai-for-software-developers/" >AI trends in the first half of 2025&lt;/a>. Using AI for
+fleets of AI agents, or will their jobs evolve in less dramatic ways?&lt;/p&gt;
+&lt;p&gt;Our previous article covered the &lt;a class="link" href="../ai-for-software-developers/" &gt;AI trends in the first half of 2025&lt;/a&gt;. Using AI for
 code completion and code generation was becoming mainstream. Today, in the second half of 2025, we can expect most
 software developers to be using AI, off and on, for these tasks. But what about using AI coding agents to make
 significant changes to the codebase, including automatically running and fixing tests? Recent surveys show that most
 software engineers are NOT using AI agents. With AI code completion tools like GitHub Copilot being widely adopted
 within about one year, we can reasonably assume that AI agents will likewise be widely adopted by the second half
-of 2026. With that in mind, what will a typical engineer&amp;rsquo;s day look like in 2026?&lt;/p>
-&lt;h3 id="ai-tools-adoption-timeline-in-software-development">&lt;a href="#ai-tools-adoption-timeline-in-software-development" class="header-anchor">&lt;/a>AI tools adoption timeline in software development
-&lt;/h3>&lt;pre class="mermaid">
+of 2026. With that in mind, what will a typical engineer&amp;rsquo;s day look like in 2026?&lt;/p&gt;
+&lt;h3 id="ai-tools-adoption-timeline-in-software-development"&gt;&lt;a href="#ai-tools-adoption-timeline-in-software-development" class="header-anchor"&gt;&lt;/a&gt;AI tools adoption timeline in software development
+&lt;/h3&gt;&lt;pre class="mermaid"&gt;
 timeline
 2022-2023 : GitHub Copilot Launch
 : Early AI code completion
@@ -196,11 +196,11 @@ timeline
 2027+ : AI-native development workflows
 : Advanced agent orchestration
 : Full SDLC integration
-&lt;/pre>
-&lt;p>Let&amp;rsquo;s walk through the software development lifecycle (SDLC) and understand where these new AI coding agents can be
+&lt;/pre&gt;
+&lt;p&gt;Let&amp;rsquo;s walk through the software development lifecycle (SDLC) and understand where these new AI coding agents can be
 used. We will focus specifically on the new capabilities that AI coding agents bring, and not on the existing and
-largely mainstream capabilities of AI code completion and chatbots.&lt;/p>
-&lt;pre class="mermaid">
+largely mainstream capabilities of AI code completion and chatbots.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
 ---
 title: SDLC
 ---
@@ -220,84 +220,84 @@ classDef highImpact fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
 class Requirements,Deployment lowImpact
 class Design,Maintenance mediumImpact
 class Implementation,Testing highImpact
-&lt;/pre>
-&lt;h2 id="requirements-gathering">&lt;a href="#requirements-gathering" class="header-anchor">&lt;/a>Requirements gathering
-&lt;/h2>&lt;p>In requirements gathering, we need to figure out why we are adding a feature and what the feature is, at a high level.
+&lt;/pre&gt;
+&lt;h2 id="requirements-gathering"&gt;&lt;a href="#requirements-gathering" class="header-anchor"&gt;&lt;/a&gt;Requirements gathering
+&lt;/h2&gt;&lt;p&gt;In requirements gathering, we need to figure out why we are adding a feature and what the feature is, at a high level.
 We have two major sources of product features. The first one is a strategic feature that will open up new sources of
 revenue for us. The second is a customer request, which we must build to keep our customers happy. A single feature
-could be both of these.&lt;/p>
-&lt;p>To understand the customer, we actually need to talk to the customer. Barring that, we could do market analysis to see
+could be both of these.&lt;/p&gt;
+&lt;p&gt;To understand the customer, we actually need to talk to the customer. Barring that, we could do market analysis to see
 what similar features our competition has. ChatGPT can speed up this process by aggregating and explaining the
 information. In this case, ChatGPT makes research more efficient, much like Google made research more efficient than
 going to the library. But this is not a new AI use case. Product managers have been using AI to speed up their work for
-years now.&lt;/p>
-&lt;p>As far as figuring out what we&amp;rsquo;re building and why, AI coding agents may have little to add. That said, they may have
-some use cases, such as writing a script to fetch and analyze data from a public API.&lt;/p>
-&lt;p>&lt;em>Note:&lt;/em> Requirements gathering combines the planning and requirements analysis phases, assuming we use a fast-paced
-Agile iterative process.&lt;/p>
-&lt;h2 id="design">&lt;a href="#design" class="header-anchor">&lt;/a>Design
-&lt;/h2>&lt;p>In the design phase, we get into the details of what we&amp;rsquo;re building. We specify the UI requirements, API changes,
-integrations with other services, and other technical requirements.&lt;/p>
-&lt;h3 id="spike-stories-and-proof-of-concepts-pocs">&lt;a href="#spike-stories-and-proof-of-concepts-pocs" class="header-anchor">&lt;/a>Spike stories and proof of concepts (POCs)
-&lt;/h3>&lt;p>Often, there are enough uncertainties in the feature that software engineers must do a spike story or build a POC. A
-spike story is an Agile user story to research a technical question. Spike stories uncover things like:&lt;/p>
-&lt;ul>
-&lt;li>Technical feasibility (e.g., can we use TPM to sign HTTP messages?)&lt;/li>
-&lt;li>Implementation approach (e.g., should we use webhooks or polling?)&lt;/li>
-&lt;li>Integration behavior (e.g., how does this 3rd party API handle pagination and errors?)&lt;/li>
-&lt;li>Tool or library evaluation (e.g., does this 3rd party library provide all the features we need?)&lt;/li>
-&lt;li>Unknown complexities or risk (e.g., will this actually work?)&lt;/li>
-&lt;/ul>
-&lt;p>In a spike story or POC, we often write quick throwaway code without other architectural considerations, such as
+years now.&lt;/p&gt;
+&lt;p&gt;As far as figuring out what we&amp;rsquo;re building and why, AI coding agents may have little to add. That said, they may have
+some use cases, such as writing a script to fetch and analyze data from a public API.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; Requirements gathering combines the planning and requirements analysis phases, assuming we use a fast-paced
+Agile iterative process.&lt;/p&gt;
+&lt;h2 id="design"&gt;&lt;a href="#design" class="header-anchor"&gt;&lt;/a&gt;Design
+&lt;/h2&gt;&lt;p&gt;In the design phase, we get into the details of what we&amp;rsquo;re building. We specify the UI requirements, API changes,
+integrations with other services, and other technical requirements.&lt;/p&gt;
+&lt;h3 id="spike-stories-and-proof-of-concepts-pocs"&gt;&lt;a href="#spike-stories-and-proof-of-concepts-pocs" class="header-anchor"&gt;&lt;/a&gt;Spike stories and proof of concepts (POCs)
+&lt;/h3&gt;&lt;p&gt;Often, there are enough uncertainties in the feature that software engineers must do a spike story or build a POC. A
+spike story is an Agile user story to research a technical question. Spike stories uncover things like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Technical feasibility (e.g., can we use TPM to sign HTTP messages?)&lt;/li&gt;
+&lt;li&gt;Implementation approach (e.g., should we use webhooks or polling?)&lt;/li&gt;
+&lt;li&gt;Integration behavior (e.g., how does this 3rd party API handle pagination and errors?)&lt;/li&gt;
+&lt;li&gt;Tool or library evaluation (e.g., does this 3rd party library provide all the features we need?)&lt;/li&gt;
+&lt;li&gt;Unknown complexities or risk (e.g., will this actually work?)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In a spike story or POC, we often write quick throwaway code without other architectural considerations, such as
 maintainability. And this is where AI coding agents can help. Theoretically, an AI coding agent can create a whole POC
 with only a cursory review from the software developer. But this is an extreme case. In most cases, the work will be a
-mix of coding, reviewing technical documentation, searching the web, and talking with ChatGPT.&lt;/p>
-&lt;p>So, with the help of an AI coding agent, we could finish our spike story faster. If the work was timeboxed, the end
-result should be higher quality.&lt;/p>
-&lt;h3 id="final-design">&lt;a href="#final-design" class="header-anchor">&lt;/a>Final design
-&lt;/h3>&lt;p>After the spike story, we still need to finish the design, providing all the technical specifications required for
+mix of coding, reviewing technical documentation, searching the web, and talking with ChatGPT.&lt;/p&gt;
+&lt;p&gt;So, with the help of an AI coding agent, we could finish our spike story faster. If the work was timeboxed, the end
+result should be higher quality.&lt;/p&gt;
+&lt;h3 id="final-design"&gt;&lt;a href="#final-design" class="header-anchor"&gt;&lt;/a&gt;Final design
+&lt;/h3&gt;&lt;p&gt;After the spike story, we still need to finish the design, providing all the technical specifications required for
 estimation and implementation. These details include an understanding of how this feature interacts with all the other
-parts of our application, such as:&lt;/p>
-&lt;ul>
-&lt;li>UI&lt;/li>
-&lt;li>configuration&lt;/li>
-&lt;li>authentication&lt;/li>
-&lt;li>monitoring and logging&lt;/li>
-&lt;li>error handling&lt;/li>
-&lt;li>scalability and performance&lt;/li>
-&lt;li>internationalization&lt;/li>
-&lt;/ul>
-&lt;p>Although some of these aspects are shared between features, we, as software developers, still need to consider and
+parts of our application, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;UI&lt;/li&gt;
+&lt;li&gt;configuration&lt;/li&gt;
+&lt;li&gt;authentication&lt;/li&gt;
+&lt;li&gt;monitoring and logging&lt;/li&gt;
+&lt;li&gt;error handling&lt;/li&gt;
+&lt;li&gt;scalability and performance&lt;/li&gt;
+&lt;li&gt;internationalization&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although some of these aspects are shared between features, we, as software developers, still need to consider and
 investigate the new feature&amp;rsquo;s implications. AI coding agents are of little help here, besides providing boilerplate
-requirements.&lt;/p>
-&lt;h2 id="implementation">&lt;a href="#implementation" class="header-anchor">&lt;/a>Implementation
-&lt;/h2>&lt;p>After the feature has been designed and estimated, it is time to get down to the work of coding. Can an AI agent do all
+requirements.&lt;/p&gt;
+&lt;h2 id="implementation"&gt;&lt;a href="#implementation" class="header-anchor"&gt;&lt;/a&gt;Implementation
+&lt;/h2&gt;&lt;p&gt;After the feature has been designed and estimated, it is time to get down to the work of coding. Can an AI agent do all
 of this? Well, we may not be able to take the design and feed it to our agent. A product manager or another engineer may
-have done the design, and this design may lack enough details for implementation. So we have to add details, like:&lt;/p>
-&lt;ul>
-&lt;li>Function names (e.g., &lt;code>sendEmailNotification&lt;/code>)&lt;/li>
-&lt;li>Constant and enum names (e.g., &lt;code>RoleAdmin&lt;/code>)&lt;/li>
-&lt;li>File and package structure (e.g., &lt;code>handlers/user.go&lt;/code>)&lt;/li>
-&lt;li>Error handling strategy (e.g., wrap errors and add context)&lt;/li>
-&lt;li>Interface design (e.g., create a new interface to simplify testing)&lt;/li>
-&lt;li>Security considerations (e.g., validate inputs)&lt;/li>
-&lt;/ul>
-&lt;p>Yes, an AI coding agent may indeed come up with some of these on its own. However, we must consciously consider these to
-ensure our codebase is maintainable, testable, scalable, and handles corner cases.&lt;/p>
-&lt;p>So, once we know what we need to code, we can write a prompt to the AI coding agent and let it do its work. Today&amp;rsquo;s AI
+have done the design, and this design may lack enough details for implementation. So we have to add details, like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Function names (e.g., &lt;code&gt;sendEmailNotification&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Constant and enum names (e.g., &lt;code&gt;RoleAdmin&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;File and package structure (e.g., &lt;code&gt;handlers/user.go&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Error handling strategy (e.g., wrap errors and add context)&lt;/li&gt;
+&lt;li&gt;Interface design (e.g., create a new interface to simplify testing)&lt;/li&gt;
+&lt;li&gt;Security considerations (e.g., validate inputs)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Yes, an AI coding agent may indeed come up with some of these on its own. However, we must consciously consider these to
+ensure our codebase is maintainable, testable, scalable, and handles corner cases.&lt;/p&gt;
+&lt;p&gt;So, once we know what we need to code, we can write a prompt to the AI coding agent and let it do its work. Today&amp;rsquo;s AI
 coding agents are not very fast. In our experience, we ask an AI agent to do a chunk of work, and it completes it in
 several minutes. Then we do a brief review of what it did and come back to it with corrections. Corrections often
-include things like:&lt;/p>
-&lt;ul>
-&lt;li>Using the correct coding standards for our codebase&lt;/li>
-&lt;li>Removing unneeded code (e.g., handling cases that we know cannot happen)&lt;/li>
-&lt;li>Removing/merging duplicate code&lt;/li>
-&lt;li>Using better names for functions/variables (e.g., don&amp;rsquo;t use &lt;code>err2&lt;/code>)&lt;/li>
-&lt;/ul>
-&lt;p>If we let the AI agent do a bigger chunk of work (30+ minutes), there is a greater chance that it will go off the rails,
+include things like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Using the correct coding standards for our codebase&lt;/li&gt;
+&lt;li&gt;Removing unneeded code (e.g., handling cases that we know cannot happen)&lt;/li&gt;
+&lt;li&gt;Removing/merging duplicate code&lt;/li&gt;
+&lt;li&gt;Using better names for functions/variables (e.g., don&amp;rsquo;t use &lt;code&gt;err2&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If we let the AI agent do a bigger chunk of work (30+ minutes), there is a greater chance that it will go off the rails,
 and all the work must be redone. For example, an AI agent could decide to implement a third-party library itself because
-it couldn&amp;rsquo;t figure out how to use the existing one.&lt;/p>
-&lt;pre class="mermaid">
+it couldn&amp;rsquo;t figure out how to use the existing one.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
 ---
 title: AI agent development workflow
 ---
@@ -318,346 +318,346 @@ classDef reviewTask fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
 class A,C,E,F,H humanTask
 class B,G aiTask
 class D,I reviewTask
-&lt;/pre>
-&lt;p>Once we reach a good stopping point, we need to review all the code changes that we and our AI agent have made. Since
+&lt;/pre&gt;
+&lt;p&gt;Once we reach a good stopping point, we need to review all the code changes that we and our AI agent have made. Since
 much of the code was autogenerated, we must take extra care to do a thorough review. The goal is to fully understand the
-implementation so that we can speak about it as if we coded all of it ourselves.&lt;/p>
-&lt;p>Once we have checked in the code or opened a PR, we can ask another AI agent to review it. With multiple LLMs and coding
+implementation so that we can speak about it as if we coded all of it ourselves.&lt;/p&gt;
+&lt;p&gt;Once we have checked in the code or opened a PR, we can ask another AI agent to review it. With multiple LLMs and coding
 agents out there, it is good practice to have one AI agent check the work of another AI agent for anything that we may
 have missed. Unfortunately, this means wading through a few false positives. However, the end result is higher-quality
-code that is ready for one of our peers to review.&lt;/p>
-&lt;h3 id="multitasking-with-multiple-ai-agents">&lt;a href="#multitasking-with-multiple-ai-agents" class="header-anchor">&lt;/a>Multitasking with multiple AI agents
-&lt;/h3>&lt;p>Some developers report using multiple AI agents to work on numerous projects simultaneously. In our workflow, this
+code that is ready for one of our peers to review.&lt;/p&gt;
+&lt;h3 id="multitasking-with-multiple-ai-agents"&gt;&lt;a href="#multitasking-with-multiple-ai-agents" class="header-anchor"&gt;&lt;/a&gt;Multitasking with multiple AI agents
+&lt;/h3&gt;&lt;p&gt;Some developers report using multiple AI agents to work on numerous projects simultaneously. In our workflow, this
 approach is not practical. We know from behavioral science research that it takes a human up to 15 minutes to entirely
 switch between different tasks because they must reload and recall all of the context associated with the new task into
 their brain. So, if we switch between tasks every 5-10 minutes, the result is that we&amp;rsquo;re never deeply engaged with any
-of these tasks, likely leading to lower quality software.&lt;/p>
-&lt;p>Perhaps two AI coding agents can work on two tasks for the same feature. However, in this case, the two tasks must be
-independent, which is more of an exception than the norm.&lt;/p>
-&lt;p>Even if we decide to save some time by switching from AI agent coding to a longer task, such as a code review for one of
+of these tasks, likely leading to lower quality software.&lt;/p&gt;
+&lt;p&gt;Perhaps two AI coding agents can work on two tasks for the same feature. However, in this case, the two tasks must be
+independent, which is more of an exception than the norm.&lt;/p&gt;
+&lt;p&gt;Even if we decide to save some time by switching from AI agent coding to a longer task, such as a code review for one of
 our peers, when we return to the agent, we will need to recall what we told the agent to do and what our expectations
-were.&lt;/p>
-&lt;h3 id="integration-with-the-rest-of-the-codebase">&lt;a href="#integration-with-the-rest-of-the-codebase" class="header-anchor">&lt;/a>Integration with the rest of the codebase
-&lt;/h3>&lt;p>A lot of software development work involves hooking up the feature into the existing codebase. For example, we need to
+were.&lt;/p&gt;
+&lt;h3 id="integration-with-the-rest-of-the-codebase"&gt;&lt;a href="#integration-with-the-rest-of-the-codebase" class="header-anchor"&gt;&lt;/a&gt;Integration with the rest of the codebase
+&lt;/h3&gt;&lt;p&gt;A lot of software development work involves hooking up the feature into the existing codebase. For example, we need to
 create the new object and properly do dependency injection. These things often only take a few lines of code. Although
 AI coding agents can do these integrations, it is often just as fast and more reliable to manually code these smaller
-snippets.&lt;/p>
-&lt;h3 id="full-stack-development">&lt;a href="#full-stack-development" class="header-anchor">&lt;/a>Full stack development
-&lt;/h3>&lt;p>AI coding agents can help you write in a programming language you&amp;rsquo;re unfamiliar with. The agent will do the brunt work,
+snippets.&lt;/p&gt;
+&lt;h3 id="full-stack-development"&gt;&lt;a href="#full-stack-development" class="header-anchor"&gt;&lt;/a&gt;Full stack development
+&lt;/h3&gt;&lt;p&gt;AI coding agents can help you write in a programming language you&amp;rsquo;re unfamiliar with. The agent will do the brunt work,
 getting the syntax (mostly) right, and you can review the code to make sure it looks reasonable. This means software
-developers can easily expand beyond their functional specialty into other languages and parts of the codebase.&lt;/p>
-&lt;p>From an SDLC perspective, a single feature is now more likely to be assigned to a single developer instead of being
+developers can easily expand beyond their functional specialty into other languages and parts of the codebase.&lt;/p&gt;
+&lt;p&gt;From an SDLC perspective, a single feature is now more likely to be assigned to a single developer instead of being
 partitioned across backend/frontend or server/client boundaries. In this case, a single developer should be able to
-finish a feature faster, without the handoffs and the issues they entail.&lt;/p>
-&lt;p>Overall, AI coding agents can significantly help speed up the implementation phase. However, we must note that AI agent
-effectiveness varies by task. Specifically, agents struggle with complex/niche designs and unfamiliar contexts.&lt;/p>
-&lt;h2 id="testing">&lt;a href="#testing" class="header-anchor">&lt;/a>Testing
-&lt;/h2>&lt;p>The two main testing areas are automated tests, including unit and integration tests, and manual tests.&lt;/p>
-&lt;h3 id="automated-unit-tests">&lt;a href="#automated-unit-tests" class="header-anchor">&lt;/a>Automated (unit) tests
-&lt;/h3>&lt;p>Writing tests has been a primary use case for generative AI over the past few years. So, given detailed instructions
+finish a feature faster, without the handoffs and the issues they entail.&lt;/p&gt;
+&lt;p&gt;Overall, AI coding agents can significantly help speed up the implementation phase. However, we must note that AI agent
+effectiveness varies by task. Specifically, agents struggle with complex/niche designs and unfamiliar contexts.&lt;/p&gt;
+&lt;h2 id="testing"&gt;&lt;a href="#testing" class="header-anchor"&gt;&lt;/a&gt;Testing
+&lt;/h2&gt;&lt;p&gt;The two main testing areas are automated tests, including unit and integration tests, and manual tests.&lt;/p&gt;
+&lt;h3 id="automated-unit-tests"&gt;&lt;a href="#automated-unit-tests" class="header-anchor"&gt;&lt;/a&gt;Automated (unit) tests
+&lt;/h3&gt;&lt;p&gt;Writing tests has been a primary use case for generative AI over the past few years. So, given detailed instructions
 regarding the scenarios to test, an AI coding agent should be able to write the test, run the test, and fix any issues.
 The software developer will still need to review and adjust the tests. Some common problems with agent-generated tests
-include:&lt;/p>
-&lt;ul>
-&lt;li>Not following project standards regarding the test helper methods being used (e.g., wrong HTTP client, wrong assert
-method)&lt;/li>
-&lt;li>Wordy and hard to maintain tests (e.g., not following a table test approach, not using subtests)&lt;/li>
-&lt;li>Duplicated tests (e.g., testing a case that was covered elsewhere in the test suite)&lt;/li>
-&lt;li>Using numbers in test variables instead of descriptive names (e.g., rsp1, err2)&lt;/li>
-&lt;li>Not actually testing anything (e.g., hard-coding test expectations in the source implementation)&lt;/li>
-&lt;/ul>
-&lt;p>The AI agent may come up with some corner cases to test, but it cannot be relied on for full functional correctness.
+include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Not following project standards regarding the test helper methods being used (e.g., wrong HTTP client, wrong assert
+method)&lt;/li&gt;
+&lt;li&gt;Wordy and hard to maintain tests (e.g., not following a table test approach, not using subtests)&lt;/li&gt;
+&lt;li&gt;Duplicated tests (e.g., testing a case that was covered elsewhere in the test suite)&lt;/li&gt;
+&lt;li&gt;Using numbers in test variables instead of descriptive names (e.g., rsp1, err2)&lt;/li&gt;
+&lt;li&gt;Not actually testing anything (e.g., hard-coding test expectations in the source implementation)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The AI agent may come up with some corner cases to test, but it cannot be relied on for full functional correctness.
 Since the AI agent can see the implementation, it often bases its tests on what has been implemented. It lacks an
-understanding of the intended requirements and, hence, what should be tested.&lt;/p>
-&lt;h3 id="manual-tests">&lt;a href="#manual-tests" class="header-anchor">&lt;/a>Manual tests
-&lt;/h3>&lt;p>Before handing over the implementation to the QA team, the software developer should review the test plan themselves and
-perform all the manual tests. Any issues found can be candidates for additional automated tests.&lt;/p>
-&lt;p>There is no AI agent today that can replace manual testers, but engineers can try to take advantage of AI to help in
-some areas:&lt;/p>
-&lt;ul>
-&lt;li>Convert natural language to test steps&lt;/li>
-&lt;li>Identify visual (UI) regressions&lt;/li>
-&lt;li>Accessibility testing&lt;/li>
-&lt;li>Auto-healing tests: updating tests when UI changes&lt;/li>
-&lt;/ul>
-&lt;p>So, for the testing phase, AI coding agents provide much help with creating and fixing automated tests, but not so much
-with manual testing.&lt;/p>
-&lt;h2 id="deployment">&lt;a href="#deployment" class="header-anchor">&lt;/a>Deployment
-&lt;/h2>&lt;p>Before deploying the app to customers, engineers should do a release readiness check covering items like:&lt;/p>
-&lt;ul>
-&lt;li>All committed features implemented&lt;/li>
-&lt;li>Testing and QA complete&lt;/li>
-&lt;li>Security checks passed&lt;/li>
-&lt;li>Load testing complete&lt;/li>
-&lt;/ul>
-&lt;p>After deployment, engineers should conduct smoke tests and health checks to ensure the app is working.&lt;/p>
-&lt;p>In addition, deployment involves communication tasks, such as:&lt;/p>
-&lt;ul>
-&lt;li>demos, guides, FAQs&lt;/li>
-&lt;li>release notes and changelogs&lt;/li>
-&lt;/ul>
-&lt;p>Generative AI is being used to generate some communication content. AI coding agents can provide little additional value
-in the deployment phase.&lt;/p>
-&lt;h2 id="maintenance">&lt;a href="#maintenance" class="header-anchor">&lt;/a>Maintenance
-&lt;/h2>&lt;p>The maintenance phase of the software development lifecycle includes:&lt;/p>
-&lt;ul>
-&lt;li>Answering customer and internal questions&lt;/li>
-&lt;li>Responding to alerts and incidents (e.g., investigating high CPU usage, resolving a failed background job)&lt;/li>
-&lt;li>Reproducing and fixing customer-reported bugs&lt;/li>
-&lt;/ul>
-&lt;p>AI search tools have been helpful with searching the codebase and documentation to answer questions. Some upcoming tools
+understanding of the intended requirements and, hence, what should be tested.&lt;/p&gt;
+&lt;h3 id="manual-tests"&gt;&lt;a href="#manual-tests" class="header-anchor"&gt;&lt;/a&gt;Manual tests
+&lt;/h3&gt;&lt;p&gt;Before handing over the implementation to the QA team, the software developer should review the test plan themselves and
+perform all the manual tests. Any issues found can be candidates for additional automated tests.&lt;/p&gt;
+&lt;p&gt;There is no AI agent today that can replace manual testers, but engineers can try to take advantage of AI to help in
+some areas:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Convert natural language to test steps&lt;/li&gt;
+&lt;li&gt;Identify visual (UI) regressions&lt;/li&gt;
+&lt;li&gt;Accessibility testing&lt;/li&gt;
+&lt;li&gt;Auto-healing tests: updating tests when UI changes&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, for the testing phase, AI coding agents provide much help with creating and fixing automated tests, but not so much
+with manual testing.&lt;/p&gt;
+&lt;h2 id="deployment"&gt;&lt;a href="#deployment" class="header-anchor"&gt;&lt;/a&gt;Deployment
+&lt;/h2&gt;&lt;p&gt;Before deploying the app to customers, engineers should do a release readiness check covering items like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;All committed features implemented&lt;/li&gt;
+&lt;li&gt;Testing and QA complete&lt;/li&gt;
+&lt;li&gt;Security checks passed&lt;/li&gt;
+&lt;li&gt;Load testing complete&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After deployment, engineers should conduct smoke tests and health checks to ensure the app is working.&lt;/p&gt;
+&lt;p&gt;In addition, deployment involves communication tasks, such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;demos, guides, FAQs&lt;/li&gt;
+&lt;li&gt;release notes and changelogs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Generative AI is being used to generate some communication content. AI coding agents can provide little additional value
+in the deployment phase.&lt;/p&gt;
+&lt;h2 id="maintenance"&gt;&lt;a href="#maintenance" class="header-anchor"&gt;&lt;/a&gt;Maintenance
+&lt;/h2&gt;&lt;p&gt;The maintenance phase of the software development lifecycle includes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Answering customer and internal questions&lt;/li&gt;
+&lt;li&gt;Responding to alerts and incidents (e.g., investigating high CPU usage, resolving a failed background job)&lt;/li&gt;
+&lt;li&gt;Reproducing and fixing customer-reported bugs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;AI search tools have been helpful with searching the codebase and documentation to answer questions. Some upcoming tools
 are trying to close the loop between production monitoring and source code fixes, and this is a great area to watch.
-Reproducing bugs is still very much a manual process.&lt;/p>
-&lt;p>Fixing bugs is an implementation task, so AI coding agents can help create the fix and a unit test. However, bug fixes
+Reproducing bugs is still very much a manual process.&lt;/p&gt;
+&lt;p&gt;Fixing bugs is an implementation task, so AI coding agents can help create the fix and a unit test. However, bug fixes
 tend to be small in nature, with most of the software engineer&amp;rsquo;s time spent figuring out where the bug is and how best
-to fix it.&lt;/p>
-&lt;h2 id="ai-coding-agent-impact-across-the-sdlc">&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor">&lt;/a>AI coding agent impact across the SDLC
-&lt;/h2>&lt;table>
-&lt;thead>
-&lt;tr>
-&lt;th>SDLC Phase&lt;/th>
-&lt;th>AI Agent Impact&lt;/th>
-&lt;th>🔍 Notes&lt;/th>
-&lt;/tr>
-&lt;/thead>
-&lt;tbody>
-&lt;tr>
-&lt;td>📝 Requirements&lt;/td>
-&lt;td>❌ Low&lt;/td>
-&lt;td>Some research support, but little for strategic/product thinking&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>🧠 Design&lt;/td>
-&lt;td>⚠️ Low–Medium&lt;/td>
-&lt;td>Help limited to spike stories and boilerplate&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>💻 Implementation&lt;/td>
-&lt;td>✅ High&lt;/td>
-&lt;td>Most benefit seen here (code gen, agent pair programming)&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>🧪 Automated Testing&lt;/td>
-&lt;td>✅ High&lt;/td>
-&lt;td>Strong at generating/fixing tests, needs human oversight&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>🧍 Manual Testing&lt;/td>
-&lt;td>❌ Low&lt;/td>
-&lt;td>Still mostly a human-driven process&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>🚀 Deployment&lt;/td>
-&lt;td>❌ Low&lt;/td>
-&lt;td>Some help with writing release notes, limited technical role&lt;/td>
-&lt;/tr>
-&lt;tr>
-&lt;td>🔧 Maintenance&lt;/td>
-&lt;td>⚠️ Medium&lt;/td>
-&lt;td>Good at fixes; weak at reproducing or analyzing issues&lt;/td>
-&lt;/tr>
-&lt;/tbody>
-&lt;/table>
-&lt;h2 id="risk-and-tradeoffs">&lt;a href="#risk-and-tradeoffs" class="header-anchor">&lt;/a>Risk and tradeoffs
-&lt;/h2>&lt;p>While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
-manage:&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>Shallow code understanding&lt;/strong>: Engineers may be tempted to rely on agents without fully understanding the generated
-code. This erodes accountability and leads to slower debugging when issues arise.&lt;/li>
-&lt;li>&lt;strong>Inconsistent quality&lt;/strong>: Agent-generated code can be verbose, redundant, or subtly incorrect. Without careful review,
-these issues can slip into production.&lt;/li>
-&lt;li>&lt;strong>Developer deskilling&lt;/strong>: Over-reliance on agents may reduce hands-on practice with fundamentals, particularly for
-junior engineers who are still developing intuition.&lt;/li>
-&lt;li>&lt;strong>Security and compliance&lt;/strong>: Agents can unknowingly introduce vulnerabilities or use unsafe patterns, especially when
-integrating with third-party APIs or handling sensitive data.&lt;/li>
-&lt;/ul>
-&lt;p>In short, AI agents amplify output, but without discipline and oversight, they can amplify problems too. Teams must
-treat agent-generated code with &lt;strong>greater&lt;/strong> rigor than human-written code.&lt;/p>
-&lt;h2 id="will-ai-coding-agents-replace-software-developers">&lt;a href="#will-ai-coding-agents-replace-software-developers" class="header-anchor">&lt;/a>Will AI coding agents replace software developers?
-&lt;/h2>&lt;p>Recent studies suggest that current AI tools improve productivity by 10% to 20%.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://arxiv.org/abs/2410.12944" target="_blank" rel="noopener"
->AI speeds up Google engineers by 21%&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://nypost.com/2025/03/14/business/jpmorgan-credits-coding-assistant-tool-for-boosting-engineers-efficiency/" target="_blank" rel="noopener"
->JPMorgan claims AI boosts efficiency by up to 20%&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.itpro.com/software/development/atlassian-says-ai-has-created-an-unexpected-paradox-for-software-developers-theyre-saving-over-10-hours-a-week-but-theyre-still-overworked-and-losing-an-equal-amount-of-time-due-to-organizational-inefficiencies" target="_blank" rel="noopener"
->Atlassian says AI is saving over 10 hours per week&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.reuters.com/business/ai-slows-down-some-experienced-software-developers-study-finds-2025-07-10" target="_blank" rel="noopener"
->AI slows down some developers&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>So, will the productivity improvements jump with AI coding agents becoming mainstream? Will one engineer be able to do
-the work of a whole team?&lt;/p>
-&lt;p>Looking at the whole software development process, we see that the most significant gains from AI coding agents are in
+to fix it.&lt;/p&gt;
+&lt;h2 id="ai-coding-agent-impact-across-the-sdlc"&gt;&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor"&gt;&lt;/a&gt;AI coding agent impact across the SDLC
+&lt;/h2&gt;&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;SDLC Phase&lt;/th&gt;
+&lt;th&gt;AI Agent Impact&lt;/th&gt;
+&lt;th&gt;🔍 Notes&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;📝 Requirements&lt;/td&gt;
+&lt;td&gt;❌ Low&lt;/td&gt;
+&lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🧠 Design&lt;/td&gt;
+&lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
+&lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;💻 Implementation&lt;/td&gt;
+&lt;td&gt;✅ High&lt;/td&gt;
+&lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🧪 Automated Testing&lt;/td&gt;
+&lt;td&gt;✅ High&lt;/td&gt;
+&lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🧍 Manual Testing&lt;/td&gt;
+&lt;td&gt;❌ Low&lt;/td&gt;
+&lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🚀 Deployment&lt;/td&gt;
+&lt;td&gt;❌ Low&lt;/td&gt;
+&lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;🔧 Maintenance&lt;/td&gt;
+&lt;td&gt;⚠️ Medium&lt;/td&gt;
+&lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="risk-and-tradeoffs"&gt;&lt;a href="#risk-and-tradeoffs" class="header-anchor"&gt;&lt;/a&gt;Risk and tradeoffs
+&lt;/h2&gt;&lt;p&gt;While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
+manage:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Shallow code understanding&lt;/strong&gt;: Engineers may be tempted to rely on agents without fully understanding the generated
+code. This erodes accountability and leads to slower debugging when issues arise.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Inconsistent quality&lt;/strong&gt;: Agent-generated code can be verbose, redundant, or subtly incorrect. Without careful review,
+these issues can slip into production.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Developer deskilling&lt;/strong&gt;: Over-reliance on agents may reduce hands-on practice with fundamentals, particularly for
+junior engineers who are still developing intuition.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Security and compliance&lt;/strong&gt;: Agents can unknowingly introduce vulnerabilities or use unsafe patterns, especially when
+integrating with third-party APIs or handling sensitive data.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In short, AI agents amplify output, but without discipline and oversight, they can amplify problems too. Teams must
+treat agent-generated code with &lt;strong&gt;greater&lt;/strong&gt; rigor than human-written code.&lt;/p&gt;
+&lt;h2 id="will-ai-coding-agents-replace-software-developers"&gt;&lt;a href="#will-ai-coding-agents-replace-software-developers" class="header-anchor"&gt;&lt;/a&gt;Will AI coding agents replace software developers?
+&lt;/h2&gt;&lt;p&gt;Recent studies suggest that current AI tools improve productivity by 10% to 20%.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://arxiv.org/abs/2410.12944" target="_blank" rel="noopener"
+&gt;AI speeds up Google engineers by 21%&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://nypost.com/2025/03/14/business/jpmorgan-credits-coding-assistant-tool-for-boosting-engineers-efficiency/" target="_blank" rel="noopener"
+&gt;JPMorgan claims AI boosts efficiency by up to 20%&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.itpro.com/software/development/atlassian-says-ai-has-created-an-unexpected-paradox-for-software-developers-theyre-saving-over-10-hours-a-week-but-theyre-still-overworked-and-losing-an-equal-amount-of-time-due-to-organizational-inefficiencies" target="_blank" rel="noopener"
+&gt;Atlassian says AI is saving over 10 hours per week&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.reuters.com/business/ai-slows-down-some-experienced-software-developers-study-finds-2025-07-10" target="_blank" rel="noopener"
+&gt;AI slows down some developers&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, will the productivity improvements jump with AI coding agents becoming mainstream? Will one engineer be able to do
+the work of a whole team?&lt;/p&gt;
+&lt;p&gt;Looking at the whole software development process, we see that the most significant gains from AI coding agents are in
 the implementation and automated testing phases. The consensus from studies and industry reports is that software
 engineers spend only about 30% of their time writing code. The rest of the time is spent in the other phases of the
-SDLC, as well as on other tasks such as:&lt;/p>
-&lt;ul>
-&lt;li>attending and preparing for meetings (e.g., planning, retros, 1:1s)&lt;/li>
-&lt;li>mentoring, teaching, and continuous learning&lt;/li>
-&lt;li>context switching and task juggling&lt;/li>
-&lt;li>recruiting, interviewing, and candidate evaluation&lt;/li>
-&lt;li>writing or reviewing internal documentation, ADRs, and RFCs&lt;/li>
-&lt;li>developer advocacy, blogging, and community engagement&lt;/li>
-&lt;li>travel for conferences, offsites, or customer visits&lt;/li>
-&lt;li>improving tooling, automation, and developer environments&lt;/li>
-&lt;/ul>
-&lt;p>Even assuming AI agents completely automate coding tasks (30% of work), the maximum productivity gain would be 43%: if
+SDLC, as well as on other tasks such as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;attending and preparing for meetings (e.g., planning, retros, 1:1s)&lt;/li&gt;
+&lt;li&gt;mentoring, teaching, and continuous learning&lt;/li&gt;
+&lt;li&gt;context switching and task juggling&lt;/li&gt;
+&lt;li&gt;recruiting, interviewing, and candidate evaluation&lt;/li&gt;
+&lt;li&gt;writing or reviewing internal documentation, ADRs, and RFCs&lt;/li&gt;
+&lt;li&gt;developer advocacy, blogging, and community engagement&lt;/li&gt;
+&lt;li&gt;travel for conferences, offsites, or customer visits&lt;/li&gt;
+&lt;li&gt;improving tooling, automation, and developer environments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Even assuming AI agents completely automate coding tasks (30% of work), the maximum productivity gain would be 43%: if
 70% of work remains unchanged, then 30% time savings translates to doing 1.43x the work. In other words, 7 people can
-now do the work of 10 people. This is far from the popular claims that AI will replace all software engineers.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/productivity-gain.svg">
-&lt;/figure>
-&lt;p>In summary, AI in general and AI coding agents in particular should continue to have a noticeable impact on software
+now do the work of 10 people. This is far from the popular claims that AI will replace all software engineers.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/productivity-gain.svg"&gt;
+&lt;/figure&gt;
+&lt;p&gt;In summary, AI in general and AI coding agents in particular should continue to have a noticeable impact on software
 developer productivity. However, developers&amp;rsquo; work is complex and varied, and AI can only provide efficiency improvements
 and not wholesale replacement. AI coding agents won&amp;rsquo;t replace developers, but developers who know how to use them will
-replace those who don&amp;rsquo;t.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../ai-for-software-developers/" >How to use AI for software development (2025)&lt;/a>&lt;/strong>&lt;br>
-&lt;em>What every software engineer needs to know about AI right now: code completion, generation, and AI agents.&lt;/em>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../introducing-mcp/" >Introducing MCP: Lessons from building an AI-driven server&lt;/a>&lt;/strong>&lt;br>
-&lt;em>How we taught an AI agent to use our product with MCP.&lt;/em>&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../multitasking-with-ai-agents/" >Multitasking with AI agents: When it works and when it fails&lt;/a>&lt;/strong>&lt;br>
-&lt;em>Practical strategies for managing multiple AI agents and avoiding the productivity traps of task switching.&lt;/em>&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers">&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor">&lt;/a>Watch us discuss whether AI agents can replace software developers
-&lt;/h2>&lt;div class="video-wrapper">
+replace those who don&amp;rsquo;t.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../ai-for-software-developers/" &gt;How to use AI for software development (2025)&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;What every software engineer needs to know about AI right now: code completion, generation, and AI agents.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../introducing-mcp/" &gt;Introducing MCP: Lessons from building an AI-driven server&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;How we taught an AI agent to use our product with MCP.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../multitasking-with-ai-agents/" &gt;Multitasking with AI agents: When it works and when it fails&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;Practical strategies for managing multiple AI agents and avoiding the productivity traps of task switching.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers"&gt;&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss whether AI agents can replace software developers
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/fdBxpWXajSE"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Introducing MCP: Lessons from building an AI-driven server</title><link>https://victoronsoftware.com/posts/introducing-mcp/</link><pubDate>Thu, 08 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/introducing-mcp/</guid><description>&lt;img src="https://victoronsoftware.com/posts/introducing-mcp/introducing-mcp-headline.png" alt="Featured image of post Introducing MCP: Lessons from building an AI-driven server" />&lt;p>Recently, we developed a proof of concept using an MCP(Model Context Protocol) server to control
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Introducing MCP: Lessons from building an AI-driven server</title><link>https://victoronsoftware.com/posts/introducing-mcp/</link><pubDate>Thu, 08 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/introducing-mcp/</guid><description>&lt;img src="https://victoronsoftware.com/posts/introducing-mcp/introducing-mcp-headline.png" alt="Featured image of post Introducing MCP: Lessons from building an AI-driven server" /&gt;&lt;p&gt;Recently, we developed a proof of concept using an MCP(Model Context Protocol) server to control
 &lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
->Fleet&amp;rsquo;s device management server&lt;/a>. This server made a successful
+&gt;Fleet&amp;rsquo;s device management server&lt;/a&gt;. This server made a successful
 &lt;a class="link" href="https://youtu.be/eKoOvT-fr2I" target="_blank" rel="noopener"
->demo video&lt;/a>. The takeaways from the video were:&lt;/p>
-&lt;ul>
-&lt;li>🧠 Natural language understanding — no commands to memorize&lt;/li>
-&lt;li>🤖 Actionable context awareness — the AI remembers what you&amp;rsquo;re asking about&lt;/li>
-&lt;li>🔗 Tool selection and orchestration — chooses the proper action automatically&lt;/li>
-&lt;/ul>
-&lt;p>In this article, we&amp;rsquo;ll talk about our process for integrating our API with agentic AI, mistakes made, and lessons
-learned.&lt;/p>
-&lt;h2 id="what-is-mcp-and-why-do-i-need-one">&lt;a href="#what-is-mcp-and-why-do-i-need-one" class="header-anchor">&lt;/a>What is MCP, and why do I need one?
-&lt;/h2>&lt;p>MCP (Model Context Protocol) is a client-server framework that enables AI agents to interact with your tools and APIs
+&gt;demo video&lt;/a&gt;. The takeaways from the video were:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;🧠 Natural language understanding — no commands to memorize&lt;/li&gt;
+&lt;li&gt;🤖 Actionable context awareness — the AI remembers what you&amp;rsquo;re asking about&lt;/li&gt;
+&lt;li&gt;🔗 Tool selection and orchestration — chooses the proper action automatically&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this article, we&amp;rsquo;ll talk about our process for integrating our API with agentic AI, mistakes made, and lessons
+learned.&lt;/p&gt;
+&lt;h2 id="what-is-mcp-and-why-do-i-need-one"&gt;&lt;a href="#what-is-mcp-and-why-do-i-need-one" class="header-anchor"&gt;&lt;/a&gt;What is MCP, and why do I need one?
+&lt;/h2&gt;&lt;p&gt;MCP (Model Context Protocol) is a client-server framework that enables AI agents to interact with your tools and APIs
 through natural language. MCP was introduced by &lt;a class="link" href="https://www.anthropic.com/news/model-context-protocol" target="_blank" rel="noopener"
->Anthropic&lt;/a> in
-November 2024. Its primary use case was to use local tools available on your local machine, such as databases.&lt;/p>
-&lt;p>But, some may ask why we need another framework—aren&amp;rsquo;t AI agents good enough to use those tools directly? Yes, it is
+&gt;Anthropic&lt;/a&gt; in
+November 2024. Its primary use case was to use local tools available on your local machine, such as databases.&lt;/p&gt;
+&lt;p&gt;But, some may ask why we need another framework—aren&amp;rsquo;t AI agents good enough to use those tools directly? Yes, it is
 true that by providing AI agents with instructions on how to use an arbitrary tool, the AI agent should be able to use
 it. However, MCP standardizes this approach. Thus, an MCP server created for one tool can be reused by many developers
-and by many AI agents.&lt;/p>
-&lt;p>Instead of telling your AI agent about every tool, imagine that the AI agent has access to a library of MCP servers that
+and by many AI agents.&lt;/p&gt;
+&lt;p&gt;Instead of telling your AI agent about every tool, imagine that the AI agent has access to a library of MCP servers that
 it can install whenever you want to &amp;ldquo;teach&amp;rdquo; it about a tool. Think of MCP as an intelligent middleware that allows AI
 agents to understand and use your system&amp;rsquo;s capabilities appropriately. With MCP, the AI can dynamically learn and adapt
-to your system&amp;rsquo;s interface.&lt;/p>
-&lt;h3 id="the-mcp-protocol">&lt;a href="#the-mcp-protocol" class="header-anchor">&lt;/a>The MCP protocol
-&lt;/h3>&lt;p>The MCP protocol consists of several key components:&lt;/p>
-&lt;ol>
-&lt;li>
-&lt;p>Tools: These are functions or actions that can be performed. Tools are defined by name, description, and parameters
-they accept. They represent the capabilities your system provides to AI agents.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Resources: These are data objects that tools can operate on. Resources have properties and relationships with other
-resources. For example, a &lt;code>User&lt;/code> resource might have properties like name and email.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Prompts: These are reusable prompt templates and workflows intended to standardize common LLM interactions.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Schema Definition: The protocol uses a schema to describe available tools and resources, making it easy for AI agents
-to understand possible actions.&lt;/p>
-&lt;/li>
-&lt;/ol>
-&lt;p>The main distinction between tools and resources is that tools are actions (verbs), while resources are objects (nouns)
-on which these actions may operate. For example, a &lt;code>createUser&lt;/code> tool might operate on a &lt;code>User&lt;/code> resource. In practice,
-however, you can create a &lt;code>User&lt;/code> tool that returns a user and not worry about associating it with a resource. The
+to your system&amp;rsquo;s interface.&lt;/p&gt;
+&lt;h3 id="the-mcp-protocol"&gt;&lt;a href="#the-mcp-protocol" class="header-anchor"&gt;&lt;/a&gt;The MCP protocol
+&lt;/h3&gt;&lt;p&gt;The MCP protocol consists of several key components:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Tools: These are functions or actions that can be performed. Tools are defined by name, description, and parameters
+they accept. They represent the capabilities your system provides to AI agents.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Resources: These are data objects that tools can operate on. Resources have properties and relationships with other
+resources. For example, a &lt;code&gt;User&lt;/code&gt; resource might have properties like name and email.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Prompts: These are reusable prompt templates and workflows intended to standardize common LLM interactions.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Schema Definition: The protocol uses a schema to describe available tools and resources, making it easy for AI agents
+to understand possible actions.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The main distinction between tools and resources is that tools are actions (verbs), while resources are objects (nouns)
+on which these actions may operate. For example, a &lt;code&gt;createUser&lt;/code&gt; tool might operate on a &lt;code&gt;User&lt;/code&gt; resource. In practice,
+however, you can create a &lt;code&gt;User&lt;/code&gt; tool that returns a user and not worry about associating it with a resource. The
 semantics of tools are simpler than those of resources, so it might be faster only to use tools if your goal is to get
-something working quickly.&lt;/p>
-&lt;h2 id="building-an-mcp-server-with-agentic-ai">&lt;a href="#building-an-mcp-server-with-agentic-ai" class="header-anchor">&lt;/a>Building an MCP server with agentic AI
-&lt;/h2>&lt;p>Our biggest mistake was asking our AI agent (&lt;a class="link" href="https://roocode.com/" target="_blank" rel="noopener"
->Roo Code&lt;/a>) to build an MCP server without fully
-understanding the MCP details ourselves. To summarize, this process was not successful.&lt;/p>
-&lt;p>MCP has SDKs available for multiple languages. We decided to build our MCP server with TypeScript. Our AI agent pulled
+something working quickly.&lt;/p&gt;
+&lt;h2 id="building-an-mcp-server-with-agentic-ai"&gt;&lt;a href="#building-an-mcp-server-with-agentic-ai" class="header-anchor"&gt;&lt;/a&gt;Building an MCP server with agentic AI
+&lt;/h2&gt;&lt;p&gt;Our biggest mistake was asking our AI agent (&lt;a class="link" href="https://roocode.com/" target="_blank" rel="noopener"
+&gt;Roo Code&lt;/a&gt;) to build an MCP server without fully
+understanding the MCP details ourselves. To summarize, this process was not successful.&lt;/p&gt;
+&lt;p&gt;MCP has SDKs available for multiple languages. We decided to build our MCP server with TypeScript. Our AI agent pulled
 in the right &lt;a class="link" href="https://github.com/modelcontextprotocol/typescript-sdk" target="_blank" rel="noopener"
->TypeScript MCP SDK&lt;/a>. However, it couldn&amp;rsquo;t get the
+&gt;TypeScript MCP SDK&lt;/a&gt;. However, it couldn&amp;rsquo;t get the
 compile to work, so it removed the SDK and implemented the MCP protocol from scratch. We allowed our agent to proceed
-since we didn&amp;rsquo;t know any better.&lt;/p>
-&lt;p>After implementing a basic tool, we couldn&amp;rsquo;t get the MCP server to work reliably. It worked using &lt;code>curl&lt;/code>, but the
+since we didn&amp;rsquo;t know any better.&lt;/p&gt;
+&lt;p&gt;After implementing a basic tool, we couldn&amp;rsquo;t get the MCP server to work reliably. It worked using &lt;code&gt;curl&lt;/code&gt;, but the
 &lt;a class="link" href="https://github.com/modelcontextprotocol/inspector" target="_blank" rel="noopener"
->MCP inspector&lt;/a> debug tool couldn&amp;rsquo;t connect to our MCP server.
+&gt;MCP inspector&lt;/a&gt; debug tool couldn&amp;rsquo;t connect to our MCP server.
 Another mistake we made was not telling the AI agent to use liberal debug messages up front, which would have sped up
-the debug effort.&lt;/p>
-&lt;p>After letting our AI agent waste our API credits for too long, we told it to rewrite the code using the TypeScript SDK.
-We copied and pasted the examples that our agent could reference. After that, things went smoothly.&lt;/p>
-&lt;p>Another engineer suggested that using the Python SDK would have been more effective and required less handholding.&lt;/p>
-&lt;p>Our proof of concept &lt;a class="link" href="https://github.com/getvictor/fleet-mcp" target="_blank" rel="noopener"
->MCP server for Fleet API&lt;/a> is on GitHub. Here&amp;rsquo;s a code
-example for the &lt;code>install_software&lt;/code> tool:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Register the install_software tool
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">mcpServer&lt;/span>.&lt;span style="color:#a6e22e">tool&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;install_software&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#39;Install software on a host managed by Fleet&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">host_id&lt;/span>: &lt;span style="color:#66d9ef">z.string&lt;/span>().&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Required. The host ID&amp;#39;&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">software_id&lt;/span>: &lt;span style="color:#66d9ef">z.string&lt;/span>().&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Required. The software title ID&amp;#39;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">async&lt;/span> (&lt;span style="color:#a6e22e">params&lt;/span>&lt;span style="color:#f92672">:&lt;/span> { &lt;span style="color:#a6e22e">host_id&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span>; &lt;span style="color:#a6e22e">software_id&lt;/span>: &lt;span style="color:#66d9ef">string&lt;/span> }) &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">try&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">`Installing software ID &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">software_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74"> on host ID &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">host_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">`&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">url&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">`/api/v1/fleet/hosts/&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">host_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">/software/&lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">params&lt;/span>.&lt;span style="color:#a6e22e">software_id&lt;/span>&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">/install`&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">response&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">await&lt;/span> &lt;span style="color:#66d9ef">this&lt;/span>.&lt;span style="color:#a6e22e">axiosInstance&lt;/span>.&lt;span style="color:#a6e22e">post&lt;/span>(&lt;span style="color:#a6e22e">url&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">log&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Fleet API install request successful&amp;#39;&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">content&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">type&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;text&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">text&lt;/span>: &lt;span style="color:#66d9ef">JSON.stringify&lt;/span>(&lt;span style="color:#a6e22e">response&lt;/span>.&lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#66d9ef">null&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">catch&lt;/span> (&lt;span style="color:#a6e22e">error&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">console&lt;/span>.&lt;span style="color:#a6e22e">error&lt;/span>(&lt;span style="color:#e6db74">&amp;#39;Fleet API error:&amp;#39;&lt;/span>, &lt;span style="color:#a6e22e">error&lt;/span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">throw&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">code&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#39;internal_error&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">message&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">`Fleet API error: &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>&lt;span style="color:#a6e22e">error&lt;/span> &lt;span style="color:#66d9ef">instanceof&lt;/span> Error &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#a6e22e">error.message&lt;/span> : &lt;span style="color:#66d9ef">String&lt;/span>(&lt;span style="color:#a6e22e">error&lt;/span>)&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74">`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> };
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>As you can see above, the code is pretty straightforward. We&amp;rsquo;re simply wrapping an existing API call with an MCP tool.&lt;/p>
-&lt;h3 id="overall-impressions">&lt;a href="#overall-impressions" class="header-anchor">&lt;/a>Overall impressions
-&lt;/h3>&lt;p>AI agent interactions with our MCP server are complex to test and challenging to debug. First, as an MCP server
+the debug effort.&lt;/p&gt;
+&lt;p&gt;After letting our AI agent waste our API credits for too long, we told it to rewrite the code using the TypeScript SDK.
+We copied and pasted the examples that our agent could reference. After that, things went smoothly.&lt;/p&gt;
+&lt;p&gt;Another engineer suggested that using the Python SDK would have been more effective and required less handholding.&lt;/p&gt;
+&lt;p&gt;Our proof of concept &lt;a class="link" href="https://github.com/getvictor/fleet-mcp" target="_blank" rel="noopener"
+&gt;MCP server for Fleet API&lt;/a&gt; is on GitHub. Here&amp;rsquo;s a code
+example for the &lt;code&gt;install_software&lt;/code&gt; tool:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Register the install_software tool
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;mcpServer&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;tool&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;install_software&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;Install software on a host managed by Fleet&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;host_id&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;z.string&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;describe&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Required. The host ID&amp;#39;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;software_id&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;z.string&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;describe&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Required. The software title ID&amp;#39;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;async&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;params&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;host_id&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;software_id&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; }) &lt;span style="color:#f92672"&gt;=&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;try&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;`Installing software ID &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;params&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;software_id&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; on host ID &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;params&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;host_id&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;url&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`/api/v1/fleet/hosts/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;params&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;host_id&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/software/&lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;params&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;software_id&lt;/span&gt;&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;/install`&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;response&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;await&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;this&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;axiosInstance&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;post&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;url&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Fleet API install request successful&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;content&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;text&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;text&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;JSON.stringify&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;response&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;null&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;catch&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;console&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#39;Fleet API error:&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;throw&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;code&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;internal_error&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;message&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`Fleet API error: &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;instanceof&lt;/span&gt; Error &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;error.message&lt;/span&gt; : &lt;span style="color:#66d9ef"&gt;String&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;error&lt;/span&gt;)&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; };
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As you can see above, the code is pretty straightforward. We&amp;rsquo;re simply wrapping an existing API call with an MCP tool.&lt;/p&gt;
+&lt;h3 id="overall-impressions"&gt;&lt;a href="#overall-impressions" class="header-anchor"&gt;&lt;/a&gt;Overall impressions
+&lt;/h3&gt;&lt;p&gt;AI agent interactions with our MCP server are complex to test and challenging to debug. First, as an MCP server
 developer, you must be familiar with AI agents, MCP protocol, and the tool interface you&amp;rsquo;re trying to use. For example,
 in one case, the AI agent didn&amp;rsquo;t use the proper parameter to call the tool and came up with wrong conclusions. Since we
 are dealing with AI, it is hard to tell how often such mistakes will happen and also hard to fix or prevent them. Also,
-we don&amp;rsquo;t know exactly how customers may use the MCP server, so the QA test space is quite large.&lt;/p>
-&lt;p>Our product already has an API, a CLI, and a UI interface. Adding MCP to the mix feels hard to justify—are customers
+we don&amp;rsquo;t know exactly how customers may use the MCP server, so the QA test space is quite large.&lt;/p&gt;
+&lt;p&gt;Our product already has an API, a CLI, and a UI interface. Adding MCP to the mix feels hard to justify—are customers
 going to use all these ways to interact with our product? For a small product team, investing in MCP support might not
-make sense until a customer is ready to pay for it.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>We recently covered &lt;a class="link" href="../will-ai-agents-replace-developers/" >the broader implications of AI agents in software development&lt;/a>.&lt;/li>
-&lt;li>Previously, we discussed &lt;a class="link" href="../ai-for-software-developers/" >what every software engineer needs to know about AI right now&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp">&lt;a href="#watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp" class="header-anchor">&lt;/a>Watch how we taught an AI agent to use our product with MCP
-&lt;/h2>&lt;div class="video-wrapper">
+make sense until a customer is ready to pay for it.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;We recently covered &lt;a class="link" href="../will-ai-agents-replace-developers/" &gt;the broader implications of AI agents in software development&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Previously, we discussed &lt;a class="link" href="../ai-for-software-developers/" &gt;what every software engineer needs to know about AI right now&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp"&gt;&lt;a href="#watch-how-we-taught-an-ai-agent-to-use-our-product-with-mcp" class="header-anchor"&gt;&lt;/a&gt;Watch how we taught an AI agent to use our product with MCP
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/1RLh3SpfytQ"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

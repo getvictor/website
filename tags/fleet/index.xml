@@ -1,183 +1,183 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fleet on Victor on Software</title><link>https://victoronsoftware.com/tags/fleet/</link><description>Recent content in Fleet on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/fleet/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a webhook flow with Tines</title><link>https://victoronsoftware.com/posts/webhook-flow-with-tines/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/webhook-flow-with-tines/</guid><description>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/tines-fleet-webhook-workflow.png" alt="Featured image of post Building a webhook flow with Tines" />&lt;h2 id="what-is-a-webhook">&lt;a href="#what-is-a-webhook" class="header-anchor">&lt;/a>What is a webhook?
-&lt;/h2>&lt;p>A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger
-an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p>
-&lt;h2 id="what-is-tines">&lt;a href="#what-is-tines" class="header-anchor">&lt;/a>What is Tines?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://www.tines.io/" target="_blank" rel="noopener"
->Tines&lt;/a> is a no-code automation platform that allows you to automate repetitive tasks. It is a
-powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p>
-&lt;h2 id="what-is-fleet">&lt;a href="#what-is-fleet" class="header-anchor">&lt;/a>What is Fleet?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
->Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Fleet on Victor on Software</title><link>https://victoronsoftware.com/tags/fleet/</link><description>Recent content in Fleet on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/fleet/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a webhook flow with Tines</title><link>https://victoronsoftware.com/posts/webhook-flow-with-tines/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/webhook-flow-with-tines/</guid><description>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/tines-fleet-webhook-workflow.png" alt="Featured image of post Building a webhook flow with Tines" /&gt;&lt;h2 id="what-is-a-webhook"&gt;&lt;a href="#what-is-a-webhook" class="header-anchor"&gt;&lt;/a&gt;What is a webhook?
+&lt;/h2&gt;&lt;p&gt;A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger
+an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p&gt;
+&lt;h2 id="what-is-tines"&gt;&lt;a href="#what-is-tines" class="header-anchor"&gt;&lt;/a&gt;What is Tines?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.tines.io/" target="_blank" rel="noopener"
+&gt;Tines&lt;/a&gt; is a no-code automation platform that allows you to automate repetitive tasks. It is a
+powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p&gt;
+&lt;h2 id="what-is-fleet"&gt;&lt;a href="#what-is-fleet" class="header-anchor"&gt;&lt;/a&gt;What is Fleet?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
+&gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as
 laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
->Osquery&lt;/a> agents run on these devices and report to the Fleet
-server.&lt;/p>
-&lt;h2 id="our-example-it-workflow">&lt;a href="#our-example-it-workflow" class="header-anchor">&lt;/a>Our example IT workflow
-&lt;/h2>&lt;p>In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a
+&gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet
+server.&lt;/p&gt;
+&lt;h2 id="our-example-it-workflow"&gt;&lt;a href="#our-example-it-workflow" class="header-anchor"&gt;&lt;/a&gt;Our example IT workflow
+&lt;/h2&gt;&lt;p&gt;In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a
 webhook callback from Fleet. Tines will then send an MDM (Mobile Device Management) command to the device to update the
-device&amp;rsquo;s OS version.&lt;/p>
-&lt;p>Fleet will send a callback via its calendar integration feature. Fleet can put a &amp;ldquo;System Maintenance&amp;rdquo; event on the
+device&amp;rsquo;s OS version.&lt;/p&gt;
+&lt;p&gt;Fleet will send a callback via its calendar integration feature. Fleet can put a &amp;ldquo;System Maintenance&amp;rdquo; event on the
 device user&amp;rsquo;s calendar. This event warns the device owner that their computer will be restarted to remediate one or more
 failing policies. During the calendar event time, Fleet sends a webhook. The IT admin must set up a flow to remediate
-the failing policy. This article is an example of one such flow.&lt;/p>
-&lt;h2 id="getting-started--webhook-action">&lt;a href="#getting-started--webhook-action" class="header-anchor">&lt;/a>Getting started &amp;ndash; webhook action
-&lt;/h2>&lt;p>First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
-action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
-alt="Tines webhook action">&lt;figcaption>
-&lt;h4>Tines webhook action&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="handling-errors">&lt;a href="#handling-errors" class="header-anchor">&lt;/a>Handling errors
-&lt;/h2>&lt;p>Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we
+the failing policy. This article is an example of one such flow.&lt;/p&gt;
+&lt;h2 id="getting-started--webhook-action"&gt;&lt;a href="#getting-started--webhook-action" class="header-anchor"&gt;&lt;/a&gt;Getting started &amp;ndash; webhook action
+&lt;/h2&gt;&lt;p&gt;First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
+action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
+alt="Tines webhook action"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines webhook action&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="handling-errors"&gt;&lt;a href="#handling-errors" class="header-anchor"&gt;&lt;/a&gt;Handling errors
+&lt;/h2&gt;&lt;p&gt;Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we
 add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
-webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
-alt="Tines trigger action checking for an error">&lt;figcaption>
-&lt;h4>Tines trigger action checking for an error&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
-triggering other actions.&lt;/p>
-&lt;h2 id="checking-whether-webhook-indicates-an-outdated-os">&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor">&lt;/a>Checking whether webhook indicates an outdated OS
-&lt;/h2>&lt;p>At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous
-testing, we know that the webhook payload will look like this:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;timestamp&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-03-28T13:57:31.668954-05:00&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">11058&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_display_name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Victor&amp;#39;s Virtual Machine (2)&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;host_serial_number&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Z5C4L7GKY0&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;failing_policies&amp;#34;&lt;/span>: [
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;id&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">479&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;macOS - OS version up to date&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The payload contains:&lt;/p>
-&lt;ul>
-&lt;li>The device&amp;rsquo;s ID (host ID).&lt;/li>
-&lt;li>Display name.&lt;/li>
-&lt;li>Serial number.&lt;/li>
-&lt;li>A list of failing policies.&lt;/li>
-&lt;/ul>
-&lt;p>We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
-up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
-alt="Tines trigger action checking for an outdated OS">&lt;figcaption>
-&lt;h4>Tines trigger action checking for an outdated OS&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p>
-&lt;pre tabindex="0">&lt;code>IF(FIND(calendar_webhook.body.failing_policies, LAMBDA(item, item.name = &amp;#34;macOS - OS version up to date&amp;#34;)).id &amp;gt; 0, TRUE)
-&lt;/code>&lt;/pre>&lt;h2 id="getting-device-details-from-fleet">&lt;a href="#getting-device-details-from-fleet" class="header-anchor">&lt;/a>Getting device details from Fleet
-&lt;/h2>&lt;p>Next, we need to get more details about the device from Fleet. Devices are called hosts in Fleet. We add an &amp;ldquo;HTTP
+webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
+alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
+triggering other actions.&lt;/p&gt;
+&lt;h2 id="checking-whether-webhook-indicates-an-outdated-os"&gt;&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor"&gt;&lt;/a&gt;Checking whether webhook indicates an outdated OS
+&lt;/h2&gt;&lt;p&gt;At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous
+testing, we know that the webhook payload will look like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;timestamp&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-03-28T13:57:31.668954-05:00&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;host_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;11058&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;host_display_name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Victor&amp;#39;s Virtual Machine (2)&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;host_serial_number&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Z5C4L7GKY0&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;failing_policies&amp;#34;&lt;/span&gt;: [
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;479&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;macOS - OS version up to date&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The payload contains:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The device&amp;rsquo;s ID (host ID).&lt;/li&gt;
+&lt;li&gt;Display name.&lt;/li&gt;
+&lt;li&gt;Serial number.&lt;/li&gt;
+&lt;li&gt;A list of failing policies.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
+up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
+alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;IF(FIND(calendar_webhook.body.failing_policies, LAMBDA(item, item.name = &amp;#34;macOS - OS version up to date&amp;#34;)).id &amp;gt; 0, TRUE)
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="getting-device-details-from-fleet"&gt;&lt;a href="#getting-device-details-from-fleet" class="header-anchor"&gt;&lt;/a&gt;Getting device details from Fleet
+&lt;/h2&gt;&lt;p&gt;Next, we need to get more details about the device from Fleet. Devices are called hosts in Fleet. We add an &amp;ldquo;HTTP
 Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
-ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
-alt="Tines HTTP Request action to get Fleet device details">&lt;figcaption>
-&lt;h4>Tines HTTP Request action to get Fleet device details&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
-key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
-alt="Add credential to Tines story">&lt;figcaption>
-&lt;h4>Add credential to Tines story&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="creating-mdm-command-payload-to-update-os-version">&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor">&lt;/a>Creating MDM command payload to update OS version
-&lt;/h2>&lt;p>We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS
+ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
+alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
+key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
+alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="creating-mdm-command-payload-to-update-os-version"&gt;&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor"&gt;&lt;/a&gt;Creating MDM command payload to update OS version
+&lt;/h2&gt;&lt;p&gt;We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS
 version. We use the
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
->ScheduleOSUpdate&lt;/a>
-command from Apple&amp;rsquo;s MDM protocol.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Command&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>RequestType&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>ScheduleOSUpdate&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Updates&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>InstallAction&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>InstallASAP&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>ProductVersion&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>14.4.1&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>CommandUUID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">&amp;lt;&lt;/span>&lt;span style="color:#f92672">&amp;lt;UUID&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">()&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>&amp;gt;&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
-device. Note that the &lt;code>&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code> Tines function creates a unique UUID for this MDM command.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
-alt="Tines event to create ScheduleOSUpdate MDM command">&lt;figcaption>
-&lt;h4>Tines event to create ScheduleOSUpdate MDM command&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
-to encode the XML payload. It uses the Tines &lt;code>BASE64_ENCODE&lt;/code> function.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
-alt="Tines Base64 Encode event">&lt;figcaption>
-&lt;h4>Tines Base64 Encode event&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="run-mdm-command-on-device">&lt;a href="#run-mdm-command-on-device" class="header-anchor">&lt;/a>Run MDM command on device
-&lt;/h2>&lt;p>Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
-POST request to the Fleet API to send the MDM command to the device.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
-alt="Tines HTTP Request action to run MDM command on device">&lt;figcaption>
-&lt;h4>Tines HTTP Request action to run MDM command on device&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The MDM command will run on the device, downloading and installing the OS update.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
-alt="macOS restart notification after OS update">&lt;figcaption>
-&lt;h4>macOS restart notification after OS update&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an
+&gt;ScheduleOSUpdate&lt;/a&gt;
+command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;plist&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;version=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Command&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;RequestType&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;ScheduleOSUpdate&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Updates&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;InstallAction&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;InstallASAP&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;ProductVersion&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;14.4.1&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;CommandUUID&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;&amp;lt;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;UUID&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;()&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;&amp;gt;&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
+device. Note that the &lt;code&gt;&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code&gt; Tines function creates a unique UUID for this MDM command.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
+alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
+to encode the XML payload. It uses the Tines &lt;code&gt;BASE64_ENCODE&lt;/code&gt; function.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
+alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="run-mdm-command-on-device"&gt;&lt;a href="#run-mdm-command-on-device" class="header-anchor"&gt;&lt;/a&gt;Run MDM command on device
+&lt;/h2&gt;&lt;p&gt;Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
+POST request to the Fleet API to send the MDM command to the device.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
+alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The MDM command will run on the device, downloading and installing the OS update.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
+alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
+&lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an
 outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how
-Tines can automate workflows and tasks in IT environments.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we explained
-&lt;a class="link" href="../google-sheets-api/" >how to quickly get started with Google Sheets API for your development scripts&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="building-a-webhook-flow-with-tines-video">&lt;a href="#building-a-webhook-flow-with-tines-video" class="header-anchor">&lt;/a>Building a webhook flow with Tines video
-&lt;/h2>&lt;div class="video-wrapper">
+Tines can automate workflows and tasks in IT environments.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we explained
+&lt;a class="link" href="../google-sheets-api/" &gt;how to quickly get started with Google Sheets API for your development scripts&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="building-a-webhook-flow-with-tines-video"&gt;&lt;a href="#building-a-webhook-flow-with-tines-video" class="header-anchor"&gt;&lt;/a&gt;Building a webhook flow with Tines video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/GFqmvv4nHqk"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p>
-&lt;p>&lt;em>This article originally appeared in
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;This article originally appeared in
 &lt;a class="link" href="https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines" target="_blank" rel="noopener"
->Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" />&lt;p>In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it&amp;rsquo;s about empowering IT professionals to safeguard digital assets more effectively. &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
->Fleet&lt;/a> gathers telemetry from various devices, from laptops to virtual machines, using &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
->osquery&lt;/a>. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
->Fleet policies&lt;/a>.&lt;/p>
-&lt;p>Policies in Fleet are more than just rules; they are the gatekeepers of your device&amp;rsquo;s security, ensuring stringent adherence to security standards. By dissecting how Fleet policies operate &amp;ldquo;under the hood,&amp;rdquo; IT administrators and security professionals can gain invaluable insights. These insights allow for setting up efficient security protocols and rapid response to potential vulnerabilities, a necessity in a landscape where cyber threats are constantly evolving. This article delves into the inner workings of Fleet policies, providing you with the knowledge to better configure, manage, and leverage these policies for optimal device security and efficiency.&lt;/p>
-&lt;h2 id="policy-creation">&lt;a href="#policy-creation" class="header-anchor">&lt;/a>Policy creation
-&lt;/h2>&lt;p>Policies can be created from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code> with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p>
-&lt;p>When a policy is created, a record for it is stored in the &lt;strong>policies&lt;/strong> table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"
-alt="Fleet policies block diagram">
-&lt;/figure>
-&lt;h2 id="policy-execution">&lt;a href="#policy-execution" class="header-anchor">&lt;/a>Policy execution
-&lt;/h2>&lt;p>Policies are executed on the devices, which are called &lt;strong>hosts&lt;/strong> in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
->FLEET_OSQUERY_POLICY_UPDATE_INTERVAL&lt;/a>, which is set to 1 hour by default. This interval can be adjusted with the environment variable or set from the server’s command line.&lt;/p>
-&lt;p>Policies are simply SQL queries that return a true or false result, so the flow they use on the hosts is the same as other queries. Hosts check in with Fleet servers every 10 seconds (the default) and access the &lt;code>/api/v1/osquery/distributed/read&lt;/code> API endpoint. The server checks when the policy was last executed to determine whether it should be executed again. If so, the server adds the policy to its response. For example, this policy in the server response checks if the macOS firewall is enabled:&lt;/p>
-&lt;pre tabindex="0">&lt;code>{
+&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" /&gt;&lt;p&gt;In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it&amp;rsquo;s about empowering IT professionals to safeguard digital assets more effectively. &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
+&gt;Fleet&lt;/a&gt; gathers telemetry from various devices, from laptops to virtual machines, using &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+&gt;osquery&lt;/a&gt;. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
+&gt;Fleet policies&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Policies in Fleet are more than just rules; they are the gatekeepers of your device&amp;rsquo;s security, ensuring stringent adherence to security standards. By dissecting how Fleet policies operate &amp;ldquo;under the hood,&amp;rdquo; IT administrators and security professionals can gain invaluable insights. These insights allow for setting up efficient security protocols and rapid response to potential vulnerabilities, a necessity in a landscape where cyber threats are constantly evolving. This article delves into the inner workings of Fleet policies, providing you with the knowledge to better configure, manage, and leverage these policies for optimal device security and efficiency.&lt;/p&gt;
+&lt;h2 id="policy-creation"&gt;&lt;a href="#policy-creation" class="header-anchor"&gt;&lt;/a&gt;Policy creation
+&lt;/h2&gt;&lt;p&gt;Policies can be created from the web UI, the command-line interface called &lt;code&gt;fleetctl&lt;/code&gt; with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p&gt;
+&lt;p&gt;When a policy is created, a record for it is stored in the &lt;strong&gt;policies&lt;/strong&gt; table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"
+alt="Fleet policies block diagram"&gt;
+&lt;/figure&gt;
+&lt;h2 id="policy-execution"&gt;&lt;a href="#policy-execution" class="header-anchor"&gt;&lt;/a&gt;Policy execution
+&lt;/h2&gt;&lt;p&gt;Policies are executed on the devices, which are called &lt;strong&gt;hosts&lt;/strong&gt; in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
+&gt;FLEET_OSQUERY_POLICY_UPDATE_INTERVAL&lt;/a&gt;, which is set to 1 hour by default. This interval can be adjusted with the environment variable or set from the server’s command line.&lt;/p&gt;
+&lt;p&gt;Policies are simply SQL queries that return a true or false result, so the flow they use on the hosts is the same as other queries. Hosts check in with Fleet servers every 10 seconds (the default) and access the &lt;code&gt;/api/v1/osquery/distributed/read&lt;/code&gt; API endpoint. The server checks when the policy was last executed to determine whether it should be executed again. If so, the server adds the policy to its response. For example, this policy in the server response checks if the macOS firewall is enabled:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;{
 &amp;#34;queries&amp;#34;: {
 &amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1 FROM alf WHERE global_state &amp;gt;= 1;&amp;#34;
 },
@@ -185,80 +185,80 @@ alt="Fleet policies block diagram">
 &amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1&amp;#34;
 }
 }
-&lt;/code>&lt;/pre>&lt;p>Once the host has executed the policy, it writes the result to the server. The server updates the result in the &lt;strong>policy_membership&lt;/strong> table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"
-alt="Fleet policies on host details page">
-&lt;/figure>
-&lt;h2 id="force-policy-execution-on-a-device">&lt;a href="#force-policy-execution-on-a-device" class="header-anchor">&lt;/a>Force policy execution on a device
-&lt;/h2>&lt;p>The user can force the host to execute all of its policies by clicking the &lt;strong>Refetch&lt;/strong> link:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"
-alt="Fleet refetch host details">
-&lt;/figure>
-&lt;h2 id="policy-results-aggregation">&lt;a href="#policy-results-aggregation" class="header-anchor">&lt;/a>Policy results aggregation
-&lt;/h2>&lt;p>However, the main &lt;strong>Policies&lt;/strong> page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong>policy_stats&lt;/strong> table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
-alt="Fleet policies page">
-&lt;/figure>
-&lt;h2 id="summary">&lt;a href="#summary" class="header-anchor">&lt;/a>Summary
-&lt;/h2>&lt;p>Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
->Fleet community Slack channels&lt;/a>.&lt;/p>
-&lt;h2 id="understanding-the-intricacies-of-fleet-policies-video">&lt;a href="#understanding-the-intricacies-of-fleet-policies-video" class="header-anchor">&lt;/a>Understanding the intricacies of Fleet policies video
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the host has executed the policy, it writes the result to the server. The server updates the result in the &lt;strong&gt;policy_membership&lt;/strong&gt; table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"
+alt="Fleet policies on host details page"&gt;
+&lt;/figure&gt;
+&lt;h2 id="force-policy-execution-on-a-device"&gt;&lt;a href="#force-policy-execution-on-a-device" class="header-anchor"&gt;&lt;/a&gt;Force policy execution on a device
+&lt;/h2&gt;&lt;p&gt;The user can force the host to execute all of its policies by clicking the &lt;strong&gt;Refetch&lt;/strong&gt; link:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"
+alt="Fleet refetch host details"&gt;
+&lt;/figure&gt;
+&lt;h2 id="policy-results-aggregation"&gt;&lt;a href="#policy-results-aggregation" class="header-anchor"&gt;&lt;/a&gt;Policy results aggregation
+&lt;/h2&gt;&lt;p&gt;However, the main &lt;strong&gt;Policies&lt;/strong&gt; page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong&gt;policy_stats&lt;/strong&gt; table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
+alt="Fleet policies page"&gt;
+&lt;/figure&gt;
+&lt;h2 id="summary"&gt;&lt;a href="#summary" class="header-anchor"&gt;&lt;/a&gt;Summary
+&lt;/h2&gt;&lt;p&gt;Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
+&gt;Fleet community Slack channels&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="understanding-the-intricacies-of-fleet-policies-video"&gt;&lt;a href="#understanding-the-intricacies-of-fleet-policies-video" class="header-anchor"&gt;&lt;/a&gt;Understanding the intricacies of Fleet policies video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/A-Qapp7vYJk"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies" target="_blank" rel="noopener"
->Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" />&lt;div class="video-wrapper">
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies" target="_blank" rel="noopener"
+&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" /&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/Jh14hNjW0Uo"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
->Fleet&lt;/a> is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
->Osquery&lt;/a> agents run on these devices and report to the Fleet server. One of Fleet’s features is the ability to query information from the devices in near real-time, called &lt;em>live queries&lt;/em>. This article discusses how live queries work “under the hood.”&lt;/p>
-&lt;h2 id="why-a-live-query">&lt;a href="#why-a-live-query" class="header-anchor">&lt;/a>Why a live query?
-&lt;/h2>&lt;p>Live queries enable administrators to ask near real-time questions of all online devices, such as checking the encryption status of SSH keys across endpoints, or obtaining the uptime of each server within their purview. This enables them to promptly identify and address any issues, thereby reducing downtime and maintaining operational efficiency. These tasks, which would be time-consuming and complex if done manually, are streamlined through live queries, offering real-time insights into the status and posture of the entire fleet of devices helping IT and security.&lt;/p>
-&lt;h2 id="live-queries-under-the-hood">&lt;a href="#live-queries-under-the-hood" class="header-anchor">&lt;/a>Live queries under the hood
-&lt;/h2>&lt;p>Live queries can be run from the web UI, the command-line interface called &lt;code>fleetctl&lt;/code>, or the REST API. The user creates a query and selects which devices will run that query. Here is an example using &lt;code>fleetctl&lt;/code> to obtain the operating system name and version for all devices:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>fleetctl query --query &lt;span style="color:#e6db74">&amp;#34;select name, version from os_version;&amp;#34;&lt;/span> --labels &lt;span style="color:#e6db74">&amp;#34;All Hosts&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When a client initiates a live query, the server first creates a &lt;strong>Query Campaign&lt;/strong> record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png"
-alt="Query campaign">&lt;figcaption>
-&lt;h4>Query campaign&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>As devices called &lt;strong>Hosts&lt;/strong> in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;queries&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;SELECT name, version FROM os_version;&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;discovery&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;SELECT 1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, the osquery agents run the actual query on their host, and write the result back to a Fleet server. As a server receives the result, it publishes it to the common cache using &lt;a class="link" href="https://redis.io/docs/interact/pubsub/" target="_blank" rel="noopener"
->Redis Pub/Sub&lt;/a>.&lt;/p>
-&lt;p>Only the one server communicating with the client subscribes to the results. It processes the data from the cache, keeps track of how many hosts reported back, and communicates results back to the client. The web UI and &lt;code>fleetctl&lt;/code> interfaces use a &lt;a class="link" href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" target="_blank" rel="noopener"
->WebSockets API&lt;/a>, and results are reported as they come in. The REST API, on the other hand, only sends a response after all online hosts have reported their query results.&lt;/p>
-&lt;h2 id="discover-more">&lt;a href="#discover-more" class="header-anchor">&lt;/a>Discover more
-&lt;/h2>&lt;p>Fleet’s live query feature represents a powerful tool in the arsenal of IT and security administrators. By harnessing the capabilities of live queries, tasks that once required extensive manual effort can now be executed swiftly and efficiently. This real-time querying ability enhances operational efficiency and significantly bolsters security and compliance measures across a range of devices.&lt;/p>
-&lt;p>The integration of Fleet with Osquery agents, the flexibility offered by interfaces like the web UI, &lt;code>fleetctl&lt;/code>, and the REST API, and the efficient data handling through mechanisms like Redis Pub/Sub and WebSockets API all come together to create a robust, real-time telemetry gathering system. This system is designed to keep you informed about the current state of your device fleet, helping you make informed decisions quickly.&lt;/p>
-&lt;p>As you reflect on the capabilities of live queries with Fleet, consider your network environment&amp;rsquo;s unique challenges and needs. &lt;strong>What questions could live queries help you answer about your devices?&lt;/strong> Whether it&amp;rsquo;s security audits, performance monitoring, or compliance checks, live queries offer a dynamic solution to address these concerns.&lt;/p>
-&lt;p>We encourage you to explore the possibilities and share your thoughts or questions. Perhaps you’re facing a specific query challenge or an innovative use case you’ve discovered. Whatever it may be, the world of live queries is vast and ripe for exploration. Join us in &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
->Fleet’s Slack forums&lt;/a> to engage with a community of like-minded professionals and deepen your understanding of what live queries can achieve in your environment.&lt;/p>
-&lt;p>API Documentation:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://fleetdm.com/docs/rest-api/rest-api#run-live-query" target="_blank" rel="noopener"
->Run live query with REST API&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6fd06d648601edd89c01e25426e2e35ff2a8a37b/docs/Contributing/API-for-contributors.md#run-live-query" target="_blank" rel="noopener"
->Run live query with WebSockets&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>&lt;em>This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/get-current-telemetry-from-your-devices-with-live-queries" target="_blank" rel="noopener"
->Fleet&amp;rsquo;s blog&lt;/a>.&lt;/em>&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
+&gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+&gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet server. One of Fleet’s features is the ability to query information from the devices in near real-time, called &lt;em&gt;live queries&lt;/em&gt;. This article discusses how live queries work “under the hood.”&lt;/p&gt;
+&lt;h2 id="why-a-live-query"&gt;&lt;a href="#why-a-live-query" class="header-anchor"&gt;&lt;/a&gt;Why a live query?
+&lt;/h2&gt;&lt;p&gt;Live queries enable administrators to ask near real-time questions of all online devices, such as checking the encryption status of SSH keys across endpoints, or obtaining the uptime of each server within their purview. This enables them to promptly identify and address any issues, thereby reducing downtime and maintaining operational efficiency. These tasks, which would be time-consuming and complex if done manually, are streamlined through live queries, offering real-time insights into the status and posture of the entire fleet of devices helping IT and security.&lt;/p&gt;
+&lt;h2 id="live-queries-under-the-hood"&gt;&lt;a href="#live-queries-under-the-hood" class="header-anchor"&gt;&lt;/a&gt;Live queries under the hood
+&lt;/h2&gt;&lt;p&gt;Live queries can be run from the web UI, the command-line interface called &lt;code&gt;fleetctl&lt;/code&gt;, or the REST API. The user creates a query and selects which devices will run that query. Here is an example using &lt;code&gt;fleetctl&lt;/code&gt; to obtain the operating system name and version for all devices:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fleetctl query --query &lt;span style="color:#e6db74"&gt;&amp;#34;select name, version from os_version;&amp;#34;&lt;/span&gt; --labels &lt;span style="color:#e6db74"&gt;&amp;#34;All Hosts&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When a client initiates a live query, the server first creates a &lt;strong&gt;Query Campaign&lt;/strong&gt; record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png"
+alt="Query campaign"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Query campaign&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;As devices called &lt;strong&gt;Hosts&lt;/strong&gt; in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;queries&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT name, version FROM os_version;&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;discovery&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT 1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, the osquery agents run the actual query on their host, and write the result back to a Fleet server. As a server receives the result, it publishes it to the common cache using &lt;a class="link" href="https://redis.io/docs/interact/pubsub/" target="_blank" rel="noopener"
+&gt;Redis Pub/Sub&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Only the one server communicating with the client subscribes to the results. It processes the data from the cache, keeps track of how many hosts reported back, and communicates results back to the client. The web UI and &lt;code&gt;fleetctl&lt;/code&gt; interfaces use a &lt;a class="link" href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" target="_blank" rel="noopener"
+&gt;WebSockets API&lt;/a&gt;, and results are reported as they come in. The REST API, on the other hand, only sends a response after all online hosts have reported their query results.&lt;/p&gt;
+&lt;h2 id="discover-more"&gt;&lt;a href="#discover-more" class="header-anchor"&gt;&lt;/a&gt;Discover more
+&lt;/h2&gt;&lt;p&gt;Fleet’s live query feature represents a powerful tool in the arsenal of IT and security administrators. By harnessing the capabilities of live queries, tasks that once required extensive manual effort can now be executed swiftly and efficiently. This real-time querying ability enhances operational efficiency and significantly bolsters security and compliance measures across a range of devices.&lt;/p&gt;
+&lt;p&gt;The integration of Fleet with Osquery agents, the flexibility offered by interfaces like the web UI, &lt;code&gt;fleetctl&lt;/code&gt;, and the REST API, and the efficient data handling through mechanisms like Redis Pub/Sub and WebSockets API all come together to create a robust, real-time telemetry gathering system. This system is designed to keep you informed about the current state of your device fleet, helping you make informed decisions quickly.&lt;/p&gt;
+&lt;p&gt;As you reflect on the capabilities of live queries with Fleet, consider your network environment&amp;rsquo;s unique challenges and needs. &lt;strong&gt;What questions could live queries help you answer about your devices?&lt;/strong&gt; Whether it&amp;rsquo;s security audits, performance monitoring, or compliance checks, live queries offer a dynamic solution to address these concerns.&lt;/p&gt;
+&lt;p&gt;We encourage you to explore the possibilities and share your thoughts or questions. Perhaps you’re facing a specific query challenge or an innovative use case you’ve discovered. Whatever it may be, the world of live queries is vast and ripe for exploration. Join us in &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
+&gt;Fleet’s Slack forums&lt;/a&gt; to engage with a community of like-minded professionals and deepen your understanding of what live queries can achieve in your environment.&lt;/p&gt;
+&lt;p&gt;API Documentation:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://fleetdm.com/docs/rest-api/rest-api#run-live-query" target="_blank" rel="noopener"
+&gt;Run live query with REST API&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6fd06d648601edd89c01e25426e2e35ff2a8a37b/docs/Contributing/API-for-contributors.md#run-live-query" target="_blank" rel="noopener"
+&gt;Run live query with WebSockets&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/get-current-telemetry-from-your-devices-with-live-queries" target="_blank" rel="noopener"
+&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

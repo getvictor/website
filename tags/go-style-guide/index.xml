@@ -1,58 +1,58 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go Style Guide on Victor on Software</title><link>https://victoronsoftware.com/tags/go-style-guide/</link><description>Recent content in Go Style Guide on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/go-style-guide/index.xml" rel="self" type="application/rss+xml"/><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" />&lt;p>When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>{}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, my IDE flagged it as a warning, and pointed me to
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Go Style Guide on Victor on Software</title><link>https://victoronsoftware.com/tags/go-style-guide/</link><description>Recent content in Go Style Guide on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 28 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/go-style-guide/index.xml" rel="self" type="application/rss+xml"/><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" /&gt;&lt;p&gt;When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;{}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, my IDE flagged it as a warning, and pointed me to
 &lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
->this Go style guide passage&lt;/a>, which recommended using a
-nil slice instead:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> []&lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
+&gt;this Go style guide passage&lt;/a&gt;, which recommended using a
+nil slice instead:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
 exceptions and other annoyances? Well, as it turns out, that’s not how slices work in Go. When declaring a nil slice, it
 is not the dreaded null pointer. It is still a slice. This slice includes a slice header, but its value just happens to
-be nil.&lt;/p>
-&lt;p>The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
-true. That’s pretty much it.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Slice is nil.&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>} &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When printing a nil slice, it will print like an empty slice:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Slice is: %v\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">slice&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>Slice is: []
-&lt;/code>&lt;/pre>&lt;p>You can append to a nil slice:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">slice&lt;/span> = append(&lt;span style="color:#a6e22e">slice&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bozo&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You can loop over a nil slice, and the code will not enter the for loop:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">slice&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;We are in a for loop.&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The length of a nil slice is 0:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;len: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">slice&lt;/span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>len: 0
-&lt;/code>&lt;/pre>&lt;p>And, of course, you can pass a nil slice by pointer. That’s right &amp;ndash; pass a nil slice by pointer.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">passByPointer&lt;/span>(&lt;span style="color:#a6e22e">slice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;passByPointer len: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span> = append(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bozo&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>You will get the updated slice if the underlying slice is reassigned.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">passByPointer&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">slice&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;len after passByPointer: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">slice&lt;/span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;pre tabindex="0">&lt;code>len after passByPointer: 1
-&lt;/code>&lt;/pre>&lt;p>The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil
-pointer like you can a nil slice. This code causes a crash:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">nullSlice&lt;/span> &lt;span style="color:#f92672">*&lt;/span>[]&lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Crash: %#v\n&amp;#34;&lt;/span>, len(&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">nullSlice&lt;/span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s the full gist:&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js">&lt;/script>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" >overriding methods in Go&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-nil-slice-vs-empty-slice-video">&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor">&lt;/a>Watch nil slice vs empty slice video
-&lt;/h2>&lt;div class="video-wrapper">
+be nil.&lt;/p&gt;
+&lt;p&gt;The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
+true. That’s pretty much it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When printing a nil slice, it will print like an empty slice:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is: %v\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;Slice is: []
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can append to a nil slice:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;bozo&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can loop over a nil slice, and the code will not enter the for loop:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;range&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;We are in a for loop.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The length of a nil slice is 0:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;len: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;len: 0
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And, of course, you can pass a nil slice by pointer. That’s right &amp;ndash; pass a nil slice by pointer.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;passByPointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;[]&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;passByPointer len: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; = append(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;bozo&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You will get the updated slice if the underlying slice is reassigned.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;passByPointer&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;len after passByPointer: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;pre tabindex="0"&gt;&lt;code&gt;len after passByPointer: 1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The code above demonstrates that a nil slice is not a nil pointer. On the other hand, you cannot dereference a nil
+pointer like you can a nil slice. This code causes a crash:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;nullSlice&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;[]&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Crash: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;nullSlice&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here&amp;rsquo;s the full gist:&lt;/p&gt;
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/bff0fa45185630e264a40476207d8e4d.js"&gt;&lt;/script&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we wrote about &lt;a class="link" href="../method-overriding-in-go/" &gt;overriding methods in Go&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-nil-slice-vs-empty-slice-video"&gt;&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor"&gt;&lt;/a&gt;Watch nil slice vs empty slice video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/q0B4q_0u4XI"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;</description></item></channel></rss>

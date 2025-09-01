@@ -1,75 +1,75 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Victor on Software</title><link>https://victoronsoftware.com/tags/linux/</link><description>Recent content in Linux on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 08 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Create an IPv6-only Linux server in 3 easy steps</title><link>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</link><pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/ipv6-only.png" alt="Featured image of post Create an IPv6-only Linux server in 3 easy steps" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out
-of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p>
-&lt;p>In addition, IPv6 is more secure than IPv4. It has built-in security features like IPsec, which is optional in IPv4.
-IPv6 also has a simplified header, which makes it faster than IPv4.&lt;/p>
-&lt;p>Many corporations use IPv6 internally, and some have even disabled IPv4. This tutorial will create a Linux VM using
-IPv6, with IPv4 disabled.&lt;/p>
-&lt;p>The steps are:&lt;/p>
-&lt;ol>
-&lt;li>&lt;a class="link" href="#create-linux-server-with-ipv6-enabled" >Create droplets with IPv6 enabled&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#ssh-from-ipv4-client-to-ipv6-only-server" >SSH from IPv4 client to IPv6-only server&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#disable-ipv4-on-linux-server" >Disable IPv4 on the Linux server&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;h2 id="prerequisites">&lt;a href="#prerequisites" class="header-anchor">&lt;/a>Prerequisites
-&lt;/h2>&lt;p>We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
->Digital Ocean&lt;/a> as our cloud provider. Their IPv6 documentation is available
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Victor on Software</title><link>https://victoronsoftware.com/tags/linux/</link><description>Recent content in Linux on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 08 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Create an IPv6-only Linux server in 3 easy steps</title><link>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</link><pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/ipv6-only.png" alt="Featured image of post Create an IPv6-only Linux server in 3 easy steps" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
+&lt;/h2&gt;&lt;p&gt;IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out
+of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p&gt;
+&lt;p&gt;In addition, IPv6 is more secure than IPv4. It has built-in security features like IPsec, which is optional in IPv4.
+IPv6 also has a simplified header, which makes it faster than IPv4.&lt;/p&gt;
+&lt;p&gt;Many corporations use IPv6 internally, and some have even disabled IPv4. This tutorial will create a Linux VM using
+IPv6, with IPv4 disabled.&lt;/p&gt;
+&lt;p&gt;The steps are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#create-linux-server-with-ipv6-enabled" &gt;Create droplets with IPv6 enabled&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#ssh-from-ipv4-client-to-ipv6-only-server" &gt;SSH from IPv4 client to IPv6-only server&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#disable-ipv4-on-linux-server" &gt;Disable IPv4 on the Linux server&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="prerequisites"&gt;&lt;a href="#prerequisites" class="header-anchor"&gt;&lt;/a&gt;Prerequisites
+&lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
+&gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
 at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
->https://docs.digitalocean.com/products/networking/ipv6/&lt;/a>.&lt;/p>
-&lt;p>Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
-sizes. We will create a new droplet with IPv6.&lt;/p>
-&lt;h2 id="create-linux-server-with-ipv6-enabled">&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor">&lt;/a>Step 1: Create droplets with IPv6 enabled
-&lt;/h2>&lt;p>We will create two Digital Ocean droplets. The first droplet will have only IPv6 enabled, and the second droplet will
+&gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
+sizes. We will create a new droplet with IPv6.&lt;/p&gt;
+&lt;h2 id="create-linux-server-with-ipv6-enabled"&gt;&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor"&gt;&lt;/a&gt;Step 1: Create droplets with IPv6 enabled
+&lt;/h2&gt;&lt;p&gt;We will create two Digital Ocean droplets. The first droplet will have only IPv6 enabled, and the second droplet will
 have both IPv4 and IPv6 enabled. We only need the second droplet to SSH into the first droplet because our client
-machine uses IPv4 only.&lt;/p>
-&lt;p>Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
-enabled in Advanced Options.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
-alt="Enable IPv6 checkbox">
-&lt;/figure>
-&lt;p>The first droplet will use the Password authentication method.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
-alt="Choose Droplet authentication method">
-&lt;/figure>
-&lt;p>The second droplet can have either Password or SSH authentication.&lt;/p>
-&lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server">&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor">&lt;/a>Step 2: SSH from IPv4 client to IPv6-only server
-&lt;/h2>&lt;p>You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
-alt="Droplet details">
-&lt;/figure>
-&lt;p>Now, we connect to the second droplet using SSH.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh root@143.198.235.211
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>From there, we can SSH into the first droplet using its IPv6 address.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>ssh root@2604:a880:4:1d0::4d3:3000
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Install the &lt;code>net-tools&lt;/code> package to use the &lt;code>ifconfig&lt;/code> command.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo apt update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>sudo apt install net-tools
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="disable-ipv4-on-linux-server">&lt;a href="#disable-ipv4-on-linux-server" class="header-anchor">&lt;/a>Step 3: Disable IPv4 on the Linux server
-&lt;/h2>&lt;p>To disable IPv4 on the first droplet, edit the &lt;code>/etc/netplan/50-cloud-init.yaml&lt;/code> network configuration file by removing
-all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown below.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">network&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">version&lt;/span>: &lt;span style="color:#ae81ff">2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">ethernets&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">eth0&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">accept-ra&lt;/span>: &lt;span style="color:#66d9ef">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">addresses&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">2604&lt;/span>:&lt;span style="color:#ae81ff">a880:4:1d0::4d3:3000/64&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">match&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">macaddress&lt;/span>: &lt;span style="color:#ae81ff">da:a1:07:89:d9:a1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">mtu&lt;/span>: &lt;span style="color:#ae81ff">1500&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">nameservers&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">addresses&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">2001&lt;/span>:&lt;span style="color:#ae81ff">4860&lt;/span>:&lt;span style="color:#ae81ff">4860&lt;/span>::&lt;span style="color:#ae81ff">8844&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">2001&lt;/span>:&lt;span style="color:#ae81ff">4860&lt;/span>:&lt;span style="color:#ae81ff">4860&lt;/span>::&lt;span style="color:#ae81ff">8888&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">search&lt;/span>: []
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">routes&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">to&lt;/span>: ::&lt;span style="color:#ae81ff">/0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">via&lt;/span>: &lt;span style="color:#ae81ff">2604&lt;/span>:&lt;span style="color:#ae81ff">a880:4:1d0::1&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">set-name&lt;/span>: &lt;span style="color:#ae81ff">eth0&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Apply the changes.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>sudo netplan apply --debug
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you can view the network configuration using the &lt;code>ifconfig&lt;/code> command. It should look like:&lt;/p>
-&lt;pre tabindex="0">&lt;code>eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
+machine uses IPv4 only.&lt;/p&gt;
+&lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
+enabled in Advanced Options.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
+alt="Enable IPv6 checkbox"&gt;
+&lt;/figure&gt;
+&lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
+alt="Choose Droplet authentication method"&gt;
+&lt;/figure&gt;
+&lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
+&lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
+&lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
+alt="Droplet details"&gt;
+&lt;/figure&gt;
+&lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From there, we can SSH into the first droplet using its IPv6 address.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@2604:a880:4:1d0::4d3:3000
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Install the &lt;code&gt;net-tools&lt;/code&gt; package to use the &lt;code&gt;ifconfig&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install net-tools
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="disable-ipv4-on-linux-server"&gt;&lt;a href="#disable-ipv4-on-linux-server" class="header-anchor"&gt;&lt;/a&gt;Step 3: Disable IPv4 on the Linux server
+&lt;/h2&gt;&lt;p&gt;To disable IPv4 on the first droplet, edit the &lt;code&gt;/etc/netplan/50-cloud-init.yaml&lt;/code&gt; network configuration file by removing
+all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown below.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ethernets&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;eth0&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;accept-ra&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;addresses&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;2604&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;a880:4:1d0::4d3:3000/64&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;match&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;macaddress&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;da:a1:07:89:d9:a1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mtu&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;1500&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nameservers&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;addresses&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;2001&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;4860&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;4860&lt;/span&gt;::&lt;span style="color:#ae81ff"&gt;8844&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;2001&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;4860&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;4860&lt;/span&gt;::&lt;span style="color:#ae81ff"&gt;8888&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;search&lt;/span&gt;: []
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;routes&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;to&lt;/span&gt;: ::&lt;span style="color:#ae81ff"&gt;/0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;via&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2604&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;a880:4:1d0::1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;set-name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;eth0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Apply the changes.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can view the network configuration using the &lt;code&gt;ifconfig&lt;/code&gt; command. It should look like:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
 inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
 inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
 ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
@@ -92,28 +92,28 @@ RX packets 233 bytes 22136 (22.1 KB)
 RX errors 0 dropped 0 overruns 0 frame 0
 TX packets 233 bytes 22136 (22.1 KB)
 TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
-&lt;/code>&lt;/pre>&lt;p>You can see that the &lt;code>eth0&lt;/code> interface has an IPv6 address but no IPv4 address. The &lt;code>eth1&lt;/code> interface also has an IPv6
-address. The &lt;code>lo&lt;/code> interface is the loopback interface and still uses the IPv4 &lt;code>127.0.0.1&lt;/code> address. We will not disable
-IPv4 on the loopback interface at this point since many tools may break.&lt;/p>
-&lt;h2 id="transfer-files-between-ipv4-and-ipv6-only-servers">&lt;a href="#transfer-files-between-ipv4-and-ipv6-only-servers" class="header-anchor">&lt;/a>Transfer files between IPv4 and IPv6-only servers
-&lt;/h2>&lt;p>To transfer files between the IPv4 and IPv6-only servers, you can use the &lt;code>scp&lt;/code> command. First, transfer to the droplet
-that supports both IPv4 and IPv6, like:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>scp fleet-osquery_1.24.0_amd64.deb root@143.198.235.211:~
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, SSH into that droplet and transfer the file to the IPv6-only droplet:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>scp fleet-osquery_1.24.0_amd64.deb root@&lt;span style="color:#ae81ff">\[&lt;/span>2604:a880:4:1d0::4d3:3000&lt;span style="color:#ae81ff">\]&lt;/span>:~
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>In this tutorial, we created a Linux VM using IPv6, with IPv4 disabled. We also transferred files between an IPv4 and an
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can see that the &lt;code&gt;eth0&lt;/code&gt; interface has an IPv6 address but no IPv4 address. The &lt;code&gt;eth1&lt;/code&gt; interface also has an IPv6
+address. The &lt;code&gt;lo&lt;/code&gt; interface is the loopback interface and still uses the IPv4 &lt;code&gt;127.0.0.1&lt;/code&gt; address. We will not disable
+IPv4 on the loopback interface at this point since many tools may break.&lt;/p&gt;
+&lt;h2 id="transfer-files-between-ipv4-and-ipv6-only-servers"&gt;&lt;a href="#transfer-files-between-ipv4-and-ipv6-only-servers" class="header-anchor"&gt;&lt;/a&gt;Transfer files between IPv4 and IPv6-only servers
+&lt;/h2&gt;&lt;p&gt;To transfer files between the IPv4 and IPv6-only servers, you can use the &lt;code&gt;scp&lt;/code&gt; command. First, transfer to the droplet
+that supports both IPv4 and IPv6, like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@143.198.235.211:~
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, SSH into that droplet and transfer the file to the IPv6-only droplet:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@&lt;span style="color:#ae81ff"&gt;\[&lt;/span&gt;2604:a880:4:1d0::4d3:3000&lt;span style="color:#ae81ff"&gt;\]&lt;/span&gt;:~
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;In this tutorial, we created a Linux VM using IPv6, with IPv4 disabled. We also transferred files between an IPv4 and an
 IPv6-only server. IPv6 is the future of the Internet, and learning how to use it is essential. You can now create your
-own IPv6-only servers and experiment with them.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" >why you need VLANs in your home network&lt;/a>.&lt;/p>
-&lt;h2 id="create-an-ipv6-only-linux-server-video">&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor">&lt;/a>Create an IPv6-only Linux server video
-&lt;/h2>&lt;div class="video-wrapper">
+own IPv6-only servers and experiment with them.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;p&gt;Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" &gt;why you need VLANs in your home network&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="create-an-ipv6-only-linux-server-video"&gt;&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor"&gt;&lt;/a&gt;Create an IPv6-only Linux server video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/BjdHmyzfe80"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

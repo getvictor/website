@@ -1,59 +1,59 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Organizational Culture on Victor on Software</title><link>https://victoronsoftware.com/tags/organizational-culture/</link><description>Recent content in Organizational Culture on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 12 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/organizational-culture/index.xml" rel="self" type="application/rss+xml"/><item><title>Why transparency beats everything else in engineering</title><link>https://victoronsoftware.com/posts/engineering-transparency/</link><pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-transparency/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-transparency/engineering-transparency-headline.png" alt="Featured image of post Why transparency beats everything else in engineering" />&lt;p>Have you ever felt like you&amp;rsquo;re working in a fog? Where everyone&amp;rsquo;s busy, everyone&amp;rsquo;s trying, but somehow nothing important
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Organizational Culture on Victor on Software</title><link>https://victoronsoftware.com/tags/organizational-culture/</link><description>Recent content in Organizational Culture on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 12 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/organizational-culture/index.xml" rel="self" type="application/rss+xml"/><item><title>Why transparency beats everything else in engineering</title><link>https://victoronsoftware.com/posts/engineering-transparency/</link><pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-transparency/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-transparency/engineering-transparency-headline.png" alt="Featured image of post Why transparency beats everything else in engineering" /&gt;&lt;p&gt;Have you ever felt like you&amp;rsquo;re working in a fog? Where everyone&amp;rsquo;s busy, everyone&amp;rsquo;s trying, but somehow nothing important
 gets done? I&amp;rsquo;ve been there. The problem isn&amp;rsquo;t the people. It&amp;rsquo;s the system. And specifically, it&amp;rsquo;s the lack of
-transparency and accountability.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#taking-action-what-you-can-do-when-you-have-no-visibility" >Taking action: What you can do when you have no visibility&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#key-takeaways" >Key takeaways&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="the-weekly-dance-of-non-delivery">&lt;a href="#the-weekly-dance-of-non-delivery" class="header-anchor">&lt;/a>The weekly dance of non-delivery
-&lt;/h2>&lt;p>Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
+transparency and accountability.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#taking-action-what-you-can-do-when-you-have-no-visibility" &gt;Taking action: What you can do when you have no visibility&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#key-takeaways" &gt;Key takeaways&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-weekly-dance-of-non-delivery"&gt;&lt;a href="#the-weekly-dance-of-non-delivery" class="header-anchor"&gt;&lt;/a&gt;The weekly dance of non-delivery
+&lt;/h2&gt;&lt;p&gt;Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
-same question, trying to keep my tone professional:&lt;/p>
-&lt;blockquote>
-&lt;p>&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;p>And every week, Alex would say:&lt;/p>
-&lt;blockquote>
-&lt;p>&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;p>At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p>
-&lt;p>But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p>
-&lt;p>I was &lt;em>boiling&lt;/em> inside.&lt;/p>
-&lt;p>I kept thinking:&lt;/p>
-&lt;blockquote>
-&lt;p>&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
-matters?&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;p>We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
+same question, trying to keep my tone professional:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;And every week, Alex would say:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
+&lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
+&lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
+&lt;p&gt;I kept thinking:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
+matters?&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
-again with another non-update.&lt;/p>
-&lt;h2 id="years-in-the-fog">&lt;a href="#years-in-the-fog" class="header-anchor">&lt;/a>Years in the fog
-&lt;/h2>&lt;p>The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p>
-&lt;blockquote>
-&lt;p>&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;blockquote>
-&lt;p>&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p>&lt;/blockquote>
-&lt;p>This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
-wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p>
-&lt;p>I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
-how my day was, and I&amp;rsquo;d just shrug. What was there to say? Another day, another meeting, another non-update.&lt;/p>
-&lt;h2 id="the-moment-of-clarity">&lt;a href="#the-moment-of-clarity" class="header-anchor">&lt;/a>The moment of clarity
-&lt;/h2>&lt;p>Then I switched companies.&lt;/p>
-&lt;p>And everything changed.&lt;/p>
-&lt;p>In my new company, everyone has access to clear company priorities: what we are building, why it is important, which
+again with another non-update.&lt;/p&gt;
+&lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
+&lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
+wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
+how my day was, and I&amp;rsquo;d just shrug. What was there to say? Another day, another meeting, another non-update.&lt;/p&gt;
+&lt;h2 id="the-moment-of-clarity"&gt;&lt;a href="#the-moment-of-clarity" class="header-anchor"&gt;&lt;/a&gt;The moment of clarity
+&lt;/h2&gt;&lt;p&gt;Then I switched companies.&lt;/p&gt;
+&lt;p&gt;And everything changed.&lt;/p&gt;
+&lt;p&gt;In my new company, everyone has access to clear company priorities: what we are building, why it is important, which
 customer requests are critical, and who our key customers are. Engineers are empowered to make their own decisions based
 on this shared context. If someone can&amp;rsquo;t deliver, they openly communicate why and offer alternatives grounded in the
-company&amp;rsquo;s priorities.&lt;/p>
-&lt;p>There is no hiding or pretending. Just reality, laid bare.&lt;/p>
-&lt;p>That&amp;rsquo;s when it hit me. The problem at my old company wasn&amp;rsquo;t Alex. He wasn&amp;rsquo;t slacking off. He was overwhelmed, like the
+company&amp;rsquo;s priorities.&lt;/p&gt;
+&lt;p&gt;There is no hiding or pretending. Just reality, laid bare.&lt;/p&gt;
+&lt;p&gt;That&amp;rsquo;s when it hit me. The problem at my old company wasn&amp;rsquo;t Alex. He wasn&amp;rsquo;t slacking off. He was overwhelmed, like the
 rest of us. Everyone was reacting to the noise instead of following the signal. No one had the authority or clarity to
-say what actually mattered.&lt;/p>
-&lt;p>&lt;strong>This wasn&amp;rsquo;t a communication problem. It was a trust and transparency problem.&lt;/strong> And the absence of that created a
-frustrating, demoralizing fog. Everyone thought they were doing the right thing, yet nothing moved forward.&lt;/p>
-&lt;p>That experience changed my understanding of leadership.&lt;/p>
-&lt;p>Because here&amp;rsquo;s the truth: Without shared visibility and shared accountability, even the best engineers will lose
-direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p>
-&lt;p>As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p>
-&lt;pre class="mermaid">
+say what actually mattered.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This wasn&amp;rsquo;t a communication problem. It was a trust and transparency problem.&lt;/strong&gt; And the absence of that created a
+frustrating, demoralizing fog. Everyone thought they were doing the right thing, yet nothing moved forward.&lt;/p&gt;
+&lt;p&gt;That experience changed my understanding of leadership.&lt;/p&gt;
+&lt;p&gt;Because here&amp;rsquo;s the truth: Without shared visibility and shared accountability, even the best engineers will lose
+direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p&gt;
+&lt;p&gt;As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
 ---
 title: The hidden work iceberg
 ---
@@ -91,74 +91,74 @@ style Row1 fill:none,stroke:none
 style Row2 fill:none,stroke:none
 style Row3 fill:none,stroke:none
 style Spacer1 fill:none,stroke:none
-&lt;/pre>
-&lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility">&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor">&lt;/a>Taking action: What you can do when you have no visibility
-&lt;/h2>&lt;p>At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
-knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p>
-&lt;p>If your manager attends cross-functional meetings with other managers where priorities and goals are discussed, you need
-to know what&amp;rsquo;s happening at those meetings. There are a few ways to do that:&lt;/p>
-&lt;ul>
-&lt;li>Watch the recordings of those meetings. If they&amp;rsquo;re not recorded, ask if they could be.&lt;/li>
-&lt;li>Read the meeting notes from those meetings. Could your company employ an AI notetaker?&lt;/li>
-&lt;li>Ask your manager for a readout from those meetings in your weekly one-on-one.&lt;/li>
-&lt;/ul>
-&lt;p>Once you feel like you&amp;rsquo;re on the same page as your manager, repeat the process with your manager&amp;rsquo;s manager. If you&amp;rsquo;re
+&lt;/pre&gt;
+&lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility"&gt;&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor"&gt;&lt;/a&gt;Taking action: What you can do when you have no visibility
+&lt;/h2&gt;&lt;p&gt;At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
+knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p&gt;
+&lt;p&gt;If your manager attends cross-functional meetings with other managers where priorities and goals are discussed, you need
+to know what&amp;rsquo;s happening at those meetings. There are a few ways to do that:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Watch the recordings of those meetings. If they&amp;rsquo;re not recorded, ask if they could be.&lt;/li&gt;
+&lt;li&gt;Read the meeting notes from those meetings. Could your company employ an AI notetaker?&lt;/li&gt;
+&lt;li&gt;Ask your manager for a readout from those meetings in your weekly one-on-one.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Once you feel like you&amp;rsquo;re on the same page as your manager, repeat the process with your manager&amp;rsquo;s manager. If you&amp;rsquo;re
 not meeting regularly with your manager&amp;rsquo;s manager, ask for a skip-level meeting and afterwards extend the ask for a
-recurring skip-level meeting.&lt;/p>
-&lt;h3 id="how-to-ask-for-more-visibility">&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor">&lt;/a>How to ask for more visibility
-&lt;/h3>&lt;p>Here&amp;rsquo;s a sample script you can adapt:&lt;/p>
-&lt;blockquote>
-&lt;p>Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
-I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p>
-&lt;p>Specifically, I&amp;rsquo;m interested in:&lt;/p>
-&lt;ul>
-&lt;li>Understanding the key decisions and trade-offs being discussed in cross-functional meetings&lt;/li>
-&lt;li>Getting insight into upcoming priorities that might affect our team&amp;rsquo;s roadmap&lt;/li>
-&lt;li>Learning about dependencies or blockers other teams are facing that might impact us&lt;/li>
-&lt;/ul>
-&lt;p>Would it be possible to either:&lt;/p>
-&lt;ol>
-&lt;li>Get access to recordings/notes from your planning meetings, or&lt;/li>
-&lt;li>Have a brief weekly sync where you share the key takeaways?&lt;/li>
-&lt;/ol>
-&lt;p>I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
-contribute more strategically to our team&amp;rsquo;s success.&lt;/p>&lt;/blockquote>
-&lt;h2 id="key-takeaways">&lt;a href="#key-takeaways" class="header-anchor">&lt;/a>Key takeaways
-&lt;/h2>&lt;p>Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p>
-&lt;p>&lt;strong>It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong> We had meetings. We had updates. What we
-didn&amp;rsquo;t have was visibility into what actually mattered.&lt;/p>
-&lt;p>&lt;strong>The absence of transparency creates a demoralizing fog.&lt;/strong> When priorities aren&amp;rsquo;t clear and accountability doesn&amp;rsquo;t
-exist, everyone thinks they&amp;rsquo;re doing the right thing while nothing moves forward.&lt;/p>
-&lt;p>&lt;strong>Great engineers need visibility to thrive.&lt;/strong> Alex wasn&amp;rsquo;t slacking. He was overwhelmed and reacting to noise instead of
-signal because no one had the clarity to say what mattered.&lt;/p>
-&lt;p>&lt;strong>You need to know what your manager knows.&lt;/strong> Aim for 90% visibility into your manager&amp;rsquo;s context through meeting
-recordings, notes, or regular readouts.&lt;/p>
-&lt;p>&lt;strong>Leaders must make the invisible visible.&lt;/strong> Their job isn&amp;rsquo;t just to set direction. It is to ensure that priorities,
-trade-offs, and blockers are explicit and public.&lt;/p>
-&lt;p>The fog I worked in for years wasn&amp;rsquo;t inevitable. It was a broken system where politeness trumped progress. You can build
-better systems. You just need to start asking for and creating transparency.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../github-code-review-issues/" >Top 3 issues with GitHub code review process&lt;/a>&lt;/strong>&lt;br>
-Discover how poor visibility in code reviews creates bottlenecks and what you can do to improve team collaboration.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../engineering-metrics-no-cost/" >Full-featured engineering metrics—for free&lt;/a>&lt;/strong>&lt;br>
-Build transparency dashboards that make engineering work visible to everyone using free tools and GitHub data.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../readable-code/" >What is readable code and why is it important?&lt;/a>&lt;/strong>&lt;br>
-Learn how code clarity impacts team velocity and why transparency starts at the code level.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-us-discuss-engineering-transparency">&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor">&lt;/a>Watch us discuss engineering transparency
-&lt;/h2>&lt;div class="video-wrapper">
+recurring skip-level meeting.&lt;/p&gt;
+&lt;h3 id="how-to-ask-for-more-visibility"&gt;&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor"&gt;&lt;/a&gt;How to ask for more visibility
+&lt;/h3&gt;&lt;p&gt;Here&amp;rsquo;s a sample script you can adapt:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
+I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p&gt;
+&lt;p&gt;Specifically, I&amp;rsquo;m interested in:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Understanding the key decisions and trade-offs being discussed in cross-functional meetings&lt;/li&gt;
+&lt;li&gt;Getting insight into upcoming priorities that might affect our team&amp;rsquo;s roadmap&lt;/li&gt;
+&lt;li&gt;Learning about dependencies or blockers other teams are facing that might impact us&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Would it be possible to either:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Get access to recordings/notes from your planning meetings, or&lt;/li&gt;
+&lt;li&gt;Have a brief weekly sync where you share the key takeaways?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
+contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
+&lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
+didn&amp;rsquo;t have was visibility into what actually mattered.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;The absence of transparency creates a demoralizing fog.&lt;/strong&gt; When priorities aren&amp;rsquo;t clear and accountability doesn&amp;rsquo;t
+exist, everyone thinks they&amp;rsquo;re doing the right thing while nothing moves forward.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Great engineers need visibility to thrive.&lt;/strong&gt; Alex wasn&amp;rsquo;t slacking. He was overwhelmed and reacting to noise instead of
+signal because no one had the clarity to say what mattered.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;You need to know what your manager knows.&lt;/strong&gt; Aim for 90% visibility into your manager&amp;rsquo;s context through meeting
+recordings, notes, or regular readouts.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Leaders must make the invisible visible.&lt;/strong&gt; Their job isn&amp;rsquo;t just to set direction. It is to ensure that priorities,
+trade-offs, and blockers are explicit and public.&lt;/p&gt;
+&lt;p&gt;The fog I worked in for years wasn&amp;rsquo;t inevitable. It was a broken system where politeness trumped progress. You can build
+better systems. You just need to start asking for and creating transparency.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../github-code-review-issues/" &gt;Top 3 issues with GitHub code review process&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Discover how poor visibility in code reviews creates bottlenecks and what you can do to improve team collaboration.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../engineering-metrics-no-cost/" &gt;Full-featured engineering metrics—for free&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Build transparency dashboards that make engineering work visible to everyone using free tools and GitHub data.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../readable-code/" &gt;What is readable code and why is it important?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn how code clarity impacts team velocity and why transparency starts at the code level.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-discuss-engineering-transparency"&gt;&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss engineering transparency
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/3oSdwkC7iiI"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

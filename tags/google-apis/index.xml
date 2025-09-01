@@ -1,340 +1,340 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Google APIs on Victor on Software</title><link>https://victoronsoftware.com/tags/google-apis/</link><description>Recent content in Google APIs on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/google-apis/index.xml" rel="self" type="application/rss+xml"/><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" />&lt;p>Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Google APIs on Victor on Software</title><link>https://victoronsoftware.com/tags/google-apis/</link><description>Recent content in Google APIs on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 26 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/google-apis/index.xml" rel="self" type="application/rss+xml"/><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" /&gt;&lt;p&gt;Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
 improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
 article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
-suite.&lt;/p>
-&lt;p>Some standard engineering metrics include:&lt;/p>
-&lt;ul>
-&lt;li>Number of bugs&lt;/li>
-&lt;li>Lead time for changes (or bug fixes)&lt;/li>
-&lt;li>Code coverage&lt;/li>
-&lt;li>Build/test success rate&lt;/li>
-&lt;li>Deployment frequency&lt;/li>
-&lt;li>Number of incidents&lt;/li>
-&lt;li>Mean time to recovery&lt;/li>
-&lt;li>Delivered story points&lt;/li>
-&lt;li>and many more&lt;/li>
-&lt;/ul>
-&lt;p>Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
-per-team basis.&lt;/p>
-&lt;h2 id="building-an-engineering-metrics-tracker">&lt;a href="#building-an-engineering-metrics-tracker" class="header-anchor">&lt;/a>Building an engineering metrics tracker
-&lt;/h2>&lt;p>For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
-Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p>
-&lt;p>All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
-services. We will use the Go programming language in our example.&lt;/p>
-&lt;h2 id="gathering-the-number-of-open-bugs">&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor">&lt;/a>Gathering the number of open bugs
-&lt;/h2>&lt;p>The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
->GitHub API&lt;/a> is a well-documented way to query issues in a repository.&lt;/p>
-&lt;p>There are also many quality client libraries for the API. We will use the
+suite.&lt;/p&gt;
+&lt;p&gt;Some standard engineering metrics include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Number of bugs&lt;/li&gt;
+&lt;li&gt;Lead time for changes (or bug fixes)&lt;/li&gt;
+&lt;li&gt;Code coverage&lt;/li&gt;
+&lt;li&gt;Build/test success rate&lt;/li&gt;
+&lt;li&gt;Deployment frequency&lt;/li&gt;
+&lt;li&gt;Number of incidents&lt;/li&gt;
+&lt;li&gt;Mean time to recovery&lt;/li&gt;
+&lt;li&gt;Delivered story points&lt;/li&gt;
+&lt;li&gt;and many more&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Engineering metrics can be further sliced and diced in various ways. For example, you can track bugs by severity or on a
+per-team basis.&lt;/p&gt;
+&lt;h2 id="building-an-engineering-metrics-tracker"&gt;&lt;a href="#building-an-engineering-metrics-tracker" class="header-anchor"&gt;&lt;/a&gt;Building an engineering metrics tracker
+&lt;/h2&gt;&lt;p&gt;For our example metrics tracker, we will gather the number of GitHub open bugs for a team, update the numbers in a
+Google Sheet, automate the process with GitHub Actions, and display the data in Google Docs.&lt;/p&gt;
+&lt;p&gt;All the tools for this flow are freely available, and this process does not rely on costly third-party metrics-gathering
+services. We will use the Go programming language in our example.&lt;/p&gt;
+&lt;h2 id="gathering-the-number-of-open-bugs"&gt;&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor"&gt;&lt;/a&gt;Gathering the number of open bugs
+&lt;/h2&gt;&lt;p&gt;The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
+&gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
+&lt;p&gt;There are also many quality client libraries for the API. We will use the
 &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
->go-github&lt;/a> client.&lt;/p>
-&lt;p>Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">getGitHubIssues&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>) ([]&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">githubToken&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">Getenv&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;GITHUB_TOKEN&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>(&lt;span style="color:#66d9ef">nil&lt;/span>).&lt;span style="color:#a6e22e">WithAuthToken&lt;/span>(&lt;span style="color:#a6e22e">githubToken&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Get issues.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span> []&lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">Issue&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">github&lt;/span>.&lt;span style="color:#a6e22e">IssueListByRepoOptions&lt;/span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">State&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;open&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Labels&lt;/span>: []&lt;span style="color:#66d9ef">string&lt;/span>{&lt;span style="color:#e6db74">&amp;#34;#g-mdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;:release&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;bug&amp;#34;&lt;/span>},
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">issues&lt;/span>, &lt;span style="color:#a6e22e">resp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">client&lt;/span>.&lt;span style="color:#a6e22e">Issues&lt;/span>.&lt;span style="color:#a6e22e">ListByRepo&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleetdm&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleet&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">opts&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">allIssues&lt;/span> = append(&lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#a6e22e">issues&lt;/span>&lt;span style="color:#f92672">...&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">NextPage&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">break&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">opts&lt;/span>.&lt;span style="color:#a6e22e">Page&lt;/span> = &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">NextPage&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code snippet uses a &lt;code>GITHUB_TOKEN&lt;/code> environment variable to authenticate with the GitHub API. You can create a
+&gt;go-github&lt;/a&gt; client.&lt;/p&gt;
+&lt;p&gt;Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;getGitHubIssues&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Context&lt;/span&gt;) ([]&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;github&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Issue&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;githubToken&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Getenv&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;GITHUB_TOKEN&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;github&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewClient&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;WithAuthToken&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;githubToken&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Get issues.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt; []&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;github&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Issue&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;github&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;IssueListByRepoOptions&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;State&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;open&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Labels&lt;/span&gt;: []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;{&lt;span style="color:#e6db74"&gt;&amp;#34;#g-mdm&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;:release&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;bug&amp;#34;&lt;/span&gt;},
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;issues&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Issues&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ListByRepo&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;fleetdm&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;fleet&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;issues&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NextPage&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;break&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Page&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NextPage&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above code snippet uses a &lt;code&gt;GITHUB_TOKEN&lt;/code&gt; environment variable to authenticate with the GitHub API. You can create a
 personal access token in your GitHub account settings. Later, we will show how to set this token in GitHub Actions
-automatically. The token is optional for public repositories but required for private repositories.&lt;/p>
-&lt;p>The code snippet queries the open issues in the public &lt;code>fleetdm/fleet&lt;/code> repository with the labels &lt;code>#g-mdm&lt;/code>, &lt;code>:release&lt;/code>,
-and &lt;code>bug&lt;/code>. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p>
-&lt;h2 id="updating-the-google-sheets-spreadsheet">&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor">&lt;/a>Updating the Google Sheets spreadsheet
-&lt;/h2>&lt;p>To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
->Google Sheets API&lt;/a>
+automatically. The token is optional for public repositories but required for private repositories.&lt;/p&gt;
+&lt;p&gt;The code snippet queries the open issues in the public &lt;code&gt;fleetdm/fleet&lt;/code&gt; repository with the labels &lt;code&gt;#g-mdm&lt;/code&gt;, &lt;code&gt;:release&lt;/code&gt;,
+and &lt;code&gt;bug&lt;/code&gt;. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p&gt;
+&lt;h2 id="updating-the-google-sheets-spreadsheet"&gt;&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor"&gt;&lt;/a&gt;Updating the Google Sheets spreadsheet
+&lt;/h2&gt;&lt;p&gt;To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
+&gt;Google Sheets API&lt;/a&gt;
 with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
->Google&amp;rsquo;s Go client library&lt;/a>.&lt;/p>
-&lt;p>For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
+&gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
 spreadsheet using the API, see our previous article:
-&lt;a class="link" href="../google-sheets-api/" >How to quickly edit Google Sheets spreadsheet using the API&lt;/a>.&lt;/p>
-&lt;p>See our integrated
+&lt;a class="link" href="../google-sheets-api/" &gt;How to quickly edit Google Sheets spreadsheet using the API&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;See our integrated
 &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
->function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a>
-on GitHub.&lt;/p>
-&lt;p>In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
-you must set the &lt;code>SPREADSHEET_ID&lt;/code> and &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> environment variables.&lt;/p>
-&lt;pre tabindex="0">&lt;code>spreadsheetId := os.Getenv(&amp;#34;SPREADSHEET_ID&amp;#34;)
+&gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
+on GitHub.&lt;/p&gt;
+&lt;p&gt;In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
+you must set the &lt;code&gt;SPREADSHEET_ID&lt;/code&gt; and &lt;code&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code&gt; environment variables.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;spreadsheetId := os.Getenv(&amp;#34;SPREADSHEET_ID&amp;#34;)
 serviceAccountKey = []byte(os.Getenv(&amp;#34;GOOGLE_SERVICE_ACCOUNT_KEY&amp;#34;))
-&lt;/code>&lt;/pre>&lt;p>The glue code combining the above two functions is straightforward.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">allIssues&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">getGitHubIssues&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to get GitHub issues: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Total issues: %d\n&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">allIssues&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">updateSpreadsheet&lt;/span>(len(&lt;span style="color:#a6e22e">allIssues&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to update spreadsheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
-automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p>
-&lt;h2 id="automating-the-metric-gathering-process-with-github-actions">&lt;a href="#automating-the-metric-gathering-process-with-github-actions" class="header-anchor">&lt;/a>Automating the metric-gathering process with GitHub Actions
-&lt;/h2>&lt;p>GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The glue code combining the above two functions is straightforward.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Background&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;getGitHubIssues&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to get GitHub issues: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Total issues: %d\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;updateSpreadsheet&lt;/span&gt;(len(&lt;span style="color:#a6e22e"&gt;allIssues&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to update spreadsheet: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can manually run our script to gather the metrics and update the Google Sheets spreadsheet. However, we want to
+automate this process so that the metrics are always up to date and we have a consistent historical record.&lt;/p&gt;
+&lt;h2 id="automating-the-metric-gathering-process-with-github-actions"&gt;&lt;a href="#automating-the-metric-gathering-process-with-github-actions" class="header-anchor"&gt;&lt;/a&gt;Automating the metric-gathering process with GitHub Actions
+&lt;/h2&gt;&lt;p&gt;GitHub Actions allows you to automate, customize, and execute your software development workflows in your GitHub
 repository. We will use GitHub Actions to run our script on a schedule and update the Google Sheets spreadsheet with the
-latest metrics.&lt;/p>
-&lt;p>Create a &lt;code>.github/workflows/update-spreadsheet.yml&lt;/code> file in your repository with the following content:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Update spreadsheet with latest metrics&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">workflow_dispatch&lt;/span>: &lt;span style="color:#75715e"># Manual&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">schedule&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">cron&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;0 */12 * * *&amp;#39;&lt;/span> &lt;span style="color:#75715e"># At 00:00 and 12:00 UTC&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">env&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">GITHUB_TOKEN&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GITHUB_TOKEN }}&lt;/span> &lt;span style="color:#75715e"># automatically generated&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">GOOGLE_SERVICE_ACCOUNT_KEY&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">SPREADSHEET_ID&lt;/span>: &lt;span style="color:#ae81ff">${{ secrets.SPREADSHEET_ID }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">update-spreadsheet&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout code&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683&lt;/span> &lt;span style="color:#75715e"># v4.2.2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">fetch-depth&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Setup Go&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a&lt;/span> &lt;span style="color:#75715e"># v5.2.0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">go run main.go&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above GitHub Actions workflow runs the &lt;code>main.go&lt;/code> script every 12 hours. GitHub automatically generates the
-&lt;code>GITHUB_TOKEN&lt;/code> secret. The &lt;code>GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code> and &lt;code>SPREADSHEET_ID&lt;/code> secrets must be set up manually in the
-repository settings.&lt;/p>
-&lt;p>The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
-manually run the workflow to test it.&lt;/p>
-&lt;h2 id="display-the-metrics-in-google-docs">&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor">&lt;/a>Display the metrics in Google Docs
-&lt;/h2>&lt;p>To see the metrics in Google Docs or Google Slides, you can
+latest metrics.&lt;/p&gt;
+&lt;p&gt;Create a &lt;code&gt;.github/workflows/update-spreadsheet.yml&lt;/code&gt; file in your repository with the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Update spreadsheet with latest metrics&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_dispatch&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# Manual&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;cron&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;0 */12 * * *&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# At 00:00 and 12:00 UTC&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;env&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;GITHUB_TOKEN&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.GITHUB_TOKEN }}&lt;/span&gt; &lt;span style="color:#75715e"&gt;# automatically generated&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;SPREADSHEET_ID&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ secrets.SPREADSHEET_ID }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;update-spreadsheet&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683&lt;/span&gt; &lt;span style="color:#75715e"&gt;# v4.2.2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;fetch-depth&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Setup Go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-go@3041bf56c941b39c61721a86cd11f3bb1338122a&lt;/span&gt; &lt;span style="color:#75715e"&gt;# v5.2.0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;go-version-file&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;go.mod&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;go run main.go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above GitHub Actions workflow runs the &lt;code&gt;main.go&lt;/code&gt; script every 12 hours. GitHub automatically generates the
+&lt;code&gt;GITHUB_TOKEN&lt;/code&gt; secret. The &lt;code&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code&gt; and &lt;code&gt;SPREADSHEET_ID&lt;/code&gt; secrets must be set up manually in the
+repository settings.&lt;/p&gt;
+&lt;p&gt;The workflow checks out the code, sets up Go, and runs the script. After pushing the workflow file to GitHub, you can
+manually run the workflow to test it.&lt;/p&gt;
+&lt;h2 id="display-the-metrics-in-google-docs"&gt;&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor"&gt;&lt;/a&gt;Display the metrics in Google Docs
+&lt;/h2&gt;&lt;p&gt;To see the metrics in Google Docs or Google Slides, you can
 &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
->copy and paste the relevant cells&lt;/a> from the Google Sheets spreadsheet.
+&gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
-&lt;strong>Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong>.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
-alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs">
-&lt;/figure>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;a class="link" href="../engineering-metrics-no-cost/" >Free, flexible, and insightful: engineering metrics done right&lt;/a>&lt;br>
-Discover how to monitor and visualize your dev team&amp;rsquo;s performance with Grafana and an analytical database.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Recently, we explained &lt;a class="link" href="../readable-code/" >how to measure unreadable code and turn it into clean code&lt;/a>, as well as
-&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >how to make incremental improvements to your codebase with evolutionary architecture&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" >how to reuse workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>We also covered &lt;a class="link" href="../go-test-execution-time/" >measuring the execution time of Go tests&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>We also described &lt;a class="link" href="../github-code-review-issues/" >inefficiencies in the GitHub code review process&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="code-on-github">&lt;a href="#code-on-github" class="header-anchor">&lt;/a>Code on GitHub
-&lt;/h2>&lt;p>For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
->github-metrics&lt;/a>.&lt;/p>
-&lt;h2 id="watch">&lt;a href="#watch" class="header-anchor">&lt;/a>Watch
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
+alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+&lt;/figure&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="../engineering-metrics-no-cost/" &gt;Free, flexible, and insightful: engineering metrics done right&lt;/a&gt;&lt;br&gt;
+Discover how to monitor and visualize your dev team&amp;rsquo;s performance with Grafana and an analytical database.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Recently, we explained &lt;a class="link" href="../readable-code/" &gt;how to measure unreadable code and turn it into clean code&lt;/a&gt;, as well as
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" &gt;how to make incremental improvements to your codebase with evolutionary architecture&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Previously, we showed &lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;how to reuse workflows and steps in GitHub Actions&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We also covered &lt;a class="link" href="../go-test-execution-time/" &gt;measuring the execution time of Go tests&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We also described &lt;a class="link" href="../github-code-review-issues/" &gt;inefficiencies in the GitHub code review process&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
+&lt;/h2&gt;&lt;p&gt;For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
+&gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="watch"&gt;&lt;a href="#watch" class="header-anchor"&gt;&lt;/a&gt;Watch
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/yzT-1nuKvNI"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" />&lt;ul>
-&lt;li>&lt;a class="link" href="#get-a-google-sheets-api-key" >Get a Google Sheets API key&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#share-a-google-sheets-spreadsheet-with-the-service-account" >Share a Google Sheets spreadsheet with the service account&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#edit-a-google-sheets-spreadsheet-using-the-api" >Edit a Google Sheets spreadsheet using the API&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>When you need to edit a Google Sheets spreadsheet quickly, you can use the Google Sheets API. The API allows you to
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#get-a-google-sheets-api-key" &gt;Get a Google Sheets API key&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#share-a-google-sheets-spreadsheet-with-the-service-account" &gt;Share a Google Sheets spreadsheet with the service account&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#edit-a-google-sheets-spreadsheet-using-the-api" &gt;Edit a Google Sheets spreadsheet using the API&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When you need to edit a Google Sheets spreadsheet quickly, you can use the Google Sheets API. The API allows you to
 programmatically read, write, and update data in a Google Sheets spreadsheet. However, following the
 &lt;a class="link" href="https://developers.google.com/sheets/api/guides/concepts" target="_blank" rel="noopener"
->Google Sheets API documentation&lt;/a> can be overwhelming. In this
-article, we will show you how to get a Google Sheets API key and edit a Google Sheets spreadsheet using the API.&lt;/p>
-&lt;h2 id="user-authentication-oauth-vs-api-key-jwt">&lt;a href="#user-authentication-oauth-vs-api-key-jwt" class="header-anchor">&lt;/a>User authentication (OAuth) vs. API key (JWT)
-&lt;/h2>&lt;p>The problem is that the Google API documentation focuses on the &lt;a class="link" href="https://oauth.net/2/" target="_blank" rel="noopener"
->OAuth 2.0&lt;/a> user authentication
+&gt;Google Sheets API documentation&lt;/a&gt; can be overwhelming. In this
+article, we will show you how to get a Google Sheets API key and edit a Google Sheets spreadsheet using the API.&lt;/p&gt;
+&lt;h2 id="user-authentication-oauth-vs-api-key-jwt"&gt;&lt;a href="#user-authentication-oauth-vs-api-key-jwt" class="header-anchor"&gt;&lt;/a&gt;User authentication (OAuth) vs. API key (JWT)
+&lt;/h2&gt;&lt;p&gt;The problem is that the Google API documentation focuses on the &lt;a class="link" href="https://oauth.net/2/" target="_blank" rel="noopener"
+&gt;OAuth 2.0&lt;/a&gt; user authentication
 flow. This flow is useful when you need to access Google Sheets on behalf of a user. For example, you&amp;rsquo;re creating your
 web app, and you need to read or write data in a Google Sheets spreadsheet owned by your web app user. The OAuth
 standard allows Google to authenticate the user and authorize your app to access the user&amp;rsquo;s data without exposing the
-user&amp;rsquo;s credentials to your web app. The OAuth flow interacts with three parties &amp;ndash; the user, your web app, and Google.&lt;/p>
-&lt;p>In our case, we want to access a specific Google Sheets spreadsheet programmatically without user interaction. We can
+user&amp;rsquo;s credentials to your web app. The OAuth flow interacts with three parties &amp;ndash; the user, your web app, and Google.&lt;/p&gt;
+&lt;p&gt;In our case, we want to access a specific Google Sheets spreadsheet programmatically without user interaction. We can
 use the API key (JWT) authentication method. JWT stands for JSON Web Token, a standard for securely transmitting
 information between two parties. This method allows us to access Google Sheets programmatically without user
-interaction. The API key (JWT) method interacts with two parties: your app and Google.&lt;/p>
-&lt;h2 id="get-a-google-sheets-api-key">&lt;a href="#get-a-google-sheets-api-key" class="header-anchor">&lt;/a>Get a Google Sheets API key
-&lt;/h2>&lt;p>To get a Google Sheets API key, follow these steps:&lt;/p>
-&lt;ol>
-&lt;li>Go to the &lt;a class="link" href="https://console.cloud.google.com/" target="_blank" rel="noopener"
->Google Cloud Console&lt;/a>.&lt;/li>
-&lt;li>Create a new project or select an existing project.
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
-alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted.">
-&lt;/figure>
-&lt;/li>
-&lt;li>In the new project, go to &lt;strong>APIs &amp;amp; Services&lt;/strong> and enable the &lt;strong>Google Sheets API&lt;/strong>. After enabling it, you should see
-it in the &lt;strong>Enabled APIs &amp;amp; services&lt;/strong> list.
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
-alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled.">
-&lt;/figure>
-&lt;/li>
-&lt;li>Go to &lt;strong>APIs &amp;amp; Services&lt;/strong> &amp;gt; &lt;strong>Credentials&lt;/strong> and create a new Service Account. This account does not need any optional
+interaction. The API key (JWT) method interacts with two parties: your app and Google.&lt;/p&gt;
+&lt;h2 id="get-a-google-sheets-api-key"&gt;&lt;a href="#get-a-google-sheets-api-key" class="header-anchor"&gt;&lt;/a&gt;Get a Google Sheets API key
+&lt;/h2&gt;&lt;p&gt;To get a Google Sheets API key, follow these steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Go to the &lt;a class="link" href="https://console.cloud.google.com/" target="_blank" rel="noopener"
+&gt;Google Cloud Console&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Create a new project or select an existing project.
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
+alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
+&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;In the new project, go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; and enable the &lt;strong&gt;Google Sheets API&lt;/strong&gt;. After enabling it, you should see
+it in the &lt;strong&gt;Enabled APIs &amp;amp; services&lt;/strong&gt; list.
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
+alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
+&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;Go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; &amp;gt; &lt;strong&gt;Credentials&lt;/strong&gt; and create a new Service Account. This account does not need any optional
 permissions.
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
-alt="Google Cloud IAM &amp;amp; Admin screen with a service account.">
-&lt;/figure>
-&lt;/li>
-&lt;li>Create a new JSON key for the service account.
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
-alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key.">
-&lt;/figure>
-&lt;/li>
-&lt;li>After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
+alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
+&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;Create a new JSON key for the service account.
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
+alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
+&lt;/figure&gt;
+&lt;/li&gt;
+&lt;li&gt;After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
 credentials for your service account. Keep it secure. For example, we received
-&lt;code>axial-paratext-444915-f9-8ef1de636587.json&lt;/code> with the following content:&lt;/li>
-&lt;/ol>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;type&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;service_account&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;project_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;axial-paratext-444915-f9&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;private_key_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;8ef1de636587238a028addaa8be9dbdf1d406420&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;private_key&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGFXmEc6VK0TO9\n2E/LDel4gTYl1u8uZGtX16B7Lo4ufM7ics3h9Gyi1lJMcGrHruGEzatDeTRclILd\nLhLwrckfl3IF9MIsqwaEkHk7YnUXj9zGl+v8LTGJL0ycQ9hVdoD6cCOOAmghLj8F\n9Sl6KQ5PHGbBUUL4qi8uExKY4tQOrqol1Pi3RPpAOCR6BLC/ZFPp+4e4HRhF+DMD\nI1QX8QwPit9XdIomnZPUL5sGD+q4cp1gHLBuBp2ehyiFI5MGhgzvCIQzaTExw7GK\nqrjYMjBKXaFRqGpZJWJMdVmGGHpmZLCL/wQmhujlThrF0FO8BHAGriAvUgDbH7m/\nMzGRk/KzAgMBAAECggEAE7LwBkWP8xxR9nfMG6fzB3pmHaY93BG9gRtfCNEM77+W\nvXtoUSfDJACHZ7WoUNpp8BCaDxg/JlPYndFmrcvCnCMuAjygkNujRsytWcQFXAYB\nETjrjYUbD4cGKeYvXfRuiDldt9Iyc9ZLCzch3FW36BMtft0reVpHXeAksdKg/yKf\nhM4jw3tQMu5JR3trLHtqwaA8VUav7I2Qn8nxEbB/0+AUatqpDOp/hQNTN7MGZ/i7\n4V0538U7C9RYDzk9hBBT2/IegGixlL0lX2V6LjYlRcEgC0PLuKF7gM/RRnorNPnv\nHfHxyZt6/MyI8RLRwwv05ZSITaOj66lXxReVsMXxhQKBgQD+vJPrvKD7mGiXRQto\nh1LJqPcyknzLzxf2OX5vZyF8asdroU0sRy8pYYHy8JCPlkOJ0fj9kq6R79W+rmn3\npFkvwRY9dUcJLpoMAMEfO4wQp3QKpxdkjMS8xGcEVOIZacAHCof7uUwrHUUcqRIq\nwrgZcj5P8ZjwsLmuqLNeXqFYNwKBgQDHEPf4PCyjieF+aGvaOPLfn/lRBbEQGlrg\n9Z09UXpxcW39RMq7MkS+U9m88Kn9MsEK3umJdP+s5m8ddVdIVgZLj96Ufn52RzRT\ne8crSjCVC3oQaloScvOBSQA1Z3Bn+QstIko042i2qTNJWMArdCJe9uRbwL1hqEvx\n+LtNPniDZQKBgQDX4g9maFzx/G8fS+doNc8mkmi01kqnGyJOjNknJnrNi1zoTTIv\nBUDly/oqXk/VMF6ajXV7yPTjPyOhTwUFV6Yx/2yOtzZ1hKYO6BDDHF8Ouitw37zG\nfTo6VCSOGjXnnaSdEwK9hYMUwuCQcoSv8oe9IQHIFJMt4EfsypIAtyf7rwKBgFtC\ntzvRcnGC+6K1AoTnyMimkWkIn/UO8Azj7TM4UFcDtnX+/KY3VHahAFhzSKswgnmW\nWiBPSAufFN+/dMVP0tD/Yv5Ww2k8GYwQWe3JtF4QBeTSrPp6QpJJwlO5WToBXZNS\nfgyjGNVs2ntMucTyF/PLYkOCKBBGVJLZAh1Wf29VAoGADf7a1l8kDKgokm6pc4qG\nzb97GMk1CpE0dGl31dvx2ilckDVP354yfWEwVXWWVfVSq/LQdJVgkdArYbAPdsPb\nYuUfNwXMSp/OjmEL2QyC2zRm+2ZZZt5bcnPRbYETzb2An8kDYX49vwgBLJXpLOmt\nlCvxUDyoASHgAMu+OlqHIh4=\n-----END PRIVATE KEY-----\n&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_email&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;example@axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_id&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;114906617333001451487&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auth_uri&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://accounts.google.com/o/oauth2/auth&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;token_uri&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://oauth2.googleapis.com/token&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;auth_provider_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://www.googleapis.com/oauth2/v1/certs&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;client_x509_cert_url&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;https://www.googleapis.com/robot/v1/metadata/x509/example%40axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;universe_domain&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;googleapis.com&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="share-a-google-sheets-spreadsheet-with-the-service-account">&lt;a href="#share-a-google-sheets-spreadsheet-with-the-service-account" class="header-anchor">&lt;/a>Share a Google Sheets spreadsheet with the service account
-&lt;/h2>&lt;p>Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
-In our case, the service account email is &lt;code>example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code>.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
-alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions.">
-&lt;/figure>
-&lt;p>Note the spreadsheet ID from the URL. For example, in the URL
-&lt;code>https://docs.google.com/spreadsheets/d/1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4/edit&lt;/code>, the spreadsheet ID is
-&lt;code>1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&lt;/code>.&lt;/p>
-&lt;h2 id="edit-a-google-sheets-spreadsheet-using-the-api">&lt;a href="#edit-a-google-sheets-spreadsheet-using-the-api" class="header-anchor">&lt;/a>Edit a Google Sheets spreadsheet using the API
-&lt;/h2>&lt;p>Now that we have the Google Sheets API key and editor permissions for the target spreadsheet, we can edit it using the
-API. For this example, we will use the Go programming language.&lt;/p>
-&lt;p>In an empty directory, create a Go project and get the necessary dependencies:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod init google-sheets-api
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get golang.org/x/oauth2@v0.24.0
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go get google.golang.org/api@v0.211.0
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Copy the JSON key file to the project directory and rename it to &lt;code>credentials.json&lt;/code>.&lt;/p>
-&lt;p>Create a new Go file, &lt;code>main.go&lt;/code>, with the following content:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;context&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;log&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;os&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;golang.org/x/oauth2/google&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;google.golang.org/api/option&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;google.golang.org/api/sheets/v4&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">spreadsheetId&lt;/span> = &lt;span style="color:#e6db74">&amp;#34;1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">serviceAccountKey&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;credentials.json&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to read client secret file: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">cfg&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">google&lt;/span>.&lt;span style="color:#a6e22e">JWTConfigFromJSON&lt;/span>(&lt;span style="color:#a6e22e">serviceAccountKey&lt;/span>, &lt;span style="color:#a6e22e">sheets&lt;/span>.&lt;span style="color:#a6e22e">SpreadsheetsScope&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to parse client secret file to config: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">cfg&lt;/span>.&lt;span style="color:#a6e22e">Client&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">srv&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">sheets&lt;/span>.&lt;span style="color:#a6e22e">NewService&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#a6e22e">option&lt;/span>.&lt;span style="color:#a6e22e">WithHTTPClient&lt;/span>(&lt;span style="color:#a6e22e">client&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to retrieve Sheets client: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">readRange&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;Sheet1!A2:B2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">resp&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">srv&lt;/span>.&lt;span style="color:#a6e22e">Spreadsheets&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span>.&lt;span style="color:#a6e22e">Get&lt;/span>(&lt;span style="color:#a6e22e">spreadsheetId&lt;/span>, &lt;span style="color:#a6e22e">readRange&lt;/span>).&lt;span style="color:#a6e22e">Do&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Unable to retrieve data from sheet: %v&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span>) &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;No data found.&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> } &lt;span style="color:#66d9ef">else&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Println&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Date, Value:&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">row&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">Values&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%s, %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">row&lt;/span>[&lt;span style="color:#ae81ff">0&lt;/span>], &lt;span style="color:#a6e22e">row&lt;/span>[&lt;span style="color:#ae81ff">1&lt;/span>])
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Replace the &lt;code>spreadsheetId&lt;/code> constant with the ID of your target spreadsheet.&lt;/p>
-&lt;p>This code authenticates with the Google Sheets API using the service account key and reads the data from cells A2 and B2
-in the &lt;code>Sheet1&lt;/code> sheet of the target spreadsheet.&lt;/p>
-&lt;p>Update the dependencies and run the program:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go mod tidy
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>go run main.go
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result should look like:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-text" data-lang="text">&lt;span style="display:flex;">&lt;span>Date, Value:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>2024-12-16 10:00:00, 10
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To write data to a Google Sheets spreadsheet, use the &lt;code>spreadsheets.Values.Update&lt;/code> and &lt;code>Spreadsheets.BatchUpdate&lt;/code>
+&lt;code&gt;axial-paratext-444915-f9-8ef1de636587.json&lt;/code&gt; with the following content:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;type&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;service_account&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;project_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;axial-paratext-444915-f9&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;private_key_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;8ef1de636587238a028addaa8be9dbdf1d406420&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;private_key&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDGFXmEc6VK0TO9\n2E/LDel4gTYl1u8uZGtX16B7Lo4ufM7ics3h9Gyi1lJMcGrHruGEzatDeTRclILd\nLhLwrckfl3IF9MIsqwaEkHk7YnUXj9zGl+v8LTGJL0ycQ9hVdoD6cCOOAmghLj8F\n9Sl6KQ5PHGbBUUL4qi8uExKY4tQOrqol1Pi3RPpAOCR6BLC/ZFPp+4e4HRhF+DMD\nI1QX8QwPit9XdIomnZPUL5sGD+q4cp1gHLBuBp2ehyiFI5MGhgzvCIQzaTExw7GK\nqrjYMjBKXaFRqGpZJWJMdVmGGHpmZLCL/wQmhujlThrF0FO8BHAGriAvUgDbH7m/\nMzGRk/KzAgMBAAECggEAE7LwBkWP8xxR9nfMG6fzB3pmHaY93BG9gRtfCNEM77+W\nvXtoUSfDJACHZ7WoUNpp8BCaDxg/JlPYndFmrcvCnCMuAjygkNujRsytWcQFXAYB\nETjrjYUbD4cGKeYvXfRuiDldt9Iyc9ZLCzch3FW36BMtft0reVpHXeAksdKg/yKf\nhM4jw3tQMu5JR3trLHtqwaA8VUav7I2Qn8nxEbB/0+AUatqpDOp/hQNTN7MGZ/i7\n4V0538U7C9RYDzk9hBBT2/IegGixlL0lX2V6LjYlRcEgC0PLuKF7gM/RRnorNPnv\nHfHxyZt6/MyI8RLRwwv05ZSITaOj66lXxReVsMXxhQKBgQD+vJPrvKD7mGiXRQto\nh1LJqPcyknzLzxf2OX5vZyF8asdroU0sRy8pYYHy8JCPlkOJ0fj9kq6R79W+rmn3\npFkvwRY9dUcJLpoMAMEfO4wQp3QKpxdkjMS8xGcEVOIZacAHCof7uUwrHUUcqRIq\nwrgZcj5P8ZjwsLmuqLNeXqFYNwKBgQDHEPf4PCyjieF+aGvaOPLfn/lRBbEQGlrg\n9Z09UXpxcW39RMq7MkS+U9m88Kn9MsEK3umJdP+s5m8ddVdIVgZLj96Ufn52RzRT\ne8crSjCVC3oQaloScvOBSQA1Z3Bn+QstIko042i2qTNJWMArdCJe9uRbwL1hqEvx\n+LtNPniDZQKBgQDX4g9maFzx/G8fS+doNc8mkmi01kqnGyJOjNknJnrNi1zoTTIv\nBUDly/oqXk/VMF6ajXV7yPTjPyOhTwUFV6Yx/2yOtzZ1hKYO6BDDHF8Ouitw37zG\nfTo6VCSOGjXnnaSdEwK9hYMUwuCQcoSv8oe9IQHIFJMt4EfsypIAtyf7rwKBgFtC\ntzvRcnGC+6K1AoTnyMimkWkIn/UO8Azj7TM4UFcDtnX+/KY3VHahAFhzSKswgnmW\nWiBPSAufFN+/dMVP0tD/Yv5Ww2k8GYwQWe3JtF4QBeTSrPp6QpJJwlO5WToBXZNS\nfgyjGNVs2ntMucTyF/PLYkOCKBBGVJLZAh1Wf29VAoGADf7a1l8kDKgokm6pc4qG\nzb97GMk1CpE0dGl31dvx2ilckDVP354yfWEwVXWWVfVSq/LQdJVgkdArYbAPdsPb\nYuUfNwXMSp/OjmEL2QyC2zRm+2ZZZt5bcnPRbYETzb2An8kDYX49vwgBLJXpLOmt\nlCvxUDyoASHgAMu+OlqHIh4=\n-----END PRIVATE KEY-----\n&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;client_email&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;example@axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;client_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;114906617333001451487&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;auth_uri&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://accounts.google.com/o/oauth2/auth&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;token_uri&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://oauth2.googleapis.com/token&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;auth_provider_x509_cert_url&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://www.googleapis.com/oauth2/v1/certs&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;client_x509_cert_url&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;https://www.googleapis.com/robot/v1/metadata/x509/example%40axial-paratext-444915-f9.iam.gserviceaccount.com&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;universe_domain&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;googleapis.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="share-a-google-sheets-spreadsheet-with-the-service-account"&gt;&lt;a href="#share-a-google-sheets-spreadsheet-with-the-service-account" class="header-anchor"&gt;&lt;/a&gt;Share a Google Sheets spreadsheet with the service account
+&lt;/h2&gt;&lt;p&gt;Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
+In our case, the service account email is &lt;code&gt;example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
+alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
+&lt;/figure&gt;
+&lt;p&gt;Note the spreadsheet ID from the URL. For example, in the URL
+&lt;code&gt;https://docs.google.com/spreadsheets/d/1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4/edit&lt;/code&gt;, the spreadsheet ID is
+&lt;code&gt;1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="edit-a-google-sheets-spreadsheet-using-the-api"&gt;&lt;a href="#edit-a-google-sheets-spreadsheet-using-the-api" class="header-anchor"&gt;&lt;/a&gt;Edit a Google Sheets spreadsheet using the API
+&lt;/h2&gt;&lt;p&gt;Now that we have the Google Sheets API key and editor permissions for the target spreadsheet, we can edit it using the
+API. For this example, we will use the Go programming language.&lt;/p&gt;
+&lt;p&gt;In an empty directory, create a Go project and get the necessary dependencies:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod init google-sheets-api
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go get golang.org/x/oauth2@v0.24.0
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go get google.golang.org/api@v0.211.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Copy the JSON key file to the project directory and rename it to &lt;code&gt;credentials.json&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Create a new Go file, &lt;code&gt;main.go&lt;/code&gt;, with the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;context&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;log&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;golang.org/x/oauth2/google&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;google.golang.org/api/option&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;google.golang.org/api/sheets/v4&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;spreadsheetId&lt;/span&gt; = &lt;span style="color:#e6db74"&gt;&amp;#34;1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Background&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;serviceAccountKey&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ReadFile&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;credentials.json&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to read client secret file: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;google&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;JWTConfigFromJSON&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;serviceAccountKey&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;sheets&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpreadsheetsScope&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to parse client secret file to config: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Client&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;srv&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;sheets&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewService&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;option&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithHTTPClient&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to retrieve Sheets client: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;readRange&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Sheet1!A2:B2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;srv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Spreadsheets&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Values&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Get&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;spreadsheetId&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;readRange&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;Do&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Unable to retrieve data from sheet: %v&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Values&lt;/span&gt;) &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;No data found.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; } &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Date, Value:&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;row&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;range&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Values&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;%s, %s\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;row&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;], &lt;span style="color:#a6e22e"&gt;row&lt;/span&gt;[&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Replace the &lt;code&gt;spreadsheetId&lt;/code&gt; constant with the ID of your target spreadsheet.&lt;/p&gt;
+&lt;p&gt;This code authenticates with the Google Sheets API using the service account key and reads the data from cells A2 and B2
+in the &lt;code&gt;Sheet1&lt;/code&gt; sheet of the target spreadsheet.&lt;/p&gt;
+&lt;p&gt;Update the dependencies and run the program:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod tidy
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go run main.go
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result should look like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Date, Value:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2024-12-16 10:00:00, 10
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To write data to a Google Sheets spreadsheet, use the &lt;code&gt;spreadsheets.Values.Update&lt;/code&gt; and &lt;code&gt;Spreadsheets.BatchUpdate&lt;/code&gt;
 methods. For example, the following modified code inserts a new row above other rows with the current date and an
-incremented value:&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js">&lt;/script>
-&lt;p>We can review the spreadsheet to verify that our code added the new row.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
-alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns.">
-&lt;/figure>
-&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../track-engineering-metrics/" >Automate tracking of engineering metrics&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we covered &lt;a class="link" href="../remote-development-environment/" >how to set up a remote development environment&lt;/a>.&lt;/li>
-&lt;li>Previously, we showed &lt;a class="link" href="../webhook-flow-with-tines/" >how to build a webhook flow with Tines&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-edit-google-sheets-spreadsheet-using-the-api">&lt;a href="#watch-how-to-edit-google-sheets-spreadsheet-using-the-api" class="header-anchor">&lt;/a>Watch how to edit Google Sheets spreadsheet using the API
-&lt;/h2>&lt;div class="video-wrapper">
+incremented value:&lt;/p&gt;
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js"&gt;&lt;/script&gt;
+&lt;p&gt;We can review the spreadsheet to verify that our code added the new row.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
+alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
+&lt;/figure&gt;
+&lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../track-engineering-metrics/" &gt;Automate tracking of engineering metrics&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we covered &lt;a class="link" href="../remote-development-environment/" &gt;how to set up a remote development environment&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Previously, we showed &lt;a class="link" href="../webhook-flow-with-tines/" &gt;how to build a webhook flow with Tines&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-edit-google-sheets-spreadsheet-using-the-api"&gt;&lt;a href="#watch-how-to-edit-google-sheets-spreadsheet-using-the-api" class="header-anchor"&gt;&lt;/a&gt;Watch how to edit Google Sheets spreadsheet using the API
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/J2UEYjQVhZ8"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

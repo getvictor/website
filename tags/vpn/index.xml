@@ -1,53 +1,53 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>VPN on Victor on Software</title><link>https://victoronsoftware.com/tags/vpn/</link><description>Recent content in VPN on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/vpn/index.xml" rel="self" type="application/rss+xml"/><item><title>How to connect to remote Active Directory server in 4 steps</title><link>https://victoronsoftware.com/posts/connect-to-remote-active-directory/</link><pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/connect-to-remote-active-directory/</guid><description>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/connect-to-ad-headline.png" alt="Featured image of post How to connect to remote Active Directory server in 4 steps" />&lt;ol>
-&lt;li>&lt;a class="link" href="#1-obtain-vpn-connection-details" >Obtain VPN connection details&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#2-point-your-computer-to-the-remote-active-directory-dns-server" >Point your computer to the remote Active Directory DNS server&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#3-join-your-computer-to-the-active-directory-domain" >Join your computer to the Active Directory domain&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#4-log-in-with-your-active-directory-credentials" >Log in with your Active Directory credentials&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;h2 id="what-is-active-directory">&lt;a href="#what-is-active-directory" class="header-anchor">&lt;/a>What is Active Directory?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank" rel="noopener"
->Active Directory&lt;/a>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>VPN on Victor on Software</title><link>https://victoronsoftware.com/tags/vpn/</link><description>Recent content in VPN on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 20 Nov 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/vpn/index.xml" rel="self" type="application/rss+xml"/><item><title>How to connect to remote Active Directory server in 4 steps</title><link>https://victoronsoftware.com/posts/connect-to-remote-active-directory/</link><pubDate>Wed, 20 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/connect-to-remote-active-directory/</guid><description>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/connect-to-ad-headline.png" alt="Featured image of post How to connect to remote Active Directory server in 4 steps" /&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#1-obtain-vpn-connection-details" &gt;Obtain VPN connection details&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#2-point-your-computer-to-the-remote-active-directory-dns-server" &gt;Point your computer to the remote Active Directory DNS server&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#3-join-your-computer-to-the-active-directory-domain" &gt;Join your computer to the Active Directory domain&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#4-log-in-with-your-active-directory-credentials" &gt;Log in with your Active Directory credentials&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="what-is-active-directory"&gt;&lt;a href="#what-is-active-directory" class="header-anchor"&gt;&lt;/a&gt;What is Active Directory?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank" rel="noopener"
+&gt;Active Directory&lt;/a&gt;
 is a directory service developed by Microsoft for Windows domain networks. It provides authentication and authorization
 services and a framework for organizing and managing resources in a networked environment. Active Directory stores
-information about users, computers, and other network objects, making managing and securing your network easier.&lt;/p>
-&lt;p>Active Directory runs on Windows Server and is the central component of many Windows-based networks. It is the central
-piece for a variety of services, including:&lt;/p>
-&lt;ul>
-&lt;li>Certificate Services (AD CS)&lt;/li>
-&lt;li>Lightweight Directory Services (AD LDS)&lt;/li>
-&lt;li>Federation Services (AD FS)&lt;/li>
-&lt;li>Rights Management Services (AD RMS)&lt;/li>
-&lt;li>and many others&lt;/li>
-&lt;/ul>
-&lt;h2 id="why-connect-to-a-remote-active-directory-server">&lt;a href="#why-connect-to-a-remote-active-directory-server" class="header-anchor">&lt;/a>Why connect to a remote Active Directory server?
-&lt;/h2>&lt;p>With the rise of remote work and distributed teams, you may need to connect your home computer to a remote Active
+information about users, computers, and other network objects, making managing and securing your network easier.&lt;/p&gt;
+&lt;p&gt;Active Directory runs on Windows Server and is the central component of many Windows-based networks. It is the central
+piece for a variety of services, including:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Certificate Services (AD CS)&lt;/li&gt;
+&lt;li&gt;Lightweight Directory Services (AD LDS)&lt;/li&gt;
+&lt;li&gt;Federation Services (AD FS)&lt;/li&gt;
+&lt;li&gt;Rights Management Services (AD RMS)&lt;/li&gt;
+&lt;li&gt;and many others&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="why-connect-to-a-remote-active-directory-server"&gt;&lt;a href="#why-connect-to-a-remote-active-directory-server" class="header-anchor"&gt;&lt;/a&gt;Why connect to a remote Active Directory server?
+&lt;/h2&gt;&lt;p&gt;With the rise of remote work and distributed teams, you may need to connect your home computer to a remote Active
 Directory server. This connection allows you to access network resources, authenticate with your company&amp;rsquo;s domain, and
-use services that rely on Active Directory.&lt;/p>
-&lt;p>The recommended way to connect to a remote Active Directory server is through a VPN (Virtual Private Network). A VPN
+use services that rely on Active Directory.&lt;/p&gt;
+&lt;p&gt;The recommended way to connect to a remote Active Directory server is through a VPN (Virtual Private Network). A VPN
 creates a secure connection between your computer and the remote network, allowing you to access resources as if you
-were physically connected.&lt;/p>
-&lt;h2 id="steps-to-connect-to-a-remote-active-directory-server">&lt;a href="#steps-to-connect-to-a-remote-active-directory-server" class="header-anchor">&lt;/a>Steps to connect to a remote Active Directory server
-&lt;/h2>&lt;h3 id="1-obtain-vpn-connection-details">&lt;a href="#1-obtain-vpn-connection-details" class="header-anchor">&lt;/a>1. Obtain VPN connection details
-&lt;/h3>&lt;p>Contact your IT department or network administrator to obtain the VPN connection details. You will need the following
-information:&lt;/p>
-&lt;ul>
-&lt;li>VPN server address&lt;/li>
-&lt;li>VPN type (e.g., PPTP, L2TP/IPsec, OpenVPN)&lt;/li>
-&lt;li>VPN username and password&lt;/li>
-&lt;li>Any additional settings or requirements, such as a private key or certificate&lt;/li>
-&lt;/ul>
-&lt;p>For our example, we are using &lt;a class="link" href="https://www.wireguard.com/" target="_blank" rel="noopener"
->WireGuard&lt;/a>, a modern VPN protocol known for its simplicity
-and security.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
-alt="WireGuard interface, including public key, listen port, addresses, and DNS servers.">
-&lt;/figure>
-&lt;p>&lt;em>Note:&lt;/em> The &lt;code>Allowed IPs&lt;/code> field above specifies which IP addresses will be routed through the VPN. Make sure to include
+were physically connected.&lt;/p&gt;
+&lt;h2 id="steps-to-connect-to-a-remote-active-directory-server"&gt;&lt;a href="#steps-to-connect-to-a-remote-active-directory-server" class="header-anchor"&gt;&lt;/a&gt;Steps to connect to a remote Active Directory server
+&lt;/h2&gt;&lt;h3 id="1-obtain-vpn-connection-details"&gt;&lt;a href="#1-obtain-vpn-connection-details" class="header-anchor"&gt;&lt;/a&gt;1. Obtain VPN connection details
+&lt;/h3&gt;&lt;p&gt;Contact your IT department or network administrator to obtain the VPN connection details. You will need the following
+information:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;VPN server address&lt;/li&gt;
+&lt;li&gt;VPN type (e.g., PPTP, L2TP/IPsec, OpenVPN)&lt;/li&gt;
+&lt;li&gt;VPN username and password&lt;/li&gt;
+&lt;li&gt;Any additional settings or requirements, such as a private key or certificate&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For our example, we are using &lt;a class="link" href="https://www.wireguard.com/" target="_blank" rel="noopener"
+&gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
+and security.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
+alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
 the IP addresses of the remote Active Directory server. Also, ensure the IP addresses do not conflict with your local
-network.&lt;/p>
-&lt;p>Install the VPN client on your computer and activate the VPN connection using the provided details.&lt;/p>
-&lt;p>Test the VPN connection by pinging the remote Active Directory server.&lt;/p>
-&lt;pre tabindex="0">&lt;code>PS C:\Users\victor&amp;gt; ping 10.98.1.1
+network.&lt;/p&gt;
+&lt;p&gt;Install the VPN client on your computer and activate the VPN connection using the provided details.&lt;/p&gt;
+&lt;p&gt;Test the VPN connection by pinging the remote Active Directory server.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\Users\victor&amp;gt; ping 10.98.1.1
 Pinging 10.98.1.1 with 32 bytes of data:
 Reply from 10.98.1.1: bytes=32 time=155ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
@@ -57,55 +57,55 @@ Ping statistics for 10.98.1.1:
 Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
 Minimum = 155ms, Maximum = 156ms, Average = 155ms
-&lt;/code>&lt;/pre>&lt;h3 id="2-point-your-computer-to-the-remote-active-directory-dns-server">&lt;a href="#2-point-your-computer-to-the-remote-active-directory-dns-server" class="header-anchor">&lt;/a>2. Point your computer to the remote Active Directory DNS server
-&lt;/h3>&lt;p>To use Active Directory, your computer must know where to find the domain controller. This information is stored in the
-DNS (Domain Name System) settings.&lt;/p>
-&lt;p>Since we are using a VPN to connect to the remote Active Directory server, we need to update the DNS settings of our VPN
-connection.&lt;/p>
-&lt;p>In the VPN settings above, we specified the DNS server as part of the WireGuard configuration.&lt;/p>
-&lt;pre tabindex="0">&lt;code>DNS = 10.98.1.1
-&lt;/code>&lt;/pre>&lt;p>Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong>Control Panel &amp;gt; Network and Sharing
-Center &amp;gt; &lt;em>your VPN connection&lt;/em> &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong>.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
-alt="Windows 11 popups for setting DNS server.">
-&lt;/figure>
-&lt;h3 id="3-join-your-computer-to-the-active-directory-domain">&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor">&lt;/a>3. Join your computer to the Active Directory domain
-&lt;/h3>&lt;p>Open &lt;strong>Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong>.&lt;/p>
-&lt;p>Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
-alt="Windows 11 dialog to join a domain.">
-&lt;/figure>
-&lt;p>Click &lt;strong>OK&lt;/strong> and enter your domain credentials when prompted. You must have permission from Active Directory to join a
-computer to the domain.&lt;/p>
-&lt;p>After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
-alt="Windows 11 dialog indicating successful domain join.">
-&lt;/figure>
-&lt;p>You must restart your computer for the changes to take effect.&lt;/p>
-&lt;h3 id="4-log-in-with-your-active-directory-credentials">&lt;a href="#4-log-in-with-your-active-directory-credentials" class="header-anchor">&lt;/a>4. Log in with your Active Directory credentials
-&lt;/h3>&lt;p>Your VPN connection must be active to log in with your Active Directory credentials after joining the domain. Some VPN
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="2-point-your-computer-to-the-remote-active-directory-dns-server"&gt;&lt;a href="#2-point-your-computer-to-the-remote-active-directory-dns-server" class="header-anchor"&gt;&lt;/a&gt;2. Point your computer to the remote Active Directory DNS server
+&lt;/h3&gt;&lt;p&gt;To use Active Directory, your computer must know where to find the domain controller. This information is stored in the
+DNS (Domain Name System) settings.&lt;/p&gt;
+&lt;p&gt;Since we are using a VPN to connect to the remote Active Directory server, we need to update the DNS settings of our VPN
+connection.&lt;/p&gt;
+&lt;p&gt;In the VPN settings above, we specified the DNS server as part of the WireGuard configuration.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;DNS = 10.98.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
+Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
+alt="Windows 11 popups for setting DNS server."&gt;
+&lt;/figure&gt;
+&lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
+&lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
+alt="Windows 11 dialog to join a domain."&gt;
+&lt;/figure&gt;
+&lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
+computer to the domain.&lt;/p&gt;
+&lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
+alt="Windows 11 dialog indicating successful domain join."&gt;
+&lt;/figure&gt;
+&lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;
+&lt;h3 id="4-log-in-with-your-active-directory-credentials"&gt;&lt;a href="#4-log-in-with-your-active-directory-credentials" class="header-anchor"&gt;&lt;/a&gt;4. Log in with your Active Directory credentials
+&lt;/h3&gt;&lt;p&gt;Your VPN connection must be active to log in with your Active Directory credentials after joining the domain. Some VPN
 clients allow you to connect before logging in to Windows. This feature ensures that your computer can reach the domain
-controller during the login process.&lt;/p>
-&lt;p>If your VPN client does not support connecting before logging in, you may need to log in with a local account first and
-then connect to the VPN. Then, you can switch users and login with your Active Directory credentials.&lt;/p>
-&lt;h2 id="additional-information">&lt;a href="#additional-information" class="header-anchor">&lt;/a>Additional information
-&lt;/h2>&lt;p>The local computer caches credentials for Active Directory users. You can log in to your computer with your Active
+controller during the login process.&lt;/p&gt;
+&lt;p&gt;If your VPN client does not support connecting before logging in, you may need to log in with a local account first and
+then connect to the VPN. Then, you can switch users and login with your Active Directory credentials.&lt;/p&gt;
+&lt;h2 id="additional-information"&gt;&lt;a href="#additional-information" class="header-anchor"&gt;&lt;/a&gt;Additional information
+&lt;/h2&gt;&lt;p&gt;The local computer caches credentials for Active Directory users. You can log in to your computer with your Active
 Directory credentials on subsequent logins, even when you are not connected to the domain. For example, you can log in
-and then connect to the VPN.&lt;/p>
-&lt;p>After joining the domain, we found that our local computer refused SSH connections from other local computers. We
-resolved this issue by allowing SSH access in Active Directory settings.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we covered &lt;a class="link" href="../test-ndes-scep-server/" >how to test a Windows NDES SCEP server&lt;/a>.&lt;/li>
-&lt;li>Previously, we explained &lt;a class="link" href="../code-signing-windows/" >how to code sign a Windows application&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-connect-to-remote-active-directory-server">&lt;a href="#watch-how-to-connect-to-remote-active-directory-server" class="header-anchor">&lt;/a>Watch how to connect to remote Active Directory server
-&lt;/h2>&lt;div class="video-wrapper">
+and then connect to the VPN.&lt;/p&gt;
+&lt;p&gt;After joining the domain, we found that our local computer refused SSH connections from other local computers. We
+resolved this issue by allowing SSH access in Active Directory settings.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we covered &lt;a class="link" href="../test-ndes-scep-server/" &gt;how to test a Windows NDES SCEP server&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Previously, we explained &lt;a class="link" href="../code-signing-windows/" &gt;how to code sign a Windows application&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-connect-to-remote-active-directory-server"&gt;&lt;a href="#watch-how-to-connect-to-remote-active-directory-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to connect to remote Active Directory server
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/wFlntCobLsA"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

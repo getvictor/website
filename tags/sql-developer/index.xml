@@ -1,259 +1,259 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQL Developer on Victor on Software</title><link>https://victoronsoftware.com/tags/sql-developer/</link><description>Recent content in SQL Developer on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 29 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/sql-developer/index.xml" rel="self" type="application/rss+xml"/><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" />&lt;ul>
-&lt;li>&lt;a class="link" href="#excessive-database-locks" >Excessive database locks&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#read-after-write-consistency" >Read-after-write consistency&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#index-limitations" >Index limitations&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>When building an application, the database is often an afterthought. The database used in a development environment
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SQL Developer on Victor on Software</title><link>https://victoronsoftware.com/tags/sql-developer/</link><description>Recent content in SQL Developer on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 29 May 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/sql-developer/index.xml" rel="self" type="application/rss+xml"/><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#excessive-database-locks" &gt;Excessive database locks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#read-after-write-consistency" &gt;Read-after-write consistency&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#index-limitations" &gt;Index limitations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When building an application, the database is often an afterthought. The database used in a development environment
 often contains limited data with little traffic. However, when the application is deployed to production, real-world
-traffic can expose issues that were not caught in development or testing.&lt;/p>
-&lt;p>In this article, we cover issues we ran into with our customers. We assume the production application is deployed with
+traffic can expose issues that were not caught in development or testing.&lt;/p&gt;
+&lt;p&gt;In this article, we cover issues we ran into with our customers. We assume the production application is deployed with
 one master and one or more read replicas. See this article on
-&lt;a class="link" href="../mysql-master-slave-replication" >creating a MySQL slave replica in dev environment&lt;/a>.&lt;/p>
-&lt;h2 id="excessive-database-locks">&lt;a href="#excessive-database-locks" class="header-anchor">&lt;/a>Excessive database locks
-&lt;/h2>&lt;p>One write query can bring your database to its knees if it locks too many rows.&lt;/p>
-&lt;p>Consider this simplified INSERT with a subquery transaction:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> software_counts (host_id, &lt;span style="color:#66d9ef">count&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> host_id, &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#66d9ef">count&lt;/span> &lt;span style="color:#66d9ef">FROM&lt;/span> host_software
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> host_software.host_id;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
-alt="Simplified INSERT with a subquery">&lt;figcaption>
-&lt;h4>Simplified INSERT with a subquery&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The above query scans the entire &lt;code>host_software&lt;/code> table index to create a count. While the database is doing the scan and
-the INSERT, it locks the &lt;code>host_software&lt;/code> table, preventing other transactions from writing to that table. If the table
+&lt;a class="link" href="../mysql-master-slave-replication" &gt;creating a MySQL slave replica in dev environment&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="excessive-database-locks"&gt;&lt;a href="#excessive-database-locks" class="header-anchor"&gt;&lt;/a&gt;Excessive database locks
+&lt;/h2&gt;&lt;p&gt;One write query can bring your database to its knees if it locks too many rows.&lt;/p&gt;
+&lt;p&gt;Consider this simplified INSERT with a subquery transaction:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; software_counts (host_id, &lt;span style="color:#66d9ef"&gt;count&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; host_id, &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;count&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; host_software
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; host_software.host_id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
+alt="Simplified INSERT with a subquery"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Simplified INSERT with a subquery&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The above query scans the entire &lt;code&gt;host_software&lt;/code&gt; table index to create a count. While the database is doing the scan and
+the INSERT, it locks the &lt;code&gt;host_software&lt;/code&gt; table, preventing other transactions from writing to that table. If the table
 and insert are large, the query can hold the lock for a long time. In production, we saw a lock time of over 30 seconds,
-creating a bottleneck and spiking DB resource usage.&lt;/p>
-&lt;p>Pay special attention to the following queries, as they can cause performance issues:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>COUNT(*)&lt;/code>&lt;/li>
-&lt;li>Using a non-indexed column, like &lt;code>WHERE non_indexed_column = value&lt;/code>&lt;/li>
-&lt;li>Returning a large number of rows, like &lt;code>SELECT * FROM table&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;p>One way to solve the above performance issue is to separate the &lt;code>SELECT&lt;/code> and &lt;code>INSERT&lt;/code> queries. First, run the &lt;code>SELECT&lt;/code>
-query on the replica to get the data, then run the &lt;code>INSERT&lt;/code> query on the master to insert the data. We completely
+creating a bottleneck and spiking DB resource usage.&lt;/p&gt;
+&lt;p&gt;Pay special attention to the following queries, as they can cause performance issues:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;COUNT(*)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Using a non-indexed column, like &lt;code&gt;WHERE non_indexed_column = value&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Returning a large number of rows, like &lt;code&gt;SELECT * FROM table&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One way to solve the above performance issue is to separate the &lt;code&gt;SELECT&lt;/code&gt; and &lt;code&gt;INSERT&lt;/code&gt; queries. First, run the &lt;code&gt;SELECT&lt;/code&gt;
+query on the replica to get the data, then run the &lt;code&gt;INSERT&lt;/code&gt; query on the master to insert the data. We completely
 eliminate the lock since the read is done on the replica. This article goes through
-&lt;a class="link" href=".../mysql-query-performance-insert-subqueries" >a specific example of optimizing an INSERT with subqueries&lt;/a>.&lt;/p>
-&lt;p>As general advice, avoid running &lt;code>SELECT&lt;/code> queries and subqueries on the master, especially if they scan the entire
-table.&lt;/p>
-&lt;h2 id="read-after-write-consistency">&lt;a href="#read-after-write-consistency" class="header-anchor">&lt;/a>Read-after-write consistency
-&lt;/h2>&lt;p>When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
-with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
-alt="Read-after-write database issue">&lt;figcaption>
-&lt;h4>Read-after-write database issue&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>These issues are typically not caught in development since dev environments usually have one database instance. Unit or
+&lt;a class="link" href=".../mysql-query-performance-insert-subqueries" &gt;a specific example of optimizing an INSERT with subqueries&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As general advice, avoid running &lt;code&gt;SELECT&lt;/code&gt; queries and subqueries on the master, especially if they scan the entire
+table.&lt;/p&gt;
+&lt;h2 id="read-after-write-consistency"&gt;&lt;a href="#read-after-write-consistency" class="header-anchor"&gt;&lt;/a&gt;Read-after-write consistency
+&lt;/h2&gt;&lt;p&gt;When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
+with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
+alt="Read-after-write database issue"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Read-after-write database issue&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;These issues are typically not caught in development since dev environments usually have one database instance. Unit or
 integration tests might not even see these issues if they run on a single database instance. Even in testing or small
 production environments, you might only see these issues if the replica sync time is high. Customers with large
-deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p>
-&lt;p>One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data
+deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p&gt;
+&lt;p&gt;One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data
 you just wrote. In
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/b7aac2cfabf17fcb5142808fb80352113710ec5c/server/contexts/ctxdb/ctxdb.go#L17" target="_blank" rel="noopener"
->our Go backend&lt;/a>,
-forcing reads from the master can be done by updating the &lt;code>Context&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ctxUsePrimary&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">ctxdb&lt;/span>.&lt;span style="color:#a6e22e">RequirePrimary&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#66d9ef">true&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, additional master reads increase the load on the master, defeating the purpose of having a replica for read
-scaling.&lt;/p>
-&lt;p>In addition, what about expensive read queries, like &lt;code>COUNT(*)&lt;/code> and calculations, which we don&amp;rsquo;t want to run on the
-master? In this case, we can wait for the replica to catch up with the master.&lt;/p>
-&lt;p>One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if
-the data is not found. The app could check the &lt;code>updated_at&lt;/code> column to see if the data is recent. If the data is not
+&gt;our Go backend&lt;/a&gt;,
+forcing reads from the master can be done by updating the &lt;code&gt;Context&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ctxUsePrimary&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctxdb&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RequirePrimary&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, additional master reads increase the load on the master, defeating the purpose of having a replica for read
+scaling.&lt;/p&gt;
+&lt;p&gt;In addition, what about expensive read queries, like &lt;code&gt;COUNT(*)&lt;/code&gt; and calculations, which we don&amp;rsquo;t want to run on the
+master? In this case, we can wait for the replica to catch up with the master.&lt;/p&gt;
+&lt;p&gt;One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if
+the data is not found. The app could check the &lt;code&gt;updated_at&lt;/code&gt; column to see if the data is recent. If the data is not
 found, the app can sleep for a few milliseconds and retry the read. This approach is imperfect but a good compromise
-between read consistency and performance.&lt;/p>
-&lt;p>Note:
+between read consistency and performance.&lt;/p&gt;
+&lt;p&gt;Note:
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-type-syntax.html#:~:text=default%20precision%20is%200." target="_blank" rel="noopener"
->The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a>.&lt;/p>
-&lt;h2 id="index-limitations">&lt;a href="#index-limitations" class="header-anchor">&lt;/a>Index limitations
-&lt;/h2>&lt;h3 id="what-are-sql-indexes">&lt;a href="#what-are-sql-indexes" class="header-anchor">&lt;/a>What are SQL indexes?
-&lt;/h3>&lt;p>Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval
+&gt;The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="index-limitations"&gt;&lt;a href="#index-limitations" class="header-anchor"&gt;&lt;/a&gt;Index limitations
+&lt;/h2&gt;&lt;h3 id="what-are-sql-indexes"&gt;&lt;a href="#what-are-sql-indexes" class="header-anchor"&gt;&lt;/a&gt;What are SQL indexes?
+&lt;/h3&gt;&lt;p&gt;Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval
 operations on a database table at the cost of additional writes and storage space to maintain the index data structure.
 Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data
-structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
-alt="Database index">&lt;figcaption>
-&lt;h4>Database index&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be
-large and take up a lot of disk space.&lt;/p>
-&lt;h3 id="index-size-is-limited">&lt;a href="#index-size-is-limited" class="header-anchor">&lt;/a>Index size is limited
-&lt;/h3>&lt;p>As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new
+structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
+alt="Database index"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Database index&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be
+large and take up a lot of disk space.&lt;/p&gt;
+&lt;h3 id="index-size-is-limited"&gt;&lt;a href="#index-size-is-limited" class="header-anchor"&gt;&lt;/a&gt;Index size is limited
+&lt;/h3&gt;&lt;p&gt;As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new
 columns need to be part of a unique index. However, the
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html" target="_blank" rel="noopener"
->maximum index size in MySQL is 3072 bytes&lt;/a>. This limit can
-be quickly reached if columns are of type &lt;code>VARCHAR&lt;/code> or &lt;code>TEXT&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> &lt;span style="color:#f92672">`&lt;/span>activities&lt;span style="color:#f92672">`&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>user_name&lt;span style="color:#f92672">`&lt;/span> VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>) &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other
+&gt;maximum index size in MySQL is 3072 bytes&lt;/a&gt;. This limit can
+be quickly reached if columns are of type &lt;code&gt;VARCHAR&lt;/code&gt; or &lt;code&gt;TEXT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;activities&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;user_name&lt;span style="color:#f92672"&gt;`&lt;/span&gt; VARCHAR(&lt;span style="color:#ae81ff"&gt;255&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other
 relevant column(s), and use that as the unique index. For example, in our backend
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6f008b40f24bcd000c1450d7438be99d30c518c5/server/datastore/mysql/schema.sql#L1450" target="_blank" rel="noopener"
->we use a &lt;code>checksum&lt;/code> column in the &lt;code>software&lt;/code> table to create a unique index for a software item&lt;/a>.&lt;/p>
-&lt;h3 id="foreign-keys-may-cause-performance-issues">&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor">&lt;/a>Foreign keys may cause performance issues
-&lt;/h3>&lt;p>If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the
-corresponding row in the parent table. This locking can lead to performance issues when&lt;/p>
-&lt;ul>
-&lt;li>the parent table is large&lt;/li>
-&lt;li>the parent has many foreign key constraints&lt;/li>
-&lt;li>the parent table or child tables are frequently updated&lt;/li>
-&lt;/ul>
-&lt;p>The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the
+&gt;we use a &lt;code&gt;checksum&lt;/code&gt; column in the &lt;code&gt;software&lt;/code&gt; table to create a unique index for a software item&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="foreign-keys-may-cause-performance-issues"&gt;&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor"&gt;&lt;/a&gt;Foreign keys may cause performance issues
+&lt;/h3&gt;&lt;p&gt;If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the
+corresponding row in the parent table. This locking can lead to performance issues when&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the parent table is large&lt;/li&gt;
+&lt;li&gt;the parent has many foreign key constraints&lt;/li&gt;
+&lt;li&gt;the parent table or child tables are frequently updated&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the
 foreign key constraint. Instead, the application code can handle the data integrity checks that the foreign key
-constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p>
-&lt;h2 id="bonus-database-gotchas">&lt;a href="#bonus-database-gotchas" class="header-anchor">&lt;/a>Bonus database gotchas
-&lt;/h2>&lt;p>Additional database gotchas that we have seen in production include:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >Prepared statements consuming too much memory&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock" >Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Also, we recently &lt;a class="link" href="../distributed-lock" >solved a problem in production with distributed lock&lt;/a>.&lt;/p>
-&lt;h2 id="3-database-gotchas-video">&lt;a href="#3-database-gotchas-video" class="header-anchor">&lt;/a>3 database gotchas video
-&lt;/h2>&lt;div class="video-wrapper">
+constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p&gt;
+&lt;h2 id="bonus-database-gotchas"&gt;&lt;a href="#bonus-database-gotchas" class="header-anchor"&gt;&lt;/a&gt;Bonus database gotchas
+&lt;/h2&gt;&lt;p&gt;Additional database gotchas that we have seen in production include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" &gt;Prepared statements consuming too much memory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-upsert-deadlock" &gt;Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Also, we recently &lt;a class="link" href="../distributed-lock" &gt;solved a problem in production with distributed lock&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="3-database-gotchas-video"&gt;&lt;a href="#3-database-gotchas-video" class="header-anchor"&gt;&lt;/a&gt;3 database gotchas video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/N-wzNq-sEwo"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Optimize MySQL query performance: INSERT with subqueries</title><link>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</link><pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/INSERT%20with%20subqueries.png" alt="Featured image of post Optimize MySQL query performance: INSERT with subqueries" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>We recently encountered a performance issue in production. Once an hour, we saw a spike in average DB lock time, along with occasional deadlocks and server errors. We identified the problematic query using &lt;a class="link" href="https://aws.amazon.com/rds/" target="_blank" rel="noopener"
->Amazon RDS&lt;/a> logs. It was an &lt;code>INSERT&lt;/code> statement with subqueries.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p.id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> t.id &lt;span style="color:#66d9ef">AS&lt;/span> inherited_team_id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> passing_host_count,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> failing_host_count
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">FROM&lt;/span> policies p
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CROSS&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> teams t
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WHERE&lt;/span> p.team_id &lt;span style="color:#66d9ef">IS&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> p.id, t.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ON&lt;/span> DUPLICATE &lt;span style="color:#66d9ef">KEY&lt;/span> &lt;span style="color:#66d9ef">UPDATE&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This statement calculated passing/failing results and inserted them into a &lt;code>policy_stats&lt;/code> summary table. Unfortunately, this query took over 30 seconds to execute. During this time, it locked the important &lt;code>policy_membership&lt;/code> table, preventing other threads from writing to it.&lt;/p>
-&lt;h2 id="reproducing-slow-sql-queries">&lt;a href="#reproducing-slow-sql-queries" class="header-anchor">&lt;/a>Reproducing slow SQL queries
-&lt;/h2>&lt;p>Since we saw the issue in production, we needed to reproduce it in a test environment. We created a similar schema and loaded it with data. We used a Go script to populate the tables with dummy data: &lt;a class="link" href="https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go" target="_blank" rel="noopener"
->https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go&lt;/a>.&lt;/p>
-&lt;p>Initially, we used ten policies and ten teams with 10,000 hosts each, resulting in 100 inserted rows with the above query. However, the performance was only three to six seconds. Then, we increased the number of policies to 50, resulting in 500 inserted rows. The performance dropped to 30 to 60 seconds.&lt;/p>
-&lt;p>The above data made it clear that this query needed to be more scalable. As the &lt;code>GROUP BY p.id, t.id&lt;/code> clause demonstrates, performance exponentially degrades with the number of policies and teams.&lt;/p>
-&lt;h2 id="debugging-slow-sql-queries">&lt;a href="#debugging-slow-sql-queries" class="header-anchor">&lt;/a>Debugging slow SQL queries
-&lt;/h2>&lt;p>MySQL has powerful tools called &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/explain.html" target="_blank" rel="noopener"
->EXPLAIN&lt;/a> and &lt;code>EXPLAIN ANALYSE&lt;/code>. These tools show how MySQL executes a query and help identify performance bottlenecks. We ran &lt;code>EXPLAIN ANALYSE&lt;/code> on the problematic query and viewed the results as a tree and a diagram.&lt;/p>
-&lt;p>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-tree.png"
-alt="MySQL EXPLAIN result in TREE format">&lt;figcaption>
-&lt;h4>MySQL EXPLAIN result in TREE format&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;br>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-diagram.png"
-alt="MySQL EXPLAIN result as a diagram">&lt;figcaption>
-&lt;h4>MySQL EXPLAIN result as a diagram&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;/p>
-&lt;p>Although the &lt;code>EXPLAIN&lt;/code> output was complex, it was clear that the &lt;code>SELECT&lt;/code> subqueries were executing too many times.&lt;/p>
-&lt;h2 id="fixing-insert-with-subqueries-performance">&lt;a href="#fixing-insert-with-subqueries-performance" class="header-anchor">&lt;/a>Fixing INSERT with subqueries performance
-&lt;/h2>&lt;p>The first step was to separate the &lt;code>INSERT&lt;/code> from the &lt;code>SELECT&lt;/code>. The top &lt;code>SELECT&lt;/code> subquery took most of the time. But, more importantly, the &lt;code>SELECT&lt;/code> does not block other threads from updating the &lt;code>policy_membership&lt;/code> table.&lt;/p>
-&lt;p>However, the single standalone &lt;code>SELECT&lt;/code> subquery was still slow. In addition, memory usage could be high for many teams and policies.&lt;/p>
-&lt;p>We decided to process one policy row at a time. This reduced the time to complete an individual &lt;code>SELECT&lt;/code> query to less than two seconds and limited the memory usage. We did not use a transaction to minimize locks. Not utilizing a transaction meant that the &lt;code>INSERT&lt;/code> could fail if a parallel process deleted the policy. Also, the &lt;code>INSERT&lt;/code> could overwrite a clearing of the &lt;code>policy_stats&lt;/code> row. These drawbacks were acceptable, as they were rare cases.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> p.id &lt;span style="color:#66d9ef">as&lt;/span> policy_id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> t.id &lt;span style="color:#66d9ef">AS&lt;/span> inherited_team_id,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> passing_host_count,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">FROM&lt;/span> policy_membership pm
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">INNER&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> hosts h &lt;span style="color:#66d9ef">ON&lt;/span> pm.host_id &lt;span style="color:#f92672">=&lt;/span> h.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">WHERE&lt;/span> pm.policy_id &lt;span style="color:#f92672">=&lt;/span> p.id &lt;span style="color:#66d9ef">AND&lt;/span> pm.passes &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">false&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> h.team_id &lt;span style="color:#f92672">=&lt;/span> t.id
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ) &lt;span style="color:#66d9ef">AS&lt;/span> failing_host_count
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">FROM&lt;/span> policies p
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CROSS&lt;/span> &lt;span style="color:#66d9ef">JOIN&lt;/span> teams t
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">WHERE&lt;/span> p.team_id &lt;span style="color:#66d9ef">IS&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> p.id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> t.id, p.id;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After each &lt;code>SELECT&lt;/code>, we inserted the results into the &lt;code>policy_stats&lt;/code> table.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>, &lt;span style="color:#f92672">?&lt;/span>), ...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">ON&lt;/span> DUPLICATE &lt;span style="color:#66d9ef">KEY&lt;/span> &lt;span style="color:#66d9ef">UPDATE&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> updated_at &lt;span style="color:#f92672">=&lt;/span> NOW(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> passing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(passing_host_count),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> failing_host_count &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#66d9ef">VALUES&lt;/span>(failing_host_count);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="further-reading-about-mysql">&lt;a href="#further-reading-about-mysql" class="header-anchor">&lt;/a>Further reading about MySQL
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../mysql-master-slave-replication/" >Scaling DB performance using master slave replication&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="mysql-code-to-populate-db-on-github">&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor">&lt;/a>MySQL code to populate DB on GitHub
-&lt;/h2>&lt;p>The code to populate our test DB is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf" target="_blank" rel="noopener"
->https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf&lt;/a>&lt;/p>
-&lt;h2 id="mysql-query-performance-insert-with-subqueries-video">&lt;a href="#mysql-query-performance-insert-with-subqueries-video" class="header-anchor">&lt;/a>MySQL query performance: INSERT with subqueries video
-&lt;/h2>&lt;div class="video-wrapper">
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Optimize MySQL query performance: INSERT with subqueries</title><link>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</link><pubDate>Mon, 06 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/INSERT%20with%20subqueries.png" alt="Featured image of post Optimize MySQL query performance: INSERT with subqueries" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
+&lt;/h2&gt;&lt;p&gt;We recently encountered a performance issue in production. Once an hour, we saw a spike in average DB lock time, along with occasional deadlocks and server errors. We identified the problematic query using &lt;a class="link" href="https://aws.amazon.com/rds/" target="_blank" rel="noopener"
+&gt;Amazon RDS&lt;/a&gt; logs. It was an &lt;code&gt;INSERT&lt;/code&gt; statement with subqueries.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; p.id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; t.id &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; inherited_team_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policy_membership pm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;INNER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; hosts h &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; pm.host_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; h.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; pm.policy_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; p.id &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; pm.passes &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; h.team_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; t.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; passing_host_count,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policy_membership pm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;INNER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; hosts h &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; pm.host_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; h.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; pm.policy_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; p.id &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; pm.passes &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; h.team_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; t.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; failing_host_count
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policies p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CROSS&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; teams t
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; p.team_id &lt;span style="color:#66d9ef"&gt;IS&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; p.id, t.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; DUPLICATE &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; updated_at &lt;span style="color:#f92672"&gt;=&lt;/span&gt; NOW(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passing_host_count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt;(passing_host_count),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; failing_host_count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt;(failing_host_count);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This statement calculated passing/failing results and inserted them into a &lt;code&gt;policy_stats&lt;/code&gt; summary table. Unfortunately, this query took over 30 seconds to execute. During this time, it locked the important &lt;code&gt;policy_membership&lt;/code&gt; table, preventing other threads from writing to it.&lt;/p&gt;
+&lt;h2 id="reproducing-slow-sql-queries"&gt;&lt;a href="#reproducing-slow-sql-queries" class="header-anchor"&gt;&lt;/a&gt;Reproducing slow SQL queries
+&lt;/h2&gt;&lt;p&gt;Since we saw the issue in production, we needed to reproduce it in a test environment. We created a similar schema and loaded it with data. We used a Go script to populate the tables with dummy data: &lt;a class="link" href="https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go" target="_blank" rel="noopener"
+&gt;https://github.com/getvictor/mysql/blob/main/insert-with-subqueries-perf/main.go&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Initially, we used ten policies and ten teams with 10,000 hosts each, resulting in 100 inserted rows with the above query. However, the performance was only three to six seconds. Then, we increased the number of policies to 50, resulting in 500 inserted rows. The performance dropped to 30 to 60 seconds.&lt;/p&gt;
+&lt;p&gt;The above data made it clear that this query needed to be more scalable. As the &lt;code&gt;GROUP BY p.id, t.id&lt;/code&gt; clause demonstrates, performance exponentially degrades with the number of policies and teams.&lt;/p&gt;
+&lt;h2 id="debugging-slow-sql-queries"&gt;&lt;a href="#debugging-slow-sql-queries" class="header-anchor"&gt;&lt;/a&gt;Debugging slow SQL queries
+&lt;/h2&gt;&lt;p&gt;MySQL has powerful tools called &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/explain.html" target="_blank" rel="noopener"
+&gt;EXPLAIN&lt;/a&gt; and &lt;code&gt;EXPLAIN ANALYSE&lt;/code&gt;. These tools show how MySQL executes a query and help identify performance bottlenecks. We ran &lt;code&gt;EXPLAIN ANALYSE&lt;/code&gt; on the problematic query and viewed the results as a tree and a diagram.&lt;/p&gt;
+&lt;p&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-tree.png"
+alt="MySQL EXPLAIN result in TREE format"&gt;&lt;figcaption&gt;
+&lt;h4&gt;MySQL EXPLAIN result in TREE format&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;br&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mysql-query-performance-insert-subqueries/mysql-explain-diagram.png"
+alt="MySQL EXPLAIN result as a diagram"&gt;&lt;figcaption&gt;
+&lt;h4&gt;MySQL EXPLAIN result as a diagram&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;/p&gt;
+&lt;p&gt;Although the &lt;code&gt;EXPLAIN&lt;/code&gt; output was complex, it was clear that the &lt;code&gt;SELECT&lt;/code&gt; subqueries were executing too many times.&lt;/p&gt;
+&lt;h2 id="fixing-insert-with-subqueries-performance"&gt;&lt;a href="#fixing-insert-with-subqueries-performance" class="header-anchor"&gt;&lt;/a&gt;Fixing INSERT with subqueries performance
+&lt;/h2&gt;&lt;p&gt;The first step was to separate the &lt;code&gt;INSERT&lt;/code&gt; from the &lt;code&gt;SELECT&lt;/code&gt;. The top &lt;code&gt;SELECT&lt;/code&gt; subquery took most of the time. But, more importantly, the &lt;code&gt;SELECT&lt;/code&gt; does not block other threads from updating the &lt;code&gt;policy_membership&lt;/code&gt; table.&lt;/p&gt;
+&lt;p&gt;However, the single standalone &lt;code&gt;SELECT&lt;/code&gt; subquery was still slow. In addition, memory usage could be high for many teams and policies.&lt;/p&gt;
+&lt;p&gt;We decided to process one policy row at a time. This reduced the time to complete an individual &lt;code&gt;SELECT&lt;/code&gt; query to less than two seconds and limited the memory usage. We did not use a transaction to minimize locks. Not utilizing a transaction meant that the &lt;code&gt;INSERT&lt;/code&gt; could fail if a parallel process deleted the policy. Also, the &lt;code&gt;INSERT&lt;/code&gt; could overwrite a clearing of the &lt;code&gt;policy_stats&lt;/code&gt; row. These drawbacks were acceptable, as they were rare cases.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; p.id &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; policy_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; t.id &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; inherited_team_id,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policy_membership pm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;INNER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; hosts h &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; pm.host_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; h.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; pm.policy_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; p.id &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; pm.passes &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; h.team_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; t.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; passing_host_count,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policy_membership pm
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;INNER&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; hosts h &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; pm.host_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; h.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; pm.policy_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; p.id &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; pm.passes &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; h.team_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; t.id
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ) &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; failing_host_count
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; policies p
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CROSS&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;JOIN&lt;/span&gt; teams t
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; p.team_id &lt;span style="color:#66d9ef"&gt;IS&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; p.id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; t.id, p.id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After each &lt;code&gt;SELECT&lt;/code&gt;, we inserted the results into the &lt;code&gt;policy_stats&lt;/code&gt; table.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; policy_stats (policy_id, inherited_team_id, passing_host_count, failing_host_count)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#f92672"&gt;?&lt;/span&gt;, &lt;span style="color:#f92672"&gt;?&lt;/span&gt;, &lt;span style="color:#f92672"&gt;?&lt;/span&gt;, &lt;span style="color:#f92672"&gt;?&lt;/span&gt;), ...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; DUPLICATE &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; updated_at &lt;span style="color:#f92672"&gt;=&lt;/span&gt; NOW(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; passing_host_count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt;(passing_host_count),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; failing_host_count &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt;(failing_host_count);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="further-reading-about-mysql"&gt;&lt;a href="#further-reading-about-mysql" class="header-anchor"&gt;&lt;/a&gt;Further reading about MySQL
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-upsert-deadlock/" &gt;MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-master-slave-replication/" &gt;Scaling DB performance using master slave replication&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../unicode-and-emoji-gotchas/" &gt;Fully supporting Unicode and emojis in your app&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" &gt;SQL prepared statements are broken when scaling applications&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="mysql-code-to-populate-db-on-github"&gt;&lt;a href="#mysql-code-to-populate-db-on-github" class="header-anchor"&gt;&lt;/a&gt;MySQL code to populate DB on GitHub
+&lt;/h2&gt;&lt;p&gt;The code to populate our test DB is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf" target="_blank" rel="noopener"
+&gt;https://github.com/getvictor/mysql/tree/main/insert-with-subqueries-perf&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="mysql-query-performance-insert-with-subqueries-video"&gt;&lt;a href="#mysql-query-performance-insert-with-subqueries-video" class="header-anchor"&gt;&lt;/a&gt;MySQL query performance: INSERT with subqueries video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/9vulV3W-bp8"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" />&lt;h2 id="what-is-an-sql-deadlock">&lt;a href="#what-is-an-sql-deadlock" class="header-anchor">&lt;/a>What is an SQL deadlock?
-&lt;/h2>&lt;p>A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p>
-&lt;h2 id="what-is-an-upsert">&lt;a href="#what-is-an-upsert" class="header-anchor">&lt;/a>What is an upsert?
-&lt;/h2>&lt;p>An upsert combines the words &amp;ldquo;update&amp;rdquo; and &amp;ldquo;insert.&amp;rdquo; It is a database operation that inserts a new row into a table if the row does not exist or updates the row if it already exists.&lt;/p>
-&lt;h2 id="insertupdate-upsert-pattern">&lt;a href="#insertupdate-upsert-pattern" class="header-anchor">&lt;/a>INSERT/UPDATE upsert pattern
-&lt;/h2>&lt;p>One common way to implement an upsert operation in MySQL is to use the following pattern:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> &lt;span style="color:#66d9ef">SET&lt;/span> column1 &lt;span style="color:#f92672">=&lt;/span> value1, column2 &lt;span style="color:#f92672">=&lt;/span> value2 &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">-- If the UPDATE statement does not affect any rows, insert a new row:
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> &lt;span style="color:#66d9ef">table_name&lt;/span> (id, column1, column2) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#f92672">?&lt;/span>, value1, value2);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/update.html" target="_blank" rel="noopener"
->UPDATE&lt;/a> returns the number of rows that were actually changed.&lt;/p>
-&lt;p>This UPDATE/INSERT pattern is optimized for frequent updates and rare inserts. However, it can lead to deadlocks when multiple transactions try to insert simultaneously.&lt;/p>
-&lt;h2 id="mysql-deadlock-example">&lt;a href="#mysql-deadlock-example" class="header-anchor">&lt;/a>MySQL deadlock example
-&lt;/h2>&lt;p>We assume the default transaction isolation level of &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"
->REPEATABLE READ&lt;/a>. Given the following table with one row:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> my_table (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> id int(&lt;span style="color:#ae81ff">10&lt;/span>) unsigned &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> amount int(&lt;span style="color:#ae81ff">10&lt;/span>) unsigned &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span> (id)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>);
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#ae81ff">1&lt;/span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One transaction executes the following SQL:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> my_table &lt;span style="color:#66d9ef">SET&lt;/span> amount &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span> &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">2&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Another transaction executes the following SQL:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">UPDATE&lt;/span> my_table &lt;span style="color:#66d9ef">SET&lt;/span> amount &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span> &lt;span style="color:#66d9ef">WHERE&lt;/span> id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#ae81ff">3&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">3&lt;/span>, &lt;span style="color:#ae81ff">3&lt;/span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>At this point, the second transaction is waiting for the first transaction to release the lock.&lt;/p>
-&lt;p>The first transaction then executes the following SQL:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> my_table (id, amount) &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">2&lt;/span>, &lt;span style="color:#ae81ff">2&lt;/span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Causing a deadlock:&lt;/p>
-&lt;pre tabindex="0">&lt;code>[40001][1213] Deadlock found when trying to get lock; try restarting transaction
-&lt;/code>&lt;/pre>&lt;h3 id="why-does-the-deadlock-occur">&lt;a href="#why-does-the-deadlock-occur" class="header-anchor">&lt;/a>Why does the deadlock occur?
-&lt;/h3>&lt;p>The deadlock occurs because both transactions set &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener"
->next-key locks&lt;/a> on the rows they attempted to update. Since the rows they attempted to update did not exist, the lock is set on the &amp;ldquo;supremum&amp;rdquo; pseudo-record. This pseudo-record has a value higher than any value actually in the index. This lock prevents the other transaction from inserting the row it needs.&lt;/p>
-&lt;h2 id="debugging-mysql-deadlocks">&lt;a href="#debugging-mysql-deadlocks" class="header-anchor">&lt;/a>Debugging MySQL deadlocks
-&lt;/h2>&lt;p>To view the last deadlock detected by MySQL, you can use:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> ENGINE INNODB STATUS;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The output will contain a section like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>------------------------
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>MySQL deadlock on UPDATE/INSERT upsert pattern</title><link>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</link><pubDate>Sun, 28 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-upsert-deadlock/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-upsert-deadlock/MySQL%20deadlock.png" alt="Featured image of post MySQL deadlock on UPDATE/INSERT upsert pattern" /&gt;&lt;h2 id="what-is-an-sql-deadlock"&gt;&lt;a href="#what-is-an-sql-deadlock" class="header-anchor"&gt;&lt;/a&gt;What is an SQL deadlock?
+&lt;/h2&gt;&lt;p&gt;A deadlock occurs when two or more SQL transactions are waiting for each other to release locks. This can occur when two transactions have locks on separate resources and each is waiting for the other to release its lock.&lt;/p&gt;
+&lt;h2 id="what-is-an-upsert"&gt;&lt;a href="#what-is-an-upsert" class="header-anchor"&gt;&lt;/a&gt;What is an upsert?
+&lt;/h2&gt;&lt;p&gt;An upsert combines the words &amp;ldquo;update&amp;rdquo; and &amp;ldquo;insert.&amp;rdquo; It is a database operation that inserts a new row into a table if the row does not exist or updates the row if it already exists.&lt;/p&gt;
+&lt;h2 id="insertupdate-upsert-pattern"&gt;&lt;a href="#insertupdate-upsert-pattern" class="header-anchor"&gt;&lt;/a&gt;INSERT/UPDATE upsert pattern
+&lt;/h2&gt;&lt;p&gt;One common way to implement an upsert operation in MySQL is to use the following pattern:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;table_name&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;SET&lt;/span&gt; column1 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; value1, column2 &lt;span style="color:#f92672"&gt;=&lt;/span&gt; value2 &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- If the UPDATE statement does not affect any rows, insert a new row:
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;table_name&lt;/span&gt; (id, column1, column2) &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#f92672"&gt;?&lt;/span&gt;, value1, value2);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/update.html" target="_blank" rel="noopener"
+&gt;UPDATE&lt;/a&gt; returns the number of rows that were actually changed.&lt;/p&gt;
+&lt;p&gt;This UPDATE/INSERT pattern is optimized for frequent updates and rare inserts. However, it can lead to deadlocks when multiple transactions try to insert simultaneously.&lt;/p&gt;
+&lt;h2 id="mysql-deadlock-example"&gt;&lt;a href="#mysql-deadlock-example" class="header-anchor"&gt;&lt;/a&gt;MySQL deadlock example
+&lt;/h2&gt;&lt;p&gt;We assume the default transaction isolation level of &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html#isolevel_repeatable-read" target="_blank" rel="noopener"
+&gt;REPEATABLE READ&lt;/a&gt;. Given the following table with one row:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; my_table (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; id int(&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;) unsigned &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; amount int(&lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;) unsigned &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt; (id)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; my_table (id, amount) &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One transaction executes the following SQL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; my_table &lt;span style="color:#66d9ef"&gt;SET&lt;/span&gt; amount &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another transaction executes the following SQL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;UPDATE&lt;/span&gt; my_table &lt;span style="color:#66d9ef"&gt;SET&lt;/span&gt; amount &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; my_table (id, amount) &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;At this point, the second transaction is waiting for the first transaction to release the lock.&lt;/p&gt;
+&lt;p&gt;The first transaction then executes the following SQL:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; my_table (id, amount) &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;, &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Causing a deadlock:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;[40001][1213] Deadlock found when trying to get lock; try restarting transaction
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="why-does-the-deadlock-occur"&gt;&lt;a href="#why-does-the-deadlock-occur" class="header-anchor"&gt;&lt;/a&gt;Why does the deadlock occur?
+&lt;/h3&gt;&lt;p&gt;The deadlock occurs because both transactions set &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-next-key-locks" target="_blank" rel="noopener"
+&gt;next-key locks&lt;/a&gt; on the rows they attempted to update. Since the rows they attempted to update did not exist, the lock is set on the &amp;ldquo;supremum&amp;rdquo; pseudo-record. This pseudo-record has a value higher than any value actually in the index. This lock prevents the other transaction from inserting the row it needs.&lt;/p&gt;
+&lt;h2 id="debugging-mysql-deadlocks"&gt;&lt;a href="#debugging-mysql-deadlocks" class="header-anchor"&gt;&lt;/a&gt;Debugging MySQL deadlocks
+&lt;/h2&gt;&lt;p&gt;To view the last deadlock detected by MySQL, you can use:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SHOW&lt;/span&gt; ENGINE INNODB STATUS;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output will contain a section like this:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;------------------------
 LATEST DETECTED DEADLOCK
 ------------------------
 2024-04-28 12:29:17 281472351068032
@@ -285,105 +285,105 @@ Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
 RECORD LOCKS space id 158 page no 4 n bits 72 index PRIMARY of table `test`.`my_table` trx id 1638812 lock_mode X insert intention waiting
 Record lock, heap no 1 PHYSICAL RECORD: n_fields 1; compact format; info bits 0
 0: len 8; hex 73757072656d756d; asc supremum;;
-&lt;/code>&lt;/pre>&lt;p>We can see the supremum locks held by both transactions: &lt;code> 0: len 8; hex 73757072656d756d; asc supremum;;&lt;/code>.&lt;/p>
-&lt;p>Another way to debug MySQL deadlocks is to enable the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_print_all_deadlocks" target="_blank" rel="noopener"
->innodb_print_all_deadlocks&lt;/a> option. This option prints all deadlocks to the error log.&lt;/p>
-&lt;h2 id="preventing-the-updateinsert-deadlock">&lt;a href="#preventing-the-updateinsert-deadlock" class="header-anchor">&lt;/a>Preventing the UPDATE/INSERT deadlock
-&lt;/h2>&lt;p>One way to prevent the deadlock is to use the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html" target="_blank" rel="noopener"
->INSERT &amp;hellip; ON DUPLICATE KEY UPDATE&lt;/a> pattern. This syntax allows you to insert a new row or update an existing row in a single statement. However, it is slower than an UPDATE and always increments the auto-increment value if present.&lt;/p>
-&lt;p>Another way is to roll back the transaction once we know that the UPDATE did not affect any rows. This avoids the deadlock by not holding the lock while we insert the new row. After the rollback, we can retry the transaction using the above &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern.&lt;/p>
-&lt;p>A third way is not to use transactions. In this case, the locks are released immediately after the statement is executed. However, this approach may not be suitable for all use cases.&lt;/p>
-&lt;h2 id="conclusion">&lt;a href="#conclusion" class="header-anchor">&lt;/a>Conclusion
-&lt;/h2>&lt;p>The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple transactions try to insert simultaneously. To prevent deadlocks, consider using the &lt;code>INSERT ... ON DUPLICATE KEY UPDATE&lt;/code> pattern, rolling back the transaction, or not using transactions.&lt;/p>
-&lt;h2 id="mysql-deadlock-on-updateinsert-upsert-pattern-video">&lt;a href="#mysql-deadlock-on-updateinsert-upsert-pattern-video" class="header-anchor">&lt;/a>MySQL deadlock on UPDATE/INSERT upsert pattern video
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We can see the supremum locks held by both transactions: &lt;code&gt; 0: len 8; hex 73757072656d756d; asc supremum;;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Another way to debug MySQL deadlocks is to enable the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-parameters.html#sysvar_innodb_print_all_deadlocks" target="_blank" rel="noopener"
+&gt;innodb_print_all_deadlocks&lt;/a&gt; option. This option prints all deadlocks to the error log.&lt;/p&gt;
+&lt;h2 id="preventing-the-updateinsert-deadlock"&gt;&lt;a href="#preventing-the-updateinsert-deadlock" class="header-anchor"&gt;&lt;/a&gt;Preventing the UPDATE/INSERT deadlock
+&lt;/h2&gt;&lt;p&gt;One way to prevent the deadlock is to use the &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/insert-on-duplicate.html" target="_blank" rel="noopener"
+&gt;INSERT &amp;hellip; ON DUPLICATE KEY UPDATE&lt;/a&gt; pattern. This syntax allows you to insert a new row or update an existing row in a single statement. However, it is slower than an UPDATE and always increments the auto-increment value if present.&lt;/p&gt;
+&lt;p&gt;Another way is to roll back the transaction once we know that the UPDATE did not affect any rows. This avoids the deadlock by not holding the lock while we insert the new row. After the rollback, we can retry the transaction using the above &lt;code&gt;INSERT ... ON DUPLICATE KEY UPDATE&lt;/code&gt; pattern.&lt;/p&gt;
+&lt;p&gt;A third way is not to use transactions. In this case, the locks are released immediately after the statement is executed. However, this approach may not be suitable for all use cases.&lt;/p&gt;
+&lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
+&lt;/h2&gt;&lt;p&gt;The UPDATE/INSERT upsert pattern can lead to MySQL deadlocks when multiple transactions try to insert simultaneously. To prevent deadlocks, consider using the &lt;code&gt;INSERT ... ON DUPLICATE KEY UPDATE&lt;/code&gt; pattern, rolling back the transaction, or not using transactions.&lt;/p&gt;
+&lt;h2 id="mysql-deadlock-on-updateinsert-upsert-pattern-video"&gt;&lt;a href="#mysql-deadlock-on-updateinsert-upsert-pattern-video" class="header-anchor"&gt;&lt;/a&gt;MySQL deadlock on UPDATE/INSERT upsert pattern video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/ADerRg7tzag"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" >Optimize MySQL query performance: INSERT with subqueries&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../mysql-master-slave-replication/" >Master slave replication in MySQL&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" >SQL prepared statements are broken when scaling applications&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" />&lt;p>A prepared statement is a feature of modern databases intended to help execute the same SQL
-statement multiple times. For example, the following statement is a prepared statement:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> id, name &lt;span style="color:#66d9ef">FROM&lt;/span> users &lt;span style="color:#66d9ef">WHERE&lt;/span> email &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The presence of an unspecified parameter, labeled “?”, makes it a prepared statement. When a
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;h2 id="other-articles-related-to-mysql"&gt;&lt;a href="#other-articles-related-to-mysql" class="header-anchor"&gt;&lt;/a&gt;Other articles related to MySQL
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" &gt;Optimize MySQL query performance: INSERT with subqueries&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-master-slave-replication/" &gt;Master slave replication in MySQL&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../unicode-and-emoji-gotchas/" &gt;Fully supporting Unicode and emojis in your app&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications/" &gt;SQL prepared statements are broken when scaling applications&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>SQL prepared statements are broken when scaling applications</title><link>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</link><pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/</guid><description>&lt;img src="https://victoronsoftware.com/posts/sql-prepared-statements-are-broken-when-scaling-applications/cover.png" alt="Featured image of post SQL prepared statements are broken when scaling applications" /&gt;&lt;p&gt;A prepared statement is a feature of modern databases intended to help execute the same SQL
+statement multiple times. For example, the following statement is a prepared statement:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; id, name &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; users &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; email &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The presence of an unspecified parameter, labeled “?”, makes it a prepared statement. When a
 prepared statement is sent to the database, it is compiled, optimized, and stored in memory on the
 database server. Subsequently, the client application may execute the same prepared statement
-multiple times with different parameter values. This results in a speedup.&lt;/p>
-&lt;p>Prepared statements are well suited for long and complex queries that require significant
+multiple times with different parameter values. This results in a speedup.&lt;/p&gt;
+&lt;p&gt;Prepared statements are well suited for long and complex queries that require significant
 compilation and optimization times. They are kept prepared on the DB server, and the application
-must only pass the parameters to execute them.&lt;/p>
-&lt;p>Another benefit of using prepared statements is the protection they provide
+must only pass the parameters to execute them.&lt;/p&gt;
+&lt;p&gt;Another benefit of using prepared statements is the protection they provide
 against &lt;a class="link" href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank" rel="noopener"
->SQL injection&lt;/a>. The application does
+&gt;SQL injection&lt;/a&gt;. The application does
 not need to properly escape the parameter values provided to the statement. Because of this
-protection, many experts recommend always using prepared statements for accessing the database.&lt;/p>
-&lt;p>However, by always using prepared statements for accessing the database, we force the SQL driver to
+protection, many experts recommend always using prepared statements for accessing the database.&lt;/p&gt;
+&lt;p&gt;However, by always using prepared statements for accessing the database, we force the SQL driver to
 send the extra prepare command for every ad-hoc statement we execute. The driver sends the following
-commands:&lt;/p>
-&lt;ol>
-&lt;li>Prepare the statement&lt;/li>
-&lt;li>Execute statement with given parameters&lt;/li>
-&lt;li>Close the statement (and deallocate the prepared statement created above)&lt;/li>
-&lt;/ol>
-&lt;p>Another issue with prepared statements is the memory requirement. In large application deployments
+commands:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Prepare the statement&lt;/li&gt;
+&lt;li&gt;Execute statement with given parameters&lt;/li&gt;
+&lt;li&gt;Close the statement (and deallocate the prepared statement created above)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Another issue with prepared statements is the memory requirement. In large application deployments
 with large numbers of connections, prepared statements can crash your environment. This issue
-happened to one of our customers.&lt;/p>
-&lt;p>A prepared statement is only valid for a single session, which typically maps to a single database
+happened to one of our customers.&lt;/p&gt;
+&lt;p&gt;A prepared statement is only valid for a single session, which typically maps to a single database
 connection. If the application runs multiple servers, with many connections, it may end up storing a
-prepared statement for each one of those sessions.&lt;/p>
-&lt;p>For example, given 100 servers with 100 connections each, we have 10,000 connections to the
+prepared statement for each one of those sessions.&lt;/p&gt;
+&lt;p&gt;For example, given 100 servers with 100 connections each, we have 10,000 connections to the
 database. Assuming a memory requirement of 50 KB per prepared statement (derived from the
 following &lt;a class="link" href="https://blog.searce.com/how-max-prepared-stmt-count-bring-down-the-production-mysql-system-6ca28e577663" target="_blank" rel="noopener"
->article&lt;/a>),
-we arrive at the maximum memory requirement of:&lt;/p>
-&lt;pre tabindex="0">&lt;code>10,000 * 50 KB = 500 MB per single saved prepared statement
-&lt;/code>&lt;/pre>&lt;p>Some databases also have limits on the number of prepared statements. MySQL’s
+&gt;article&lt;/a&gt;),
+we arrive at the maximum memory requirement of:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;10,000 * 50 KB = 500 MB per single saved prepared statement
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Some databases also have limits on the number of prepared statements. MySQL’s
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_prepared_stmt_count" target="_blank" rel="noopener"
->max_prepared_stmt_count&lt;/a> defaults to 16,382 for the entire server. Yes, this is a global limit, and
-&lt;strong>not&lt;/strong> per session. In the above example, if the application uses prepared statements for every
+&gt;max_prepared_stmt_count&lt;/a&gt; defaults to 16,382 for the entire server. Yes, this is a global limit, and
+&lt;strong&gt;not&lt;/strong&gt; per session. In the above example, if the application uses prepared statements for every
 database access, then each database connection will always be using up 1 short-lived prepared
 statement. A short-lived prepared statement is the prepared statement, as we described above, that
 will be created for the purposes of executing one statement, and then immediately deallocated
-afterwards. This means the above application running with a default MySQL config &lt;strong>cannot explicitly
-save any prepared statements&lt;/strong> &amp;ndash; 10,000 transient prepared statements + 10,000 saved prepared
-statements is greater than the max_prepared_stmt_count of 16,382.&lt;/p>
-&lt;p>This is &lt;strong>extremely inconvenient&lt;/strong> for application developers, because they must keep track of:&lt;/p>
-&lt;ul>
-&lt;li>The number of saved prepared statements they are using&lt;/li>
-&lt;li>How many application servers are running&lt;/li>
-&lt;li>How many database connections each server has&lt;/li>
-&lt;li>The prepared statement limits of the database&lt;/li>
-&lt;/ul>
-&lt;p>This detail can easily be overlooked when scaling applications.&lt;/p>
-&lt;p>In the end, is it really worth using prepared statements, and especially saved prepared statements, in your application? Yes, saved prepared statements can offer performance advantages, especially for complex queries executed frequently. However they must also be kept in check.&lt;/p>
-&lt;p>A few ways to mitigate prepared statement issues for large application deployments include:&lt;/p>
-&lt;ul>
-&lt;li>Limit the number of database connections per application server&lt;/li>
-&lt;li>Increase the prepared statement limit on the database server(s)&lt;/li>
-&lt;li>Limit the maximum lifespan of connections. When closing a connection, the database will deallocate all prepared statements on that connection.&lt;/li>
-&lt;/ul>
-&lt;h2 id="sql-prepared-statements-are-broken-when-scaling-applications-video">&lt;a href="#sql-prepared-statements-are-broken-when-scaling-applications-video" class="header-anchor">&lt;/a>SQL prepared statements are broken when scaling applications video
-&lt;/h2>&lt;div class="video-wrapper">
+afterwards. This means the above application running with a default MySQL config &lt;strong&gt;cannot explicitly
+save any prepared statements&lt;/strong&gt; &amp;ndash; 10,000 transient prepared statements + 10,000 saved prepared
+statements is greater than the max_prepared_stmt_count of 16,382.&lt;/p&gt;
+&lt;p&gt;This is &lt;strong&gt;extremely inconvenient&lt;/strong&gt; for application developers, because they must keep track of:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The number of saved prepared statements they are using&lt;/li&gt;
+&lt;li&gt;How many application servers are running&lt;/li&gt;
+&lt;li&gt;How many database connections each server has&lt;/li&gt;
+&lt;li&gt;The prepared statement limits of the database&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This detail can easily be overlooked when scaling applications.&lt;/p&gt;
+&lt;p&gt;In the end, is it really worth using prepared statements, and especially saved prepared statements, in your application? Yes, saved prepared statements can offer performance advantages, especially for complex queries executed frequently. However they must also be kept in check.&lt;/p&gt;
+&lt;p&gt;A few ways to mitigate prepared statement issues for large application deployments include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Limit the number of database connections per application server&lt;/li&gt;
+&lt;li&gt;Increase the prepared statement limit on the database server(s)&lt;/li&gt;
+&lt;li&gt;Limit the maximum lifespan of connections. When closing a connection, the database will deallocate all prepared statements on that connection.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="sql-prepared-statements-are-broken-when-scaling-applications-video"&gt;&lt;a href="#sql-prepared-statements-are-broken-when-scaling-applications-video" class="header-anchor"&gt;&lt;/a&gt;SQL prepared statements are broken when scaling applications video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/JHoEKmNj8t8"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;h2 id="other-articles-related-to-mysql">&lt;a href="#other-articles-related-to-mysql" class="header-anchor">&lt;/a>Other articles related to MySQL
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" >Optimize MySQL query performance: INSERT with subqueries&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock/" >MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../unicode-and-emoji-gotchas/" >Fully supporting Unicode and emojis in your app&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;h2 id="other-articles-related-to-mysql"&gt;&lt;a href="#other-articles-related-to-mysql" class="header-anchor"&gt;&lt;/a&gt;Other articles related to MySQL
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" &gt;Optimize MySQL query performance: INSERT with subqueries&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-upsert-deadlock/" &gt;MySQL deadlock on UPDATE/INSERT upsert pattern&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../unicode-and-emoji-gotchas/" &gt;Fully supporting Unicode and emojis in your app&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

@@ -1,131 +1,131 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Testing on Victor on Software</title><link>https://victoronsoftware.com/tags/unit-testing/</link><description>Recent content in Unit Testing on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/unit-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" />&lt;p>Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Unit Testing on Victor on Software</title><link>https://victoronsoftware.com/tags/unit-testing/</link><description>Recent content in Unit Testing on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/unit-testing/index.xml" rel="self" type="application/rss+xml"/><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" /&gt;&lt;p&gt;Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
 give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
-changes, slow tests can become a bottleneck, delaying deployments.&lt;/p>
-&lt;p>Previously, we covered &lt;a class="link" href="../go-test-execution-time/" >how to accurately measure the execution time of Go tests&lt;/a>. This
+changes, slow tests can become a bottleneck, delaying deployments.&lt;/p&gt;
+&lt;p&gt;Previously, we covered &lt;a class="link" href="../go-test-execution-time/" &gt;how to accurately measure the execution time of Go tests&lt;/a&gt;. This
 article will demonstrate one approach to breaking apart a large Go test suite and running each part in parallel. This
-approach should reduce the CI cycle time, benefitting developers and the organization.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#split-up-the-go-test-suite" >Split up the Go test suite&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#create-parallel-go-test-jobs-in-ci" >Create parallel Go test jobs in CI&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="understanding-your-go-test-suite">&lt;a href="#understanding-your-go-test-suite" class="header-anchor">&lt;/a>Understanding your Go test suite
-&lt;/h2>&lt;p>The standard way to run all the tests in your Go project is with the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test ./...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will compile all the Go packages and their tests, each compiling to a separate binary. The Go toolchain
-will then run each binary in parallel. The &lt;code>-p&lt;/code> flag controls this parallel test behavior, which defaults to the number
-of CPUs on your machine.&lt;/p>
-&lt;p>Splitting up the test suite makes sense if you have a lot of packages to test. If you have few packages or if you have 1
+approach should reduce the CI cycle time, benefitting developers and the organization.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#split-up-the-go-test-suite" &gt;Split up the Go test suite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#create-parallel-go-test-jobs-in-ci" &gt;Create parallel Go test jobs in CI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="understanding-your-go-test-suite"&gt;&lt;a href="#understanding-your-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Understanding your Go test suite
+&lt;/h2&gt;&lt;p&gt;The standard way to run all the tests in your Go project is with the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go test ./...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will compile all the Go packages and their tests, each compiling to a separate binary. The Go toolchain
+will then run each binary in parallel. The &lt;code&gt;-p&lt;/code&gt; flag controls this parallel test behavior, which defaults to the number
+of CPUs on your machine.&lt;/p&gt;
+&lt;p&gt;Splitting up the test suite makes sense if you have a lot of packages to test. If you have few packages or if you have 1
 or 2 packages that dominate your project&amp;rsquo;s test run time, then a simple split may not help much. You may need to
 refactor your code or split the tests in a single Go package across multiple CI jobs. Splitting a single package is
-generally inefficient since each CI job must compile the same package separately, and we will not cover this approach.&lt;/p>
-&lt;p>To find all the packages in your project, you can list them with the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go list ./...
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>To identify time-consuming packages, you can run your test suite with the &lt;code>-json&lt;/code> switch and save the results. Then,
+generally inefficient since each CI job must compile the same package separately, and we will not cover this approach.&lt;/p&gt;
+&lt;p&gt;To find all the packages in your project, you can list them with the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go list ./...
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To identify time-consuming packages, you can run your test suite with the &lt;code&gt;-json&lt;/code&gt; switch and save the results. Then,
 find the elapsed time of each package and sort the times. This operation can be done with &lt;a class="link" href="https://jqlang.org/" target="_blank" rel="noopener"
->jq&lt;/a>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>cat test-result.json | jq -s &lt;span style="color:#e6db74">&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="split-up-the-go-test-suite">&lt;a href="#split-up-the-go-test-suite" class="header-anchor">&lt;/a>Split up the Go test suite
-&lt;/h2>&lt;p>You can specify the packages at the end of the &lt;code>go test&lt;/code> command to run a subset of packages in a CI job. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test ./cmd/fleetctl/... ./server/service
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, manually create groups of packages and identify them with a name.&lt;/p>
-&lt;p>To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
+&gt;jq&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat test-result.json | jq -s &lt;span style="color:#e6db74"&gt;&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="split-up-the-go-test-suite"&gt;&lt;a href="#split-up-the-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Split up the Go test suite
+&lt;/h2&gt;&lt;p&gt;You can specify the packages at the end of the &lt;code&gt;go test&lt;/code&gt; command to run a subset of packages in a CI job. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go test ./cmd/fleetctl/... ./server/service
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, manually create groups of packages and identify them with a name.&lt;/p&gt;
+&lt;p&gt;To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
 &lt;a class="link" href="https://linux.die.net/man/1/comm" target="_blank" rel="noopener"
->comm&lt;/a> command to generate the remaining packages. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>comm -23 &amp;lt;&lt;span style="color:#f92672">(&lt;/span>go list ./... | sort&lt;span style="color:#f92672">)&lt;/span> &amp;lt;&lt;span style="color:#f92672">({&lt;/span> go list ./cmd/fleetctl/... &lt;span style="color:#f92672">&amp;amp;&amp;amp;&lt;/span> go list ./server/service/... ;&lt;span style="color:#f92672">}&lt;/span> | sort&lt;span style="color:#f92672">)&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above command returns the packages unique to the first list, which includes all the packages (&lt;code>./...&lt;/code>).&lt;/p>
-&lt;p>The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-Makefile" data-lang="Makefile">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># Set up packages for CI testing.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>DEFAULT_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./cmd/... ./ee/... ./orbit/pkg/... ./orbit/cmd/orbit ./pkg/... ./server/... ./tools/...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># fast tests are quick and do not require out-of-process dependencies (such as MySQL, etc.)
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>FAST_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./ee/tools/mdm &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/cryptoinfo &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/dataflatten &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./orbit/pkg/keystore &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/goose &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/apple/appmanifest &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/lifecycle &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/scep/challenge &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/mdm/scep/x509util &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> ./server/policies
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLEETCTL_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./cmd/fleetctl/...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>MYSQL_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/datastore/mysql/... ./server/mdm/android/mysql
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SCRIPTS_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./orbit/pkg/scripts
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>SERVICE_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/service
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>VULN_PKGS_TO_TEST &lt;span style="color:#f92672">:=&lt;/span> ./server/vulnerabilities/...
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">main)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># This is the bucket of all the tests that are not in a specific group. We take a diff between DEFAULT_PKG_TO_TEST and all the specific *_PKGS_TO_TEST.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>shell /bin/bash -c &lt;span style="color:#e6db74">&amp;#34;comm -23 &amp;lt;(go list &lt;/span>&lt;span style="color:#e6db74">${&lt;/span>DEFAULT_PKGS_TO_TEST&lt;span style="color:#e6db74">}&lt;/span>&lt;span style="color:#e6db74"> | sort) &amp;lt;({ \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> &amp;amp;&amp;amp; \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> go list &lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#e6db74"> \
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> ;} | sort)&amp;#34;&lt;/span>&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">fast)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">fleetctl)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">mysql)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">scripts)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">service)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">ifeq&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">(&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>CI_TEST_PKG&lt;span style="color:#66d9ef">)&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">,&lt;/span> &lt;span style="color:#960050;background-color:#1e0010">vuln)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">else&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> CI_PKG_TO_TEST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#66d9ef">$(&lt;/span>DEFAULT_PKGS_TO_TEST&lt;span style="color:#66d9ef">)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#960050;background-color:#1e0010">endif&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="create-parallel-go-test-jobs-in-ci">&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor">&lt;/a>Create parallel Go test jobs in CI
-&lt;/h2>&lt;p>The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
+&gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;comm -23 &amp;lt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;go list ./... | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &amp;lt;&lt;span style="color:#f92672"&gt;({&lt;/span&gt; go list ./cmd/fleetctl/... &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; go list ./server/service/... ;&lt;span style="color:#f92672"&gt;}&lt;/span&gt; | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command returns the packages unique to the first list, which includes all the packages (&lt;code&gt;./...&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-Makefile" data-lang="Makefile"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Set up packages for CI testing.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;DEFAULT_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./cmd/... ./ee/... ./orbit/pkg/... ./orbit/cmd/orbit ./pkg/... ./server/... ./tools/...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# fast tests are quick and do not require out-of-process dependencies (such as MySQL, etc.)
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;FAST_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./ee/tools/mdm &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./orbit/pkg/cryptoinfo &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./orbit/pkg/dataflatten &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./orbit/pkg/keystore &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/goose &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/mdm/apple/appmanifest &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/mdm/lifecycle &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/mdm/scep/challenge &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/mdm/scep/x509util &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; ./server/policies
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FLEETCTL_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./cmd/fleetctl/...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;MYSQL_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./server/datastore/mysql/... ./server/mdm/android/mysql
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SCRIPTS_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./orbit/pkg/scripts
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;SERVICE_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./server/service
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;VULN_PKGS_TO_TEST &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; ./server/vulnerabilities/...
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;main)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# This is the bucket of all the tests that are not in a specific group. We take a diff between DEFAULT_PKG_TO_TEST and all the specific *_PKGS_TO_TEST.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;shell /bin/bash -c &lt;span style="color:#e6db74"&gt;&amp;#34;comm -23 &amp;lt;(go list &lt;/span&gt;&lt;span style="color:#e6db74"&gt;${&lt;/span&gt;DEFAULT_PKGS_TO_TEST&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt; | sort) &amp;lt;({ \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;amp;&amp;amp; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;amp;&amp;amp; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;amp;&amp;amp; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;amp;&amp;amp; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; &amp;amp;&amp;amp; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; go list &lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#e6db74"&gt; \
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; ;} | sort)&amp;#34;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;fast)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;FAST_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;fleetctl)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;FLEETCTL_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;mysql)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;MYSQL_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;scripts)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;SCRIPTS_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;service)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;SERVICE_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;ifeq&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;(&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;CI_TEST_PKG&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;,&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;vuln)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;VULN_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;else&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; CI_PKG_TO_TEST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;$(&lt;/span&gt;DEFAULT_PKGS_TO_TEST&lt;span style="color:#66d9ef"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;endif&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-parallel-go-test-jobs-in-ci"&gt;&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor"&gt;&lt;/a&gt;Create parallel Go test jobs in CI
+&lt;/h2&gt;&lt;p&gt;The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
 &lt;a class="link" href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow" target="_blank" rel="noopener"
->matrix strategy&lt;/a>.&lt;/p>
-&lt;p>In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">test-go&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">strategy&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">matrix&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">suite&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;fast&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;fleetctl&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;main&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;mysql&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;service&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;vuln&amp;#34;&lt;/span>]
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">os&lt;/span>: [&lt;span style="color:#ae81ff">ubuntu-latest]&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">${{ matrix.os }}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout Code&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9&lt;/span> &lt;span style="color:#75715e"># v3.5.3&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Install Go&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32&lt;/span> &lt;span style="color:#75715e"># v5.0.2&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">with&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">go-version-file&lt;/span>: &lt;span style="color:#e6db74">&amp;#39;go.mod&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Run Go Tests&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: &lt;span style="color:#ae81ff">CI_TEST_PKG=${{ matrix.suite }} make test-go&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above workflow runs our test suites in parallel, speeding up our overall CI cycle time.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../analyze-go-build/" >analyzing Go build times&lt;/a>.&lt;/p>
-&lt;p>In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" >the state of fuzz testing in Go&lt;/a>.&lt;/p>
-&lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite">&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor">&lt;/a>Watch how to break apart a large Go test suite
-&lt;/h2>&lt;div class="video-wrapper">
+&gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test-go&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;strategy&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;matrix&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;suite&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;fast&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;fleetctl&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;main&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;service&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;vuln&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;os&lt;/span&gt;: [&lt;span style="color:#ae81ff"&gt;ubuntu-latest]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ matrix.os }}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout Code&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9&lt;/span&gt; &lt;span style="color:#75715e"&gt;# v3.5.3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Install Go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32&lt;/span&gt; &lt;span style="color:#75715e"&gt;# v5.0.2&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;go-version-file&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;go.mod&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Run Go Tests&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;CI_TEST_PKG=${{ matrix.suite }} make test-go&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above workflow runs our test suites in parallel, speeding up our overall CI cycle time.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;p&gt;Recently, we covered &lt;a class="link" href="../analyze-go-build/" &gt;analyzing Go build times&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" &gt;the state of fuzz testing in Go&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite"&gt;&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Watch how to break apart a large Go test suite
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/AFVlbf5LZwc"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" />&lt;ul>
-&lt;li>&lt;a class="link" href="#accurately-measuring-test-execution-time" >Accurately measuring test execution time&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="why-measure-test-execution-time">&lt;a href="#why-measure-test-execution-time" class="header-anchor">&lt;/a>Why measure test execution time?
-&lt;/h2>&lt;p>By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster feedback, which leads to quicker iterations and better code quality.&lt;/p>
-&lt;p>When you run tests, you want to know how long they take to execute. This information can help you optimize your test suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve their performance.&lt;/p>
-&lt;h2 id="problems-with-current-measurement-tools">&lt;a href="#problems-with-current-measurement-tools" class="header-anchor">&lt;/a>Problems with current measurement tools
-&lt;/h2>&lt;p>We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p>
-&lt;p>For example, running the &lt;code>gotestsum tool slowest&lt;/code> command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
->gotestsum&lt;/a> tool gave us the following output for our test suite:&lt;/p>
-&lt;pre tabindex="0">&lt;code>github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#accurately-measuring-test-execution-time" &gt;Accurately measuring test execution time&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="why-measure-test-execution-time"&gt;&lt;a href="#why-measure-test-execution-time" class="header-anchor"&gt;&lt;/a&gt;Why measure test execution time?
+&lt;/h2&gt;&lt;p&gt;By speeding up your test suite, you&amp;rsquo;re improving developer experience and productivity. Faster tests mean faster feedback, which leads to quicker iterations and better code quality.&lt;/p&gt;
+&lt;p&gt;When you run tests, you want to know how long they take to execute. This information can help you optimize your test suite and make it run faster. By measuring the execution time of your tests, you can identify slow tests and improve their performance.&lt;/p&gt;
+&lt;h2 id="problems-with-current-measurement-tools"&gt;&lt;a href="#problems-with-current-measurement-tools" class="header-anchor"&gt;&lt;/a&gt;Problems with current measurement tools
+&lt;/h2&gt;&lt;p&gt;We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p&gt;
+&lt;p&gt;For example, running the &lt;code&gt;gotestsum tool slowest&lt;/code&gt; command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
+&gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestPolicies 3m31s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestActivity 2m16.67s
@@ -143,91 +143,91 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504 1m35.73s
 github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/recent_vulns 1m34.87s
 ...
-&lt;/code>&lt;/pre>&lt;p>The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p>
-&lt;p>The second thing to notice is that our tests contain many subtests. The &lt;code>TestMDMApple&lt;/code> test contains over 40 subtests. We want to know the execution time of each subtest, not just the total time for the test.&lt;/p>
-&lt;p>The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the test suite.&lt;/p>
-&lt;h2 id="understanding-parallelism-in-go-tests">&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor">&lt;/a>Understanding parallelism in Go tests
-&lt;/h2>&lt;p>Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
-alt="Sequence diagram of a go test run with two packages, two tests, and two subtests.">
-&lt;/figure>
-&lt;p>When you run &lt;code>go test&lt;/code>, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code>-p&lt;/code> flag, which defaults to &lt;code>GOMAXPROCS&lt;/code>, the number of CPUs on your machine.&lt;/p>
-&lt;p>Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code>t.Parallel()&lt;/code> in your test functions. This behavior is controlled by the &lt;code>-parallel&lt;/code> flag, which also defaults to &lt;code>GOMAXPROCS&lt;/code>. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p>
-&lt;p>Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code>t.Parallel()&lt;/code> in your subtest functions.&lt;/p>
-&lt;h2 id="accurately-measuring-test-execution-time">&lt;a href="#accurately-measuring-test-execution-time" class="header-anchor">&lt;/a>Accurately measuring test execution time
-&lt;/h2>&lt;p>To measure the execution time of your tests, we must use the &lt;code>-json&lt;/code> flag with the &lt;code>go test&lt;/code> command. This flag outputs test results in JSON format, which we can parse and analyze.&lt;/p>
-&lt;p>The &lt;code>Action&lt;/code> field in the JSON output shows the start and end times of each test and subtest.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969606869Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.96984165Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969928132Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pause&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.969983777Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;run&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.970052987Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pause&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.970090377Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cont&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:51.973464469Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;cont&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015505184Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0.04&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015523238Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0.04&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:22:52.015527907Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;pass&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestCPEDB&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Elapsed&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">0&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p>
-&lt;p>When tests run in parallel, we typically see the &lt;code>pause&lt;/code> and &lt;code>cont&lt;/code> actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p>
-&lt;p>We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> that does these calculations.&lt;/p>
-&lt;h2 id="accurate-test-execution-time-measurement-in-practice">&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor">&lt;/a>Accurate test execution time measurement in practice
-&lt;/h2>&lt;p>By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p>
-&lt;pre tabindex="0">&lt;code>WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The first thing to notice is that the numbers don&amp;rsquo;t add up. Our test suite takes around 14 minutes to run, but the times in the report add up to more than 14 minutes. This discrepancy makes it hard to identify the slowest tests.&lt;/p&gt;
+&lt;p&gt;The second thing to notice is that our tests contain many subtests. The &lt;code&gt;TestMDMApple&lt;/code&gt; test contains over 40 subtests. We want to know the execution time of each subtest, not just the total time for the test.&lt;/p&gt;
+&lt;p&gt;The third thing to notice is that the output does not provide any information regarding parallelism. We want to know if our tests run in parallel and how many run concurrently. We want to run tests in parallel when possible to speed up the test suite.&lt;/p&gt;
+&lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
+&lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
+alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+&lt;/figure&gt;
+&lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
+&lt;p&gt;Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your test functions. This behavior is controlled by the &lt;code&gt;-parallel&lt;/code&gt; flag, which also defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p&gt;
+&lt;p&gt;Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your subtest functions.&lt;/p&gt;
+&lt;h2 id="accurately-measuring-test-execution-time"&gt;&lt;a href="#accurately-measuring-test-execution-time" class="header-anchor"&gt;&lt;/a&gt;Accurately measuring test execution time
+&lt;/h2&gt;&lt;p&gt;To measure the execution time of your tests, we must use the &lt;code&gt;-json&lt;/code&gt; flag with the &lt;code&gt;go test&lt;/code&gt; command. This flag outputs test results in JSON format, which we can parse and analyze.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;Action&lt;/code&gt; field in the JSON output shows the start and end times of each test and subtest.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.969606869Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;run&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.96984165Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;run&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.969928132Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;pause&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.969983777Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;run&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.970052987Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;pause&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.970090377Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;cont&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:51.973464469Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;cont&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:52.015505184Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test1&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Elapsed&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:52.015523238Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB/test2&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Elapsed&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0.04&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:22:52.015527907Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/cpe&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestCPEDB&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Elapsed&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p&gt;
+&lt;p&gt;When tests run in parallel, we typically see the &lt;code&gt;pause&lt;/code&gt; and &lt;code&gt;cont&lt;/code&gt; actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p&gt;
+&lt;p&gt;We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+&gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
+&lt;h2 id="accurate-test-execution-time-measurement-in-practice"&gt;&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor"&gt;&lt;/a&gt;Accurate test execution time measurement in practice
+&lt;/h2&gt;&lt;p&gt;By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+&gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
 github.com/fleetdm/fleet/v4/server/cron TestEventForDifferentHost: 7.853s (total: 36.158s parallel: 4)
@@ -244,144 +244,144 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240730171504: 5.517s (total: 1m35.74s parallel: 17)
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240726100517: 5.418s (total: 1m33.987s parallel: 17)
 ...
-&lt;/code>&lt;/pre>&lt;p>For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this test from the suite.&lt;/p>
-&lt;p>The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the times in the report add up to around 14 minutes.&lt;/p>
-&lt;p>The second thing to notice is that we now have the execution time of each subtest. This information is crucial for identifying slow tests and improving their performance.&lt;/p>
-&lt;p>The third thing to notice is that we now have information about parallelism. We can see how many tests are running concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that this test is a bottleneck and should parallelized.&lt;/p>
-&lt;p>The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing package. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Time&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;2024-08-26T19:23:17.8084601Z&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Action&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;output&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Package&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;github.com/fleetdm/fleet/v4/cmd/fleetctl&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;TestGenerateMDMApple/CSR_API_call_fails&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;Output&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;requesting APNs CSR: GET /api/latest/fleet/mdm/apple/request_csr received status 502 Bad Gateway: FleetDM CSR request failed: bad request=== RUN TestGenerateMDMApple/successful_run\n&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="goteststats-on-github">&lt;a href="#goteststats-on-github" class="header-anchor">&lt;/a>&lt;code>goteststats&lt;/code> on GitHub
-&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
->goteststats&lt;/a> is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" >optimizing the performance of Go applications&lt;/a> and &lt;a class="link" href="../analyze-go-build/" >analyzing Go build times&lt;/a>.&lt;/li>
-&lt;li>And &lt;a class="link" href="../readable-code/" >how to measure and fix unreadable code&lt;/a>.&lt;/li>
-&lt;li>We also explored &lt;a class="link" href="../fuzz-testing-with-go" >fuzz testing with Go&lt;/a>.&lt;/li>
-&lt;li>In addition, we showed &lt;a class="link" href="../exe-installer" >how to create an EXE installer for a Go program&lt;/a>.&lt;/li>
-&lt;li>We also published an article on &lt;a class="link" href="../go-modules-and-packages" >using Go modules and packages&lt;/a>.&lt;/li>
-&lt;li>And we wrote about &lt;a class="link" href="../track-engineering-metrics/" >automatically tracking engineering metrics with Go&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately">&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor">&lt;/a>Watch how to measure the execution time of Go tests accurately
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;For a given test, we provide the adjusted time, the total time, and the average number of tests running concurrently with this test. The adjusted time is the time the test took to execute, which is also the time saved if we removed this test from the suite.&lt;/p&gt;
+&lt;p&gt;The first thing to notice is that the numbers add up. The total time for the test suite is around 14 minutes, and the times in the report add up to around 14 minutes.&lt;/p&gt;
+&lt;p&gt;The second thing to notice is that we now have the execution time of each subtest. This information is crucial for identifying slow tests and improving their performance.&lt;/p&gt;
+&lt;p&gt;The third thing to notice is that we now have information about parallelism. We can see how many tests are running concurrently and how many tests are running in parallel. If we see a test with a low parallelism number, we know that this test is a bottleneck and should parallelized.&lt;/p&gt;
+&lt;p&gt;The WARNING message indicates that the JSON output did not contain the start time of the test. This issue can happen if the console output of the code under test does not include a new line and gets mixed with the output of Go&amp;rsquo;s testing package. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Time&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-08-26T19:23:17.8084601Z&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Action&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;output&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Package&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/fleetdm/fleet/v4/cmd/fleetctl&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;TestGenerateMDMApple/CSR_API_call_fails&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;Output&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;requesting APNs CSR: GET /api/latest/fleet/mdm/apple/request_csr received status 502 Bad Gateway: FleetDM CSR request failed: bad request=== RUN TestGenerateMDMApple/successful_run\n&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="goteststats-on-github"&gt;&lt;a href="#goteststats-on-github" class="header-anchor"&gt;&lt;/a&gt;&lt;code&gt;goteststats&lt;/code&gt; on GitHub
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
+&gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" &gt;optimizing the performance of Go applications&lt;/a&gt; and &lt;a class="link" href="../analyze-go-build/" &gt;analyzing Go build times&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;And &lt;a class="link" href="../readable-code/" &gt;how to measure and fix unreadable code&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;We also explored &lt;a class="link" href="../fuzz-testing-with-go" &gt;fuzz testing with Go&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In addition, we showed &lt;a class="link" href="../exe-installer" &gt;how to create an EXE installer for a Go program&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;We also published an article on &lt;a class="link" href="../go-modules-and-packages" &gt;using Go modules and packages&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;And we wrote about &lt;a class="link" href="../track-engineering-metrics/" &gt;automatically tracking engineering metrics with Go&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately"&gt;&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to measure the execution time of Go tests accurately
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/caTDvS5vCjA"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" />&lt;ul>
-&lt;li>&lt;a class="link" href="#add-jest-to-the-project" >Add Jest testing framework&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#write-a-unit-test" >Write a unit test&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#review-unit-test-coverage" >Review unit test coverage&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>This article is part of our &lt;a class="link" href="../chrome-extension" >series on building a Chrome extension&lt;/a>.&lt;/p>
-&lt;h2 id="why-add-unit-tests">&lt;a href="#why-add-unit-tests" class="header-anchor">&lt;/a>Why add unit tests?
-&lt;/h2>&lt;p>Unit tests help us catch bugs early, ensure our extension continues to work as expected in different scenarios, and make
-it easier to refactor our code. In this article, we will add unit tests to our Chrome extension.&lt;/p>
-&lt;h2 id="add-jest-to-the-project">&lt;a href="#add-jest-to-the-project" class="header-anchor">&lt;/a>Add Jest to the project
-&lt;/h2>&lt;p>&lt;a class="link" href="https://jestjs.io/" target="_blank" rel="noopener"
->Jest&lt;/a> is a popular JavaScript testing framework. We will use Jest to write and run unit tests for
-our Chrome extension.&lt;/p>
-&lt;p>To install Jest, run:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev jest jest-environment-jsdom ts-jest @types/jest
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;ul>
-&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/jest" target="_blank" rel="noopener"
->jest&lt;/a> is the testing framework&lt;/li>
-&lt;li>&lt;code>jest-environment-jsdom&lt;/code> simulates a browser environment for Jest tests&lt;/li>
-&lt;li>&lt;a class="link" href="https://www.npmjs.com/package/ts-jest" target="_blank" rel="noopener"
->ts-jest&lt;/a> allows Jest to work with TypeScript&lt;/li>
-&lt;li>&lt;code>@types/jest&lt;/code> provides TypeScript definitions for Jest&lt;/li>
-&lt;/ul>
-&lt;h2 id="configure-jest">&lt;a href="#configure-jest" class="header-anchor">&lt;/a>Configure Jest
-&lt;/h2>&lt;p>Create a &lt;code>jest.config.ts&lt;/code> file in the root of the project with the following content:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#66d9ef">type&lt;/span> { &lt;span style="color:#a6e22e">JestConfigWithTsJest&lt;/span> } &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;ts-jest&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>: &lt;span style="color:#66d9ef">JestConfigWithTsJest&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">setupFiles&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;./__mocks__/chrome.ts&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">testEnvironment&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#e6db74">&amp;#34;jsdom&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">transform&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;^.+.ts$&amp;#34;&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;ts-jest&amp;#34;&lt;/span>, {}],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>setupFiles&lt;/code> option loads a mock for the Chrome API. In the next step, we will create this mock.&lt;/p>
-&lt;p>The &lt;code>testEnvironment&lt;/code> option sets a browser testing environment by default. We can override the environment at the top
-of each test file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">/**
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> * @jest-environment jsdom
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"> */&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>transform&lt;/code> option specifies to process TypeScript test files with &lt;code>ts-jest&lt;/code>.&lt;/p>
-&lt;h2 id="create-a-mock-for-the-chrome-api">&lt;a href="#create-a-mock-for-the-chrome-api" class="header-anchor">&lt;/a>Create a mock for the Chrome API
-&lt;/h2>&lt;p>Our extension code relies on the Chrome API, which is unavailable in our unit test environment. We will create a mock
-for the Chrome API to simulate its behavior in our tests.&lt;/p>
-&lt;p>A mock is a fake implementation of a function or object that allows us to test our code in isolation. Mocks are helpful
-for testing code that depends on external services or APIs.&lt;/p>
-&lt;p>Create a &lt;code>__mocks__&lt;/code> folder in the root of the project. The &lt;code>__mocks__&lt;/code> name is a Jest convention for mock files. In
-that folder, add a &lt;code>chrome.ts&lt;/code> file with the following content:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- disable ESLint check for the next line
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// @ts-nocheck -- this TS comment turns off TypeScript type checking for this file because we do not
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// mock the entire Chrome API, but only the parts we need
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>&lt;span style="color:#66d9ef">global&lt;/span>.&lt;span style="color:#a6e22e">chrome&lt;/span> &lt;span style="color:#f92672">=&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">runtime&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onInstalled&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onMessage&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">onStartup&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">addListener&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sendMessage&lt;/span>: &lt;span style="color:#66d9ef">jest.fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">storage&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">sync&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">get&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">jest&lt;/span>.&lt;span style="color:#a6e22e">fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">set&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#a6e22e">jest&lt;/span>.&lt;span style="color:#a6e22e">fn&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The empty &lt;code>jest.fn()&lt;/code> implementations can be replaced during testing with custom behavior using Jest&amp;rsquo;s mocking functions
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#add-jest-to-the-project" &gt;Add Jest testing framework&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#write-a-unit-test" &gt;Write a unit test&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#review-unit-test-coverage" &gt;Review unit test coverage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This article is part of our &lt;a class="link" href="../chrome-extension" &gt;series on building a Chrome extension&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="why-add-unit-tests"&gt;&lt;a href="#why-add-unit-tests" class="header-anchor"&gt;&lt;/a&gt;Why add unit tests?
+&lt;/h2&gt;&lt;p&gt;Unit tests help us catch bugs early, ensure our extension continues to work as expected in different scenarios, and make
+it easier to refactor our code. In this article, we will add unit tests to our Chrome extension.&lt;/p&gt;
+&lt;h2 id="add-jest-to-the-project"&gt;&lt;a href="#add-jest-to-the-project" class="header-anchor"&gt;&lt;/a&gt;Add Jest to the project
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://jestjs.io/" target="_blank" rel="noopener"
+&gt;Jest&lt;/a&gt; is a popular JavaScript testing framework. We will use Jest to write and run unit tests for
+our Chrome extension.&lt;/p&gt;
+&lt;p&gt;To install Jest, run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev jest jest-environment-jsdom ts-jest @types/jest
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/jest" target="_blank" rel="noopener"
+&gt;jest&lt;/a&gt; is the testing framework&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;jest-environment-jsdom&lt;/code&gt; simulates a browser environment for Jest tests&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/ts-jest" target="_blank" rel="noopener"
+&gt;ts-jest&lt;/a&gt; allows Jest to work with TypeScript&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@types/jest&lt;/code&gt; provides TypeScript definitions for Jest&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="configure-jest"&gt;&lt;a href="#configure-jest" class="header-anchor"&gt;&lt;/a&gt;Configure Jest
+&lt;/h2&gt;&lt;p&gt;Create a &lt;code&gt;jest.config.ts&lt;/code&gt; file in the root of the project with the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;JestConfigWithTsJest&lt;/span&gt; } &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;ts-jest&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;JestConfigWithTsJest&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;setupFiles&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;./__mocks__/chrome.ts&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;testEnvironment&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;jsdom&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;transform&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;^.+.ts$&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;ts-jest&amp;#34;&lt;/span&gt;, {}],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;export&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;default&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;setupFiles&lt;/code&gt; option loads a mock for the Chrome API. In the next step, we will create this mock.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;testEnvironment&lt;/code&gt; option sets a browser testing environment by default. We can override the environment at the top
+of each test file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;/**
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; * @jest-environment jsdom
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt; */&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;transform&lt;/code&gt; option specifies to process TypeScript test files with &lt;code&gt;ts-jest&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="create-a-mock-for-the-chrome-api"&gt;&lt;a href="#create-a-mock-for-the-chrome-api" class="header-anchor"&gt;&lt;/a&gt;Create a mock for the Chrome API
+&lt;/h2&gt;&lt;p&gt;Our extension code relies on the Chrome API, which is unavailable in our unit test environment. We will create a mock
+for the Chrome API to simulate its behavior in our tests.&lt;/p&gt;
+&lt;p&gt;A mock is a fake implementation of a function or object that allows us to test our code in isolation. Mocks are helpful
+for testing code that depends on external services or APIs.&lt;/p&gt;
+&lt;p&gt;Create a &lt;code&gt;__mocks__&lt;/code&gt; folder in the root of the project. The &lt;code&gt;__mocks__&lt;/code&gt; name is a Jest convention for mock files. In
+that folder, add a &lt;code&gt;chrome.ts&lt;/code&gt; file with the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- disable ESLint check for the next line
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// @ts-nocheck -- this TS comment turns off TypeScript type checking for this file because we do not
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// mock the entire Chrome API, but only the parts we need
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;global&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;chrome&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;runtime&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;onInstalled&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;addListener&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;jest.fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;onMessage&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;addListener&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;jest.fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;onStartup&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;addListener&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;jest.fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;sendMessage&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;jest.fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;storage&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;sync&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;get&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;jest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;set&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;jest&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;fn&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The empty &lt;code&gt;jest.fn()&lt;/code&gt; implementations can be replaced during testing with custom behavior using Jest&amp;rsquo;s mocking functions
 using &lt;a class="link" href="https://jestjs.io/docs/jest-object#jestspyonobject-methodname" target="_blank" rel="noopener"
->jest.spyOn&lt;/a>.&lt;/p>
-&lt;h2 id="write-a-unit-test">&lt;a href="#write-a-unit-test" class="header-anchor">&lt;/a>Write a unit test
-&lt;/h2>&lt;p>We will test the &lt;code>content.ts&lt;/code> file in our first unit test. This file contains the logic for the content script that runs
-on web pages when the extension is active. The content script blurs a page element that contains a user-defined keyword.&lt;/p>
-&lt;p>Create a &lt;code>content.test.ts&lt;/code> file in the &lt;code>src&lt;/code> folder with the following content:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-typescript" data-lang="typescript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> { &lt;span style="color:#a6e22e">blurFilter&lt;/span>, &lt;span style="color:#a6e22e">observe&lt;/span>, &lt;span style="color:#a6e22e">config&lt;/span> } &lt;span style="color:#66d9ef">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;./content&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">describe&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;blur&amp;#34;&lt;/span>, () &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">test&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;blur a secret&amp;#34;&lt;/span>, () &lt;span style="color:#f92672">=&amp;gt;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Define the document (web page) that we will test against
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> document.&lt;span style="color:#a6e22e">body&lt;/span>.&lt;span style="color:#a6e22e">innerHTML&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">`
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;lt;div id=&amp;#34;testDiv&amp;#34;&amp;gt;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;#34;My secret&amp;#34;
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> &amp;lt;/div&amp;gt;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Set value to blur
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>.&lt;span style="color:#a6e22e">item&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#e6db74">&amp;#34;secret&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Start observing the document.
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#a6e22e">observe&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Make sure the element is blurred as expected
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span> &lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">testDiv&lt;/span> &lt;span style="color:#f92672">=&lt;/span> document.&lt;span style="color:#a6e22e">getElementById&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testDiv&amp;#34;&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#a6e22e">HTMLInputElement&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">expect&lt;/span>(&lt;span style="color:#a6e22e">testDiv&lt;/span>).&lt;span style="color:#a6e22e">toBeDefined&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">expect&lt;/span>(&lt;span style="color:#a6e22e">testDiv&lt;/span>.&lt;span style="color:#a6e22e">style&lt;/span>.&lt;span style="color:#a6e22e">filter&lt;/span>).&lt;span style="color:#a6e22e">toBe&lt;/span>(&lt;span style="color:#a6e22e">blurFilter&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> })
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>})
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In the above test, the Jest functions &lt;code>describe&lt;/code> and &lt;code>test&lt;/code> define a test suite and a test case, respectively. The
-&lt;code>expect&lt;/code> function checks whether the test results match the expected values.&lt;/p>
-&lt;h2 id="run-the-unit-tests">&lt;a href="#run-the-unit-tests" class="header-anchor">&lt;/a>Run the unit tests
-&lt;/h2>&lt;p>The Jest unit test can be run using the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx jest
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result of the test should look like:&lt;/p>
-&lt;pre tabindex="0">&lt;code> console.debug
+&gt;jest.spyOn&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="write-a-unit-test"&gt;&lt;a href="#write-a-unit-test" class="header-anchor"&gt;&lt;/a&gt;Write a unit test
+&lt;/h2&gt;&lt;p&gt;We will test the &lt;code&gt;content.ts&lt;/code&gt; file in our first unit test. This file contains the logic for the content script that runs
+on web pages when the extension is active. The content script blurs a page element that contains a user-defined keyword.&lt;/p&gt;
+&lt;p&gt;Create a &lt;code&gt;content.test.ts&lt;/code&gt; file in the &lt;code&gt;src&lt;/code&gt; folder with the following content:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;blurFilter&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;observe&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt; } &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;./content&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;describe&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;blur&amp;#34;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;test&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;blur a secret&amp;#34;&lt;/span&gt;, () &lt;span style="color:#f92672"&gt;=&amp;gt;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Define the document (web page) that we will test against
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; document.&lt;span style="color:#a6e22e"&gt;body&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;innerHTML&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;lt;div id=&amp;#34;testDiv&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;#34;My secret&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; &amp;lt;/div&amp;gt;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Set value to blur
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;item&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;secret&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Start observing the document.
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;observe&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Make sure the element is blurred as expected
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;testDiv&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; document.&lt;span style="color:#a6e22e"&gt;getElementById&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;testDiv&amp;#34;&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;HTMLInputElement&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;expect&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;testDiv&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;toBeDefined&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;expect&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;testDiv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;style&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;filter&lt;/span&gt;).&lt;span style="color:#a6e22e"&gt;toBe&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;blurFilter&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; })
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;})
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In the above test, the Jest functions &lt;code&gt;describe&lt;/code&gt; and &lt;code&gt;test&lt;/code&gt; define a test suite and a test case, respectively. The
+&lt;code&gt;expect&lt;/code&gt; function checks whether the test results match the expected values.&lt;/p&gt;
+&lt;h2 id="run-the-unit-tests"&gt;&lt;a href="#run-the-unit-tests" class="header-anchor"&gt;&lt;/a&gt;Run the unit tests
+&lt;/h2&gt;&lt;p&gt;The Jest unit test can be run using the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx jest
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of the test should look like:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt; console.debug
 blurred id:testDiv class: tag:DIV text:
 &amp;#34;My secret&amp;#34;
 at blurElement (src/content.ts:36:11)
@@ -397,32 +397,32 @@ Tests: 1 passed, 1 total
 Snapshots: 0 total
 Time: 1.149 s
 Ran all test suites.
-&lt;/code>&lt;/pre>&lt;p>Add the following script to the &lt;code>package.json&lt;/code> file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;test&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;jest&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now you can run the tests using the &lt;code>npm test&lt;/code> or &lt;code>npm run test&lt;/code>.&lt;/p>
-&lt;h2 id="review-unit-test-coverage">&lt;a href="#review-unit-test-coverage" class="header-anchor">&lt;/a>Review unit test coverage
-&lt;/h2>&lt;p>Code coverage measures how much of the code is tested by the unit tests. A high percentage indicates that most of the
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Add the following script to the &lt;code&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;test&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;jest&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now you can run the tests using the &lt;code&gt;npm test&lt;/code&gt; or &lt;code&gt;npm run test&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="review-unit-test-coverage"&gt;&lt;a href="#review-unit-test-coverage" class="header-anchor"&gt;&lt;/a&gt;Review unit test coverage
+&lt;/h2&gt;&lt;p&gt;Code coverage measures how much of the code is tested by the unit tests. A high percentage indicates that most of the
 code is tested and less likely to contain bugs. Code coverage is an important metric for assessing the quality of the
-code. A common target for code coverage is 80% or higher.&lt;/p>
-&lt;p>Jest can generate a code coverage report to show which parts of the code are covered by the unit tests. To create a
-coverage report, add the &lt;code>--coverage&lt;/code> flag to the Jest command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx jest --coverage
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The terminal output will include the code coverage summary:&lt;/p>
-&lt;pre tabindex="0">&lt;code>------------|---------|----------|---------|---------|--------------------------
+code. A common target for code coverage is 80% or higher.&lt;/p&gt;
+&lt;p&gt;Jest can generate a code coverage report to show which parts of the code are covered by the unit tests. To create a
+coverage report, add the &lt;code&gt;--coverage&lt;/code&gt; flag to the Jest command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx jest --coverage
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The terminal output will include the code coverage summary:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;------------|---------|----------|---------|---------|--------------------------
 File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ------------|---------|----------|---------|---------|--------------------------
 All files | 45.23 | 48.57 | 42.85 | 45.23 |
 content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
 ------------|---------|----------|---------|---------|--------------------------
-&lt;/code>&lt;/pre>&lt;p>The full report is available in the &lt;code>coverage&lt;/code> folder. Open the &lt;code>coverage/lcov-report/index.html&lt;/code> file in a browser to
-view the detailed coverage report.&lt;/p>
-&lt;p>Note that the code coverage report only includes the files in the test run. If you want to include all files in the
-coverage report, we can add the &lt;code>collectCoverageFrom&lt;/code> option to the &lt;code>jest.config.ts&lt;/code> Jest configuration file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">collectCoverageFrom&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;src/**/*.ts&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, the report shows a complete picture:&lt;/p>
-&lt;pre tabindex="0">&lt;code>---------------|---------|----------|---------|---------|--------------------------
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The full report is available in the &lt;code&gt;coverage&lt;/code&gt; folder. Open the &lt;code&gt;coverage/lcov-report/index.html&lt;/code&gt; file in a browser to
+view the detailed coverage report.&lt;/p&gt;
+&lt;p&gt;Note that the code coverage report only includes the files in the test run. If you want to include all files in the
+coverage report, we can add the &lt;code&gt;collectCoverageFrom&lt;/code&gt; option to the &lt;code&gt;jest.config.ts&lt;/code&gt; Jest configuration file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;collectCoverageFrom&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;src/**/*.ts&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, the report shows a complete picture:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;---------------|---------|----------|---------|---------|--------------------------
 File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ---------------|---------|----------|---------|---------|--------------------------
 All files | 16.96 | 30.9 | 10.71 | 16.96 |
@@ -432,133 +432,133 @@ content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
 options.ts | 0 | 0 | 0 | 0 | 2-31
 popup.ts | 0 | 0 | 0 | 0 | 1-86
 ---------------|---------|----------|---------|---------|--------------------------
-&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
-alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files">&lt;figcaption>
-&lt;h4>HTML coverage report&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="adding-unit-tests-to-github-actions">&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor">&lt;/a>Adding unit tests to GitHub Actions
-&lt;/h2>&lt;p>To make sure that our unit tests are run automatically on every push to the repository, we can add them to a GitHub
-Actions workflow. In the &lt;a class="link" href="../linting-and-formatting-typescript" >Linting and formatting TypeScript&lt;/a> article, we added
-ESLint to GitHub Actions. We can add a step to run the Jest tests in the same workflow.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Test&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run test&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="unit-test-code-on-github">&lt;a href="#unit-test-code-on-github" class="header-anchor">&lt;/a>Unit test code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests" target="_blank" rel="noopener"
->https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests&lt;/a>&lt;/p>
-&lt;h2 id="other-articles-on-unit-testing">&lt;a href="#other-articles-on-unit-testing" class="header-anchor">&lt;/a>Other articles on Unit Testing
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../fuzz-testing-with-go" >Explore fuzz testing with Go&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-we-set-up-unit-testing-for-our-chrome-extension">&lt;a href="#watch-how-we-set-up-unit-testing-for-our-chrome-extension" class="header-anchor">&lt;/a>Watch how we set up unit testing for our Chrome extension
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
+alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
+&lt;h4&gt;HTML coverage report&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="adding-unit-tests-to-github-actions"&gt;&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor"&gt;&lt;/a&gt;Adding unit tests to GitHub Actions
+&lt;/h2&gt;&lt;p&gt;To make sure that our unit tests are run automatically on every push to the repository, we can add them to a GitHub
+Actions workflow. In the &lt;a class="link" href="../linting-and-formatting-typescript" &gt;Linting and formatting TypeScript&lt;/a&gt; article, we added
+ESLint to GitHub Actions. We can add a step to run the Jest tests in the same workflow.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm run test&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="unit-test-code-on-github"&gt;&lt;a href="#unit-test-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Unit test code on GitHub
+&lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests" target="_blank" rel="noopener"
+&gt;https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="other-articles-on-unit-testing"&gt;&lt;a href="#other-articles-on-unit-testing" class="header-anchor"&gt;&lt;/a&gt;Other articles on Unit Testing
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../fuzz-testing-with-go" &gt;Explore fuzz testing with Go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-we-set-up-unit-testing-for-our-chrome-extension"&gt;&lt;a href="#watch-how-we-set-up-unit-testing-for-our-chrome-extension" class="header-anchor"&gt;&lt;/a&gt;Watch how we set up unit testing for our Chrome extension
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/EA11fnr8x8g"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Fuzz testing in Go</title><link>https://victoronsoftware.com/posts/fuzz-testing-with-go/</link><pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fuzz-testing-with-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fuzz-testing-with-go/fuzz.png" alt="Featured image of post Fuzz testing in Go" />&lt;p>Fuzz testing is a software automated testing technique where random inputs are provided to the software under test. My
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Fuzz testing in Go</title><link>https://victoronsoftware.com/posts/fuzz-testing-with-go/</link><pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fuzz-testing-with-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fuzz-testing-with-go/fuzz.png" alt="Featured image of post Fuzz testing in Go" /&gt;&lt;p&gt;Fuzz testing is a software automated testing technique where random inputs are provided to the software under test. My
 background is in hardware verification, which uses sophisticated methodologies for pseudorandom testing, so I wanted to
-see what the Go library had to offer out of the box.&lt;/p>
-&lt;p>A &lt;a class="link" href="https://go.dev/doc/security/fuzz" target="_blank" rel="noopener"
->Go fuzz test&lt;/a> can run as:&lt;/p>
-&lt;ul>
-&lt;li>a normal unit test&lt;/li>
-&lt;li>a test with fuzzing&lt;/li>
-&lt;/ul>
-&lt;p>A fuzz test is written similarly to a normal unit test in a &lt;strong>*_test.go&lt;/strong> file, with the following changes. It must
-have a &lt;strong>Fuzz&lt;/strong> prefix and use the &lt;strong>testing.F&lt;/strong> struct instead of the usual &lt;strong>testing.T&lt;/strong> struct.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">FuzzSample&lt;/span>(&lt;span style="color:#a6e22e">f&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">F&lt;/span>) {
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here is a workflow for using fuzz testing. First, you create a fuzz test. Then, you run it with fuzzing to automatically
+see what the Go library had to offer out of the box.&lt;/p&gt;
+&lt;p&gt;A &lt;a class="link" href="https://go.dev/doc/security/fuzz" target="_blank" rel="noopener"
+&gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;a normal unit test&lt;/li&gt;
+&lt;li&gt;a test with fuzzing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A fuzz test is written similarly to a normal unit test in a &lt;strong&gt;*_test.go&lt;/strong&gt; file, with the following changes. It must
+have a &lt;strong&gt;Fuzz&lt;/strong&gt; prefix and use the &lt;strong&gt;testing.F&lt;/strong&gt; struct instead of the usual &lt;strong&gt;testing.T&lt;/strong&gt; struct.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;FuzzSample&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;F&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Here is a workflow for using fuzz testing. First, you create a fuzz test. Then, you run it with fuzzing to automatically
 find failing corner cases and make any fixes. Thirdly, you include the test and the corner cases in your continuous
-integration testing suite.&lt;/p>
-&lt;h2 id="create-a-fuzz-test">&lt;a href="#create-a-fuzz-test" class="header-anchor">&lt;/a>Create a fuzz test
-&lt;/h2>&lt;p>When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use
-before applying randomization. Add the seed corpus with the &lt;strong>Add&lt;/strong> method. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(&lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Num&lt;/span>, &lt;span style="color:#a6e22e">tc&lt;/span>.&lt;span style="color:#a6e22e">Name&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Add&lt;/span>(uint8(&lt;span style="color:#ae81ff">0&lt;/span>), &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The inputs to the &lt;strong>Add&lt;/strong> method indicate which types will be fuzzed, and these types must match the subsequent call to
-the &lt;strong>Fuzz&lt;/strong> method:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">f&lt;/span>.&lt;span style="color:#a6e22e">Fuzz&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">t&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">T&lt;/span>, &lt;span style="color:#a6e22e">num&lt;/span> &lt;span style="color:#66d9ef">uint8&lt;/span>, &lt;span style="color:#a6e22e">name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) {
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The fuzz test can randomize any number of inputs, as long as they are one of the supported types.&lt;/p>
-&lt;h2 id="run-the-test-with-fuzzing">&lt;a href="#run-the-test-with-fuzzing" class="header-anchor">&lt;/a>Run the test with fuzzing
-&lt;/h2>&lt;p>To run the test with fuzzing, use the &lt;strong>-fuzz&lt;/strong> switch, like:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>go test -fuzz FuzzSample
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The test will continuously run on all your CPUs until it fails, or you kill it:&lt;/p>
-&lt;pre tabindex="0">&lt;code>=== RUN FuzzSample
+integration testing suite.&lt;/p&gt;
+&lt;h2 id="create-a-fuzz-test"&gt;&lt;a href="#create-a-fuzz-test" class="header-anchor"&gt;&lt;/a&gt;Create a fuzz test
+&lt;/h2&gt;&lt;p&gt;When creating a fuzz test, you should provide a corpus of initial seed inputs. These are the inputs the test will use
+before applying randomization. Add the seed corpus with the &lt;strong&gt;Add&lt;/strong&gt; method. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Add&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tc&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Num&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;tc&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Add&lt;/span&gt;(uint8(&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;), &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The inputs to the &lt;strong&gt;Add&lt;/strong&gt; method indicate which types will be fuzzed, and these types must match the subsequent call to
+the &lt;strong&gt;Fuzz&lt;/strong&gt; method:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fuzz&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;t&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;num&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;uint8&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;name&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The fuzz test can randomize any number of inputs, as long as they are one of the supported types.&lt;/p&gt;
+&lt;h2 id="run-the-test-with-fuzzing"&gt;&lt;a href="#run-the-test-with-fuzzing" class="header-anchor"&gt;&lt;/a&gt;Run the test with fuzzing
+&lt;/h2&gt;&lt;p&gt;To run the test with fuzzing, use the &lt;strong&gt;-fuzz&lt;/strong&gt; switch, like:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go test -fuzz FuzzSample
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test will continuously run on all your CPUs until it fails, or you kill it:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;=== RUN FuzzSample
 fuzz: elapsed: 0s, gathering baseline coverage: 0/11 completed
 fuzz: elapsed: 0s, gathering baseline coverage: 11/11 completed, now fuzzing with 12 workers
 fuzz: elapsed: 3s, execs: 432199 (144036/sec), new interesting: 0 (total: 11)
 fuzz: elapsed: 6s, execs: 871147 (146328/sec), new interesting: 0 (total: 11)
-&lt;/code>&lt;/pre>&lt;p>A sample failure:&lt;/p>
-&lt;pre tabindex="0">&lt;code>failure while testing seed corpus entry: FuzzSample/49232526a5eabbdc
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;A sample failure:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;failure while testing seed corpus entry: FuzzSample/49232526a5eabbdc
 fuzz: elapsed: 1s, gathering baseline coverage: 10/11 completed
 --- FAIL: FuzzSample (1.03s)
 --- FAIL: FuzzSample (0.00s)
 fuzz_test.go:21: Found 0
-&lt;/code>&lt;/pre>&lt;p>The failures are automatically added to the seed corpus. The seed corpus includes the initial inputs that were added
-with the &lt;strong>Add&lt;/strong> method as well as any new fails. These new seed corpus files are automatically created in the
-&lt;strong>testdata/fuzz/Fuzz*&lt;/strong> directory. Sample contents of one such file:&lt;/p>
-&lt;pre tabindex="0">&lt;code>go test fuzz v1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The failures are automatically added to the seed corpus. The seed corpus includes the initial inputs that were added
+with the &lt;strong&gt;Add&lt;/strong&gt; method as well as any new fails. These new seed corpus files are automatically created in the
+&lt;strong&gt;testdata/fuzz/Fuzz*&lt;/strong&gt; directory. Sample contents of one such file:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;go test fuzz v1
 byte(&amp;#39;\x01&amp;#39;)
 string(&amp;#34;0a0000&amp;#34;)
-&lt;/code>&lt;/pre>&lt;p>Adding the failure to the seed corpus means that the failing case will always run when this test is run again as a unit
-test or with fuzzing.&lt;/p>
-&lt;p>Now, you must fix the failing test and continue the loop of fuzzing and fixing.&lt;/p>
-&lt;h2 id="include-the-test-in-continuous-integration">&lt;a href="#include-the-test-in-continuous-integration" class="header-anchor">&lt;/a>Include the test in continuous integration
-&lt;/h2>&lt;p>When checking in the test to your repository, you must either include the &lt;strong>testdata/fuzz/Fuzz*&lt;/strong> files or convert
-those files into individual &lt;strong>Add&lt;/strong> method calls in your test. Once the test is checked in, all the inputs in the seed
-corpus will run as part of the standard Go unit test flow.&lt;/p>
-&lt;h2 id="initial-impressions">&lt;a href="#initial-impressions" class="header-anchor">&lt;/a>Initial impressions
-&lt;/h2>&lt;p>Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
-documentation mentions the following about the function under test:&lt;/p>
-&lt;blockquote>
-&lt;p>This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p>&lt;/blockquote>
-&lt;p>I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p>
-&lt;h2 id="concerns-and-issues">&lt;a href="#concerns-and-issues" class="header-anchor">&lt;/a>Concerns and Issues
-&lt;/h2>&lt;p>Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Adding the failure to the seed corpus means that the failing case will always run when this test is run again as a unit
+test or with fuzzing.&lt;/p&gt;
+&lt;p&gt;Now, you must fix the failing test and continue the loop of fuzzing and fixing.&lt;/p&gt;
+&lt;h2 id="include-the-test-in-continuous-integration"&gt;&lt;a href="#include-the-test-in-continuous-integration" class="header-anchor"&gt;&lt;/a&gt;Include the test in continuous integration
+&lt;/h2&gt;&lt;p&gt;When checking in the test to your repository, you must either include the &lt;strong&gt;testdata/fuzz/Fuzz*&lt;/strong&gt; files or convert
+those files into individual &lt;strong&gt;Add&lt;/strong&gt; method calls in your test. Once the test is checked in, all the inputs in the seed
+corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
+&lt;h2 id="initial-impressions"&gt;&lt;a href="#initial-impressions" class="header-anchor"&gt;&lt;/a&gt;Initial impressions
+&lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
+documentation mentions the following about the function under test:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
+&lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
+&lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in
 features and usability. The types of functions, fast and deterministic, that fuzzing is intended for are generally not
 very interesting when testing real applications. They are good examples for students learning how to code. However, more
-interesting testing scenarios include:&lt;/p>
-&lt;ul>
-&lt;li>Functions accessing remote resources in parallel, such as APIs or databases&lt;/li>
-&lt;li>Functions with asynchronous code&lt;/li>
-&lt;/ul>
-&lt;p>Secondly, the fuzzing library does not provide a good way to guide the randomization of inputs and does not give
+interesting testing scenarios include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Functions accessing remote resources in parallel, such as APIs or databases&lt;/li&gt;
+&lt;li&gt;Functions with asynchronous code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Secondly, the fuzzing library does not provide a good way to guide the randomization of inputs and does not give
 feedback about the input state space already covered. It does provide line coverage information, but that doesn&amp;rsquo;t help
-for unknown corner cases.&lt;/p>
-&lt;p>If one of my inputs is intended to be a percentage, then I want most of the fuzzing to concentrate on the legal range of
+for unknown corner cases.&lt;/p&gt;
+&lt;p&gt;If one of my inputs is intended to be a percentage, then I want most of the fuzzing to concentrate on the legal range of
 0-100, as opposed to all numbers. This lack of constraints becomes a problem when adding additional inputs to the
 fuzzing function, as the available state space of inputs expands exponentially. If the state space of inputs is huge,
 there is no guarantee that fuzzing accomplished its goal of finding all corner cases, leaving the developer with a false
-sense of confidence in their code.&lt;/p>
-&lt;p>Lastly, the fuzz test is hard to maintain. The seed corpus is stored in files without any context regarding what corner
+sense of confidence in their code.&lt;/p&gt;
+&lt;p&gt;Lastly, the fuzz test is hard to maintain. The seed corpus is stored in files without any context regarding what corner
 case each seed is hitting. Software engineers unfamiliar with fuzz testing will find this extremely confusing. If the
 fuzz test needs to be extended in the future with additional inputs or different types, the old seed corpus will become
 useless. It will be worse than useless &amp;ndash; the test will not run, and the developer unfamiliar with fuzz testing will not
-have a clear idea why.&lt;/p>
-&lt;pre>&lt;code>fuzz_test.go:16: wrong number of values in corpus entry: 2, want 3
-&lt;/code>&lt;/pre>
-&lt;p>That said, understanding the fuzz testing limitation, I’m willing to try fuzz testing for more interesting test cases,
-such as database accesses. I will report my findings in a future post.&lt;/p>
-&lt;p>GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js">&lt;/script>&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="../optimizing-performance-of-go-app" >Benchmarking performance with Go&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../go-test-execution-time" >Measure Go test execution time&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../large-go-test-suite/" >Speed up Go CI tests by breaking them apart&lt;/a>.&lt;/li>
-&lt;li>&lt;a class="link" href="../add-unit-tests-to-chrome-extension" >Unit testing a Chrome Extension&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="go-fuzz-testing-video">&lt;a href="#go-fuzz-testing-video" class="header-anchor">&lt;/a>Go fuzz testing video
-&lt;/h2>&lt;div class="video-wrapper">
+have a clear idea why.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;fuzz_test.go:16: wrong number of values in corpus entry: 2, want 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;That said, understanding the fuzz testing limitation, I’m willing to try fuzz testing for more interesting test cases,
+such as database accesses. I will report my findings in a future post.&lt;/p&gt;
+&lt;p&gt;GitHub gist: &lt;script type="application/javascript" src="https://gist.github.com/getvictor/24baadcc9cf08e7d7a6028ad54ff2aba.js"&gt;&lt;/script&gt;&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../optimizing-performance-of-go-app" &gt;Benchmarking performance with Go&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../go-test-execution-time" &gt;Measure Go test execution time&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../large-go-test-suite/" &gt;Speed up Go CI tests by breaking them apart&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../add-unit-tests-to-chrome-extension" &gt;Unit testing a Chrome Extension&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="go-fuzz-testing-video"&gt;&lt;a href="#go-fuzz-testing-video" class="header-anchor"&gt;&lt;/a&gt;Go fuzz testing video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/4emTXow54F4"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

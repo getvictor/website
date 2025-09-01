@@ -1,158 +1,158 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SCEP on Victor on Software</title><link>https://victoronsoftware.com/tags/scep/</link><description>Recent content in SCEP on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 02 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/scep/index.xml" rel="self" type="application/rss+xml"/><item><title>How to test a Windows NDES SCEP server</title><link>https://victoronsoftware.com/posts/test-ndes-scep-server/</link><pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/test-ndes-scep-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/windows-security-headline.png" alt="Featured image of post How to test a Windows NDES SCEP server" />&lt;ul>
-&lt;li>&lt;a class="link" href="#test-ndes-using-powershell" >Test NDES using PowerShell&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#test-ndes-using-a-scep-client" >Test NDES using a SCEP client&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#test-ndes-using-apple-mdm-profile" >Test NDES using Apple MDM profile&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h1 id="what-is-a-windows-ndes-scep-server">&lt;a href="#what-is-a-windows-ndes-scep-server" class="header-anchor">&lt;/a>What is a Windows NDES SCEP server?
-&lt;/h1>&lt;p>&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc8894" target="_blank" rel="noopener"
->SCEP&lt;/a> (Simple Certificate Enrollment Protocol) is a protocol used to
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>SCEP on Victor on Software</title><link>https://victoronsoftware.com/tags/scep/</link><description>Recent content in SCEP on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 02 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/scep/index.xml" rel="self" type="application/rss+xml"/><item><title>How to test a Windows NDES SCEP server</title><link>https://victoronsoftware.com/posts/test-ndes-scep-server/</link><pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/test-ndes-scep-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/windows-security-headline.png" alt="Featured image of post How to test a Windows NDES SCEP server" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#test-ndes-using-powershell" &gt;Test NDES using PowerShell&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#test-ndes-using-a-scep-client" &gt;Test NDES using a SCEP client&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#test-ndes-using-apple-mdm-profile" &gt;Test NDES using Apple MDM profile&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="what-is-a-windows-ndes-scep-server"&gt;&lt;a href="#what-is-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;What is a Windows NDES SCEP server?
+&lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc8894" target="_blank" rel="noopener"
+&gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
 issue certificates with a Certificate Authority (CA) in a Public Key Infrastructure (PKI). It allows devices to request
 and receive certificates over a secure channel without user interaction. IT admins use SCEP for network devices, mobile
 devices, and other endpoints that need to authenticate themselves. The issued certificates can be used for various
 purposes, such as Wi-Fi authentication, VPN access, email encryption, etc. For example, a new mobile device can request
-a certificate from the SCEP server to authenticate on the corporate Wi-Fi network.&lt;/p>
-&lt;p>NDES (Network Device Enrollment Service) is a Microsoft implementation of the SCEP protocol. NDES is part of the Active
-Directory Certificate Services (AD CS) role in Windows Server.&lt;/p>
-&lt;h1 id="setting-up-a-windows-ndes-scep-server">&lt;a href="#setting-up-a-windows-ndes-scep-server" class="header-anchor">&lt;/a>Setting up a Windows NDES SCEP server
-&lt;/h1>&lt;p>Before testing your Windows NDES SCEP server, you must set it up. Numerous articles and guides cover the installation
+a certificate from the SCEP server to authenticate on the corporate Wi-Fi network.&lt;/p&gt;
+&lt;p&gt;NDES (Network Device Enrollment Service) is a Microsoft implementation of the SCEP protocol. NDES is part of the Active
+Directory Certificate Services (AD CS) role in Windows Server.&lt;/p&gt;
+&lt;h1 id="setting-up-a-windows-ndes-scep-server"&gt;&lt;a href="#setting-up-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;Setting up a Windows NDES SCEP server
+&lt;/h1&gt;&lt;p&gt;Before testing your Windows NDES SCEP server, you must set it up. Numerous articles and guides cover the installation
 and configuration of NDES. This article will focus on testing the NDES SCEP server to ensure the correct setup. We wrote
-this article because we could not find a comprehensive guide on how to test the NDES SCEP server.&lt;/p>
-&lt;p>Here are the high-level steps to configure a Windows NDES SCEP server:&lt;/p>
-&lt;ol>
-&lt;li>Create or use an existing Windows AD (Active Directory) server and domain.&lt;/li>
-&lt;li>Install the Active Directory Certificate Services (AD CS) role on a Windows Server that is part of the AD domain.&lt;/li>
-&lt;li>Configure the Enterprise NDES role service within AD CS.&lt;/li>
-&lt;li>(Optional) Configure the certificate templates for NDES.&lt;/li>
-&lt;/ol>
-&lt;p>We used Windows Server 2022 for our tests, and we will update this article once we test with Windows Server 2025.&lt;/p>
-&lt;h1 id="test-ndes-using-a-web-browser">&lt;a href="#test-ndes-using-a-web-browser" class="header-anchor">&lt;/a>Test NDES using a web browser
-&lt;/h1>&lt;p>First, we must make sure the NDES server is accessible via a web browser. If the server should be accessible outside the
-corporate network, test it using the public URL or IP address.&lt;/p>
-&lt;p>The NDES server has an admin web interface for retrieving the SCEP challenge. The URL typically looks like
-&lt;code>http://ndes-server/certsrv/mscep_admin/&lt;/code> and requires authentication. The username must use the Windows name format,
-like &lt;code>username@example.domain.com&lt;/code>. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service.">
-&lt;/figure>
-&lt;p>&lt;strong>Note:&lt;/strong> The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
-considered when parsing this page with a script.&lt;/p>
-&lt;p>The other URL to test is the actual SCEP enrollment URL, typically &lt;code>http://ndes-server/certsrv/mscep/mscep.dll&lt;/code>. It
-returns the following.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service.">
-&lt;/figure>
-&lt;h1 id="test-ndes-using-powershell">&lt;a href="#test-ndes-using-powershell" class="header-anchor">&lt;/a>Test NDES using PowerShell
-&lt;/h1>&lt;p>For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p>
-&lt;p>Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
-password.&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js">&lt;/script>
-&lt;p>After running the script, check that NDES issued a certificate.&lt;/p>
-&lt;h1 id="test-ndes-using-a-scep-client">&lt;a href="#test-ndes-using-a-scep-client" class="header-anchor">&lt;/a>Test NDES using a SCEP client
-&lt;/h1>&lt;p>For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
-available, but many have been abandoned and do not work with NDES.&lt;/p>
-&lt;p>We will use &lt;a class="link" href="https://github.com/micromdm/scep" target="_blank" rel="noopener"
->micromdm/scep&lt;/a>, a Go-based open-source SCEP server and client. We will
-use the latest code from the &lt;code>main&lt;/code> branch, with the following commit hash: &lt;code>781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code>.&lt;/p>
-&lt;p>Follow the instructions from the above URL to install the &lt;code>scep&lt;/code> client. We built it for macOS M1 using the following
-command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>make scepclient-darwin-arm64
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>After building the client, obtain a new enrollment challenge password and run the following command to request a
-certificate from the NDES server:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>mkdir test
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>cd test
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>../scepclient-darwin-arm64 -key-encipherment-selector -cn &lt;span style="color:#e6db74">&amp;#34;ScepClient&amp;#34;&lt;/span> -challenge &lt;span style="color:#e6db74">&amp;#34;ABBFE34CF11C2C04&amp;#34;&lt;/span> -server-url &lt;span style="color:#e6db74">&amp;#34;https://my-ndes.com/certsrv/mscep/mscep.dll&amp;#34;&lt;/span> -debug -private-key ./ndes-pk
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;strong>Note:&lt;/strong> We recommend running the above command in a separate directory because the SCEP client generates several
+this article because we could not find a comprehensive guide on how to test the NDES SCEP server.&lt;/p&gt;
+&lt;p&gt;Here are the high-level steps to configure a Windows NDES SCEP server:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Create or use an existing Windows AD (Active Directory) server and domain.&lt;/li&gt;
+&lt;li&gt;Install the Active Directory Certificate Services (AD CS) role on a Windows Server that is part of the AD domain.&lt;/li&gt;
+&lt;li&gt;Configure the Enterprise NDES role service within AD CS.&lt;/li&gt;
+&lt;li&gt;(Optional) Configure the certificate templates for NDES.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We used Windows Server 2022 for our tests, and we will update this article once we test with Windows Server 2025.&lt;/p&gt;
+&lt;h1 id="test-ndes-using-a-web-browser"&gt;&lt;a href="#test-ndes-using-a-web-browser" class="header-anchor"&gt;&lt;/a&gt;Test NDES using a web browser
+&lt;/h1&gt;&lt;p&gt;First, we must make sure the NDES server is accessible via a web browser. If the server should be accessible outside the
+corporate network, test it using the public URL or IP address.&lt;/p&gt;
+&lt;p&gt;The NDES server has an admin web interface for retrieving the SCEP challenge. The URL typically looks like
+&lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
+like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
+alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
+considered when parsing this page with a script.&lt;/p&gt;
+&lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
+returns the following.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
+alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+&lt;/figure&gt;
+&lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
+&lt;/h1&gt;&lt;p&gt;For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p&gt;
+&lt;p&gt;Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
+password.&lt;/p&gt;
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/fd2e7b88603be7898087b0f445102daf.js"&gt;&lt;/script&gt;
+&lt;p&gt;After running the script, check that NDES issued a certificate.&lt;/p&gt;
+&lt;h1 id="test-ndes-using-a-scep-client"&gt;&lt;a href="#test-ndes-using-a-scep-client" class="header-anchor"&gt;&lt;/a&gt;Test NDES using a SCEP client
+&lt;/h1&gt;&lt;p&gt;For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
+available, but many have been abandoned and do not work with NDES.&lt;/p&gt;
+&lt;p&gt;We will use &lt;a class="link" href="https://github.com/micromdm/scep" target="_blank" rel="noopener"
+&gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
+use the latest code from the &lt;code&gt;main&lt;/code&gt; branch, with the following commit hash: &lt;code&gt;781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Follow the instructions from the above URL to install the &lt;code&gt;scep&lt;/code&gt; client. We built it for macOS M1 using the following
+command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make scepclient-darwin-arm64
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After building the client, obtain a new enrollment challenge password and run the following command to request a
+certificate from the NDES server:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd test
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;../scepclient-darwin-arm64 -key-encipherment-selector -cn &lt;span style="color:#e6db74"&gt;&amp;#34;ScepClient&amp;#34;&lt;/span&gt; -challenge &lt;span style="color:#e6db74"&gt;&amp;#34;ABBFE34CF11C2C04&amp;#34;&lt;/span&gt; -server-url &lt;span style="color:#e6db74"&gt;&amp;#34;https://my-ndes.com/certsrv/mscep/mscep.dll&amp;#34;&lt;/span&gt; -debug -private-key ./ndes-pk
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We recommend running the above command in a separate directory because the SCEP client generates several
 intermediate files during the certificate request process. If you don&amp;rsquo;t clean them up, the client may reuse them instead
-of generating new ones from the command line flags.&lt;/p>
-&lt;p>The above command will generate a new certificate request and send it to the NDES server. The server will respond with a
-signed certificate, which the client will save to the current directory as a &lt;code>client.pem&lt;/code> file.&lt;/p>
-&lt;p>As a final step, verify that the certificate and the private key match by building a PKCS#12 file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>/usr/bin/openssl pkcs12 -export -inkey ndes-pk -in client.pem -out client.p12
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h1 id="test-ndes-using-apple-mdm-profile">&lt;a href="#test-ndes-using-apple-mdm-profile" class="header-anchor">&lt;/a>Test NDES using Apple MDM profile
-&lt;/h1>&lt;p>For our final test, we will use an Apple MDM profile to request a certificate from the NDES server. We will use a macOS
-VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding the MDM profile manually via &lt;strong>System Settings&lt;/strong> -&amp;gt;
-&lt;strong>Profiles&lt;/strong> should also work.&lt;/p>
-&lt;p>First, create a new
+of generating new ones from the command line flags.&lt;/p&gt;
+&lt;p&gt;The above command will generate a new certificate request and send it to the NDES server. The server will respond with a
+signed certificate, which the client will save to the current directory as a &lt;code&gt;client.pem&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;As a final step, verify that the certificate and the private key match by building a PKCS#12 file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/openssl pkcs12 -export -inkey ndes-pk -in client.pem -out client.p12
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id="test-ndes-using-apple-mdm-profile"&gt;&lt;a href="#test-ndes-using-apple-mdm-profile" class="header-anchor"&gt;&lt;/a&gt;Test NDES using Apple MDM profile
+&lt;/h1&gt;&lt;p&gt;For our final test, we will use an Apple MDM profile to request a certificate from the NDES server. We will use a macOS
+VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding the MDM profile manually via &lt;strong&gt;System Settings&lt;/strong&gt; -&amp;gt;
+&lt;strong&gt;Profiles&lt;/strong&gt; should also work.&lt;/p&gt;
+&lt;p&gt;First, create a new
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/scep?language=objc" target="_blank" rel="noopener"
->Device Management SCEP payload&lt;/a> with the
-NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-xml" data-lang="xml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;plist&lt;/span> &lt;span style="color:#a6e22e">version=&lt;/span>&lt;span style="color:#e6db74">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span style="color:#f92672">&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadContent&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadContent&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Challenge&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>8E6D19CAEC9411CC&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Key Type&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>RSA&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Key Usage&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>5&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Keysize&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>2048&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Retries&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>3&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>RetryDelay&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>10&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>Subject&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>CN&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>MDM TEST VM&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>OU&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>FLEET DEVICE MANAGEMENT&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>URL&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>https://my-ndes.com/certsrv/mscep/mscep.dll&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadDisplayName&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>SCEP #1&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadIdentifier&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>com.apple.security.scep.9DCC35A5-72F9-42B7-9A98-7AD9A9CCA3AA&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadType&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>com.apple.security.scep&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadUUID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>9DCC35A5-72F9-42B7-9A98-7AD9A9CCA3AA&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadVersion&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>1&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/array&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadDisplayName&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>SCEP cert&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadIdentifier&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>Victors-Fleet-MBP.4CD1BD65-1D2C-4E9E-9E18-9BCD400CDEDB&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadType&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>Configuration&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadUUID&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;string&amp;gt;&lt;/span>4CD1BD65-1D2C-4E9E-9E18-9BCD400CDEDB&lt;span style="color:#f92672">&amp;lt;/string&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;key&amp;gt;&lt;/span>PayloadVersion&lt;span style="color:#f92672">&amp;lt;/key&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;integer&amp;gt;&lt;/span>1&lt;span style="color:#f92672">&amp;lt;/integer&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;lt;/dict&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">&amp;lt;/plist&amp;gt;&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Once the device receives the payload, it immediately requests a certificate from the NDES server. The server responds
-with a signed certificate, which the device saves to the keychain.&lt;/p>
-&lt;h1 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h1>&lt;p>Recently, we covered &lt;a class="link" href="../connect-to-remote-active-directory/" >how to connect to a remote Active Directory server&lt;/a>.&lt;/p>
-&lt;p>We also wrote a series of articles on
-&lt;a class="link" href="../mtls/" >building a mutual TLS client which uses a system keystore, such as a Windows certificate store&lt;/a>.&lt;/p>
-&lt;p>In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" >code signing a Windows application&lt;/a>.&lt;/p>
-&lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server">&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor">&lt;/a>Watch how to test a Windows NDES SCEP server
-&lt;/h1>&lt;div class="video-wrapper">
+&gt;Device Management SCEP payload&lt;/a&gt; with the
+NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;plist&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;version=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadContent&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadContent&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Challenge&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;8E6D19CAEC9411CC&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Key Type&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;RSA&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Key Usage&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;5&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Keysize&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;2048&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Retries&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;3&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;RetryDelay&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;10&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Subject&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;CN&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;MDM TEST VM&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;OU&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;FLEET DEVICE MANAGEMENT&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;URL&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;https://my-ndes.com/certsrv/mscep/mscep.dll&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadDisplayName&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;SCEP #1&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadIdentifier&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;com.apple.security.scep.9DCC35A5-72F9-42B7-9A98-7AD9A9CCA3AA&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadType&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;com.apple.security.scep&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadUUID&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;9DCC35A5-72F9-42B7-9A98-7AD9A9CCA3AA&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadVersion&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;1&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadDisplayName&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;SCEP cert&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadIdentifier&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;Victors-Fleet-MBP.4CD1BD65-1D2C-4E9E-9E18-9BCD400CDEDB&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadType&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;Configuration&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadUUID&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;string&amp;gt;&lt;/span&gt;4CD1BD65-1D2C-4E9E-9E18-9BCD400CDEDB&lt;span style="color:#f92672"&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;PayloadVersion&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;1&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Once the device receives the payload, it immediately requests a certificate from the NDES server. The server responds
+with a signed certificate, which the device saves to the keychain.&lt;/p&gt;
+&lt;h1 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h1&gt;&lt;p&gt;Recently, we covered &lt;a class="link" href="../connect-to-remote-active-directory/" &gt;how to connect to a remote Active Directory server&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We also wrote a series of articles on
+&lt;a class="link" href="../mtls/" &gt;building a mutual TLS client which uses a system keystore, such as a Windows certificate store&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" &gt;code signing a Windows application&lt;/a&gt;.&lt;/p&gt;
+&lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server"&gt;&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to test a Windows NDES SCEP server
+&lt;/h1&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/JMHs6spfdvQ"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

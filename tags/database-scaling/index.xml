@@ -1,252 +1,252 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Database Scaling on Victor on Software</title><link>https://victoronsoftware.com/tags/database-scaling/</link><description>Recent content in Database Scaling on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 06 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/database-scaling/index.xml" rel="self" type="application/rss+xml"/><item><title>Create a MySQL replica database in 4 short steps (2025)</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL replica database in 4 short steps (2025)" />&lt;h2 id="introduction">&lt;a href="#introduction" class="header-anchor">&lt;/a>Introduction
-&lt;/h2>&lt;p>In this article, we will create a MySQL replica database. A MySQL replica is a read-only copy of the primary database,
-which is kept in sync with the main database using MySQL replication threads.&lt;/p>
-&lt;p>The steps we will follow are:&lt;/p>
-&lt;ol>
-&lt;li>&lt;a class="link" href="#create-mysql-source-and-replica-databases" >Spin up MySQL source and replica databases&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#create-db-user-for-replication" >Create a user for replication&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#retrieve-source-binary-log-coordinates" >Obtain source binary log coordinates&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#configure-replica-and-start-replication" >Configure replica DB and start replication&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;p>To add a replica to an existing MySQL database, see the
-&lt;a class="link" href="#copy-database-from-source-and-start-replication-manually" >copy database from source and start replication manually&lt;/a>
-section.&lt;/p>
-&lt;h2 id="terminology-master-slave-vs-source-replica">&lt;a href="#terminology-master-slave-vs-source-replica" class="header-anchor">&lt;/a>Terminology: master-slave vs source-replica
-&lt;/h2>&lt;p>In database replication, the terms master-slave and source-replica are used interchangeably. In recent MySQL versions,
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Database Scaling on Victor on Software</title><link>https://victoronsoftware.com/tags/database-scaling/</link><description>Recent content in Database Scaling on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 06 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/database-scaling/index.xml" rel="self" type="application/rss+xml"/><item><title>Create a MySQL replica database in 4 short steps (2025)</title><link>https://victoronsoftware.com/posts/mysql-master-slave-replication/</link><pubDate>Mon, 06 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mysql-master-slave-replication/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mysql-master-slave-replication/mysql-master-slave-replication.png" alt="Featured image of post Create a MySQL replica database in 4 short steps (2025)" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
+&lt;/h2&gt;&lt;p&gt;In this article, we will create a MySQL replica database. A MySQL replica is a read-only copy of the primary database,
+which is kept in sync with the main database using MySQL replication threads.&lt;/p&gt;
+&lt;p&gt;The steps we will follow are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#create-mysql-source-and-replica-databases" &gt;Spin up MySQL source and replica databases&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#create-db-user-for-replication" &gt;Create a user for replication&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#retrieve-source-binary-log-coordinates" &gt;Obtain source binary log coordinates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#configure-replica-and-start-replication" &gt;Configure replica DB and start replication&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To add a replica to an existing MySQL database, see the
+&lt;a class="link" href="#copy-database-from-source-and-start-replication-manually" &gt;copy database from source and start replication manually&lt;/a&gt;
+section.&lt;/p&gt;
+&lt;h2 id="terminology-master-slave-vs-source-replica"&gt;&lt;a href="#terminology-master-slave-vs-source-replica" class="header-anchor"&gt;&lt;/a&gt;Terminology: master-slave vs source-replica
+&lt;/h2&gt;&lt;p&gt;In database replication, the terms master-slave and source-replica are used interchangeably. In recent MySQL versions,
 the term source-replica is preferred over master-slave due to its more neutral connotation. Many keywords and variables
-in MySQL have recently been renamed to use neutral terms. We will use the terms source and replica in this article.&lt;/p>
-&lt;h2 id="what-is-database-replication">&lt;a href="#what-is-database-replication" class="header-anchor">&lt;/a>What is database replication?
-&lt;/h2>&lt;p>Database replication is a process that allows data from one database server (the source) to be copied to one or more
+in MySQL have recently been renamed to use neutral terms. We will use the terms source and replica in this article.&lt;/p&gt;
+&lt;h2 id="what-is-database-replication"&gt;&lt;a href="#what-is-database-replication" class="header-anchor"&gt;&lt;/a&gt;What is database replication?
+&lt;/h2&gt;&lt;p&gt;Database replication is a process that allows data from one database server (the source) to be copied to one or more
 database servers (replicas). Replication is asynchronous, meaning the replica instance does not need to be connected to
-the source constantly. The replica can catch up with the source when either becomes available.&lt;/p>
-&lt;p>Database replicas are used for:&lt;/p>
-&lt;ul>
-&lt;li>Scaling read operations&lt;/li>
-&lt;li>High availability&lt;/li>
-&lt;li>Disaster recovery&lt;/li>
-&lt;/ul>
-&lt;p>MySQL implements replication using the binary log. The source server writes changes to the binary log, and the replica
-server reads it and applies the changes to its database.&lt;/p>
-&lt;h2 id="create-mysql-source-and-replica-databases">&lt;a href="#create-mysql-source-and-replica-databases" class="header-anchor">&lt;/a>Create MySQL source and replica databases
-&lt;/h2>&lt;p>We will use Docker to create the MySQL source and replica databases. We will use the
+the source constantly. The replica can catch up with the source when either becomes available.&lt;/p&gt;
+&lt;p&gt;Database replicas are used for:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scaling read operations&lt;/li&gt;
+&lt;li&gt;High availability&lt;/li&gt;
+&lt;li&gt;Disaster recovery&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;MySQL implements replication using the binary log. The source server writes changes to the binary log, and the replica
+server reads it and applies the changes to its database.&lt;/p&gt;
+&lt;h2 id="create-mysql-source-and-replica-databases"&gt;&lt;a href="#create-mysql-source-and-replica-databases" class="header-anchor"&gt;&lt;/a&gt;Create MySQL source and replica databases
+&lt;/h2&gt;&lt;p&gt;We will use Docker to create the MySQL source and replica databases. We will use the
 &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
->official MySQL Docker image&lt;/a>. The source database will run on port 3308, and the
-replica database will run on port 3309. Both servers will have the database named &lt;code>test&lt;/code>. We tested these instructions
-on MySQL 8.0.36, MySQL 8.4.3, and MySQL 9.1.0.&lt;/p>
-&lt;p>We run &lt;code>docker compose up&lt;/code> using the following &lt;code>docker-compose.yml&lt;/code> file:&lt;/p>
-&lt;script type="application/javascript" src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js">&lt;/script>
-&lt;h2 id="create-db-user-for-replication">&lt;a href="#create-db-user-for-replication" class="header-anchor">&lt;/a>Create a DB user for replication
-&lt;/h2>&lt;p>Replication in MySQL requires a user with the
+&gt;official MySQL Docker image&lt;/a&gt;. The source database will run on port 3308, and the
+replica database will run on port 3309. Both servers will have the database named &lt;code&gt;test&lt;/code&gt;. We tested these instructions
+on MySQL 8.0.36, MySQL 8.4.3, and MySQL 9.1.0.&lt;/p&gt;
+&lt;p&gt;We run &lt;code&gt;docker compose up&lt;/code&gt; using the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
+&lt;script type="application/javascript" src="https://gist.github.com/getvictor/92ce5a8541ce27a1ea36f9eb7feb0344.js"&gt;&lt;/script&gt;
+&lt;h2 id="create-db-user-for-replication"&gt;&lt;a href="#create-db-user-for-replication" class="header-anchor"&gt;&lt;/a&gt;Create a DB user for replication
+&lt;/h2&gt;&lt;p&gt;Replication in MySQL requires a user with the
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.4/en/privileges-provided.html#priv_replication-slave" target="_blank" rel="noopener"
->&lt;code>REPLICATION SLAVE&lt;/code>&lt;/a>
-privilege. We will create a user named &lt;code>replicator&lt;/code> with the password &lt;code>rotacilper&lt;/code>.&lt;/p>
-&lt;p>Connect to the source database using the MySQL client:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3308&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Create the &lt;code>replicator&lt;/code> user and grant the &lt;code>REPLICATION SLAVE&lt;/code> privilege:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">USER&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span> IDENTIFIED &lt;span style="color:#66d9ef">BY&lt;/span> &lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GRANT&lt;/span> REPLICATION SLAVE &lt;span style="color:#66d9ef">ON&lt;/span> &lt;span style="color:#f92672">*&lt;/span>.&lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span> &lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>&lt;span style="color:#f92672">@&lt;/span>&lt;span style="color:#e6db74">&amp;#39;%&amp;#39;&lt;/span>;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>FLUSH &lt;span style="color:#66d9ef">PRIVILEGES&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="retrieve-source-binary-log-coordinates">&lt;a href="#retrieve-source-binary-log-coordinates" class="header-anchor">&lt;/a>Retrieve source binary log coordinates
-&lt;/h2>&lt;p>For the replica server to start replication, it needs to know the source&amp;rsquo;s binary log file and position. We can obtain
-this information using the MySQL client we opened in the previous step.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SHOW&lt;/span> BINARY LOG STATUS;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In MySQL 8.0, use the &lt;code>SHOW MASTER STATUS&lt;/code> command instead of &lt;code>SHOW BINARY LOG STATUS&lt;/code>.&lt;/p>
-&lt;p>The output will look like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>+------------+----------+--------------+------------------+-------------------+
+&gt;&lt;code&gt;REPLICATION SLAVE&lt;/code&gt;&lt;/a&gt;
+privilege. We will create a user named &lt;code&gt;replicator&lt;/code&gt; with the password &lt;code&gt;rotacilper&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Connect to the source database using the MySQL client:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff"&gt;3308&lt;/span&gt; -uroot -ptoor
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create the &lt;code&gt;replicator&lt;/code&gt; user and grant the &lt;code&gt;REPLICATION SLAVE&lt;/code&gt; privilege:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;USER&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;replicator&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;@&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;%&amp;#39;&lt;/span&gt; IDENTIFIED &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;rotacilper&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GRANT&lt;/span&gt; REPLICATION SLAVE &lt;span style="color:#66d9ef"&gt;ON&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;.&lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TO&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;replicator&amp;#39;&lt;/span&gt;&lt;span style="color:#f92672"&gt;@&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;%&amp;#39;&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;FLUSH &lt;span style="color:#66d9ef"&gt;PRIVILEGES&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="retrieve-source-binary-log-coordinates"&gt;&lt;a href="#retrieve-source-binary-log-coordinates" class="header-anchor"&gt;&lt;/a&gt;Retrieve source binary log coordinates
+&lt;/h2&gt;&lt;p&gt;For the replica server to start replication, it needs to know the source&amp;rsquo;s binary log file and position. We can obtain
+this information using the MySQL client we opened in the previous step.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SHOW&lt;/span&gt; BINARY LOG STATUS;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In MySQL 8.0, use the &lt;code&gt;SHOW MASTER STATUS&lt;/code&gt; command instead of &lt;code&gt;SHOW BINARY LOG STATUS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The output will look like this:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;+------------+----------+--------------+------------------+-------------------+
 | File | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
 +------------+----------+--------------+------------------+-------------------+
 | bin.000003 | 862 | | | |
 +------------+----------+--------------+------------------+-------------------+
 1 row in set (0.01 sec)
-&lt;/code>&lt;/pre>&lt;p>We must remember the &lt;code>File&lt;/code> and &lt;code>Position&lt;/code> values for the next step.&lt;/p>
-&lt;h2 id="configure-replica-and-start-replication">&lt;a href="#configure-replica-and-start-replication" class="header-anchor">&lt;/a>Configure replica DB and start replication
-&lt;/h2>&lt;p>Now, we will connect to the replica database and configure it to replicate from the source database.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff">3309&lt;/span> -uroot -ptoor
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Use the &lt;code>CHANGE REPLICATION SOURCE TO&lt;/code> command to configure the replica to replicate from the source. Replace
-&lt;code>SOURCE_LOG_FILE&lt;/code> and &lt;code>SOURCE_LOG_POS&lt;/code> with the values obtained in the previous step.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>CHANGE REPLICATION &lt;span style="color:#66d9ef">SOURCE&lt;/span> &lt;span style="color:#66d9ef">TO&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_HOST&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;mysql_source&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_PORT&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3306&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_USER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;replicator&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_PASSWORD&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;rotacilper&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_LOG_FILE&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#e6db74">&amp;#39;bin.000003&amp;#39;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> SOURCE_LOG_POS&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">862&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> GET_SOURCE_PUBLIC_KEY&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">1&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>SOURCE_HOST&lt;/code> is the primary source&amp;rsquo;s hostname, which matches the docker service name. The &lt;code>GET_SOURCE_PUBLIC_KEY&lt;/code>
-option is needed for &lt;code>caching_sha2_password&lt;/code> authentication.&lt;/p>
-&lt;p>Finally, start the replica:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> REPLICA;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The replica will now start cloning data from the source database. You can check the replication status using the
-&lt;code>SHOW REPLICA STATUS\G&lt;/code> command. Use this command to check for errors if you suspect something is wrong.&lt;/p>
-&lt;p>We can create a table with data on the source database and check if it is replicated to the replica database:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>USE test;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> users (id INT &lt;span style="color:#66d9ef">PRIMARY&lt;/span> &lt;span style="color:#66d9ef">KEY&lt;/span>, name VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>));
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> users &lt;span style="color:#66d9ef">VALUES&lt;/span> (&lt;span style="color:#ae81ff">1&lt;/span>, &lt;span style="color:#e6db74">&amp;#39;Alice&amp;#39;&lt;/span>);
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="restore-replication-after-an-issue">&lt;a href="#restore-replication-after-an-issue" class="header-anchor">&lt;/a>Restore replication after an issue
-&lt;/h2>&lt;p>If the replica crashes and comes back up, it may be unable to resume replication from where it left off. If the replica
-stops replicating due to an error, first try to restart replication on the replica:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>STOP REPLICA;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">START&lt;/span> REPLICA;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Check the replication status for errors using the &lt;code>SHOW REPLICA STATUS\G&lt;/code> command.&lt;/p>
-&lt;p>If the replica still does not replicate, we need to copy the database from the source and restart replication manually.&lt;/p>
-&lt;h3 id="copy-database-from-source-and-start-replication-manually">&lt;a href="#copy-database-from-source-and-start-replication-manually" class="header-anchor">&lt;/a>Copy database from source and start replication manually
-&lt;/h3>&lt;p>Reset the replica:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>STOP REPLICA;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">RESET&lt;/span> REPLICA &lt;span style="color:#66d9ef">ALL&lt;/span>;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Optionally, drop and recreate the database on the replica:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">DROP&lt;/span> &lt;span style="color:#66d9ef">DATABASE&lt;/span> test;
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">DATABASE&lt;/span> test;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If the source database still has the binary log files around from the first time we set up replication, we can redo the
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We must remember the &lt;code&gt;File&lt;/code&gt; and &lt;code&gt;Position&lt;/code&gt; values for the next step.&lt;/p&gt;
+&lt;h2 id="configure-replica-and-start-replication"&gt;&lt;a href="#configure-replica-and-start-replication" class="header-anchor"&gt;&lt;/a&gt;Configure replica DB and start replication
+&lt;/h2&gt;&lt;p&gt;Now, we will connect to the replica database and configure it to replicate from the source database.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql --host 127.0.0.1 --port &lt;span style="color:#ae81ff"&gt;3309&lt;/span&gt; -uroot -ptoor
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Use the &lt;code&gt;CHANGE REPLICATION SOURCE TO&lt;/code&gt; command to configure the replica to replicate from the source. Replace
+&lt;code&gt;SOURCE_LOG_FILE&lt;/code&gt; and &lt;code&gt;SOURCE_LOG_POS&lt;/code&gt; with the values obtained in the previous step.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;CHANGE REPLICATION &lt;span style="color:#66d9ef"&gt;SOURCE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TO&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_HOST&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;mysql_source&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_PORT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_USER&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;replicator&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_PASSWORD&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;rotacilper&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_LOG_FILE&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#39;bin.000003&amp;#39;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; SOURCE_LOG_POS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;862&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; GET_SOURCE_PUBLIC_KEY&lt;span style="color:#f92672"&gt;=&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;SOURCE_HOST&lt;/code&gt; is the primary source&amp;rsquo;s hostname, which matches the docker service name. The &lt;code&gt;GET_SOURCE_PUBLIC_KEY&lt;/code&gt;
+option is needed for &lt;code&gt;caching_sha2_password&lt;/code&gt; authentication.&lt;/p&gt;
+&lt;p&gt;Finally, start the replica:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;START&lt;/span&gt; REPLICA;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The replica will now start cloning data from the source database. You can check the replication status using the
+&lt;code&gt;SHOW REPLICA STATUS\G&lt;/code&gt; command. Use this command to check for errors if you suspect something is wrong.&lt;/p&gt;
+&lt;p&gt;We can create a table with data on the source database and check if it is replicated to the replica database:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;USE test;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; users (id INT &lt;span style="color:#66d9ef"&gt;PRIMARY&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;KEY&lt;/span&gt;, name VARCHAR(&lt;span style="color:#ae81ff"&gt;255&lt;/span&gt;));
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; users &lt;span style="color:#66d9ef"&gt;VALUES&lt;/span&gt; (&lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#39;Alice&amp;#39;&lt;/span&gt;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="restore-replication-after-an-issue"&gt;&lt;a href="#restore-replication-after-an-issue" class="header-anchor"&gt;&lt;/a&gt;Restore replication after an issue
+&lt;/h2&gt;&lt;p&gt;If the replica crashes and comes back up, it may be unable to resume replication from where it left off. If the replica
+stops replicating due to an error, first try to restart replication on the replica:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;STOP REPLICA;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;START&lt;/span&gt; REPLICA;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Check the replication status for errors using the &lt;code&gt;SHOW REPLICA STATUS\G&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;If the replica still does not replicate, we need to copy the database from the source and restart replication manually.&lt;/p&gt;
+&lt;h3 id="copy-database-from-source-and-start-replication-manually"&gt;&lt;a href="#copy-database-from-source-and-start-replication-manually" class="header-anchor"&gt;&lt;/a&gt;Copy database from source and start replication manually
+&lt;/h3&gt;&lt;p&gt;Reset the replica:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;STOP REPLICA;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;RESET&lt;/span&gt; REPLICA &lt;span style="color:#66d9ef"&gt;ALL&lt;/span&gt;;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Optionally, drop and recreate the database on the replica:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;DROP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DATABASE&lt;/span&gt; test;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;DATABASE&lt;/span&gt; test;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If the source database still has the binary log files around from the first time we set up replication, we can redo the
 original steps using the same source log file and position. If not, we need to back up the source database and restore
-it on the replica.&lt;/p>
-&lt;p>Backup the source database (on port 3308 with database name &lt;code>test&lt;/code>):&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>bash &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">c&lt;/span> &lt;span style="color:#e6db74">&amp;#39;mysqldump --host 127.0.0.1 --port 3308 -uroot -ptoor test | gzip -&amp;#39;&lt;/span> &lt;span style="color:#f92672">&amp;gt;&lt;/span> backup.&lt;span style="color:#66d9ef">sql&lt;/span>.gz
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Restore the backup on the replica database (on port 3309):&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>bash &lt;span style="color:#f92672">-&lt;/span>&lt;span style="color:#66d9ef">c&lt;/span> &lt;span style="color:#e6db74">&amp;#39;gzip -dc - | mysql --host 127.0.0.1 --port 3308 -uroot -ptoor test&amp;#39;&lt;/span> &lt;span style="color:#f92672">&amp;lt;&lt;/span> backup.&lt;span style="color:#66d9ef">sql&lt;/span>.gz
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, redo the following steps from above:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#retrieve-source-binary-log-coordinates" >Obtain source binary log coordinates&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#configure-replica-and-start-replication" >Configure replica DB and start replication&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>As you can see, restarting replication after an issue can be more involved than just restarting the replica. Regular
+it on the replica.&lt;/p&gt;
+&lt;p&gt;Backup the source database (on port 3308 with database name &lt;code&gt;test&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bash &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;c&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;mysqldump --host 127.0.0.1 --port 3308 -uroot -ptoor test | gzip -&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt; backup.&lt;span style="color:#66d9ef"&gt;sql&lt;/span&gt;.gz
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Restore the backup on the replica database (on port 3309):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;bash &lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;c&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;gzip -dc - | mysql --host 127.0.0.1 --port 3308 -uroot -ptoor test&amp;#39;&lt;/span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;&lt;/span&gt; backup.&lt;span style="color:#66d9ef"&gt;sql&lt;/span&gt;.gz
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, redo the following steps from above:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#retrieve-source-binary-log-coordinates" &gt;Obtain source binary log coordinates&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#configure-replica-and-start-replication" &gt;Configure replica DB and start replication&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As you can see, restarting replication after an issue can be more involved than just restarting the replica. Regular
 backups can help in such situations. When backing up the source database, make sure to include the binary log files,
 along with the corresponding binary log position. You can then use these files to restore or spin up a new replica while
-the source database is actively running.&lt;/p>
-&lt;h2 id="further-reading-on-database-scaling">&lt;a href="#further-reading-on-database-scaling" class="header-anchor">&lt;/a>Further reading on database scaling
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" >database gotchas when scaling applications&lt;/a>. One of
+the source database is actively running.&lt;/p&gt;
+&lt;h2 id="further-reading-on-database-scaling"&gt;&lt;a href="#further-reading-on-database-scaling" class="header-anchor"&gt;&lt;/a&gt;Further reading on database scaling
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we wrote about &lt;a class="link" href="../database-gotchas-when-scaling-apps" &gt;database gotchas when scaling applications&lt;/a&gt;. One of
 the issues we summarized was
-&lt;a class="link" href="../mysql-query-performance-insert-subqueries" >optimizing a MySQL INSERT with subqueries&lt;/a>.&lt;/li>
-&lt;li>In the past, we encountered a
-&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >memory issue with MySQL prepared statements when scaling applications&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../secure-mysql-docker" >securing your MySQL Docker container for Zero Trust&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="follow-along-with-the-mysql-source-replica-video">&lt;a href="#follow-along-with-the-mysql-source-replica-video" class="header-anchor">&lt;/a>Follow along with the MySQL source-replica video
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;a class="link" href="../mysql-query-performance-insert-subqueries" &gt;optimizing a MySQL INSERT with subqueries&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;In the past, we encountered a
+&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" &gt;memory issue with MySQL prepared statements when scaling applications&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;We also wrote about &lt;a class="link" href="../secure-mysql-docker" &gt;securing your MySQL Docker container for Zero Trust&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="follow-along-with-the-mysql-source-replica-video"&gt;&lt;a href="#follow-along-with-the-mysql-source-replica-video" class="header-anchor"&gt;&lt;/a&gt;Follow along with the MySQL source-replica video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/mpCeatW4t_U"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" />&lt;ul>
-&lt;li>&lt;a class="link" href="#excessive-database-locks" >Excessive database locks&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#read-after-write-consistency" >Read-after-write consistency&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#index-limitations" >Index limitations&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>When building an application, the database is often an afterthought. The database used in a development environment
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>3 database gotchas when building apps for scale</title><link>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</link><pubDate>Wed, 29 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-thumbnail.png" alt="Featured image of post 3 database gotchas when building apps for scale" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#excessive-database-locks" &gt;Excessive database locks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#read-after-write-consistency" &gt;Read-after-write consistency&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#index-limitations" &gt;Index limitations&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;When building an application, the database is often an afterthought. The database used in a development environment
 often contains limited data with little traffic. However, when the application is deployed to production, real-world
-traffic can expose issues that were not caught in development or testing.&lt;/p>
-&lt;p>In this article, we cover issues we ran into with our customers. We assume the production application is deployed with
+traffic can expose issues that were not caught in development or testing.&lt;/p&gt;
+&lt;p&gt;In this article, we cover issues we ran into with our customers. We assume the production application is deployed with
 one master and one or more read replicas. See this article on
-&lt;a class="link" href="../mysql-master-slave-replication" >creating a MySQL slave replica in dev environment&lt;/a>.&lt;/p>
-&lt;h2 id="excessive-database-locks">&lt;a href="#excessive-database-locks" class="header-anchor">&lt;/a>Excessive database locks
-&lt;/h2>&lt;p>One write query can bring your database to its knees if it locks too many rows.&lt;/p>
-&lt;p>Consider this simplified INSERT with a subquery transaction:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">INSERT&lt;/span> &lt;span style="color:#66d9ef">INTO&lt;/span> software_counts (host_id, &lt;span style="color:#66d9ef">count&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> host_id, &lt;span style="color:#66d9ef">COUNT&lt;/span>(&lt;span style="color:#f92672">*&lt;/span>) &lt;span style="color:#66d9ef">as&lt;/span> &lt;span style="color:#66d9ef">count&lt;/span> &lt;span style="color:#66d9ef">FROM&lt;/span> host_software
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">GROUP&lt;/span> &lt;span style="color:#66d9ef">BY&lt;/span> host_software.host_id;
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
-alt="Simplified INSERT with a subquery">&lt;figcaption>
-&lt;h4>Simplified INSERT with a subquery&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The above query scans the entire &lt;code>host_software&lt;/code> table index to create a count. While the database is doing the scan and
-the INSERT, it locks the &lt;code>host_software&lt;/code> table, preventing other transactions from writing to that table. If the table
+&lt;a class="link" href="../mysql-master-slave-replication" &gt;creating a MySQL slave replica in dev environment&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="excessive-database-locks"&gt;&lt;a href="#excessive-database-locks" class="header-anchor"&gt;&lt;/a&gt;Excessive database locks
+&lt;/h2&gt;&lt;p&gt;One write query can bring your database to its knees if it locks too many rows.&lt;/p&gt;
+&lt;p&gt;Consider this simplified INSERT with a subquery transaction:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;INSERT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;INTO&lt;/span&gt; software_counts (host_id, &lt;span style="color:#66d9ef"&gt;count&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; host_id, &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;count&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; host_software
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; host_software.host_id;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
+alt="Simplified INSERT with a subquery"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Simplified INSERT with a subquery&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The above query scans the entire &lt;code&gt;host_software&lt;/code&gt; table index to create a count. While the database is doing the scan and
+the INSERT, it locks the &lt;code&gt;host_software&lt;/code&gt; table, preventing other transactions from writing to that table. If the table
 and insert are large, the query can hold the lock for a long time. In production, we saw a lock time of over 30 seconds,
-creating a bottleneck and spiking DB resource usage.&lt;/p>
-&lt;p>Pay special attention to the following queries, as they can cause performance issues:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>COUNT(*)&lt;/code>&lt;/li>
-&lt;li>Using a non-indexed column, like &lt;code>WHERE non_indexed_column = value&lt;/code>&lt;/li>
-&lt;li>Returning a large number of rows, like &lt;code>SELECT * FROM table&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;p>One way to solve the above performance issue is to separate the &lt;code>SELECT&lt;/code> and &lt;code>INSERT&lt;/code> queries. First, run the &lt;code>SELECT&lt;/code>
-query on the replica to get the data, then run the &lt;code>INSERT&lt;/code> query on the master to insert the data. We completely
+creating a bottleneck and spiking DB resource usage.&lt;/p&gt;
+&lt;p&gt;Pay special attention to the following queries, as they can cause performance issues:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;COUNT(*)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Using a non-indexed column, like &lt;code&gt;WHERE non_indexed_column = value&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Returning a large number of rows, like &lt;code&gt;SELECT * FROM table&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;One way to solve the above performance issue is to separate the &lt;code&gt;SELECT&lt;/code&gt; and &lt;code&gt;INSERT&lt;/code&gt; queries. First, run the &lt;code&gt;SELECT&lt;/code&gt;
+query on the replica to get the data, then run the &lt;code&gt;INSERT&lt;/code&gt; query on the master to insert the data. We completely
 eliminate the lock since the read is done on the replica. This article goes through
-&lt;a class="link" href=".../mysql-query-performance-insert-subqueries" >a specific example of optimizing an INSERT with subqueries&lt;/a>.&lt;/p>
-&lt;p>As general advice, avoid running &lt;code>SELECT&lt;/code> queries and subqueries on the master, especially if they scan the entire
-table.&lt;/p>
-&lt;h2 id="read-after-write-consistency">&lt;a href="#read-after-write-consistency" class="header-anchor">&lt;/a>Read-after-write consistency
-&lt;/h2>&lt;p>When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
-with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
-alt="Read-after-write database issue">&lt;figcaption>
-&lt;h4>Read-after-write database issue&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>These issues are typically not caught in development since dev environments usually have one database instance. Unit or
+&lt;a class="link" href=".../mysql-query-performance-insert-subqueries" &gt;a specific example of optimizing an INSERT with subqueries&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As general advice, avoid running &lt;code&gt;SELECT&lt;/code&gt; queries and subqueries on the master, especially if they scan the entire
+table.&lt;/p&gt;
+&lt;h2 id="read-after-write-consistency"&gt;&lt;a href="#read-after-write-consistency" class="header-anchor"&gt;&lt;/a&gt;Read-after-write consistency
+&lt;/h2&gt;&lt;p&gt;When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
+with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
+alt="Read-after-write database issue"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Read-after-write database issue&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;These issues are typically not caught in development since dev environments usually have one database instance. Unit or
 integration tests might not even see these issues if they run on a single database instance. Even in testing or small
 production environments, you might only see these issues if the replica sync time is high. Customers with large
-deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p>
-&lt;p>One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data
+deployments may be experiencing these consistency issues without the development team knowing about it.&lt;/p&gt;
+&lt;p&gt;One way to solve this issue is to read from the master after writing to it. This way, you are guaranteed to see the data
 you just wrote. In
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/b7aac2cfabf17fcb5142808fb80352113710ec5c/server/contexts/ctxdb/ctxdb.go#L17" target="_blank" rel="noopener"
->our Go backend&lt;/a>,
-forcing reads from the master can be done by updating the &lt;code>Context&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">ctxUsePrimary&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">ctxdb&lt;/span>.&lt;span style="color:#a6e22e">RequirePrimary&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#66d9ef">true&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, additional master reads increase the load on the master, defeating the purpose of having a replica for read
-scaling.&lt;/p>
-&lt;p>In addition, what about expensive read queries, like &lt;code>COUNT(*)&lt;/code> and calculations, which we don&amp;rsquo;t want to run on the
-master? In this case, we can wait for the replica to catch up with the master.&lt;/p>
-&lt;p>One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if
-the data is not found. The app could check the &lt;code>updated_at&lt;/code> column to see if the data is recent. If the data is not
+&gt;our Go backend&lt;/a&gt;,
+forcing reads from the master can be done by updating the &lt;code&gt;Context&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ctxUsePrimary&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;ctxdb&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RequirePrimary&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, additional master reads increase the load on the master, defeating the purpose of having a replica for read
+scaling.&lt;/p&gt;
+&lt;p&gt;In addition, what about expensive read queries, like &lt;code&gt;COUNT(*)&lt;/code&gt; and calculations, which we don&amp;rsquo;t want to run on the
+master? In this case, we can wait for the replica to catch up with the master.&lt;/p&gt;
+&lt;p&gt;One generic approach to waiting for the replica is to read the last written data from the replica and retry the read if
+the data is not found. The app could check the &lt;code&gt;updated_at&lt;/code&gt; column to see if the data is recent. If the data is not
 found, the app can sleep for a few milliseconds and retry the read. This approach is imperfect but a good compromise
-between read consistency and performance.&lt;/p>
-&lt;p>Note:
+between read consistency and performance.&lt;/p&gt;
+&lt;p&gt;Note:
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/date-and-time-type-syntax.html#:~:text=default%20precision%20is%200." target="_blank" rel="noopener"
->The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a>.&lt;/p>
-&lt;h2 id="index-limitations">&lt;a href="#index-limitations" class="header-anchor">&lt;/a>Index limitations
-&lt;/h2>&lt;h3 id="what-are-sql-indexes">&lt;a href="#what-are-sql-indexes" class="header-anchor">&lt;/a>What are SQL indexes?
-&lt;/h3>&lt;p>Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval
+&gt;The default precision of MySQL date and time data types is 1 second (0 fractional seconds)&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="index-limitations"&gt;&lt;a href="#index-limitations" class="header-anchor"&gt;&lt;/a&gt;Index limitations
+&lt;/h2&gt;&lt;h3 id="what-are-sql-indexes"&gt;&lt;a href="#what-are-sql-indexes" class="header-anchor"&gt;&lt;/a&gt;What are SQL indexes?
+&lt;/h3&gt;&lt;p&gt;Indexes are a way to optimize read queries. They are a data structure that improves the speed of data retrieval
 operations on a database table at the cost of additional writes and storage space to maintain the index data structure.
 Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data
-structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
-alt="Database index">&lt;figcaption>
-&lt;h4>Database index&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be
-large and take up a lot of disk space.&lt;/p>
-&lt;h3 id="index-size-is-limited">&lt;a href="#index-size-is-limited" class="header-anchor">&lt;/a>Index size is limited
-&lt;/h3>&lt;p>As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new
+structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
+alt="Database index"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Database index&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be
+large and take up a lot of disk space.&lt;/p&gt;
+&lt;h3 id="index-size-is-limited"&gt;&lt;a href="#index-size-is-limited" class="header-anchor"&gt;&lt;/a&gt;Index size is limited
+&lt;/h3&gt;&lt;p&gt;As the product grows with more features, the number of columns in a specific table can also increase. Sometimes, the new
 columns need to be part of a unique index. However, the
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html" target="_blank" rel="noopener"
->maximum index size in MySQL is 3072 bytes&lt;/a>. This limit can
-be quickly reached if columns are of type &lt;code>VARCHAR&lt;/code> or &lt;code>TEXT&lt;/code>.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">CREATE&lt;/span> &lt;span style="color:#66d9ef">TABLE&lt;/span> &lt;span style="color:#f92672">`&lt;/span>activities&lt;span style="color:#f92672">`&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">`&lt;/span>user_name&lt;span style="color:#f92672">`&lt;/span> VARCHAR(&lt;span style="color:#ae81ff">255&lt;/span>) &lt;span style="color:#66d9ef">NOT&lt;/span> &lt;span style="color:#66d9ef">NULL&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other
+&gt;maximum index size in MySQL is 3072 bytes&lt;/a&gt;. This limit can
+be quickly reached if columns are of type &lt;code&gt;VARCHAR&lt;/code&gt; or &lt;code&gt;TEXT&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;CREATE&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;TABLE&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;activities&lt;span style="color:#f92672"&gt;`&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;user_name&lt;span style="color:#f92672"&gt;`&lt;/span&gt; VARCHAR(&lt;span style="color:#ae81ff"&gt;255&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;NOT&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;NULL&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;One way to solve the issue of hitting the index size limit is to create a new column that makes the hash of the other
 relevant column(s), and use that as the unique index. For example, in our backend
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6f008b40f24bcd000c1450d7438be99d30c518c5/server/datastore/mysql/schema.sql#L1450" target="_blank" rel="noopener"
->we use a &lt;code>checksum&lt;/code> column in the &lt;code>software&lt;/code> table to create a unique index for a software item&lt;/a>.&lt;/p>
-&lt;h3 id="foreign-keys-may-cause-performance-issues">&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor">&lt;/a>Foreign keys may cause performance issues
-&lt;/h3>&lt;p>If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the
-corresponding row in the parent table. This locking can lead to performance issues when&lt;/p>
-&lt;ul>
-&lt;li>the parent table is large&lt;/li>
-&lt;li>the parent has many foreign key constraints&lt;/li>
-&lt;li>the parent table or child tables are frequently updated&lt;/li>
-&lt;/ul>
-&lt;p>The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the
+&gt;we use a &lt;code&gt;checksum&lt;/code&gt; column in the &lt;code&gt;software&lt;/code&gt; table to create a unique index for a software item&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="foreign-keys-may-cause-performance-issues"&gt;&lt;a href="#foreign-keys-may-cause-performance-issues" class="header-anchor"&gt;&lt;/a&gt;Foreign keys may cause performance issues
+&lt;/h3&gt;&lt;p&gt;If a table has a foreign key, any insert, update, or delete with a constraint on the foreign key column will lock the
+corresponding row in the parent table. This locking can lead to performance issues when&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;the parent table is large&lt;/li&gt;
+&lt;li&gt;the parent has many foreign key constraints&lt;/li&gt;
+&lt;li&gt;the parent table or child tables are frequently updated&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The performance issue manifests as excessive lock wait times for queries. One way to solve this issue is to remove the
 foreign key constraint. Instead, the application code can handle the data integrity checks that the foreign key
-constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p>
-&lt;h2 id="bonus-database-gotchas">&lt;a href="#bonus-database-gotchas" class="header-anchor">&lt;/a>Bonus database gotchas
-&lt;/h2>&lt;p>Additional database gotchas that we have seen in production include:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" >Prepared statements consuming too much memory&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../mysql-upsert-deadlock" >Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>Also, we recently &lt;a class="link" href="../distributed-lock" >solved a problem in production with distributed lock&lt;/a>.&lt;/p>
-&lt;h2 id="3-database-gotchas-video">&lt;a href="#3-database-gotchas-video" class="header-anchor">&lt;/a>3 database gotchas video
-&lt;/h2>&lt;div class="video-wrapper">
+constraint provides. In our application, we run a regular clean-up job to remove orphaned child rows.&lt;/p&gt;
+&lt;h2 id="bonus-database-gotchas"&gt;&lt;a href="#bonus-database-gotchas" class="header-anchor"&gt;&lt;/a&gt;Bonus database gotchas
+&lt;/h2&gt;&lt;p&gt;Additional database gotchas that we have seen in production include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../sql-prepared-statements-are-broken-when-scaling-applications" &gt;Prepared statements consuming too much memory&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../mysql-upsert-deadlock" &gt;Deadlocks caused by using an UPDATE/INSERT upsert pattern&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Also, we recently &lt;a class="link" href="../distributed-lock" &gt;solved a problem in production with distributed lock&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="3-database-gotchas-video"&gt;&lt;a href="#3-database-gotchas-video" class="header-anchor"&gt;&lt;/a&gt;3 database gotchas video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/N-wzNq-sEwo"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

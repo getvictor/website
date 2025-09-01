@@ -1,334 +1,334 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linting on Victor on Software</title><link>https://victoronsoftware.com/tags/linting/</link><description>Recent content in Linting on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/linting/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" />&lt;p>&lt;em>This article is part of a series on &lt;strong>technical debt&lt;/strong>. Check out the previous articles:&lt;/em>&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="../readable-code/" >Ways to improve your code for readability&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" >How to scale a codebase with evolutionary architecture&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="intro-to-code-complexity-metrics">&lt;a href="#intro-to-code-complexity-metrics" class="header-anchor">&lt;/a>Intro to code complexity metrics
-&lt;/h2>&lt;ul>
-&lt;li>&lt;a class="link" href="#code-style" >Code style&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#code-size" >Code size&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#cyclomatic-complexity" >Cyclomatic complexity&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#cognitive-complexity" >Cognitive complexity&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>In the previous article on &lt;a class="link" href="../readable-code/" >readable code&lt;/a>, we discussed a few metrics for measuring unreadable code.
-In this article, we will expand on some of those ideas and specifically focus on code complexity.&lt;/p>
-&lt;p>Code complexity primarily refers to the difficulty of understanding a piece of code or a piece of the codebase, such as
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linting on Victor on Software</title><link>https://victoronsoftware.com/tags/linting/</link><description>Recent content in Linting on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 05 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/linting/index.xml" rel="self" type="application/rss+xml"/><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Ways to improve your code for readability&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="../scaling-codebase-evolutionary-architecture/" &gt;How to scale a codebase with evolutionary architecture&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="intro-to-code-complexity-metrics"&gt;&lt;a href="#intro-to-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Intro to code complexity metrics
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#code-style" &gt;Code style&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#code-size" &gt;Code size&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#cyclomatic-complexity" &gt;Cyclomatic complexity&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#cognitive-complexity" &gt;Cognitive complexity&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In the previous article on &lt;a class="link" href="../readable-code/" &gt;readable code&lt;/a&gt;, we discussed a few metrics for measuring unreadable code.
+In this article, we will expand on some of those ideas and specifically focus on code complexity.&lt;/p&gt;
+&lt;p&gt;Code complexity primarily refers to the difficulty of understanding a piece of code or a piece of the codebase, such as
 a module. Complex code is difficult to modify because engineers must spend considerable mental energy to understand it.
 Frequently, engineers will not understand the code well enough, so they&amp;rsquo;ll make a change to fix a bug, and the change
 will introduce a new bug somewhere else. Lack of understanding also leads to
 &lt;a class="link" href="https://victoronsoftware.com/posts/common-refactorings/#why-are-engineers-afraid-of-refactoring" target="_blank" rel="noopener"
->a fear of refactoring&lt;/a>,
-because engineers don&amp;rsquo;t want to break the codebase.&lt;/p>
-&lt;h2 id="code-complexity-metrics">&lt;a href="#code-complexity-metrics" class="header-anchor">&lt;/a>Code complexity metrics
-&lt;/h2>&lt;p>Many code complexity measures overlap since they all try to measure the same thing.&lt;/p>
-&lt;h3 id="code-style">&lt;a href="#code-style" class="header-anchor">&lt;/a>Code style
-&lt;/h3>&lt;p>A standard code style is helpful for readability. For example, if I opened a file and saw that it had no indentation,
-the max line length was 20, and somebody named all the variables with a leading &lt;code>iwuzhere&lt;/code>, I would be confused. I would
-have to stop and carefully process the file. I would not have to slow down if the code style were consistent.&lt;/p>
-&lt;p>The metric to track is the number of code style violations or the number of files violating the code style. Most
+&gt;a fear of refactoring&lt;/a&gt;,
+because engineers don&amp;rsquo;t want to break the codebase.&lt;/p&gt;
+&lt;h2 id="code-complexity-metrics"&gt;&lt;a href="#code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Code complexity metrics
+&lt;/h2&gt;&lt;p&gt;Many code complexity measures overlap since they all try to measure the same thing.&lt;/p&gt;
+&lt;h3 id="code-style"&gt;&lt;a href="#code-style" class="header-anchor"&gt;&lt;/a&gt;Code style
+&lt;/h3&gt;&lt;p&gt;A standard code style is helpful for readability. For example, if I opened a file and saw that it had no indentation,
+the max line length was 20, and somebody named all the variables with a leading &lt;code&gt;iwuzhere&lt;/code&gt;, I would be confused. I would
+have to stop and carefully process the file. I would not have to slow down if the code style were consistent.&lt;/p&gt;
+&lt;p&gt;The metric to track is the number of code style violations or the number of files violating the code style. Most
 companies enforce a code style with their CI pipeline. Modern tooling can automatically reformat code to match the
-agreed-upon code style, so code style should no longer be a complexity or readability issue.&lt;/p>
-&lt;h3 id="code-size">&lt;a href="#code-size" class="header-anchor">&lt;/a>Code size
-&lt;/h3>&lt;p>How much code is there? The more code there is, the longer it takes to read and understand it. The common metrics are:&lt;/p>
-&lt;ul>
-&lt;li>program size or lines of code (LOC)
-&lt;ul>
-&lt;li>in a function&lt;/li>
-&lt;li>in a file&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;li>number of functions/classes/modules/files&lt;/li>
-&lt;/ul>
-&lt;p>The motivation for tracking these metrics is to help engineers split their functions/files/projects into smaller, more
+agreed-upon code style, so code style should no longer be a complexity or readability issue.&lt;/p&gt;
+&lt;h3 id="code-size"&gt;&lt;a href="#code-size" class="header-anchor"&gt;&lt;/a&gt;Code size
+&lt;/h3&gt;&lt;p&gt;How much code is there? The more code there is, the longer it takes to read and understand it. The common metrics are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;program size or lines of code (LOC)
+&lt;ul&gt;
+&lt;li&gt;in a function&lt;/li&gt;
+&lt;li&gt;in a file&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;number of functions/classes/modules/files&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The motivation for tracking these metrics is to help engineers split their functions/files/projects into smaller, more
 manageable pieces. James Lewis from ThoughtWorks said that &amp;ldquo;a microservice should be as big as my head.&amp;rdquo; His idea is
 that one person should be able to understand the entire codebase. The smaller the piece of code, the easier it is to
-understand.&lt;/p>
-&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
->Halstead introduced a set of software complexity measures&lt;/a>
+understand.&lt;/p&gt;
+&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
+&gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
 in 1977, and one of his metrics was the Halstead volume, which is directly related to code size. We can approximate the
 Halstead volume by ignoring all comments and whitespace, then multiplying the average code line length by the number of
-lines of code. This approximation is a good enough metric for our purposes.&lt;/p>
-&lt;h3 id="cyclomatic-complexity">&lt;a href="#cyclomatic-complexity" class="header-anchor">&lt;/a>Cyclomatic complexity
-&lt;/h3>&lt;p>&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
->Cyclomatic complexity&lt;/a> measures the number of linearly independent
+lines of code. This approximation is a good enough metric for our purposes.&lt;/p&gt;
+&lt;h3 id="cyclomatic-complexity"&gt;&lt;a href="#cyclomatic-complexity" class="header-anchor"&gt;&lt;/a&gt;Cyclomatic complexity
+&lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
+&gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
 paths through a program&amp;rsquo;s source code. It is often used as the master metric for code complexity, uncovering
-maintainability and hard-to-test parts of the codebase.&lt;/p>
-&lt;p>A typical calculation of cyclomatic complexity is as follows:&lt;/p>
-&lt;ul>
-&lt;li>1 is the base complexity for a function&lt;/li>
-&lt;li>for each &lt;code>if&lt;/code>, &lt;code>case&lt;/code>, &lt;code>while&lt;/code>, &lt;code>for&lt;/code>, or other branching statement, add 1&lt;/li>
-&lt;/ul>
-&lt;p>A good cyclomatic complexity is 10 or less. A score of 20 or more is generally considered difficult to understand. This
-metric encourages us to write smaller functions.&lt;/p>
-&lt;h3 id="cognitive-complexity">&lt;a href="#cognitive-complexity" class="header-anchor">&lt;/a>Cognitive complexity
-&lt;/h3>&lt;p>An alternative to cyclomatic complexity is
+maintainability and hard-to-test parts of the codebase.&lt;/p&gt;
+&lt;p&gt;A typical calculation of cyclomatic complexity is as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;1 is the base complexity for a function&lt;/li&gt;
+&lt;li&gt;for each &lt;code&gt;if&lt;/code&gt;, &lt;code&gt;case&lt;/code&gt;, &lt;code&gt;while&lt;/code&gt;, &lt;code&gt;for&lt;/code&gt;, or other branching statement, add 1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A good cyclomatic complexity is 10 or less. A score of 20 or more is generally considered difficult to understand. This
+metric encourages us to write smaller functions.&lt;/p&gt;
+&lt;h3 id="cognitive-complexity"&gt;&lt;a href="#cognitive-complexity" class="header-anchor"&gt;&lt;/a&gt;Cognitive complexity
+&lt;/h3&gt;&lt;p&gt;An alternative to cyclomatic complexity is
 &lt;a class="link" href="https://www.sonarsource.com/docs/CognitiveComplexity.pdf" target="_blank" rel="noopener"
->cognitive complexity&lt;/a>. This metric tries to adjust the
+&gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
 cyclomatic complexity metric to focus on the human reader&amp;rsquo;s mental load &amp;ndash; on the maintainability, and not on the
-testability, of the code.&lt;/p>
-&lt;p>The key differences in the calculation are:&lt;/p>
-&lt;ul>
-&lt;li>for nested structures, extra incremental penalties are added&lt;/li>
-&lt;li>recursion is penalized&lt;/li>
-&lt;li>jumps to labels, such as &lt;code>goto LABEL&lt;/code>, are penalized&lt;/li>
-&lt;li>&lt;code>switch&lt;/code> is preferred over nested &lt;code>if&lt;/code>&lt;/li>
-&lt;li>groups of similar logical operators are NOT penalized
-&lt;ul>
-&lt;li>for example, &lt;code>a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c &amp;amp;&amp;amp; d&lt;/code> is easier to understand than &lt;code>a &amp;amp;&amp;amp; b || c &amp;amp;&amp;amp; d&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;/li>
-&lt;/ul>
-&lt;p>This metric is more difficult to calculate than cyclomatic complexity, but it is generally considered a better
-approximation of code complexity. Many companies are adopting this metric.&lt;/p>
-&lt;h2 id="tool-and-language-specific-considerations">&lt;a href="#tool-and-language-specific-considerations" class="header-anchor">&lt;/a>Tool and language-specific considerations
-&lt;/h2>&lt;p>Modern tools can help with code maintainability issues. For example, AI tools that index the codebase can help explain
+testability, of the code.&lt;/p&gt;
+&lt;p&gt;The key differences in the calculation are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;for nested structures, extra incremental penalties are added&lt;/li&gt;
+&lt;li&gt;recursion is penalized&lt;/li&gt;
+&lt;li&gt;jumps to labels, such as &lt;code&gt;goto LABEL&lt;/code&gt;, are penalized&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;switch&lt;/code&gt; is preferred over nested &lt;code&gt;if&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;groups of similar logical operators are NOT penalized
+&lt;ul&gt;
+&lt;li&gt;for example, &lt;code&gt;a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c &amp;amp;&amp;amp; d&lt;/code&gt; is easier to understand than &lt;code&gt;a &amp;amp;&amp;amp; b || c &amp;amp;&amp;amp; d&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This metric is more difficult to calculate than cyclomatic complexity, but it is generally considered a better
+approximation of code complexity. Many companies are adopting this metric.&lt;/p&gt;
+&lt;h2 id="tool-and-language-specific-considerations"&gt;&lt;a href="#tool-and-language-specific-considerations" class="header-anchor"&gt;&lt;/a&gt;Tool and language-specific considerations
+&lt;/h2&gt;&lt;p&gt;Modern tools can help with code maintainability issues. For example, AI tools that index the codebase can help explain
 how a piece of code (or a feature) works. IDEs can also help by collapsing boilerplate code or improving readability in
-other ways.&lt;/p>
-&lt;p>In the Go programming language, the idiomatic way to check for errors is:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The above code is repeated everywhere and is typically collapsed by modern IDEs. However, cyclomatic complexity and
-cognitive complexity metrics penalize it.&lt;/p>
-&lt;p>We need a complexity tool where the user can adjust the penalties. This way, an engineering team can agree on what is
-considered complex code based on their experience, language, and code style.&lt;/p>
-&lt;h3 id="go-complexity-metrics">&lt;a href="#go-complexity-metrics" class="header-anchor">&lt;/a>Go complexity metrics
-&lt;/h3>&lt;p>For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
->gocyclo&lt;/a>. For measuring cognitive
+other ways.&lt;/p&gt;
+&lt;p&gt;In the Go programming language, the idiomatic way to check for errors is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above code is repeated everywhere and is typically collapsed by modern IDEs. However, cyclomatic complexity and
+cognitive complexity metrics penalize it.&lt;/p&gt;
+&lt;p&gt;We need a complexity tool where the user can adjust the penalties. This way, an engineering team can agree on what is
+considered complex code based on their experience, language, and code style.&lt;/p&gt;
+&lt;h3 id="go-complexity-metrics"&gt;&lt;a href="#go-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Go complexity metrics
+&lt;/h3&gt;&lt;p&gt;For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
+&gt;gocyclo&lt;/a&gt;. For measuring cognitive
 complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocognit" target="_blank" rel="noopener"
->gocognit&lt;/a>.&lt;/p>
-&lt;h3 id="what-is-modularity-and-why-is-it-important">&lt;a href="#what-is-modularity-and-why-is-it-important" class="header-anchor">&lt;/a>What is modularity and why is it important
-&lt;/h3>&lt;p>In the next article of this &lt;strong>technical debt&lt;/strong> series, we
-&lt;a class="link" href="../software-modularity/" >explain what is modularity and why it is important for modern scalable software systems&lt;/a>.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;a class="link" href="../engineering-metrics-no-cost/" >Track your team’s engineering performance with open-source tools&lt;/a>&lt;br>
-A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Recently, we &lt;a class="link" href="../literate-programming-lessons/" >showed an example and key takeaways from literate programming&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>We also wrote &lt;a class="link" href="../ai-for-software-developers/" >an overview of using AI in software development&lt;/a>.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics">&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor">&lt;/a>Watch us discuss and show examples of code complexity metrics
-&lt;/h2>&lt;div class="video-wrapper">
+&gt;gocognit&lt;/a&gt;.&lt;/p&gt;
+&lt;h3 id="what-is-modularity-and-why-is-it-important"&gt;&lt;a href="#what-is-modularity-and-why-is-it-important" class="header-anchor"&gt;&lt;/a&gt;What is modularity and why is it important
+&lt;/h3&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
+&lt;a class="link" href="../software-modularity/" &gt;explain what is modularity and why it is important for modern scalable software systems&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class="link" href="../engineering-metrics-no-cost/" &gt;Track your team’s engineering performance with open-source tools&lt;/a&gt;&lt;br&gt;
+A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Recently, we &lt;a class="link" href="../literate-programming-lessons/" &gt;showed an example and key takeaways from literate programming&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;We also wrote &lt;a class="link" href="../ai-for-software-developers/" &gt;an overview of using AI in software development&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics"&gt;&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss and show examples of code complexity metrics
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/HzZQqrhX3cg"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Is staticcheck linter useful for my Go project?</title><link>https://victoronsoftware.com/posts/staticcheck-go-linter/</link><pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/staticcheck-go-linter/</guid><description>&lt;img src="https://victoronsoftware.com/posts/staticcheck-go-linter/staticcheck-go-linter-headline.png" alt="Featured image of post Is staticcheck linter useful for my Go project?" />&lt;h2 id="what-is-staticcheck">&lt;a href="#what-is-staticcheck" class="header-anchor">&lt;/a>What is staticcheck?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://staticcheck.dev/" target="_blank" rel="noopener"
->Staticcheck&lt;/a> is a Go linter that checks your Go code for bugs and performance issues. It is a
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Is staticcheck linter useful for my Go project?</title><link>https://victoronsoftware.com/posts/staticcheck-go-linter/</link><pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/staticcheck-go-linter/</guid><description>&lt;img src="https://victoronsoftware.com/posts/staticcheck-go-linter/staticcheck-go-linter-headline.png" alt="Featured image of post Is staticcheck linter useful for my Go project?" /&gt;&lt;h2 id="what-is-staticcheck"&gt;&lt;a href="#what-is-staticcheck" class="header-anchor"&gt;&lt;/a&gt;What is staticcheck?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://staticcheck.dev/" target="_blank" rel="noopener"
+&gt;Staticcheck&lt;/a&gt; is a Go linter that checks your Go code for bugs and performance issues. It is a
 powerful tool that can help you find issues in your code before they become problematic. Staticcheck is one of the
 default linters in the &lt;a class="link" href="https://golangci-lint.run/" target="_blank" rel="noopener"
->golangci-lint&lt;/a> tool.&lt;/p>
-&lt;h2 id="run-staticcheck-on-your-go-project">&lt;a href="#run-staticcheck-on-your-go-project" class="header-anchor">&lt;/a>Run staticcheck on your Go project
-&lt;/h2>&lt;p>In this example, we will enable staticcheck via the &lt;code>golangci-lint&lt;/code> tool in a large Go project. The &lt;code>golangci-lint&lt;/code> tool
+&gt;golangci-lint&lt;/a&gt; tool.&lt;/p&gt;
+&lt;h2 id="run-staticcheck-on-your-go-project"&gt;&lt;a href="#run-staticcheck-on-your-go-project" class="header-anchor"&gt;&lt;/a&gt;Run staticcheck on your Go project
+&lt;/h2&gt;&lt;p&gt;In this example, we will enable staticcheck via the &lt;code&gt;golangci-lint&lt;/code&gt; tool in a large Go project. The &lt;code&gt;golangci-lint&lt;/code&gt; tool
 is a lint runner that runs many linters in parallel. It is a great tool to use in your CI/CD pipeline to catch issues
-early.&lt;/p>
-&lt;h3 id="install-golangci-lint">&lt;a href="#install-golangci-lint" class="header-anchor">&lt;/a>Install golangci-lint
-&lt;/h3>&lt;p>To install the &lt;code>golangci-lint&lt;/code> tool, you can use one of the options in
+early.&lt;/p&gt;
+&lt;h3 id="install-golangci-lint"&gt;&lt;a href="#install-golangci-lint" class="header-anchor"&gt;&lt;/a&gt;Install golangci-lint
+&lt;/h3&gt;&lt;p&gt;To install the &lt;code&gt;golangci-lint&lt;/code&gt; tool, you can use one of the options in
 &lt;a class="link" href="https://golangci-lint.run/welcome/install/" target="_blank" rel="noopener"
->golangci-lint install documentation&lt;/a>. We install it using the following
-command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Although the documentation does not recommend this way of installing from source, we use it to ensure that our version
-of &lt;code>golangci-lint&lt;/code> is compiled using the same Go version as our project. We previously encountered issues with
-&lt;code>golangci-lint&lt;/code> compiled with a different Go version.&lt;/p>
-&lt;p>Check the version of &lt;code>golangci-lint&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint --version
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Sample output:&lt;/p>
-&lt;pre tabindex="0">&lt;code>golangci-lint has version v1.61.0 built with go1.23.1 from (unknown, modified: ?, mod sum: &amp;#34;h1:VvbOLaRVWmyxCnUIMTbf1kDsaJbTzH20FAMXTAlQGu8=&amp;#34;) on (unknown)
-&lt;/code>&lt;/pre>&lt;h3 id="run-golangci-lint-with-staticcheck">&lt;a href="#run-golangci-lint-with-staticcheck" class="header-anchor">&lt;/a>Run golangci-lint with staticcheck
-&lt;/h3>&lt;p>You can run &lt;code>staticcheck&lt;/code> using the &lt;code>golangci-lint&lt;/code> tool. In the root of your Go project, run the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command turns off all default linters and enables only the &lt;code>staticcheck&lt;/code> linter. You can view the complete list of
-run options with:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --help
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For our project, we add a few more flags to the &lt;code>golangci-lint run&lt;/code> command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --timeout 10m --max-same-issues &lt;span style="color:#ae81ff">0&lt;/span> --max-issues-per-linter &lt;span style="color:#ae81ff">0&lt;/span> --exclude-dirs ./node_modules
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="analyze-and-fix-staticcheck-issues">&lt;a href="#analyze-and-fix-staticcheck-issues" class="header-anchor">&lt;/a>Analyze and fix staticcheck issues
-&lt;/h2>&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-field">&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-field" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
->SA1019 - Using a deprecated function, variable, constant or field&lt;/a>
-&lt;/h3>&lt;p>After running the linter, the first thing we notice is a considerable number of
+&gt;golangci-lint install documentation&lt;/a&gt;. We install it using the following
+command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Although the documentation does not recommend this way of installing from source, we use it to ensure that our version
+of &lt;code&gt;golangci-lint&lt;/code&gt; is compiled using the same Go version as our project. We previously encountered issues with
+&lt;code&gt;golangci-lint&lt;/code&gt; compiled with a different Go version.&lt;/p&gt;
+&lt;p&gt;Check the version of &lt;code&gt;golangci-lint&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint --version
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Sample output:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;golangci-lint has version v1.61.0 built with go1.23.1 from (unknown, modified: ?, mod sum: &amp;#34;h1:VvbOLaRVWmyxCnUIMTbf1kDsaJbTzH20FAMXTAlQGu8=&amp;#34;) on (unknown)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id="run-golangci-lint-with-staticcheck"&gt;&lt;a href="#run-golangci-lint-with-staticcheck" class="header-anchor"&gt;&lt;/a&gt;Run golangci-lint with staticcheck
+&lt;/h3&gt;&lt;p&gt;You can run &lt;code&gt;staticcheck&lt;/code&gt; using the &lt;code&gt;golangci-lint&lt;/code&gt; tool. In the root of your Go project, run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --disable-all --enable staticcheck
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command turns off all default linters and enables only the &lt;code&gt;staticcheck&lt;/code&gt; linter. You can view the complete list of
+run options with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --help
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For our project, we add a few more flags to the &lt;code&gt;golangci-lint run&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --disable-all --enable staticcheck --timeout 10m --max-same-issues &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; --max-issues-per-linter &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; --exclude-dirs ./node_modules
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="analyze-and-fix-staticcheck-issues"&gt;&lt;a href="#analyze-and-fix-staticcheck-issues" class="header-anchor"&gt;&lt;/a&gt;Analyze and fix staticcheck issues
+&lt;/h2&gt;&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-field"&gt;&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-field" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
+&gt;SA1019 - Using a deprecated function, variable, constant or field&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;After running the linter, the first thing we notice is a considerable number of
 &lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
->SA1019&lt;/a> fails flagging deprecations, such as:&lt;/p>
-&lt;pre tabindex="0">&lt;code>cmd/osquery-perf/agent.go:2574:2: SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator. (staticcheck)
+&gt;SA1019&lt;/a&gt; fails flagging deprecations, such as:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;cmd/osquery-perf/agent.go:2574:2: SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator. (staticcheck)
 rand.Seed(*randSeed)
 ^
-&lt;/code>&lt;/pre>&lt;p>or&lt;/p>
-&lt;pre tabindex="0">&lt;code>server/service/appconfig.go:970:5: SA1019: customSettings[i].Labels is deprecated: the Labels field is now deprecated, it is superseded by LabelsIncludeAll, so any value set via this field will be transferred to LabelsIncludeAll. (staticcheck)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;server/service/appconfig.go:970:5: SA1019: customSettings[i].Labels is deprecated: the Labels field is now deprecated, it is superseded by LabelsIncludeAll, so any value set via this field will be transferred to LabelsIncludeAll. (staticcheck)
 customSettings[i].Labels = nil
 ^
-&lt;/code>&lt;/pre>&lt;p>The first fail flags a Go library depreciation issue. Although we could fix it, we are not worried because of Go&amp;rsquo;s
-commitment to backward compatibility.&lt;/p>
-&lt;p>The second &lt;code>SA1019&lt;/code> deprecation fail flags an internal depreciation within our app. However, we must maintain many
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The first fail flags a Go library depreciation issue. Although we could fix it, we are not worried because of Go&amp;rsquo;s
+commitment to backward compatibility.&lt;/p&gt;
+&lt;p&gt;The second &lt;code&gt;SA1019&lt;/code&gt; deprecation fail flags an internal depreciation within our app. However, we must maintain many
 deprecated functions within our app for backward compatibility until they can be removed with the next major release.
-So, many of these failures cannot be fixed. We could waive each one, but that would be a lot of busy work.&lt;/p>
-&lt;p>Enabling &lt;code>SA1019&lt;/code> as a default &lt;code>staticcheck&lt;/code> rule is a mistake. We suspect many potential users of &lt;code>staticcheck&lt;/code> will be
-turned off by the sheer number of these fails and will simply turn off &lt;code>staticcheck&lt;/code> in their projects.&lt;/p>
-&lt;p>We decide to suppress them for now by creating a custom configuration file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">linters-settings&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">staticcheck&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">checks&lt;/span>: [&lt;span style="color:#e6db74">&amp;#34;all&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1000&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1003&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1016&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1020&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1021&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-ST1022&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;-SA1019&amp;#34;&lt;/span>]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We use the &lt;a class="link" href="https://staticcheck.dev/docs/configuration/#example-configuration" target="_blank" rel="noopener"
->default staticcheck checks&lt;/a> and turn off
-the &lt;code>SA1019&lt;/code> check.&lt;/p>
-&lt;p>We then run &lt;code>golangci-lint&lt;/code> with the custom configuration file:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>golangci-lint run --disable-all --enable staticcheck --config staticcheck.yml
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsis">&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsis" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
->SA1032 - Wrong order of arguments to errors.Is&lt;/a>
-&lt;/h3>&lt;p>After rerunning the linter, we saw a &lt;code>SA1032&lt;/code> fail:&lt;/p>
-&lt;pre tabindex="0">&lt;code>server/datastore/mysql/vpp.go:1090:6: SA1032: arguments have the wrong order (staticcheck)
+So, many of these failures cannot be fixed. We could waive each one, but that would be a lot of busy work.&lt;/p&gt;
+&lt;p&gt;Enabling &lt;code&gt;SA1019&lt;/code&gt; as a default &lt;code&gt;staticcheck&lt;/code&gt; rule is a mistake. We suspect many potential users of &lt;code&gt;staticcheck&lt;/code&gt; will be
+turned off by the sheer number of these fails and will simply turn off &lt;code&gt;staticcheck&lt;/code&gt; in their projects.&lt;/p&gt;
+&lt;p&gt;We decide to suppress them for now by creating a custom configuration file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;linters-settings&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;staticcheck&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;checks&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;all&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1000&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1003&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1016&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1020&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1021&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1022&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-SA1019&amp;#34;&lt;/span&gt;]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://staticcheck.dev/docs/configuration/#example-configuration" target="_blank" rel="noopener"
+&gt;default staticcheck checks&lt;/a&gt; and turn off
+the &lt;code&gt;SA1019&lt;/code&gt; check.&lt;/p&gt;
+&lt;p&gt;We then run &lt;code&gt;golangci-lint&lt;/code&gt; with the custom configuration file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --disable-all --enable staticcheck --config staticcheck.yml
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsis"&gt;&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsis" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
+&gt;SA1032 - Wrong order of arguments to errors.Is&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;After rerunning the linter, we saw a &lt;code&gt;SA1032&lt;/code&gt; fail:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;server/datastore/mysql/vpp.go:1090:6: SA1032: arguments have the wrong order (staticcheck)
 if errors.Is(sql.ErrNoRows, err) {
 ^
-&lt;/code>&lt;/pre>&lt;p>This failure is a good catch and a potential bug. We fix it by swapping the arguments:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">errors&lt;/span>.&lt;span style="color:#a6e22e">Is&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>, &lt;span style="color:#a6e22e">sql&lt;/span>.&lt;span style="color:#a6e22e">ErrNoRows&lt;/span>) {
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver">&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
->SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a>
-&lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4005&lt;/code>:&lt;/p>
-&lt;pre tabindex="0">&lt;code>server/mail/users.go:44:2: SA4005: ineffective assignment to field PasswordResetMailer.CurrentYear (staticcheck)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This failure is a good catch and a potential bug. We fix it by swapping the arguments:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;errors&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Is&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;sql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ErrNoRows&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver"&gt;&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
+&gt;SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;Another fail we saw was &lt;code&gt;SA4005&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;server/mail/users.go:44:2: SA4005: ineffective assignment to field PasswordResetMailer.CurrentYear (staticcheck)
 r.CurrentYear = time.Now().Year()
 ^
-&lt;/code>&lt;/pre>&lt;p>The relevant Go code is:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">t&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">server&lt;/span>.&lt;span style="color:#a6e22e">GetTemplate&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;server/mail/templates/password_reset.html&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;email_template&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">msg&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Buffer&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">t&lt;/span>.&lt;span style="color:#a6e22e">Execute&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">msg&lt;/span>, &lt;span style="color:#a6e22e">r&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In this case, the &lt;code>CurrentYear&lt;/code> field was used in our template, but the linter could not detect it. We spent a few
-minutes testing the template to ensure that the &lt;code>CurrentYear&lt;/code> field was being populated correctly. To waive this
-failure, we add a comment:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">CurrentYear&lt;/span> = &lt;span style="color:#a6e22e">time&lt;/span>.&lt;span style="color:#a6e22e">Now&lt;/span>().&lt;span style="color:#a6e22e">Year&lt;/span>() &lt;span style="color:#75715e">// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code">&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
->SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a>
-&lt;/h3>&lt;p>We saw a lot of &lt;code>SA4006&lt;/code> fails in our codebase. It was the most common &lt;code>staticcheck&lt;/code> fail we encountered. Here is an
-example:&lt;/p>
-&lt;pre tabindex="0">&lt;code>ee/fleetctl/updates_test.go:455:2: SA4006: this value of `repo` is never used (staticcheck)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The relevant Go code is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CurrentYear&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;time&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Now&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;Year&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;t&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;server&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;GetTemplate&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;server/mail/templates/password_reset.html&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;email_template&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;msg&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Buffer&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;t&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Execute&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;msg&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this case, the &lt;code&gt;CurrentYear&lt;/code&gt; field was used in our template, but the linter could not detect it. We spent a few
+minutes testing the template to ensure that the &lt;code&gt;CurrentYear&lt;/code&gt; field was being populated correctly. To waive this
+failure, we add a comment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CurrentYear&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;time&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Now&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;Year&lt;/span&gt;() &lt;span style="color:#75715e"&gt;// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code"&gt;&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
+&gt;SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;We saw a lot of &lt;code&gt;SA4006&lt;/code&gt; fails in our codebase. It was the most common &lt;code&gt;staticcheck&lt;/code&gt; fail we encountered. Here is an
+example:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;ee/fleetctl/updates_test.go:455:2: SA4006: this value of `repo` is never used (staticcheck)
 repo, err = openRepo(tmpDir)
 ^
-&lt;/code>&lt;/pre>&lt;p>This is a bug or a potential bug. The developer assigned a value to &lt;code>repo&lt;/code> but never used it. We fix it by removing the
-assignment:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">openRepo&lt;/span>(&lt;span style="color:#a6e22e">tmpDir&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-use">&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-use" class="header-anchor">&lt;/a>&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
->SA4009 - A function argument is overwritten before its first use&lt;/a>
-&lt;/h3>&lt;p>Another fail we saw was &lt;code>SA4009&lt;/code>. Here is an example:&lt;/p>
-&lt;pre tabindex="0">&lt;code>orbit/pkg/installer/installer.go:288:37: SA4009: argument ctx is overwritten before first use (staticcheck)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is a bug or a potential bug. The developer assigned a value to &lt;code&gt;repo&lt;/code&gt; but never used it. We fix it by removing the
+assignment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;_&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;openRepo&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tmpDir&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-use"&gt;&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-use" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
+&gt;SA4009 - A function argument is overwritten before its first use&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;Another fail we saw was &lt;code&gt;SA4009&lt;/code&gt;. Here is an example:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;orbit/pkg/installer/installer.go:288:37: SA4009: argument ctx is overwritten before first use (staticcheck)
 func (r *Runner) runInstallerScript(ctx context.Context, scriptContents string, installerPath string, fileName string) (string, int, error) {
 ^
-&lt;/code>&lt;/pre>&lt;p>This is another bug or potential bug. A function argument is passed in but then immediately overwritten and never used.
-This issue could be challenging to fix because it requires specific code knowledge.&lt;/p>
-&lt;h3 id="other-fails">&lt;a href="#other-fails" class="header-anchor">&lt;/a>Other fails
-&lt;/h3>&lt;p>We found a few other fails that were not as critical as the ones mentioned above. We fixed them as we went along. See
-the video below for more details.&lt;/p>
-&lt;h2 id="overall-impressions">&lt;a href="#overall-impressions" class="header-anchor">&lt;/a>Overall impressions
-&lt;/h2>&lt;p>Overall, we like the &lt;code>staticcheck&lt;/code> linter. It found many bugs or potential bugs and provided a lot of value.&lt;/p>
-&lt;p>We did have to ignore the &lt;code>SA1019&lt;/code> check and encountered an &lt;code>SA4005&lt;/code> false positive.&lt;/p>
-&lt;p>We will enable it in our CI/CD pipeline and continue to use it in our project.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>See &lt;a class="link" href="../code-complexity-metrics/" >how to use linting to improve Go code complexity&lt;/a>.&lt;/li>
-&lt;li>Recently, we wrote about
-&lt;a class="link" href="../opentelemetry-with-jaeger/" >finding performance issues with OpenTelemetry and Jaeger in your Go project&lt;/a>.&lt;/li>
-&lt;li>We also wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" >optimizing the performance of your Go code&lt;/a>.&lt;/li>
-&lt;li>We also published an article on &lt;a class="link" href="../go-modules-and-packages/" >Go modules and packages&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
-&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/b4a5a1fb49666dd3b10cfd11ccf26190ad9d2902" target="_blank" rel="noopener"
->Fleet repo we used when enabling staticcheck (as of this writing)&lt;/a>&lt;/p>
-&lt;h2 id="watch-us-enable-staticcheck-in-our-go-project">&lt;a href="#watch-us-enable-staticcheck-in-our-go-project" class="header-anchor">&lt;/a>Watch us enable staticcheck in our Go project
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is another bug or potential bug. A function argument is passed in but then immediately overwritten and never used.
+This issue could be challenging to fix because it requires specific code knowledge.&lt;/p&gt;
+&lt;h3 id="other-fails"&gt;&lt;a href="#other-fails" class="header-anchor"&gt;&lt;/a&gt;Other fails
+&lt;/h3&gt;&lt;p&gt;We found a few other fails that were not as critical as the ones mentioned above. We fixed them as we went along. See
+the video below for more details.&lt;/p&gt;
+&lt;h2 id="overall-impressions"&gt;&lt;a href="#overall-impressions" class="header-anchor"&gt;&lt;/a&gt;Overall impressions
+&lt;/h2&gt;&lt;p&gt;Overall, we like the &lt;code&gt;staticcheck&lt;/code&gt; linter. It found many bugs or potential bugs and provided a lot of value.&lt;/p&gt;
+&lt;p&gt;We did have to ignore the &lt;code&gt;SA1019&lt;/code&gt; check and encountered an &lt;code&gt;SA4005&lt;/code&gt; false positive.&lt;/p&gt;
+&lt;p&gt;We will enable it in our CI/CD pipeline and continue to use it in our project.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;See &lt;a class="link" href="../code-complexity-metrics/" &gt;how to use linting to improve Go code complexity&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Recently, we wrote about
+&lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;finding performance issues with OpenTelemetry and Jaeger in your Go project&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;We also wrote about &lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;optimizing the performance of your Go code&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;We also published an article on &lt;a class="link" href="../go-modules-and-packages/" &gt;Go modules and packages&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/b4a5a1fb49666dd3b10cfd11ccf26190ad9d2902" target="_blank" rel="noopener"
+&gt;Fleet repo we used when enabling staticcheck (as of this writing)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="watch-us-enable-staticcheck-in-our-go-project"&gt;&lt;a href="#watch-us-enable-staticcheck-in-our-go-project" class="header-anchor"&gt;&lt;/a&gt;Watch us enable staticcheck in our Go project
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/oqmVtN-Soig"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Linting and formatting TypeScript in Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</link><pubDate>Wed, 19 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</guid><description>&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/linting-and-formatting-headline.png" alt="Featured image of post Linting and formatting TypeScript in Chrome extension (2024)" />&lt;ul>
-&lt;li>&lt;a class="link" href="#setting-up-linting" >Setting up linting with ESLint and typescript-eslint&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#setting-up-formatting" >Setting up formatting with Prettier&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#adding-linting-and-formatting-to-ci" >Adding linting and formatting to CI&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>This article is part of a series on &lt;a class="link" href="../chrome-extension" >building a maintainable Chrome extension&lt;/a>.&lt;/p>
-&lt;p>In the previous article, we
-&lt;a class="link" href="../message-passing-in-chrome-extension" >added TypeScript code for communicating between parts of a Chrome extension&lt;/a>.
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Linting and formatting TypeScript in Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</link><pubDate>Wed, 19 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/linting-and-formatting-typescript/</guid><description>&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/linting-and-formatting-headline.png" alt="Featured image of post Linting and formatting TypeScript in Chrome extension (2024)" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#setting-up-linting" &gt;Setting up linting with ESLint and typescript-eslint&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#setting-up-formatting" &gt;Setting up formatting with Prettier&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#adding-linting-and-formatting-to-ci" &gt;Adding linting and formatting to CI&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This article is part of a series on &lt;a class="link" href="../chrome-extension" &gt;building a maintainable Chrome extension&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the previous article, we
+&lt;a class="link" href="../message-passing-in-chrome-extension" &gt;added TypeScript code for communicating between parts of a Chrome extension&lt;/a&gt;.
 This check-in will be our starting point for this article. This article will add linting and formatting to our
-TypeScript code, which will help us catch errors and enforce a consistent code style for larger teams.&lt;/p>
-&lt;h2 id="what-is-linting">&lt;a href="#what-is-linting" class="header-anchor">&lt;/a>What is linting?
-&lt;/h2>&lt;p>Linting is the process of running a static code analysis program to analyze code for potential errors. Linters can catch
+TypeScript code, which will help us catch errors and enforce a consistent code style for larger teams.&lt;/p&gt;
+&lt;h2 id="what-is-linting"&gt;&lt;a href="#what-is-linting" class="header-anchor"&gt;&lt;/a&gt;What is linting?
+&lt;/h2&gt;&lt;p&gt;Linting is the process of running a static code analysis program to analyze code for potential errors. Linters can catch
 syntax errors, typos, and other common mistakes that can lead to bugs. They can also enforce coding standards, such as
-indentation, variable naming, and other style rules.&lt;/p>
-&lt;h2 id="what-is-formatting">&lt;a href="#what-is-formatting" class="header-anchor">&lt;/a>What is formatting?
-&lt;/h2>&lt;p>Formatting automatically changes the code&amp;rsquo;s appearance to match a specific style guide. Formatting tools can
+indentation, variable naming, and other style rules.&lt;/p&gt;
+&lt;h2 id="what-is-formatting"&gt;&lt;a href="#what-is-formatting" class="header-anchor"&gt;&lt;/a&gt;What is formatting?
+&lt;/h2&gt;&lt;p&gt;Formatting automatically changes the code&amp;rsquo;s appearance to match a specific style guide. Formatting tools can
 automatically add or remove whitespace, change indentation, and reformat code to make it more readable. Formatting tools
-can enforce a consistent code style across a project.&lt;/p>
-&lt;h2 id="why-use-linting-and-formatting-tools">&lt;a href="#why-use-linting-and-formatting-tools" class="header-anchor">&lt;/a>Why use linting and formatting tools?
-&lt;/h2>&lt;p>Linters and formatters work together to help developers write better code and accelerate the development process &amp;ndash;
-linters flag errors, while formatters automatically enforce a consistent code style.&lt;/p>
-&lt;p>Together, they can help prevent bugs, improve code quality, and make it easier for developers to read and understand the
-code. The result is cleaner, more maintainable code that uses many coding best practices and is easier to work with.&lt;/p>
-&lt;p>Linting can also teach developers about best practices and help them avoid common pitfalls. For example, a linter can
-flag misused promises, such as missing &lt;code>await&lt;/code> or uncaught errors.&lt;/p>
-&lt;h2 id="setting-up-linting">&lt;a href="#setting-up-linting" class="header-anchor">&lt;/a>Setting up linting with ESLint and typescript-eslint
-&lt;/h2>&lt;p>To set up linting for TypeScript code, we will use &lt;a class="link" href="https://eslint.org/" target="_blank" rel="noopener"
->ESLint&lt;/a> with the
+can enforce a consistent code style across a project.&lt;/p&gt;
+&lt;h2 id="why-use-linting-and-formatting-tools"&gt;&lt;a href="#why-use-linting-and-formatting-tools" class="header-anchor"&gt;&lt;/a&gt;Why use linting and formatting tools?
+&lt;/h2&gt;&lt;p&gt;Linters and formatters work together to help developers write better code and accelerate the development process &amp;ndash;
+linters flag errors, while formatters automatically enforce a consistent code style.&lt;/p&gt;
+&lt;p&gt;Together, they can help prevent bugs, improve code quality, and make it easier for developers to read and understand the
+code. The result is cleaner, more maintainable code that uses many coding best practices and is easier to work with.&lt;/p&gt;
+&lt;p&gt;Linting can also teach developers about best practices and help them avoid common pitfalls. For example, a linter can
+flag misused promises, such as missing &lt;code&gt;await&lt;/code&gt; or uncaught errors.&lt;/p&gt;
+&lt;h2 id="setting-up-linting"&gt;&lt;a href="#setting-up-linting" class="header-anchor"&gt;&lt;/a&gt;Setting up linting with ESLint and typescript-eslint
+&lt;/h2&gt;&lt;p&gt;To set up linting for TypeScript code, we will use &lt;a class="link" href="https://eslint.org/" target="_blank" rel="noopener"
+&gt;ESLint&lt;/a&gt; with the
 &lt;a class="link" href="https://typescript-eslint.io/" target="_blank" rel="noopener"
->typescript-eslint&lt;/a> plugin. ESLint is a popular linter that can analyze JavaScript and
-TypeScript code. The typescript-eslint plugin adds TypeScript-specific rules to ESLint.&lt;/p>
-&lt;p>To set up ESLint with typescript-eslint, we need to install the following packages:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev eslint @eslint/js @types/eslint__js typescript-eslint
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we need to create an ESLint configuration file. We will create an &lt;code>eslint.config.mjs&lt;/code> file at the root of our
-project:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-javascript" data-lang="javascript">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// @ts-check
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">eslint&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#39;@eslint/js&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">import&lt;/span> &lt;span style="color:#a6e22e">tseslint&lt;/span> &lt;span style="color:#a6e22e">from&lt;/span> &lt;span style="color:#e6db74">&amp;#34;typescript-eslint&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span> &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">config&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">eslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">recommended&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">recommendedTypeChecked&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ...&lt;span style="color:#a6e22e">tseslint&lt;/span>.&lt;span style="color:#a6e22e">configs&lt;/span>.&lt;span style="color:#a6e22e">stylisticTypeChecked&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ignores&lt;/span>&lt;span style="color:#f92672">:&lt;/span> [&lt;span style="color:#e6db74">&amp;#34;dist/**/*&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;eslint.config.mjs&amp;#34;&lt;/span>],
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">languageOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">parserOptions&lt;/span>&lt;span style="color:#f92672">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">project&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tsconfigRootDir&lt;/span>&lt;span style="color:#f92672">:&lt;/span> &lt;span style="color:#66d9ef">import&lt;/span>.&lt;span style="color:#a6e22e">meta&lt;/span>.&lt;span style="color:#a6e22e">dirname&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">export&lt;/span> &lt;span style="color:#66d9ef">default&lt;/span> &lt;span style="color:#a6e22e">config&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code>dist&lt;/code>
+&gt;typescript-eslint&lt;/a&gt; plugin. ESLint is a popular linter that can analyze JavaScript and
+TypeScript code. The typescript-eslint plugin adds TypeScript-specific rules to ESLint.&lt;/p&gt;
+&lt;p&gt;To set up ESLint with typescript-eslint, we need to install the following packages:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev eslint @eslint/js @types/eslint__js typescript-eslint
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, we need to create an ESLint configuration file. We will create an &lt;code&gt;eslint.config.mjs&lt;/code&gt; file at the root of our
+project:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// @ts-check
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;eslint&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@eslint/js&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tseslint&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;typescript-eslint&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt; &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tseslint&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;eslint&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;configs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;recommended&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ...&lt;span style="color:#a6e22e"&gt;tseslint&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;configs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;recommendedTypeChecked&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ...&lt;span style="color:#a6e22e"&gt;tseslint&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;configs&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;stylisticTypeChecked&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ignores&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [&lt;span style="color:#e6db74"&gt;&amp;#34;dist/**/*&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;eslint.config.mjs&amp;#34;&lt;/span&gt;],
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;languageOptions&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;parserOptions&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;project&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;tsconfigRootDir&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;import&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;meta&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;dirname&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;export&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;default&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;config&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This configuration file sets up ESLint with the recommended TypeScript type-checked rules and ignores our &lt;code&gt;dist&lt;/code&gt;
 directory containing the webpack-generated bundles. We also ignore the config file because we do not want to apply
-TypeScript linting to it.&lt;/p>
-&lt;h3 id="why-use-the-mjs-instead-of-js">&lt;a href="#why-use-the-mjs-instead-of-js" class="header-anchor">&lt;/a>Why use the &lt;code>.mjs&lt;/code> extension instead of &lt;code>.js&lt;/code> for the configuration file?
-&lt;/h3>&lt;p>We are using &lt;code>.mjs&lt;/code> extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
-allows us to import and export modules using the &lt;code>import&lt;/code> and &lt;code>export&lt;/code> keywords. There are other ways to enable
+TypeScript linting to it.&lt;/p&gt;
+&lt;h3 id="why-use-the-mjs-instead-of-js"&gt;&lt;a href="#why-use-the-mjs-instead-of-js" class="header-anchor"&gt;&lt;/a&gt;Why use the &lt;code&gt;.mjs&lt;/code&gt; extension instead of &lt;code&gt;.js&lt;/code&gt; for the configuration file?
+&lt;/h3&gt;&lt;p&gt;We are using &lt;code&gt;.mjs&lt;/code&gt; extension for the configuration file to take advantage of ECMAScript modules. Using ES modules
+allows us to import and export modules using the &lt;code&gt;import&lt;/code&gt; and &lt;code&gt;export&lt;/code&gt; keywords. There are other ways to enable
 ECMAScript modules in JavaScript for our project, but this is the simplest way for just one JavaScript file. Our
-TypeScript files already use ECMAScript modules via these included recommended &lt;code>tsconfig.json&lt;/code> settings:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;compilerOptions&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;module&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;commonjs&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;esModuleInterop&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If we used &lt;code>.js&lt;/code> extension for the configuration file, we would need to use &lt;code>require&lt;/code> and &lt;code>module.exports&lt;/code> syntax.
-Otherwise, we would get an error like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>/Users/victor/work/create-chrome-extension/4-linting-and-formatting/eslint.config.js:3
+TypeScript files already use ECMAScript modules via these included recommended &lt;code&gt;tsconfig.json&lt;/code&gt; settings:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;compilerOptions&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;module&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;commonjs&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;esModuleInterop&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we used &lt;code&gt;.js&lt;/code&gt; extension for the configuration file, we would need to use &lt;code&gt;require&lt;/code&gt; and &lt;code&gt;module.exports&lt;/code&gt; syntax.
+Otherwise, we would get an error like this:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/Users/victor/work/create-chrome-extension/4-linting-and-formatting/eslint.config.js:3
 import eslint from &amp;#39;@eslint/js&amp;#39;
 ^^^^^^
 SyntaxError: Cannot use import statement outside a module
@@ -342,14 +342,14 @@ at cjsLoader (node:internal/modules/esm/translators:356:17)
 at ModuleWrap.&amp;lt;anonymous&amp;gt; (node:internal/modules/esm/translators:305:7)
 at ModuleJob.run (node:internal/modules/esm/module_job:218:25)
 at async ModuleLoader.import (node:internal/modules/esm/loader:329:24)
-&lt;/code>&lt;/pre>&lt;h2 id="running-eslint">&lt;a href="#running-eslint" class="header-anchor">&lt;/a>Running ESLint
-&lt;/h2>&lt;p>We can run ESLint from the command line using the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./node_modules/.bin/eslint .
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Alternatively, we can use &lt;code>npx&lt;/code>, which is a package runner tool that comes with npm:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx eslint .
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will run ESLint on all TypeScript files in the current directory and subdirectories. ESLint will output any
-errors or warnings it finds in the code, such as:&lt;/p>
-&lt;pre tabindex="0">&lt;code>/Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/background.ts
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="running-eslint"&gt;&lt;a href="#running-eslint" class="header-anchor"&gt;&lt;/a&gt;Running ESLint
+&lt;/h2&gt;&lt;p&gt;We can run ESLint from the command line using the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;./node_modules/.bin/eslint .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Alternatively, we can use &lt;code&gt;npx&lt;/code&gt;, which is a package runner tool that comes with npm:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx eslint .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will run ESLint on all TypeScript files in the current directory and subdirectories. ESLint will output any
+errors or warnings it finds in the code, such as:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/background.ts
 14:17 error Unsafe member access .enabled on an `any` value @typescript-eslint/no-unsafe-member-access
 /Users/victor/work/create-chrome-extension/4-linting-and-formatting/src/content.ts
 51:9 error Unsafe assignment of an `any` value @typescript-eslint/no-unsafe-assignment
@@ -363,130 +363,130 @@ errors or warnings it finds in the code, such as:&lt;/p>
 23:50 error Unsafe member access .url on an `any` value @typescript-eslint/no-unsafe-member-access
 43:5 error Unsafe assignment of an `any` value @typescript-eslint/no-unsafe-assignment
 ✖ 10 problems (10 errors, 0 warnings)
-&lt;/code>&lt;/pre>&lt;p>At this point, we should fix the errors and warnings that ESLint has found in our code.&lt;/p>
-&lt;p>We can also update the &lt;code>scripts&lt;/code> section of our &lt;code>package.json&lt;/code> file to run ESLint with &lt;code>npm run&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;lint&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;eslint .&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now we can run ESLint with the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm run lint
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="setting-up-formatting">&lt;a href="#setting-up-formatting" class="header-anchor">&lt;/a>Setting up formatting with Prettier
-&lt;/h2>&lt;p>To format TypeScript code, we will use &lt;a class="link" href="https://prettier.io/" target="_blank" rel="noopener"
->Prettier&lt;/a>. Prettier is a popular code formatter that
-automatically formats code to match a specific style guide.&lt;/p>
-&lt;p>To set up Prettier, we need to install the following package:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npm install --save-dev --save-exact prettier
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, create a &lt;code>.prettierignore&lt;/code> file in the root of our project to ignore the &lt;code>dist&lt;/code> directory:&lt;/p>
-&lt;pre tabindex="0">&lt;code>/dist
-&lt;/code>&lt;/pre>&lt;p>By default, Prettier ignores the &lt;code>node_modules&lt;/code> directory.&lt;/p>
-&lt;p>Next, create a &lt;code>.prettierrc&lt;/code> file in the root of our project to configure Prettier:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;semi&amp;#34;&lt;/span>: &lt;span style="color:#66d9ef">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We will use the default Prettier settings but turn off the &lt;code>semi&lt;/code> rule to remove semicolons from the end of TypeScript
-lines. Removing semicolons is a common style choice in modern JavaScript and TypeScript code.&lt;/p>
-&lt;h2 id="running-prettier">&lt;a href="#running-prettier" class="header-anchor">&lt;/a>Running Prettier
-&lt;/h2>&lt;p>We can run Prettier from the command line using the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>npx prettier --write .
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This command will format all eligible files in the current directory and subdirectories.&lt;/p>
-&lt;p>We can also update the &lt;code>scripts&lt;/code> section of our &lt;code>package.json&lt;/code> file to run Prettier with the following command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;scripts&amp;#34;&lt;/span>&lt;span style="color:#960050;background-color:#1e0010">:&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;format&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;prettier --write .&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;format-check&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;prettier --check .&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>npm run format&lt;/code> will format all eligible files, while &lt;code>npm run format-check&lt;/code> will check if the files are formatted.&lt;/p>
-&lt;h2 id="adding-linting-and-formatting-to-ci">&lt;a href="#adding-linting-and-formatting-to-ci" class="header-anchor">&lt;/a>Adding linting and formatting to continuous integration (CI)
-&lt;/h2>&lt;p>We will use GitHub Actions to automate linting and formatting checks on every pull request and commit to our main
-branch. This will make sure all code changes are linted and formatted correctly on the main branch.&lt;/p>
-&lt;p>This automatic check means that all contributors can expect that the code they are working on uses a consistent style
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this point, we should fix the errors and warnings that ESLint has found in our code.&lt;/p&gt;
+&lt;p&gt;We can also update the &lt;code&gt;scripts&lt;/code&gt; section of our &lt;code&gt;package.json&lt;/code&gt; file to run ESLint with &lt;code&gt;npm run&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;lint&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;eslint .&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now we can run ESLint with the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm run lint
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="setting-up-formatting"&gt;&lt;a href="#setting-up-formatting" class="header-anchor"&gt;&lt;/a&gt;Setting up formatting with Prettier
+&lt;/h2&gt;&lt;p&gt;To format TypeScript code, we will use &lt;a class="link" href="https://prettier.io/" target="_blank" rel="noopener"
+&gt;Prettier&lt;/a&gt;. Prettier is a popular code formatter that
+automatically formats code to match a specific style guide.&lt;/p&gt;
+&lt;p&gt;To set up Prettier, we need to install the following package:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev --save-exact prettier
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, create a &lt;code&gt;.prettierignore&lt;/code&gt; file in the root of our project to ignore the &lt;code&gt;dist&lt;/code&gt; directory:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;/dist
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;By default, Prettier ignores the &lt;code&gt;node_modules&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;Next, create a &lt;code&gt;.prettierrc&lt;/code&gt; file in the root of our project to configure Prettier:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;semi&amp;#34;&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We will use the default Prettier settings but turn off the &lt;code&gt;semi&lt;/code&gt; rule to remove semicolons from the end of TypeScript
+lines. Removing semicolons is a common style choice in modern JavaScript and TypeScript code.&lt;/p&gt;
+&lt;h2 id="running-prettier"&gt;&lt;a href="#running-prettier" class="header-anchor"&gt;&lt;/a&gt;Running Prettier
+&lt;/h2&gt;&lt;p&gt;We can run Prettier from the command line using the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx prettier --write .
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will format all eligible files in the current directory and subdirectories.&lt;/p&gt;
+&lt;p&gt;We can also update the &lt;code&gt;scripts&lt;/code&gt; section of our &lt;code&gt;package.json&lt;/code&gt; file to run Prettier with the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;scripts&amp;#34;&lt;/span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;format&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;prettier --write .&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;format-check&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;prettier --check .&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;npm run format&lt;/code&gt; will format all eligible files, while &lt;code&gt;npm run format-check&lt;/code&gt; will check if the files are formatted.&lt;/p&gt;
+&lt;h2 id="adding-linting-and-formatting-to-ci"&gt;&lt;a href="#adding-linting-and-formatting-to-ci" class="header-anchor"&gt;&lt;/a&gt;Adding linting and formatting to continuous integration (CI)
+&lt;/h2&gt;&lt;p&gt;We will use GitHub Actions to automate linting and formatting checks on every pull request and commit to our main
+branch. This will make sure all code changes are linted and formatted correctly on the main branch.&lt;/p&gt;
+&lt;p&gt;This automatic check means that all contributors can expect that the code they are working on uses a consistent style
 and meets a quality standard. Consistency is beneficial for open-source projects where contributors may not be familiar
-with the codebase.&lt;/p>
-&lt;p>To set up GitHub Actions, create a &lt;code>.github/workflows/lint-and-format.yml&lt;/code> file in the root of our git repository:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Lint check, format check, and build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">on&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">push&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">branches&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#ae81ff">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">paths&lt;/span>: &lt;span style="color:#75715e"># We only run the workflow if the code in these files/directories changes&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span> &lt;span style="color:#75715e"># This file&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span> &lt;span style="color:#75715e"># The working directory for this article&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">pull_request&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">paths&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#e6db74">&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e"># This allows a subsequently queued workflow run to interrupt previous runs&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">concurrency&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">group&lt;/span>: &lt;span style="color:#ae81ff">${{ github.workflow }}-${{ github.head_ref || github.run_id}}&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">cancel-in-progress&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">defaults&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">shell&lt;/span>: &lt;span style="color:#ae81ff">bash&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">working-directory&lt;/span>: &lt;span style="color:#ae81ff">./4-linting-and-formatting&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">permissions&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">contents&lt;/span>: &lt;span style="color:#ae81ff">read&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">jobs&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">lint-format-build&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">runs-on&lt;/span>: &lt;span style="color:#ae81ff">ubuntu-latest&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">steps&lt;/span>:
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Checkout&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">uses&lt;/span>: &lt;span style="color:#ae81ff">actions/checkout@v4&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Install dependencies&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm install --no-save&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Format check and lint&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run format-check
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run lint&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> - &lt;span style="color:#f92672">name&lt;/span>: &lt;span style="color:#ae81ff">Build&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">run&lt;/span>: |&lt;span style="color:#e6db74">
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#e6db74"> npm run build&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Since our git repository is shared by multiple projects (from various articles), we use the &lt;code>paths&lt;/code> key to only run the
-workflow when the code in the &lt;code>4-linting-and-formatting&lt;/code> directory changes.&lt;/p>
-&lt;p>After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
-Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
-alt="GitHub Actions workflow results">&lt;figcaption>
-&lt;h4>GitHub Actions workflow results&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>For more details on GitHub Actions workflows, see our article on
-&lt;a class="link" href="../github-reusable-workflows-and-steps/" >reusing GitHub Actions workflows and steps&lt;/a>.&lt;/p>
-&lt;h2 id="adding-stricter-linting-rules-to-typescript-eslint">&lt;a href="#adding-stricter-linting-rules-to-typescript-eslint" class="header-anchor">&lt;/a>Adding stricter linting rules to typescript-eslint
-&lt;/h2>&lt;p>The &lt;code>recommended&lt;/code> ruleset is a good starting point for linting TypeScript code. However, we can add stricter rules to
+with the codebase.&lt;/p&gt;
+&lt;p&gt;To set up GitHub Actions, create a &lt;code&gt;.github/workflows/lint-and-format.yml&lt;/code&gt; file in the root of our git repository:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Lint check, format check, and build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;push&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;branches&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#ae81ff"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;paths&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# We only run the workflow if the code in these files/directories changes&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# This file&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span&gt; &lt;span style="color:#75715e"&gt;# The working directory for this article&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;paths&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;.github/workflows/lint-and-format.yml&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#39;4-linting-and-formatting/**&amp;#39;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This allows a subsequently queued workflow run to interrupt previous runs&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;concurrency&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;group&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;${{ github.workflow }}-${{ github.head_ref || github.run_id}}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;cancel-in-progress&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;defaults&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;shell&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;bash&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;working-directory&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./4-linting-and-formatting&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;permissions&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;contents&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;read&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;lint-format-build&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;runs-on&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;ubuntu-latest&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;steps&lt;/span&gt;:
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Checkout&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;actions/checkout@v4&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Install dependencies&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm install --no-save&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Format check and lint&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm run format-check
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm run lint&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;run&lt;/span&gt;: |&lt;span style="color:#e6db74"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm run build&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since our git repository is shared by multiple projects (from various articles), we use the &lt;code&gt;paths&lt;/code&gt; key to only run the
+workflow when the code in the &lt;code&gt;4-linting-and-formatting&lt;/code&gt; directory changes.&lt;/p&gt;
+&lt;p&gt;After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
+Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
+alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
+&lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;For more details on GitHub Actions workflows, see our article on
+&lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;reusing GitHub Actions workflows and steps&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="adding-stricter-linting-rules-to-typescript-eslint"&gt;&lt;a href="#adding-stricter-linting-rules-to-typescript-eslint" class="header-anchor"&gt;&lt;/a&gt;Adding stricter linting rules to typescript-eslint
+&lt;/h2&gt;&lt;p&gt;The &lt;code&gt;recommended&lt;/code&gt; ruleset is a good starting point for linting TypeScript code. However, we can add stricter rules to
 catch even more potential issues in our code. It is easiest to start with strict rules early in the project when fixing
 issues is relatively painless. Otherwise, it is a good idea to gradually add stricter rules to avoid overwhelming
-developers with too many errors and warnings.&lt;/p>
-&lt;p>To switch to a stricter, more opinionated ruleset, replace &lt;code>tseslint.configs.recommendedTypeChecked&lt;/code> with
-&lt;code>tseslint.configs.strictTypeChecked&lt;/code> in the &lt;code>eslint.config.mjs&lt;/code> file.&lt;/p>
-&lt;p>ESLint rules can be configured or disabled using configuration comments in the code or the ESLint configuration file.
+developers with too many errors and warnings.&lt;/p&gt;
+&lt;p&gt;To switch to a stricter, more opinionated ruleset, replace &lt;code&gt;tseslint.configs.recommendedTypeChecked&lt;/code&gt; with
+&lt;code&gt;tseslint.configs.strictTypeChecked&lt;/code&gt; in the &lt;code&gt;eslint.config.mjs&lt;/code&gt; file.&lt;/p&gt;
+&lt;p&gt;ESLint rules can be configured or disabled using configuration comments in the code or the ESLint configuration file.
 For more details, see the &lt;a class="link" href="https://eslint.org/docs/latest/use/configure/rules" target="_blank" rel="noopener"
->ESLint configure rules&lt;/a>.&lt;/p>
-&lt;h2 id="next-steps">&lt;a href="#next-steps" class="header-anchor">&lt;/a>Next steps
-&lt;/h2>&lt;p>In the next part of this series, we will
-&lt;a class="link" href="../add-options-to-chrome-extension" >add an options page to our Chrome extension&lt;/a>. This page will allow users to
-configure the extension&amp;rsquo;s behavior and settings.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>We recently wrote about &lt;a class="link" href="../staticcheck-go-linter/" >enabling staticcheck linter in a large Go project&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="linting-and-formatting-typescript-code-on-github">&lt;a href="#linting-and-formatting-typescript-code-on-github" class="header-anchor">&lt;/a>Linting and formatting TypeScript code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at:
+&gt;ESLint configure rules&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
+&lt;/h2&gt;&lt;p&gt;In the next part of this series, we will
+&lt;a class="link" href="../add-options-to-chrome-extension" &gt;add an options page to our Chrome extension&lt;/a&gt;. This page will allow users to
+configure the extension&amp;rsquo;s behavior and settings.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;We recently wrote about &lt;a class="link" href="../staticcheck-go-linter/" &gt;enabling staticcheck linter in a large Go project&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="linting-and-formatting-typescript-code-on-github"&gt;&lt;a href="#linting-and-formatting-typescript-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Linting and formatting TypeScript code on GitHub
+&lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at:
 &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/4-linting-and-formatting" target="_blank" rel="noopener"
->https://github.com/getvictor/create-chrome-extension/tree/main/4-linting-and-formatting&lt;/a>&lt;/p>
-&lt;h2 id="linting-and-formatting-typescript-video">&lt;a href="#linting-and-formatting-typescript-video" class="header-anchor">&lt;/a>Linting and formatting TypeScript video
-&lt;/h2>&lt;div class="video-wrapper">
+&gt;https://github.com/getvictor/create-chrome-extension/tree/main/4-linting-and-formatting&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="linting-and-formatting-typescript-video"&gt;&lt;a href="#linting-and-formatting-typescript-video" class="header-anchor"&gt;&lt;/a&gt;Linting and formatting TypeScript video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/DHtwTkF0DOE"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

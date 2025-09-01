@@ -1,101 +1,101 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pull Request on Victor on Software</title><link>https://victoronsoftware.com/tags/pull-request/</link><description>Recent content in Pull Request on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/pull-request/index.xml" rel="self" type="application/rss+xml"/><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" />&lt;ul>
-&lt;li>&lt;a class="link" href="#find-code-owners-from-command-line" >Find code owners from the command line&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="what-are-github-code-owners">&lt;a href="#what-are-github-code-owners" class="header-anchor">&lt;/a>What are GitHub code owners?
-&lt;/h2>&lt;p>GitHub
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Pull Request on Victor on Software</title><link>https://victoronsoftware.com/tags/pull-request/</link><description>Recent content in Pull Request on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 06 Aug 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/pull-request/index.xml" rel="self" type="application/rss+xml"/><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#find-code-owners-from-command-line" &gt;Find code owners from the command line&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-are-github-code-owners"&gt;&lt;a href="#what-are-github-code-owners" class="header-anchor"&gt;&lt;/a&gt;What are GitHub code owners?
+&lt;/h2&gt;&lt;p&gt;GitHub
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
->CODEOWNERS&lt;/a>
+&gt;CODEOWNERS&lt;/a&gt;
 is a file that defines the individuals or teams responsible for code in a repository. When a user creates a pull
-request, GitHub uses the &lt;code>CODEOWNERS&lt;/code> file to suggest the appropriate reviewers for the pull request. This process helps
-ensure that the right people review the code changes.&lt;/p>
-&lt;p>Repository owners can enable branch protection rules that require the code owner of each changed file to approve the
-pull request.&lt;/p>
-&lt;h2 id="the-problem-too-many-files-and-too-many-code-owners">&lt;a href="#the-problem-too-many-files-and-too-many-code-owners" class="header-anchor">&lt;/a>The problem: too many files and too many code owners
-&lt;/h2>&lt;p>It can be challenging to determine who needs to review a pull request in a large repository with many files and many
-code owners. This challenge is especially true when the pull request touches many files.&lt;/p>
-&lt;p>Many times, I&amp;rsquo;ve asked another engineer to approve my PR, and they approved it, but GitHub said that the PR still needed
+request, GitHub uses the &lt;code&gt;CODEOWNERS&lt;/code&gt; file to suggest the appropriate reviewers for the pull request. This process helps
+ensure that the right people review the code changes.&lt;/p&gt;
+&lt;p&gt;Repository owners can enable branch protection rules that require the code owner of each changed file to approve the
+pull request.&lt;/p&gt;
+&lt;h2 id="the-problem-too-many-files-and-too-many-code-owners"&gt;&lt;a href="#the-problem-too-many-files-and-too-many-code-owners" class="header-anchor"&gt;&lt;/a&gt;The problem: too many files and too many code owners
+&lt;/h2&gt;&lt;p&gt;It can be challenging to determine who needs to review a pull request in a large repository with many files and many
+code owners. This challenge is especially true when the pull request touches many files.&lt;/p&gt;
+&lt;p&gt;Many times, I&amp;rsquo;ve asked another engineer to approve my PR, and they approved it, but GitHub said that the PR still needed
 approval from another code owner. I needed another approval because my PR changed another file with another code owner,
-and I didn&amp;rsquo;t know about it.&lt;/p>
-&lt;h2 id="steps-to-find-the-minimum-required-code-owners">&lt;a href="#steps-to-find-the-minimum-required-code-owners" class="header-anchor">&lt;/a>Steps to find the minimum required code owners
-&lt;/h2>&lt;p>To find the minimum required code owners for a pull request, we can use these steps:&lt;/p>
-&lt;ol>
-&lt;li>Get the list of changed files in the pull request.&lt;/li>
-&lt;li>For each changed file, get the list of code owners.&lt;/li>
-&lt;li>Find the minimum set of code owners that covers all the above lists.&lt;/li>
-&lt;/ol>
-&lt;h2 id="finding-the-code-owners-manually">&lt;a href="#finding-the-code-owners-manually" class="header-anchor">&lt;/a>Finding the code owners manually
-&lt;/h2>&lt;p>The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
-for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
-alt="List of files, with code owners showing when hovering over the blue icon next to the file">&lt;figcaption>
-&lt;h4>See the code owners on hover&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="find-code-owners-from-command-line">&lt;a href="#find-code-owners-from-command-line" class="header-anchor">&lt;/a>Finding the code owners from the command line
-&lt;/h2>&lt;p>To automate the above steps, we will need the following prerequisites:&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="https://cli.github.com/" target="_blank" rel="noopener"
->GitHub CLI&lt;/a> installed and logged in&lt;/li>
-&lt;li>Command-line JSON processor &lt;a class="link" href="https://jqlang.github.io/jq/download/" target="_blank" rel="noopener"
->jq&lt;/a> installed&lt;/li>
-&lt;li>A CODEOWNERS parser installed, such as &lt;a class="link" href="https://github.com/hmarr/codeowners" target="_blank" rel="noopener"
->https://github.com/hmarr/codeowners&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;p>From the top directory containing your git repository, run the following:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74">&amp;#39;.files[] .path&amp;#39;&lt;/span> &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>| xargs codeowners | tr -s &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | cut -f2- -d &lt;span style="color:#e6db74">&amp;#39; &amp;#39;&lt;/span> | sort -u
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Where &lt;code>$MY_PR_NUMBER&lt;/code> is the number of your pull request.&lt;/p>
-&lt;p>The first part of the command, &lt;code>gh pr view $MY_PR_NUMBER --json files&lt;/code>, gets the list of changed files in the pull
-request in JSON format. The second part, &lt;code>jq -r '.files[] .path'&lt;/code>, extracts the file paths from the JSON. The third
-part, &lt;code>xargs codeowners&lt;/code>, runs the &lt;code>codeowners&lt;/code> command for each file. The fourth optional part, &lt;code>tr -s ' '&lt;/code>, removes
-extra spaces. The fifth part, &lt;code>cut -f2- -d ' '&lt;/code>, removes the first column. The last part, &lt;code>sort -u&lt;/code>, sorts and removes
-duplicates.&lt;/p>
-&lt;p>The output will be the list of code owners for the changed files in the pull request. For example:&lt;/p>
-&lt;pre tabindex="0">&lt;code>(unowned)
+and I didn&amp;rsquo;t know about it.&lt;/p&gt;
+&lt;h2 id="steps-to-find-the-minimum-required-code-owners"&gt;&lt;a href="#steps-to-find-the-minimum-required-code-owners" class="header-anchor"&gt;&lt;/a&gt;Steps to find the minimum required code owners
+&lt;/h2&gt;&lt;p&gt;To find the minimum required code owners for a pull request, we can use these steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Get the list of changed files in the pull request.&lt;/li&gt;
+&lt;li&gt;For each changed file, get the list of code owners.&lt;/li&gt;
+&lt;li&gt;Find the minimum set of code owners that covers all the above lists.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="finding-the-code-owners-manually"&gt;&lt;a href="#finding-the-code-owners-manually" class="header-anchor"&gt;&lt;/a&gt;Finding the code owners manually
+&lt;/h2&gt;&lt;p&gt;The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
+for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
+alt="List of files, with code owners showing when hovering over the blue icon next to the file"&gt;&lt;figcaption&gt;
+&lt;h4&gt;See the code owners on hover&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="find-code-owners-from-command-line"&gt;&lt;a href="#find-code-owners-from-command-line" class="header-anchor"&gt;&lt;/a&gt;Finding the code owners from the command line
+&lt;/h2&gt;&lt;p&gt;To automate the above steps, we will need the following prerequisites:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="https://cli.github.com/" target="_blank" rel="noopener"
+&gt;GitHub CLI&lt;/a&gt; installed and logged in&lt;/li&gt;
+&lt;li&gt;Command-line JSON processor &lt;a class="link" href="https://jqlang.github.io/jq/download/" target="_blank" rel="noopener"
+&gt;jq&lt;/a&gt; installed&lt;/li&gt;
+&lt;li&gt;A CODEOWNERS parser installed, such as &lt;a class="link" href="https://github.com/hmarr/codeowners" target="_blank" rel="noopener"
+&gt;https://github.com/hmarr/codeowners&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;From the top directory containing your git repository, run the following:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;| xargs codeowners | tr -s &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | cut -f2- -d &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | sort -u
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where &lt;code&gt;$MY_PR_NUMBER&lt;/code&gt; is the number of your pull request.&lt;/p&gt;
+&lt;p&gt;The first part of the command, &lt;code&gt;gh pr view $MY_PR_NUMBER --json files&lt;/code&gt;, gets the list of changed files in the pull
+request in JSON format. The second part, &lt;code&gt;jq -r '.files[] .path'&lt;/code&gt;, extracts the file paths from the JSON. The third
+part, &lt;code&gt;xargs codeowners&lt;/code&gt;, runs the &lt;code&gt;codeowners&lt;/code&gt; command for each file. The fourth optional part, &lt;code&gt;tr -s ' '&lt;/code&gt;, removes
+extra spaces. The fifth part, &lt;code&gt;cut -f2- -d ' '&lt;/code&gt;, removes the first column. The last part, &lt;code&gt;sort -u&lt;/code&gt;, sorts and removes
+duplicates.&lt;/p&gt;
+&lt;p&gt;The output will be the list of code owners for the changed files in the pull request. For example:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;(unowned)
 @fleetdm/go
 @getvictor @lucasmrod @roperzh @mostlikelee
 @lucasmrod @getvictor @jacobshandling
 @roperzh @gillespi314 @lucasmrod @getvictor
-&lt;/code>&lt;/pre>&lt;p>At this point, we can do additional processing, such as excluding some code owners.&lt;/p>
-&lt;p>By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >top 3 issues with GitHub code review process&lt;/a>.&lt;/p>
-&lt;p>We also wrote about &lt;a class="link" href="../git-merges-and-pull-requests" >how merges work with GitHub pull requests&lt;/a>.&lt;/p>
-&lt;p>Previously, we explained
-&lt;a class="link" href="../github-reusable-workflows-and-steps" >how to create reusable workflows and steps in GitHub Actions&lt;/a>.&lt;/p>
-&lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request">&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor">&lt;/a>Watch how to find the minimum required code owners for a pull request
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;At this point, we can do additional processing, such as excluding some code owners.&lt;/p&gt;
+&lt;p&gt;By visually inspecting the output, we can determine the minimum set of code owners that need to review the pull request.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;p&gt;Recently, we covered &lt;a class="link" href="../github-code-review-issues" &gt;top 3 issues with GitHub code review process&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We also wrote about &lt;a class="link" href="../git-merges-and-pull-requests" &gt;how merges work with GitHub pull requests&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Previously, we explained
+&lt;a class="link" href="../github-reusable-workflows-and-steps" &gt;how to create reusable workflows and steps in GitHub Actions&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request"&gt;&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Watch how to find the minimum required code owners for a pull request
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/RHW-ZELnuSg"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" />&lt;p>This article covers how &lt;code>git merge&lt;/code> works with GitHub pull requests. We will focus on the use case where developers want
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" /&gt;&lt;p&gt;This article covers how &lt;code&gt;git merge&lt;/code&gt; works with GitHub pull requests. We will focus on the use case where developers want
 to keep their feature branches updated with the main branch. After completing the feature work, developers create a pull
-request to merge their feature branch into the main branch.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#git-merge" >git merge&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#pull-request-after-merge" >Pull request after a merge&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#update-protected-branch" >Updating a protected feature branch with a pull request&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="what-is-a-merge-in-version-control">&lt;a href="#what-is-a-merge-in-version-control" class="header-anchor">&lt;/a>What is a merge in version control?
-&lt;/h2>&lt;p>Git is a distributed version control system that allows multiple developers to work on the same codebase. When
+request to merge their feature branch into the main branch.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#git-merge" &gt;git merge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#pull-request-after-merge" &gt;Pull request after a merge&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#update-protected-branch" &gt;Updating a protected feature branch with a pull request&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-is-a-merge-in-version-control"&gt;&lt;a href="#what-is-a-merge-in-version-control" class="header-anchor"&gt;&lt;/a&gt;What is a merge in version control?
+&lt;/h2&gt;&lt;p&gt;Git is a distributed version control system that allows multiple developers to work on the same codebase. When
 developers work on different branches, they must merge their changes into the main branch. A merge is the process of
 combining changes from one branch into another branch, resulting in a single branch that contains the changes from both
-branches.&lt;/p>
-&lt;h2 id="git-merge">&lt;a href="#git-merge" class="header-anchor">&lt;/a>git merge
-&lt;/h2>&lt;p>The standard &lt;code>git merge&lt;/code> command takes each commit from one branch and applies it to another. The final commit has two
-parent commits: one from the current branch and one from the merged branch.&lt;/p>
-&lt;p>In the following example, we have a &lt;code>branch&lt;/code> that we want to merge into the &lt;code>main&lt;/code> branch:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
-alt="git merge of two branches before merge">&lt;figcaption>
-&lt;h4>git merge of two branches before merge&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The &lt;code>git log&lt;/code> of the &lt;code>main&lt;/code> branch shows the commit history:&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit e493ac8fea4e0efe125a561b9014313bec41a489 (HEAD -&amp;gt; main, origin/main)
+branches.&lt;/p&gt;
+&lt;h2 id="git-merge"&gt;&lt;a href="#git-merge" class="header-anchor"&gt;&lt;/a&gt;git merge
+&lt;/h2&gt;&lt;p&gt;The standard &lt;code&gt;git merge&lt;/code&gt; command takes each commit from one branch and applies it to another. The final commit has two
+parent commits: one from the current branch and one from the merged branch.&lt;/p&gt;
+&lt;p&gt;In the following example, we have a &lt;code&gt;branch&lt;/code&gt; that we want to merge into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
+alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
+&lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;main&lt;/code&gt; branch shows the commit history:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit e493ac8fea4e0efe125a561b9014313bec41a489 (HEAD -&amp;gt; main, origin/main)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:31:12 2024 -0500
 m3
@@ -111,8 +111,8 @@ commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
 first commit
-&lt;/code>&lt;/pre>&lt;p>And the &lt;code>git log&lt;/code> of the &lt;code>branch&lt;/code> shows the commit history:&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit 2afb078875a84095327ab2ef7c83711534c5eef8 (HEAD -&amp;gt; branch, origin/branch)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And the &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;branch&lt;/code&gt; shows the commit history:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit 2afb078875a84095327ab2ef7c83711534c5eef8 (HEAD -&amp;gt; branch, origin/branch)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:30:20 2024 -0500
 b2
@@ -128,12 +128,12 @@ commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
 first commit
-&lt;/code>&lt;/pre>&lt;p>We merge the &lt;code>branch&lt;/code> into the &lt;code>main&lt;/code> branch:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout main
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge branch
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
-to the two parent commits: &lt;code>e493ac8 2afb078&lt;/code>:&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit 09d569bd079162643462dde112246f4167f14889 (HEAD -&amp;gt; main)
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge branch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
+to the two parent commits: &lt;code&gt;e493ac8 2afb078&lt;/code&gt;:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit 09d569bd079162643462dde112246f4167f14889 (HEAD -&amp;gt; main)
 Merge: e493ac8 2afb078
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 21:03:01 2024 -0500
@@ -162,74 +162,74 @@ commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
 first commit
-&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
-alt="git merge of two branches after merge">&lt;figcaption>
-&lt;h4>git merge of two branches after merge&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The result would be the same if &lt;strong>instead&lt;/strong> we merged the &lt;code>main&lt;/code> branch into the &lt;code>branch&lt;/code> branch:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout branch
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge main
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>except the final merge commit would be slightly different:&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&amp;gt; branch)
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
+alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
+&lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;except the final merge commit would be slightly different:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&amp;gt; branch)
 Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:32:01 2024 -0500
 Merge branch &amp;#39;main&amp;#39; into branch
-&lt;/code>&lt;/pre>&lt;p>The merged changes on &lt;code>branch&lt;/code> can be pushed to the remote repository without issues because the remote branch can be
-fast-forwarded to the new commit.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git push origin branch
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="what-is-a-fast-forward-merge">&lt;a href="#what-is-a-fast-forward-merge" class="header-anchor">&lt;/a>What is a fast-forward merge?
-&lt;/h2>&lt;p>A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The merged changes on &lt;code&gt;branch&lt;/code&gt; can be pushed to the remote repository without issues because the remote branch can be
+fast-forwarded to the new commit.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="what-is-a-fast-forward-merge"&gt;&lt;a href="#what-is-a-fast-forward-merge" class="header-anchor"&gt;&lt;/a&gt;What is a fast-forward merge?
+&lt;/h2&gt;&lt;p&gt;A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
 target branch to the commit of the source branch. It is a fast-forward merge because the target branch is moved forward
-to the new commit.&lt;/p>
-&lt;p>A fast-forward merge does not lose any history &amp;ndash; it is always possible to undo a fast-forward merge.&lt;/p>
-&lt;p>&lt;code>git push&lt;/code> does not, by default, allow a merge that is not a fast-forward. Use the&amp;rsquo;- force&amp;rsquo; option to enable a merge
-that is not a fast-forward.&lt;/p>
-&lt;h2 id="undo-a-git-merge">&lt;a href="#undo-a-git-merge" class="header-anchor">&lt;/a>Undo a git merge
-&lt;/h2>&lt;p>The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
-of the merge commit.&lt;/p>
-&lt;p>This command resets the &lt;code>branch&lt;/code> to the commit before the merge:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="git-rebase">&lt;a href="#git-rebase" class="header-anchor">&lt;/a>git rebase
-&lt;/h2>&lt;p>Another way to combine changes from one branch into another is to use &lt;code>git rebase&lt;/code>. This command applies the changes
-from the source branch to the target branch by reapplying the commits from the source branch to the target branch.&lt;/p>
-&lt;p>The &lt;code>git rebase&lt;/code> command will modify the commit history of the source branch. In our pull request examples, we will use
-&lt;code>git merge&lt;/code> instead of &lt;code>git rebase&lt;/code> to preserve all the commit histories.&lt;/p>
-&lt;h2 id="pull-request-after-merge">&lt;a href="#pull-request-after-merge" class="header-anchor">&lt;/a>Pull request after a merge
-&lt;/h2>&lt;p>When working on a feature branch, developers often want to update their branch with the latest changes from the main to
-make sure their feature works with the newest code. We start this process with the above-described &lt;code>git merge&lt;/code> command,
-where we merge the &lt;code>main&lt;/code> branch into the &lt;code>branch&lt;/code> branch.&lt;/p>
-&lt;p>After the merge, the developer can create a GitHub pull request to merge the &lt;code>branch&lt;/code> into the &lt;code>main&lt;/code> branch.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
-alt="GitHub pull request after merge">&lt;figcaption>
-&lt;h4>GitHub pull request after merge&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Note that the commit history only shows the commits from the &lt;code>branch&lt;/code> and the merge commit. The &lt;code>main&lt;/code> commits are not
-shown in the pull request.&lt;/p>
-&lt;p>GitHub shows a few options for merging the pull request:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
-alt="Merge pull request">&lt;figcaption>
-&lt;h4>Merge pull request&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;ul>
-&lt;li>&lt;strong>Create a merge commit&lt;/strong>: This option creates a new merge commit combining the changes from the &lt;code>branch&lt;/code> and the
-&lt;code>main&lt;/code> branches. This is the default option.&lt;/li>
-&lt;li>&lt;strong>Squash and merge&lt;/strong>: This option combines all the commits from the &lt;code>branch&lt;/code> into a single commit and merges that
-commit into the &lt;code>main&lt;/code> branch.&lt;/li>
-&lt;li>&lt;strong>Rebase and merge&lt;/strong>: This option applies the changes from the &lt;code>branch&lt;/code> onto the &lt;code>main&lt;/code> branch by rebasing the commits
-from the &lt;code>branch&lt;/code> onto the &lt;code>main&lt;/code> branch.&lt;/li>
-&lt;/ul>
-&lt;p>Selecting &lt;strong>Create a merge commit&lt;/strong> results in the following commit history:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
-alt="Commit history after pull request">&lt;figcaption>
-&lt;h4>Commit history after pull request&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The last two commits are both merge commits.&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit 1eb0af8c0e9ad16a0267d8abd1ce667f125ab7e8 (HEAD -&amp;gt; main, origin/main)
+to the new commit.&lt;/p&gt;
+&lt;p&gt;A fast-forward merge does not lose any history &amp;ndash; it is always possible to undo a fast-forward merge.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git push&lt;/code&gt; does not, by default, allow a merge that is not a fast-forward. Use the&amp;rsquo;- force&amp;rsquo; option to enable a merge
+that is not a fast-forward.&lt;/p&gt;
+&lt;h2 id="undo-a-git-merge"&gt;&lt;a href="#undo-a-git-merge" class="header-anchor"&gt;&lt;/a&gt;Undo a git merge
+&lt;/h2&gt;&lt;p&gt;The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
+of the merge commit.&lt;/p&gt;
+&lt;p&gt;This command resets the &lt;code&gt;branch&lt;/code&gt; to the commit before the merge:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="git-rebase"&gt;&lt;a href="#git-rebase" class="header-anchor"&gt;&lt;/a&gt;git rebase
+&lt;/h2&gt;&lt;p&gt;Another way to combine changes from one branch into another is to use &lt;code&gt;git rebase&lt;/code&gt;. This command applies the changes
+from the source branch to the target branch by reapplying the commits from the source branch to the target branch.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;git rebase&lt;/code&gt; command will modify the commit history of the source branch. In our pull request examples, we will use
+&lt;code&gt;git merge&lt;/code&gt; instead of &lt;code&gt;git rebase&lt;/code&gt; to preserve all the commit histories.&lt;/p&gt;
+&lt;h2 id="pull-request-after-merge"&gt;&lt;a href="#pull-request-after-merge" class="header-anchor"&gt;&lt;/a&gt;Pull request after a merge
+&lt;/h2&gt;&lt;p&gt;When working on a feature branch, developers often want to update their branch with the latest changes from the main to
+make sure their feature works with the newest code. We start this process with the above-described &lt;code&gt;git merge&lt;/code&gt; command,
+where we merge the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch.&lt;/p&gt;
+&lt;p&gt;After the merge, the developer can create a GitHub pull request to merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
+alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
+&lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Note that the commit history only shows the commits from the &lt;code&gt;branch&lt;/code&gt; and the merge commit. The &lt;code&gt;main&lt;/code&gt; commits are not
+shown in the pull request.&lt;/p&gt;
+&lt;p&gt;GitHub shows a few options for merging the pull request:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
+alt="Merge pull request"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Merge pull request&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Create a merge commit&lt;/strong&gt;: This option creates a new merge commit combining the changes from the &lt;code&gt;branch&lt;/code&gt; and the
+&lt;code&gt;main&lt;/code&gt; branches. This is the default option.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Squash and merge&lt;/strong&gt;: This option combines all the commits from the &lt;code&gt;branch&lt;/code&gt; into a single commit and merges that
+commit into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Rebase and merge&lt;/strong&gt;: This option applies the changes from the &lt;code&gt;branch&lt;/code&gt; onto the &lt;code&gt;main&lt;/code&gt; branch by rebasing the commits
+from the &lt;code&gt;branch&lt;/code&gt; onto the &lt;code&gt;main&lt;/code&gt; branch.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Selecting &lt;strong&gt;Create a merge commit&lt;/strong&gt; results in the following commit history:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
+alt="Commit history after pull request"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Commit history after pull request&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The last two commits are both merge commits.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit 1eb0af8c0e9ad16a0267d8abd1ce667f125ab7e8 (HEAD -&amp;gt; main, origin/main)
 Merge: e493ac8 22d2107
 Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
 Date: Sun Jun 23 07:35:57 2024 -0500
@@ -240,58 +240,58 @@ Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 21:25:39 2024 -0500
 Merge branch &amp;#39;main&amp;#39; into branch
-&lt;/code>&lt;/pre>&lt;p>The PR merge commit points to the previous merge commit and the last commit on &lt;code>main&lt;/code>.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
-alt="Diagram of commit history after pull request">&lt;figcaption>
-&lt;h4>Diagram of commit history after pull request&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="update-protected-branch">&lt;a href="#update-protected-branch" class="header-anchor">&lt;/a>Updating a protected feature branch
-&lt;/h2>&lt;p>We have two branches in this example: &lt;code>main&lt;/code> and &lt;code>feature&lt;/code>. Both branches are protected, meaning that changes to them
-must be made through a pull request. We want to update the &lt;code>feature&lt;/code> branch with the latest changes from the &lt;code>main&lt;/code>
-branch.&lt;/p>
-&lt;p>We can do this by merging the &lt;code>main&lt;/code> branch into the &lt;code>feature&lt;/code> branch, creating a new branch, and creating a pull
-request.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-shell" data-lang="shell">&lt;span style="display:flex;">&lt;span>git checkout feature
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git merge main
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git checkout -b feature-update
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git push origin feature-update
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>And create a pull request to merge &lt;code>feature-update&lt;/code> into &lt;code>feature&lt;/code>.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
-alt="Create a PR to merge into feature branch">&lt;figcaption>
-&lt;h4>Create a PR to merge into feature branch&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>This pull request shows all the commits from the &lt;code>main&lt;/code> branch and the merge commit. This commit history is problematic
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The PR merge commit points to the previous merge commit and the last commit on &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
+alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="update-protected-branch"&gt;&lt;a href="#update-protected-branch" class="header-anchor"&gt;&lt;/a&gt;Updating a protected feature branch
+&lt;/h2&gt;&lt;p&gt;We have two branches in this example: &lt;code&gt;main&lt;/code&gt; and &lt;code&gt;feature&lt;/code&gt;. Both branches are protected, meaning that changes to them
+must be made through a pull request. We want to update the &lt;code&gt;feature&lt;/code&gt; branch with the latest changes from the &lt;code&gt;main&lt;/code&gt;
+branch.&lt;/p&gt;
+&lt;p&gt;We can do this by merging the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;feature&lt;/code&gt; branch, creating a new branch, and creating a pull
+request.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout feature
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout -b feature-update
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And create a pull request to merge &lt;code&gt;feature-update&lt;/code&gt; into &lt;code&gt;feature&lt;/code&gt;.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
+alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;This pull request shows all the commits from the &lt;code&gt;main&lt;/code&gt; branch and the merge commit. This commit history is problematic
 because the PR may trigger a code review from the
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
->code owners&lt;/a>
-of the files that were already reviewed in previous pull requests to the &lt;code>main&lt;/code> branch.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
-alt="Commits from feature-update branch">&lt;figcaption>
-&lt;h4>Commits from feature-update branch&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>After the merge, the &lt;code>feature&lt;/code> branch commit history looks like:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
-alt="Commit history of feature branch after PR">&lt;figcaption>
-&lt;h4>Commit history of feature branch after PR&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Now, we create a pull request to merge the update &lt;code>feature&lt;/code> branch into the &lt;code>main&lt;/code> branch.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
-alt="PR to merge feature branch into main">&lt;figcaption>
-&lt;h4>PR to merge feature branch into main&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>After the merge, the &lt;code>main&lt;/code> branch commit history looks like:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
-alt="Commit history of main after PR from feature branch">&lt;figcaption>
-&lt;h4>Commit history of main after PR from feature branch&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The last three commits are merge commits.&lt;/p>
-&lt;pre tabindex="0">&lt;code>commit 59caaf1cc5103099f850c32f1729c5ffe3525404 (HEAD -&amp;gt; main, origin/main)
+&gt;code owners&lt;/a&gt;
+of the files that were already reviewed in previous pull requests to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
+alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;After the merge, the &lt;code&gt;feature&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
+alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Now, we create a pull request to merge the update &lt;code&gt;feature&lt;/code&gt; branch into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
+alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
+&lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;After the merge, the &lt;code&gt;main&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
+alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The last three commits are merge commits.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;commit 59caaf1cc5103099f850c32f1729c5ffe3525404 (HEAD -&amp;gt; main, origin/main)
 Merge: e493ac8 dcbc117
 Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
 Date: Sun Jun 23 08:56:53 2024 -0500
@@ -308,34 +308,34 @@ Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sun Jun 23 08:03:22 2024 -0500
 Merge branch &amp;#39;main&amp;#39; into feature
-&lt;/code>&lt;/pre>&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
-alt="Diagram of commit history after two pull requests">&lt;figcaption>
-&lt;h4>Diagram of commit history after two pull requests&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h3 id="merging-a-pull-request-with-squash-and-merge">&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor">&lt;/a>Merging a pull request with &lt;strong>Squash and merge&lt;/strong>
-&lt;/h3>&lt;p>If the final pull request is merged with &lt;strong>Squash and merge&lt;/strong>, the commit history will look like:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
-alt="Commit history of main after squash and merge">&lt;figcaption>
-&lt;h4>Commit history of main after squash and merge&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The last commit is a single commit that combines all the changes from the &lt;code>feature&lt;/code> branch. The merge commits and all
-other commits are eliminated.&lt;/p>
-&lt;p>The downside of &lt;strong>Squash and merge&lt;/strong> is that the commit history is lost. The commit history is useful for debugging,
+&lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
+alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h3 id="merging-a-pull-request-with-squash-and-merge"&gt;&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor"&gt;&lt;/a&gt;Merging a pull request with &lt;strong&gt;Squash and merge&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;If the final pull request is merged with &lt;strong&gt;Squash and merge&lt;/strong&gt;, the commit history will look like:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
+alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The last commit is a single commit that combines all the changes from the &lt;code&gt;feature&lt;/code&gt; branch. The merge commits and all
+other commits are eliminated.&lt;/p&gt;
+&lt;p&gt;The downside of &lt;strong&gt;Squash and merge&lt;/strong&gt; is that the commit history is lost. The commit history is useful for debugging,
 understanding the changes made, and keeping ownership of the changes when multiple developers work on the same feature
-branch.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;p>Recently, we covered &lt;a class="link" href="../github-code-review-issues" >why GitHub code review process is broken for our organization&lt;/a>.&lt;/p>
-&lt;p>Previously, we explained
-&lt;a class="link" href="../find-code-owners-for-pull-request" >how to find the minimum required code owner approvers for a pull request&lt;/a>.&lt;/p>
-&lt;h2 id="watch-how-git-merge-works-with-github-pull-requests">&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor">&lt;/a>Watch how git merge works with GitHub pull requests
-&lt;/h2>&lt;div class="video-wrapper">
+branch.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;p&gt;Recently, we covered &lt;a class="link" href="../github-code-review-issues" &gt;why GitHub code review process is broken for our organization&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Previously, we explained
+&lt;a class="link" href="../find-code-owners-for-pull-request" &gt;how to find the minimum required code owner approvers for a pull request&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="watch-how-git-merge-works-with-github-pull-requests"&gt;&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor"&gt;&lt;/a&gt;Watch how git merge works with GitHub pull requests
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/Djpc7ymvuzU"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

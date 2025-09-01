@@ -1,704 +1,704 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Performance on Victor on Software</title><link>https://victoronsoftware.com/tags/performance/</link><description>Recent content in Performance on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 05 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/performance/index.xml" rel="self" type="application/rss+xml"/><item><title>Why developers should use OpenTelemetry in dev</title><link>https://victoronsoftware.com/posts/opentelemetry-for-devs/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-for-devs/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/opentelemetry-for-devs-headline.png" alt="Featured image of post Why developers should use OpenTelemetry in dev" />&lt;p>We&amp;rsquo;ve changed our tune on OpenTelemetry.&lt;/p>
-&lt;p>In our &lt;a class="link" href="../opentelemetry-with-jaeger/" >previous article on OpenTelemetry with Jaeger&lt;/a>, we were skeptical about its value
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Performance on Victor on Software</title><link>https://victoronsoftware.com/tags/performance/</link><description>Recent content in Performance on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 05 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/performance/index.xml" rel="self" type="application/rss+xml"/><item><title>Why developers should use OpenTelemetry in dev</title><link>https://victoronsoftware.com/posts/opentelemetry-for-devs/</link><pubDate>Tue, 05 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-for-devs/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/opentelemetry-for-devs-headline.png" alt="Featured image of post Why developers should use OpenTelemetry in dev" /&gt;&lt;p&gt;We&amp;rsquo;ve changed our tune on OpenTelemetry.&lt;/p&gt;
+&lt;p&gt;In our &lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;previous article on OpenTelemetry with Jaeger&lt;/a&gt;, we were skeptical about its value
 for the average developer. The tooling seemed more suited for production monitoring than day-to-day development work.
-However, recent production issues have made us reconsider.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#feature-1-api-request-and-response-bodies" >Feature 1: API request and response bodies&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#feature-2-database-query-instrumentation" >Feature 2: Database query instrumentation&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#feature-3-outgoing-http-requests" >Feature 3: Outgoing HTTP requests&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#feature-4-trace-log-correlation" >Feature 4: Trace-log correlation&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#feature-5-comprehensive-error-handling" >Feature 5: Comprehensive error handling&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="the-wake-up-call">&lt;a href="#the-wake-up-call" class="header-anchor">&lt;/a>The wake-up call
-&lt;/h2>&lt;p>We discovered a critical gap in our production telemetry: several key API endpoints weren&amp;rsquo;t instrumented. When issues
-arose, we were flying blind. No traces. No visibility. Just frustrated customers and scrambling engineers.&lt;/p>
-&lt;p>This experience taught us an important lesson: &lt;strong>telemetry isn&amp;rsquo;t just an operations concern, it&amp;rsquo;s a development
-concern&lt;/strong>. If developers don&amp;rsquo;t use and understand telemetry during development, we end up with half-baked
-instrumentation in production.&lt;/p>
-&lt;p>The solution? Developers must dogfood their own telemetry.&lt;/p>
-&lt;h2 id="setting-up-opentelemetry-for-development">&lt;a href="#setting-up-opentelemetry-for-development" class="header-anchor">&lt;/a>Setting up OpenTelemetry for development
-&lt;/h2>&lt;p>Using OpenTelemetry during development provides immediate benefits:&lt;/p>
-&lt;ul>
-&lt;li>Complete instrumentation coverage before production&lt;/li>
-&lt;li>Faster debugging with familiar tooling (same tooling in dev and production)&lt;/li>
-&lt;li>Better understanding of code behavior&lt;/li>
-&lt;li>Early detection of performance issues&lt;/li>
-&lt;/ul>
-&lt;p>We built a TODO application to demonstrate key OpenTelemetry features for developers. The examples use
+However, recent production issues have made us reconsider.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#feature-1-api-request-and-response-bodies" &gt;Feature 1: API request and response bodies&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#feature-2-database-query-instrumentation" &gt;Feature 2: Database query instrumentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#feature-3-outgoing-http-requests" &gt;Feature 3: Outgoing HTTP requests&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#feature-4-trace-log-correlation" &gt;Feature 4: Trace-log correlation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#feature-5-comprehensive-error-handling" &gt;Feature 5: Comprehensive error handling&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-wake-up-call"&gt;&lt;a href="#the-wake-up-call" class="header-anchor"&gt;&lt;/a&gt;The wake-up call
+&lt;/h2&gt;&lt;p&gt;We discovered a critical gap in our production telemetry: several key API endpoints weren&amp;rsquo;t instrumented. When issues
+arose, we were flying blind. No traces. No visibility. Just frustrated customers and scrambling engineers.&lt;/p&gt;
+&lt;p&gt;This experience taught us an important lesson: &lt;strong&gt;telemetry isn&amp;rsquo;t just an operations concern, it&amp;rsquo;s a development
+concern&lt;/strong&gt;. If developers don&amp;rsquo;t use and understand telemetry during development, we end up with half-baked
+instrumentation in production.&lt;/p&gt;
+&lt;p&gt;The solution? Developers must dogfood their own telemetry.&lt;/p&gt;
+&lt;h2 id="setting-up-opentelemetry-for-development"&gt;&lt;a href="#setting-up-opentelemetry-for-development" class="header-anchor"&gt;&lt;/a&gt;Setting up OpenTelemetry for development
+&lt;/h2&gt;&lt;p&gt;Using OpenTelemetry during development provides immediate benefits:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Complete instrumentation coverage before production&lt;/li&gt;
+&lt;li&gt;Faster debugging with familiar tooling (same tooling in dev and production)&lt;/li&gt;
+&lt;li&gt;Better understanding of code behavior&lt;/li&gt;
+&lt;li&gt;Early detection of performance issues&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We built a TODO application to demonstrate key OpenTelemetry features for developers. The examples use
 &lt;a class="link" href="https://signoz.io/docs/install/docker/" target="_blank" rel="noopener"
->SigNoz&lt;/a> as the backend, but any OpenTelemetry-compatible system works (Jaeger,
-Grafana, Datadog, etc.).&lt;/p>
-&lt;blockquote>
-&lt;p>&lt;strong>Note&lt;/strong>: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
-to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p>&lt;/blockquote>
-&lt;h2 id="feature-1-api-request-and-response-bodies">&lt;a href="#feature-1-api-request-and-response-bodies" class="header-anchor">&lt;/a>Feature 1: API request and response bodies
-&lt;/h2>&lt;p>Seeing actual request and response bodies is invaluable during development. While you&amp;rsquo;d avoid this in production for
-security reasons, it&amp;rsquo;s essential for debugging locally.&lt;/p>
-&lt;h3 id="key-opentelemetry-concepts-attributes-vs-events">&lt;a href="#key-opentelemetry-concepts-attributes-vs-events" class="header-anchor">&lt;/a>Key OpenTelemetry concepts: attributes vs events
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>Attributes&lt;/strong>: Key-value pairs attached to spans that provide metadata. They&amp;rsquo;re indexed and searchable (e.g.,
-&lt;code>http.method&lt;/code>, &lt;code>http.status_code&lt;/code>, &lt;code>user.id&lt;/code>). Use attributes for the data you need to query or filter.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>Events&lt;/strong>: Timestamped records within a span that capture what happened at a specific moment. They&amp;rsquo;re perfect for
+&gt;SigNoz&lt;/a&gt; as the backend, but any OpenTelemetry-compatible system works (Jaeger,
+Grafana, Datadog, etc.).&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
+to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;h2 id="feature-1-api-request-and-response-bodies"&gt;&lt;a href="#feature-1-api-request-and-response-bodies" class="header-anchor"&gt;&lt;/a&gt;Feature 1: API request and response bodies
+&lt;/h2&gt;&lt;p&gt;Seeing actual request and response bodies is invaluable during development. While you&amp;rsquo;d avoid this in production for
+security reasons, it&amp;rsquo;s essential for debugging locally.&lt;/p&gt;
+&lt;h3 id="key-opentelemetry-concepts-attributes-vs-events"&gt;&lt;a href="#key-opentelemetry-concepts-attributes-vs-events" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: attributes vs events
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Attributes&lt;/strong&gt;: Key-value pairs attached to spans that provide metadata. They&amp;rsquo;re indexed and searchable (e.g.,
+&lt;code&gt;http.method&lt;/code&gt;, &lt;code&gt;http.status_code&lt;/code&gt;, &lt;code&gt;user.id&lt;/code&gt;). Use attributes for the data you need to query or filter.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Events&lt;/strong&gt;: Timestamped records within a span that capture what happened at a specific moment. They&amp;rsquo;re perfect for
 logging request/response bodies, error messages, or any detailed information that doesn&amp;rsquo;t need to be searchable but
-provides context when debugging.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>In our TODO app, we recorded request and response bodies as events:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">AddEvent&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;http.request.body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">requestBody&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">AddEvent&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;http.response.body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">responseBody&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This approach provides full API context without bloating searchable attributes.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
-alt="SigNoz showing API request and response bodies as events in a trace span">
-&lt;/figure>
-&lt;h2 id="feature-2-database-query-instrumentation">&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor">&lt;/a>Feature 2: Database query instrumentation
-&lt;/h2>&lt;p>Database queries often cause performance bottlenecks. OpenTelemetry captures both query timing and the actual SQL
-executed.&lt;/p>
-&lt;p>Standard instrumentation shows parameterized queries:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sql" data-lang="sql">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">SELECT&lt;/span> &lt;span style="color:#f92672">*&lt;/span> &lt;span style="color:#66d9ef">FROM&lt;/span> todos &lt;span style="color:#66d9ef">WHERE&lt;/span> user_id &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span> &lt;span style="color:#66d9ef">AND&lt;/span> status &lt;span style="color:#f92672">=&lt;/span> &lt;span style="color:#f92672">?&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
-alt="SigNoz showing database queries with both parameterized and populated SQL statements">
-&lt;/figure>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">SetAttributes&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;db.statement&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;SELECT * FROM todos WHERE user_id = ? AND status = ?&amp;#34;&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;db.statement.formatted&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;SELECT * FROM todos WHERE user_id = 123 AND status = &amp;#39;active&amp;#39;&amp;#34;&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This dual approach maintains security (prepared statements against SQL injection) while providing debugging context. Use
-populated queries to:&lt;/p>
-&lt;ul>
-&lt;li>Reproduce issues by running the exact query&lt;/li>
-&lt;li>Understand why a query returned unexpected results&lt;/li>
-&lt;li>Debug complex queries with multiple parameters&lt;/li>
-&lt;/ul>
-&lt;p>Alternatively, you could log the populated query statements instead of adding them as span attributes. Putting them in
+provides context when debugging.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In our TODO app, we recorded request and response bodies as events:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.response.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;responseBody&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This approach provides full API context without bloating searchable attributes.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
+alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
+&lt;/figure&gt;
+&lt;h2 id="feature-2-database-query-instrumentation"&gt;&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor"&gt;&lt;/a&gt;Feature 2: Database query instrumentation
+&lt;/h2&gt;&lt;p&gt;Database queries often cause performance bottlenecks. OpenTelemetry captures both query timing and the actual SQL
+executed.&lt;/p&gt;
+&lt;p&gt;Standard instrumentation shows parameterized queries:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
+alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
+&lt;/figure&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = ? AND status = ?&amp;#34;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement.formatted&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = 123 AND status = &amp;#39;active&amp;#39;&amp;#34;&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This dual approach maintains security (prepared statements against SQL injection) while providing debugging context. Use
+populated queries to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Reproduce issues by running the exact query&lt;/li&gt;
+&lt;li&gt;Understand why a query returned unexpected results&lt;/li&gt;
+&lt;li&gt;Debug complex queries with multiple parameters&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Alternatively, you could log the populated query statements instead of adding them as span attributes. Putting them in
 the logs gives you more flexibility in controlling data retention policies, as logs and traces often have different
-storage durations and access controls in production environments.&lt;/p>
-&lt;h2 id="feature-3-outgoing-http-requests">&lt;a href="#feature-3-outgoing-http-requests" class="header-anchor">&lt;/a>Feature 3: Outgoing HTTP requests
-&lt;/h2>&lt;p>Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
-incoming requests.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
-alt="SigNoz displaying outgoing HTTP request details">
-&lt;/figure>
-&lt;p>Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Before making the request&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">AddEvent&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;http.request.body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">requestBody&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">Int&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;size&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">requestBody&lt;/span>)),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// After receiving the response&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">AddEvent&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;http.response.body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">String&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;body&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">responseBody&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">Int&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;size&amp;#34;&lt;/span>, len(&lt;span style="color:#a6e22e">responseBody&lt;/span>)),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">attribute&lt;/span>.&lt;span style="color:#a6e22e">Int&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;status_code&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">resp&lt;/span>.&lt;span style="color:#a6e22e">StatusCode&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This visibility is crucial when:&lt;/p>
-&lt;ul>
-&lt;li>Third-party APIs return unexpected results&lt;/li>
-&lt;li>You need to debug authentication or request formatting issues&lt;/li>
-&lt;li>Performance bottlenecks come from external dependencies&lt;/li>
-&lt;li>You&amp;rsquo;re troubleshooting integration problems&lt;/li>
-&lt;/ul>
-&lt;p>External calls receive the same instrumentation as internal operations, eliminating black boxes during development.&lt;/p>
-&lt;h2 id="feature-4-trace-log-correlation">&lt;a href="#feature-4-trace-log-correlation" class="header-anchor">&lt;/a>Feature 4: Trace-log correlation
-&lt;/h2>&lt;p>OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
-output.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
-alt="SigNoz showing correlated logs for a specific trace with direct navigation links">
-&lt;/figure>
-&lt;h3 id="key-opentelemetry-concepts-spans-vs-traces">&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor">&lt;/a>Key OpenTelemetry concepts: spans vs traces
-&lt;/h3>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>Span&lt;/strong>: A single unit of work within a trace. It represents an operation like a database query, HTTP request, or
-function call. Each span has a unique &lt;code>span_id&lt;/code> and may have a &lt;code>parent_span_id&lt;/code> to form a tree. Spans are connected
-through these relationships to reflect the call hierarchy.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>Trace&lt;/strong>: The complete journey of a request through your system, composed of multiple spans that all share the same
-&lt;code>trace_id&lt;/code>. The root span has no parent and marks the start of the trace. Think of a trace as the tree, and spans as
-the branches and leaves.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>In our TODO app, we inject trace context into all log entries:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">logger&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">log&lt;/span>.&lt;span style="color:#a6e22e">With&lt;/span>(
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;trace_id&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">SpanContext&lt;/span>().&lt;span style="color:#a6e22e">TraceID&lt;/span>().&lt;span style="color:#a6e22e">String&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;span_id&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">SpanContext&lt;/span>().&lt;span style="color:#a6e22e">SpanID&lt;/span>().&lt;span style="color:#a6e22e">String&lt;/span>(),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">logger&lt;/span>.&lt;span style="color:#a6e22e">Info&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Creating new TODO item&amp;#34;&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;user_id&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">userID&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;title&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">todo&lt;/span>.&lt;span style="color:#a6e22e">Title&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This correlation enables:&lt;/p>
-&lt;ul>
-&lt;li>Quick navigation from a slow span to its detailed logs&lt;/li>
-&lt;li>Understanding the sequence of operations within a request&lt;/li>
-&lt;li>Debugging complex flows across multiple services&lt;/li>
-&lt;li>Maintaining context when troubleshooting issues&lt;/li>
-&lt;/ul>
-&lt;p>Viewing traces and logs together reduces debugging time significantly.&lt;/p>
-&lt;h2 id="feature-5-comprehensive-error-handling">&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor">&lt;/a>Feature 5: Comprehensive error handling
-&lt;/h2>&lt;p>OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
-alt="SigNoz showing errors">
-&lt;/figure>
-&lt;p>Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p>
-&lt;ol>
-&lt;li>Database layer throws an error (count: 1)&lt;/li>
-&lt;li>Service layer catches and returns error response (count: 2)&lt;/li>
-&lt;/ol>
-&lt;p>This propagation helps identify error origins and their path through application layers.&lt;/p>
-&lt;p>Example error instrumentation:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Simple error recording&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">RecordError&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">SetStatus&lt;/span>(&lt;span style="color:#a6e22e">codes&lt;/span>.&lt;span style="color:#a6e22e">Error&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span>.&lt;span style="color:#a6e22e">Error&lt;/span>())
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// With stack trace&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a6e22e">span&lt;/span>.&lt;span style="color:#a6e22e">RecordError&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>, &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithStackTrace&lt;/span>(&lt;span style="color:#66d9ef">true&lt;/span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>With proper error instrumentation, you get:&lt;/p>
-&lt;ul>
-&lt;li>Complete stack traces for debugging&lt;/li>
-&lt;li>Error propagation paths through your system&lt;/li>
-&lt;li>Direct links to the failing trace&lt;/li>
-&lt;li>Associated logs with full context&lt;/li>
-&lt;li>Performance impact of error handling&lt;/li>
-&lt;/ul>
-&lt;p>All debugging information exists in one place, reducing troubleshooting from hours to minutes.&lt;/p>
-&lt;h2 id="moving-forward">&lt;a href="#moving-forward" class="header-anchor">&lt;/a>Moving forward
-&lt;/h2>&lt;p>Our next step is implementing this approach in our production application. The benefits are clear:&lt;/p>
-&lt;ul>
-&lt;li>&lt;strong>Complete visibility&lt;/strong>: No more blind spots in our API endpoints&lt;/li>
-&lt;li>&lt;strong>Faster debugging&lt;/strong>: All context in one place&lt;/li>
-&lt;li>&lt;strong>Better habits&lt;/strong>: Developers who use telemetry build better instrumented code&lt;/li>
-&lt;li>&lt;strong>Proactive monitoring&lt;/strong>: Issues are caught before they impact users&lt;/li>
-&lt;/ul>
-&lt;p>Telemetry isn&amp;rsquo;t an afterthought. It&amp;rsquo;s a development tool that we can use from day one.&lt;/p>
-&lt;h2 id="try-it-yourself">&lt;a href="#try-it-yourself" class="header-anchor">&lt;/a>Try it yourself
-&lt;/h2>&lt;p>See these concepts in action with our &lt;a class="link" href="https://github.com/getvictor/todo-app" target="_blank" rel="noopener"
->instrumented TODO application on GitHub&lt;/a>.
-The AI-generated code has readability issues, but effectively demonstrates all telemetry concepts.&lt;/p>
-&lt;p>To get started with your own setup:&lt;/p>
-&lt;ol>
-&lt;li>Install &lt;a class="link" href="https://signoz.io/docs/install/docker/" target="_blank" rel="noopener"
->SigNoz using Docker&lt;/a>&lt;/li>
-&lt;li>Clone the TODO app repository&lt;/li>
-&lt;li>Run the app with OpenTelemetry enabled&lt;/li>
-&lt;li>Start exploring your traces!&lt;/li>
-&lt;/ol>
-&lt;p>The goal isn&amp;rsquo;t perfect code. It&amp;rsquo;s perfect visibility into code behavior.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
-Learn which telemetry metrics matter most when load testing your applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../optimizing-performance-of-go-app/" >How to benchmark performance of Go serializers&lt;/a>&lt;/strong>&lt;br>
-Discover performance optimization techniques using Go&amp;rsquo;s built-in profiling tools.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
-Our initial skeptical take on OpenTelemetry and its challenges for development use.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;p>&lt;em>Note:&lt;/em> What&amp;rsquo;s your experience with OpenTelemetry? Have you found other creative ways to use telemetry during
-development?&lt;/p>
-&lt;h2 id="watch-us-demonstrate-opentelemetry-features-useful-for-developers">&lt;a href="#watch-us-demonstrate-opentelemetry-features-useful-for-developers" class="header-anchor">&lt;/a>Watch us demonstrate OpenTelemetry features useful for developers
-&lt;/h2>&lt;div class="video-wrapper">
+storage durations and access controls in production environments.&lt;/p&gt;
+&lt;h2 id="feature-3-outgoing-http-requests"&gt;&lt;a href="#feature-3-outgoing-http-requests" class="header-anchor"&gt;&lt;/a&gt;Feature 3: Outgoing HTTP requests
+&lt;/h2&gt;&lt;p&gt;Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
+incoming requests.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
+alt="SigNoz displaying outgoing HTTP request details"&gt;
+&lt;/figure&gt;
+&lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Before making the request&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Int&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;)),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// After receiving the response&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.response.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;responseBody&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Int&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;responseBody&lt;/span&gt;)),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Int&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;status_code&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;resp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StatusCode&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This visibility is crucial when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Third-party APIs return unexpected results&lt;/li&gt;
+&lt;li&gt;You need to debug authentication or request formatting issues&lt;/li&gt;
+&lt;li&gt;Performance bottlenecks come from external dependencies&lt;/li&gt;
+&lt;li&gt;You&amp;rsquo;re troubleshooting integration problems&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;External calls receive the same instrumentation as internal operations, eliminating black boxes during development.&lt;/p&gt;
+&lt;h2 id="feature-4-trace-log-correlation"&gt;&lt;a href="#feature-4-trace-log-correlation" class="header-anchor"&gt;&lt;/a&gt;Feature 4: Trace-log correlation
+&lt;/h2&gt;&lt;p&gt;OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
+output.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
+alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
+&lt;/figure&gt;
+&lt;h3 id="key-opentelemetry-concepts-spans-vs-traces"&gt;&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: spans vs traces
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Span&lt;/strong&gt;: A single unit of work within a trace. It represents an operation like a database query, HTTP request, or
+function call. Each span has a unique &lt;code&gt;span_id&lt;/code&gt; and may have a &lt;code&gt;parent_span_id&lt;/code&gt; to form a tree. Spans are connected
+through these relationships to reflect the call hierarchy.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Trace&lt;/strong&gt;: The complete journey of a request through your system, composed of multiple spans that all share the same
+&lt;code&gt;trace_id&lt;/code&gt;. The root span has no parent and marks the start of the trace. Think of a trace as the tree, and spans as
+the branches and leaves.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In our TODO app, we inject trace context into all log entries:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;With&lt;/span&gt;(
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;trace_id&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpanContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;TraceID&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;span_id&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpanContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;SpanID&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Info&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Creating new TODO item&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user_id&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;userID&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;title&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;todo&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Title&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This correlation enables:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Quick navigation from a slow span to its detailed logs&lt;/li&gt;
+&lt;li&gt;Understanding the sequence of operations within a request&lt;/li&gt;
+&lt;li&gt;Debugging complex flows across multiple services&lt;/li&gt;
+&lt;li&gt;Maintaining context when troubleshooting issues&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Viewing traces and logs together reduces debugging time significantly.&lt;/p&gt;
+&lt;h2 id="feature-5-comprehensive-error-handling"&gt;&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor"&gt;&lt;/a&gt;Feature 5: Comprehensive error handling
+&lt;/h2&gt;&lt;p&gt;OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
+alt="SigNoz showing errors"&gt;
+&lt;/figure&gt;
+&lt;p&gt;Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Database layer throws an error (count: 1)&lt;/li&gt;
+&lt;li&gt;Service layer catches and returns error response (count: 2)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This propagation helps identify error origins and their path through application layers.&lt;/p&gt;
+&lt;p&gt;Example error instrumentation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Simple error recording&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RecordError&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetStatus&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;codes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Error&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Error&lt;/span&gt;())
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// With stack trace&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RecordError&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithStackTrace&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;With proper error instrumentation, you get:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Complete stack traces for debugging&lt;/li&gt;
+&lt;li&gt;Error propagation paths through your system&lt;/li&gt;
+&lt;li&gt;Direct links to the failing trace&lt;/li&gt;
+&lt;li&gt;Associated logs with full context&lt;/li&gt;
+&lt;li&gt;Performance impact of error handling&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All debugging information exists in one place, reducing troubleshooting from hours to minutes.&lt;/p&gt;
+&lt;h2 id="moving-forward"&gt;&lt;a href="#moving-forward" class="header-anchor"&gt;&lt;/a&gt;Moving forward
+&lt;/h2&gt;&lt;p&gt;Our next step is implementing this approach in our production application. The benefits are clear:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Complete visibility&lt;/strong&gt;: No more blind spots in our API endpoints&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Faster debugging&lt;/strong&gt;: All context in one place&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Better habits&lt;/strong&gt;: Developers who use telemetry build better instrumented code&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Proactive monitoring&lt;/strong&gt;: Issues are caught before they impact users&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Telemetry isn&amp;rsquo;t an afterthought. It&amp;rsquo;s a development tool that we can use from day one.&lt;/p&gt;
+&lt;h2 id="try-it-yourself"&gt;&lt;a href="#try-it-yourself" class="header-anchor"&gt;&lt;/a&gt;Try it yourself
+&lt;/h2&gt;&lt;p&gt;See these concepts in action with our &lt;a class="link" href="https://github.com/getvictor/todo-app" target="_blank" rel="noopener"
+&gt;instrumented TODO application on GitHub&lt;/a&gt;.
+The AI-generated code has readability issues, but effectively demonstrates all telemetry concepts.&lt;/p&gt;
+&lt;p&gt;To get started with your own setup:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Install &lt;a class="link" href="https://signoz.io/docs/install/docker/" target="_blank" rel="noopener"
+&gt;SigNoz using Docker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Clone the TODO app repository&lt;/li&gt;
+&lt;li&gt;Run the app with OpenTelemetry enabled&lt;/li&gt;
+&lt;li&gt;Start exploring your traces!&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The goal isn&amp;rsquo;t perfect code. It&amp;rsquo;s perfect visibility into code behavior.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../software-load-testing/" &gt;Top 5 metrics for software load testing performance&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn which telemetry metrics matter most when load testing your applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;How to benchmark performance of Go serializers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Discover performance optimization techniques using Go&amp;rsquo;s built-in profiling tools.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;Is OpenTelemetry useful for the average software developer?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Our initial skeptical take on OpenTelemetry and its challenges for development use.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; What&amp;rsquo;s your experience with OpenTelemetry? Have you found other creative ways to use telemetry during
+development?&lt;/p&gt;
+&lt;h2 id="watch-us-demonstrate-opentelemetry-features-useful-for-developers"&gt;&lt;a href="#watch-us-demonstrate-opentelemetry-features-useful-for-developers" class="header-anchor"&gt;&lt;/a&gt;Watch us demonstrate OpenTelemetry features useful for developers
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/1a8f8FWRWS0"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Top 5 metrics for software load testing performance</title><link>https://victoronsoftware.com/posts/software-load-testing/</link><pubDate>Wed, 15 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-load-testing/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/loadtest-fail.png" alt="Featured image of post Top 5 metrics for software load testing performance" />&lt;ol>
-&lt;li>&lt;a class="link" href="#server-cpu-and-memory-utilization" >Server CPU and memory utilization&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#server-errors" >Server errors&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#server-api-latency-response-time" >Server API latency (response time)&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#database-slow-queries" >Database slow queries&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#database-performance-metrics" >Database performance metrics&lt;/a>&lt;/li>
-&lt;/ol>
-&lt;h2 id="what-is-software-load-testing">&lt;a href="#what-is-software-load-testing" class="header-anchor">&lt;/a>What is software load testing?
-&lt;/h2>&lt;p>Software load testing is a type of performance testing that simulates real-world user load on a software application.
-Load tests usually run in a test environment identical to the production environment.&lt;/p>
-&lt;p>The goals of load testing may include:&lt;/p>
-&lt;ul>
-&lt;li>Ensure the application meets the required performance criteria&lt;/li>
-&lt;li>Ensure the application performance did not degrade after changes&lt;/li>
-&lt;li>Test a new feature&amp;rsquo;s performance before releasing it to production&lt;/li>
-&lt;li>Identify bottlenecks in the application to reduce compute costs and/or risks&lt;/li>
-&lt;li>Run &lt;a class="link" href="https://en.wikipedia.org/wiki/Chaos_engineering" target="_blank" rel="noopener"
->chaos engineering&lt;/a> performance experiments&lt;/li>
-&lt;/ul>
-&lt;p>Load testing can be done manually or automatically. Many open-source and commercial tools are available to help you run
-load tests. Some features of load testing tools include:&lt;/p>
-&lt;ul>
-&lt;li>Record and replay user interactions, including simulating unique users&lt;/li>
-&lt;li>Simulate different user loads&lt;/li>
-&lt;li>Monitor the application&amp;rsquo;s performance during the test&lt;/li>
-&lt;li>Generate reports with performance metrics&lt;/li>
-&lt;/ul>
-&lt;p>This article lists the key metrics you should gather during a software load test of your web application.&lt;/p>
-&lt;h2 id="server-cpu-and-memory-utilization">&lt;a href="#server-cpu-and-memory-utilization" class="header-anchor">&lt;/a>Server CPU and memory utilization
-&lt;/h2>&lt;p>CPU utilization is the percentage of time the CPU is busy processing instructions, and memory utilization is the
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top 5 metrics for software load testing performance</title><link>https://victoronsoftware.com/posts/software-load-testing/</link><pubDate>Wed, 15 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-load-testing/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/loadtest-fail.png" alt="Featured image of post Top 5 metrics for software load testing performance" /&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a class="link" href="#server-cpu-and-memory-utilization" &gt;Server CPU and memory utilization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#server-errors" &gt;Server errors&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#server-api-latency-response-time" &gt;Server API latency (response time)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#database-slow-queries" &gt;Database slow queries&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#database-performance-metrics" &gt;Database performance metrics&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="what-is-software-load-testing"&gt;&lt;a href="#what-is-software-load-testing" class="header-anchor"&gt;&lt;/a&gt;What is software load testing?
+&lt;/h2&gt;&lt;p&gt;Software load testing is a type of performance testing that simulates real-world user load on a software application.
+Load tests usually run in a test environment identical to the production environment.&lt;/p&gt;
+&lt;p&gt;The goals of load testing may include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensure the application meets the required performance criteria&lt;/li&gt;
+&lt;li&gt;Ensure the application performance did not degrade after changes&lt;/li&gt;
+&lt;li&gt;Test a new feature&amp;rsquo;s performance before releasing it to production&lt;/li&gt;
+&lt;li&gt;Identify bottlenecks in the application to reduce compute costs and/or risks&lt;/li&gt;
+&lt;li&gt;Run &lt;a class="link" href="https://en.wikipedia.org/wiki/Chaos_engineering" target="_blank" rel="noopener"
+&gt;chaos engineering&lt;/a&gt; performance experiments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Load testing can be done manually or automatically. Many open-source and commercial tools are available to help you run
+load tests. Some features of load testing tools include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Record and replay user interactions, including simulating unique users&lt;/li&gt;
+&lt;li&gt;Simulate different user loads&lt;/li&gt;
+&lt;li&gt;Monitor the application&amp;rsquo;s performance during the test&lt;/li&gt;
+&lt;li&gt;Generate reports with performance metrics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This article lists the key metrics you should gather during a software load test of your web application.&lt;/p&gt;
+&lt;h2 id="server-cpu-and-memory-utilization"&gt;&lt;a href="#server-cpu-and-memory-utilization" class="header-anchor"&gt;&lt;/a&gt;Server CPU and memory utilization
+&lt;/h2&gt;&lt;p&gt;CPU utilization is the percentage of time the CPU is busy processing instructions, and memory utilization is the
 percentage of memory used by the server. Companies deploy multiple instances of the same application web server, and the
-load balancer distributes the user requests among them. These metrics are averages across all instances.&lt;/p>
-&lt;p>High CPU or memory utilization can indicate a bottleneck in the application or server. It may also signal that the
-application needs to be scaled horizontally (add more instances) or vertically (increase the server&amp;rsquo;s resources).&lt;/p>
-&lt;p>Low CPU or memory utilization may indicate that the application is over-provisioned, and infrastructure engineers could
-reduce resources to save costs.&lt;/p>
-&lt;p>Typical expectations for CPU and memory utilization are:&lt;/p>
-&lt;ul>
-&lt;li>CPU utilization should be below 80% on average&lt;/li>
-&lt;li>Memory utilization should be below 80% on average&lt;/li>
-&lt;/ul>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/cpu-utilization.png">&lt;figcaption>
-&lt;h4>High CPU utilization during load test&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="server-errors">&lt;a href="#server-errors" class="header-anchor">&lt;/a>Server errors
-&lt;/h2>&lt;p>Server errors are error messages in the application logs or 5XX HTTP status codes. They can indicate that the
-application is not handling the load well, has a bug, or is misconfigured.&lt;/p>
-&lt;p>Error logs are a key debugging tool for developers. They can help identify the root cause of a functional or performance
+load balancer distributes the user requests among them. These metrics are averages across all instances.&lt;/p&gt;
+&lt;p&gt;High CPU or memory utilization can indicate a bottleneck in the application or server. It may also signal that the
+application needs to be scaled horizontally (add more instances) or vertically (increase the server&amp;rsquo;s resources).&lt;/p&gt;
+&lt;p&gt;Low CPU or memory utilization may indicate that the application is over-provisioned, and infrastructure engineers could
+reduce resources to save costs.&lt;/p&gt;
+&lt;p&gt;Typical expectations for CPU and memory utilization are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CPU utilization should be below 80% on average&lt;/li&gt;
+&lt;li&gt;Memory utilization should be below 80% on average&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/cpu-utilization.png"&gt;&lt;figcaption&gt;
+&lt;h4&gt;High CPU utilization during load test&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="server-errors"&gt;&lt;a href="#server-errors" class="header-anchor"&gt;&lt;/a&gt;Server errors
+&lt;/h2&gt;&lt;p&gt;Server errors are error messages in the application logs or 5XX HTTP status codes. They can indicate that the
+application is not handling the load well, has a bug, or is misconfigured.&lt;/p&gt;
+&lt;p&gt;Error logs are a key debugging tool for developers. They can help identify the root cause of a functional or performance
 error and fix it. As such, developers must use error logs to report actual server errors and not just informational
 messages. For example, a 404 error is typically not a server error but a client error. A website user requesting a
 resource that does not exist is a common scenario. Client errors should be logged as informational messages or tagged
-appropriately to be excluded from the server error metric.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/server-errors.png">&lt;figcaption>
-&lt;h4>AWS Logs Insights JSON error filter and sample error patterns&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The ideal number of server errors is zero. However, in practice, some errors are expected. For example, some startup or
+appropriately to be excluded from the server error metric.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/server-errors.png"&gt;&lt;figcaption&gt;
+&lt;h4&gt;AWS Logs Insights JSON error filter and sample error patterns&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The ideal number of server errors is zero. However, in practice, some errors are expected. For example, some startup or
 shutdown-related errors may occur if application servers are scaling up or down due to load. Note the expected errors in
-the test plan and adjust the error filter accordingly.&lt;/p>
-&lt;h2 id="server-api-latency-response-time">&lt;a href="#server-api-latency-response-time" class="header-anchor">&lt;/a>Server API latency (response time)
-&lt;/h2>&lt;p>API latency is the time it takes for the server to respond to a request, measured in milliseconds. Typically, the
-business cares about user-facing API endpoints, such as the login, checkout, or search endpoints.&lt;/p>
-&lt;p>API latency is a critical metric for user experience. High latency can lead to user frustration and abandonment.&lt;/p>
-&lt;p>One standard metric is the 95th percentile latency. This metric indicates the latency that 95% of the requests are
-faster than. It is a good indicator of the user experience because it filters out outliers.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/api-latency.png">&lt;figcaption>
-&lt;h4>Example spike in latency during a load test experiment&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>Telemetry tools such as &lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
->OpenTelemetry&lt;/a> can help you gather API latency metrics and correlate
-them with other metrics, such as server errors or CPU utilization.&lt;/p>
-&lt;h2 id="database-slow-queries">&lt;a href="#database-slow-queries" class="header-anchor">&lt;/a>Database slow queries
-&lt;/h2>&lt;p>Query response time is the time it takes for the database to respond to a query. Slow queries can indicate that the
-query is not optimized or that the table needs an index.&lt;/p>
-&lt;p>Slow queries can lead to high API latency and server errors. They can also lead to high CPU and memory utilization on
-the database server.&lt;/p>
-&lt;p>Typically, we want to look at the average query response time multiplied by the number of queries per second for each
-query signature. This will identify the queries that have the most impact on database performance.&lt;/p>
-&lt;p>The list of slow queries should remain stable during a load test. If it changes, it may indicate a new unoptimized query
-or a new bug in the application.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/db-slow-queries.png">&lt;figcaption>
-&lt;h4>AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h2 id="database-performance-metrics">&lt;a href="#database-performance-metrics" class="header-anchor">&lt;/a>Database performance metrics
-&lt;/h2>&lt;p>Along with slow queries, we always gather the following database performance metrics:&lt;/p>
-&lt;h3 id="database-cpu-utilization">&lt;a href="#database-cpu-utilization" class="header-anchor">&lt;/a>Database CPU utilization
-&lt;/h3>&lt;p>Just like the server, we monitor the database&amp;rsquo;s CPU utilization. The typical expectation is that CPU utilization should
-be below 80% on average.&lt;/p>
-&lt;p>Memory utilization may not be as critical for the database as for the server. We expect the database to use as much
-memory as possible to cache data and speed up queries.&lt;/p>
-&lt;h3 id="database-threads-running-sessions">&lt;a href="#database-threads-running-sessions" class="header-anchor">&lt;/a>Database threads running (sessions)
-&lt;/h3>&lt;p>Database threads running is the number of database connections actively processing queries. High thread counts can
-indicate that the database is under heavy load.&lt;/p>
-&lt;p>The number of threads should be at or below the number of CPUs on the database server.&lt;/p>
-&lt;h3 id="database-io-operations-per-second-iops">&lt;a href="#database-io-operations-per-second-iops" class="header-anchor">&lt;/a>Database IO operations per second (IOPS)
-&lt;/h3>&lt;p>Database IOPS is the number of disk read and write operations the database performs per second. High IOPS can indicate
-that the database is not effectively caching data or that too many writes are occurring.&lt;/p>
-&lt;p>IOPS should be in line with the database&amp;rsquo;s provisioned IOPS. If IOPS are consistently higher than provisioned, the
-database may need to be scaled up.&lt;/p>
-&lt;h2 id="additional-metrics">&lt;a href="#additional-metrics" class="header-anchor">&lt;/a>Additional metrics
-&lt;/h2>&lt;p>The following metrics may also be necessary. However, these additional metrics may be more situational than the above
-top 5 metrics.&lt;/p>
-&lt;h3 id="network-traffic">&lt;a href="#network-traffic" class="header-anchor">&lt;/a>Network traffic
-&lt;/h3>&lt;p>Network traffic includes the number of bytes sent and received by the server. Typically, the data received by the server
-is the user&amp;rsquo;s request, and the data sent by the server is the response.&lt;/p>
-&lt;p>However, in microservices architectures and servers with 3rd party integrations, our server may also make requests to
-other web servers.&lt;/p>
-&lt;p>User traffic is typically consistent from load test to load test. Traffic to other servers may change as engineers add
+the test plan and adjust the error filter accordingly.&lt;/p&gt;
+&lt;h2 id="server-api-latency-response-time"&gt;&lt;a href="#server-api-latency-response-time" class="header-anchor"&gt;&lt;/a&gt;Server API latency (response time)
+&lt;/h2&gt;&lt;p&gt;API latency is the time it takes for the server to respond to a request, measured in milliseconds. Typically, the
+business cares about user-facing API endpoints, such as the login, checkout, or search endpoints.&lt;/p&gt;
+&lt;p&gt;API latency is a critical metric for user experience. High latency can lead to user frustration and abandonment.&lt;/p&gt;
+&lt;p&gt;One standard metric is the 95th percentile latency. This metric indicates the latency that 95% of the requests are
+faster than. It is a good indicator of the user experience because it filters out outliers.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/api-latency.png"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Example spike in latency during a load test experiment&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;Telemetry tools such as &lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
+&gt;OpenTelemetry&lt;/a&gt; can help you gather API latency metrics and correlate
+them with other metrics, such as server errors or CPU utilization.&lt;/p&gt;
+&lt;h2 id="database-slow-queries"&gt;&lt;a href="#database-slow-queries" class="header-anchor"&gt;&lt;/a&gt;Database slow queries
+&lt;/h2&gt;&lt;p&gt;Query response time is the time it takes for the database to respond to a query. Slow queries can indicate that the
+query is not optimized or that the table needs an index.&lt;/p&gt;
+&lt;p&gt;Slow queries can lead to high API latency and server errors. They can also lead to high CPU and memory utilization on
+the database server.&lt;/p&gt;
+&lt;p&gt;Typically, we want to look at the average query response time multiplied by the number of queries per second for each
+query signature. This will identify the queries that have the most impact on database performance.&lt;/p&gt;
+&lt;p&gt;The list of slow queries should remain stable during a load test. If it changes, it may indicate a new unoptimized query
+or a new bug in the application.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/db-slow-queries.png"&gt;&lt;figcaption&gt;
+&lt;h4&gt;AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2 id="database-performance-metrics"&gt;&lt;a href="#database-performance-metrics" class="header-anchor"&gt;&lt;/a&gt;Database performance metrics
+&lt;/h2&gt;&lt;p&gt;Along with slow queries, we always gather the following database performance metrics:&lt;/p&gt;
+&lt;h3 id="database-cpu-utilization"&gt;&lt;a href="#database-cpu-utilization" class="header-anchor"&gt;&lt;/a&gt;Database CPU utilization
+&lt;/h3&gt;&lt;p&gt;Just like the server, we monitor the database&amp;rsquo;s CPU utilization. The typical expectation is that CPU utilization should
+be below 80% on average.&lt;/p&gt;
+&lt;p&gt;Memory utilization may not be as critical for the database as for the server. We expect the database to use as much
+memory as possible to cache data and speed up queries.&lt;/p&gt;
+&lt;h3 id="database-threads-running-sessions"&gt;&lt;a href="#database-threads-running-sessions" class="header-anchor"&gt;&lt;/a&gt;Database threads running (sessions)
+&lt;/h3&gt;&lt;p&gt;Database threads running is the number of database connections actively processing queries. High thread counts can
+indicate that the database is under heavy load.&lt;/p&gt;
+&lt;p&gt;The number of threads should be at or below the number of CPUs on the database server.&lt;/p&gt;
+&lt;h3 id="database-io-operations-per-second-iops"&gt;&lt;a href="#database-io-operations-per-second-iops" class="header-anchor"&gt;&lt;/a&gt;Database IO operations per second (IOPS)
+&lt;/h3&gt;&lt;p&gt;Database IOPS is the number of disk read and write operations the database performs per second. High IOPS can indicate
+that the database is not effectively caching data or that too many writes are occurring.&lt;/p&gt;
+&lt;p&gt;IOPS should be in line with the database&amp;rsquo;s provisioned IOPS. If IOPS are consistently higher than provisioned, the
+database may need to be scaled up.&lt;/p&gt;
+&lt;h2 id="additional-metrics"&gt;&lt;a href="#additional-metrics" class="header-anchor"&gt;&lt;/a&gt;Additional metrics
+&lt;/h2&gt;&lt;p&gt;The following metrics may also be necessary. However, these additional metrics may be more situational than the above
+top 5 metrics.&lt;/p&gt;
+&lt;h3 id="network-traffic"&gt;&lt;a href="#network-traffic" class="header-anchor"&gt;&lt;/a&gt;Network traffic
+&lt;/h3&gt;&lt;p&gt;Network traffic includes the number of bytes sent and received by the server. Typically, the data received by the server
+is the user&amp;rsquo;s request, and the data sent by the server is the response.&lt;/p&gt;
+&lt;p&gt;However, in microservices architectures and servers with 3rd party integrations, our server may also make requests to
+other web servers.&lt;/p&gt;
+&lt;p&gt;User traffic is typically consistent from load test to load test. Traffic to other servers may change as engineers add
 new features. If the network traffic changes significantly, it may indicate a new bug in the application, such as
-application servers making too many requests to a 3rd party service.&lt;/p>
-&lt;h3 id="performance-profile">&lt;a href="#performance-profile" class="header-anchor">&lt;/a>Performance profile
-&lt;/h3>&lt;p>Many performance tools and modern programming languages can generate a performance profile. A performance profile is a
+application servers making too many requests to a 3rd party service.&lt;/p&gt;
+&lt;h3 id="performance-profile"&gt;&lt;a href="#performance-profile" class="header-anchor"&gt;&lt;/a&gt;Performance profile
+&lt;/h3&gt;&lt;p&gt;Many performance tools and modern programming languages can generate a performance profile. A performance profile is a
 breakdown of the time spent in each function of the application. It can help identify bottlenecks in the application
-code.&lt;/p>
-&lt;p>If code performance is a significant concern, take a performance profile during the load test and compare it to a
+code.&lt;/p&gt;
+&lt;p&gt;If code performance is a significant concern, take a performance profile during the load test and compare it to a
 baseline or the previous load test profile. If the profile changes significantly, it may indicate a new bug in the
-application or a new performance bottleneck.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/software-load-testing/performance-profile.png">&lt;figcaption>
-&lt;h4>Example performance profile from Go pprof&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;h3 id="database-replication-lag">&lt;a href="#database-replication-lag" class="header-anchor">&lt;/a>Database replication lag
-&lt;/h3>&lt;p>If the database is replicated, the replication lag is the time it takes for changes to be sent from the primary database
+application or a new performance bottleneck.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/performance-profile.png"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Example performance profile from Go pprof&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h3 id="database-replication-lag"&gt;&lt;a href="#database-replication-lag" class="header-anchor"&gt;&lt;/a&gt;Database replication lag
+&lt;/h3&gt;&lt;p&gt;If the database is replicated, the replication lag is the time it takes for changes to be sent from the primary database
 and applied to the replica database. High replication lag can indicate that the replica is not keeping up with the
-primary database.&lt;/p>
-&lt;p>High replication lag can lead to a bad user experience &amp;ndash; for example, if the user saves data, then immediately
-retrieves it and receives stale data.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry: A developer&amp;rsquo;s best friend for production-ready code&lt;/a>&lt;/strong>&lt;br>
-See how developers can leverage OpenTelemetry during development to build better instrumented applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
-Our initial exploration of OpenTelemetry&amp;rsquo;s practical value for everyday development tasks.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../optimizing-performance-of-go-app/" >How to benchmark performance of Go serializers&lt;/a>&lt;/strong>&lt;br>
-Measure and optimize your Go application&amp;rsquo;s performance with effective benchmarking techniques.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-us-discuss-the-software-load-testing-performance-metrics">&lt;a href="#watch-us-discuss-the-software-load-testing-performance-metrics" class="header-anchor">&lt;/a>Watch us discuss the software load testing performance metrics
-&lt;/h2>&lt;div class="video-wrapper">
+primary database.&lt;/p&gt;
+&lt;p&gt;High replication lag can lead to a bad user experience &amp;ndash; for example, if the user saves data, then immediately
+retrieves it and receives stale data.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-for-devs/" &gt;OpenTelemetry: A developer&amp;rsquo;s best friend for production-ready code&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+See how developers can leverage OpenTelemetry during development to build better instrumented applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;Is OpenTelemetry useful for the average software developer?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Our initial exploration of OpenTelemetry&amp;rsquo;s practical value for everyday development tasks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;How to benchmark performance of Go serializers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Measure and optimize your Go application&amp;rsquo;s performance with effective benchmarking techniques.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-discuss-the-software-load-testing-performance-metrics"&gt;&lt;a href="#watch-us-discuss-the-software-load-testing-performance-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss the software load testing performance metrics
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/KHS4D2QfsFk"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>Is OpenTelemetry useful for the average software developer?</title><link>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/opentelemetry-with-jaeger-headline.png" alt="Featured image of post Is OpenTelemetry useful for the average software developer?" />&lt;p>This article discusses our first impressions of using OpenTelemetry with Jaeger.&lt;/p>
-&lt;ul>
-&lt;li>&lt;a class="link" href="#use-cases-for-opentelemetry-and-jaeger" >Use cases for OpenTelemetry and Jaeger&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#problems-with-opentelemetry-and-jaeger" >Problems with OpenTelemetry and Jaeger&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="what-is-opentelemetry">&lt;a href="#what-is-opentelemetry" class="header-anchor">&lt;/a>What is OpenTelemetry?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
->OpenTelemetry&lt;/a> is a set of APIs, libraries, agents, and instrumentation for collecting
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Is OpenTelemetry useful for the average software developer?</title><link>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/opentelemetry-with-jaeger-headline.png" alt="Featured image of post Is OpenTelemetry useful for the average software developer?" /&gt;&lt;p&gt;This article discusses our first impressions of using OpenTelemetry with Jaeger.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#use-cases-for-opentelemetry-and-jaeger" &gt;Use cases for OpenTelemetry and Jaeger&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#problems-with-opentelemetry-and-jaeger" &gt;Problems with OpenTelemetry and Jaeger&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-is-opentelemetry"&gt;&lt;a href="#what-is-opentelemetry" class="header-anchor"&gt;&lt;/a&gt;What is OpenTelemetry?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
+&gt;OpenTelemetry&lt;/a&gt; is a set of APIs, libraries, agents, and instrumentation for collecting
 distributed traces and metrics from your applications. It provides a standardized way to instrument your code and
-collect telemetry data. OpenTelemetry supports programming languages like Java, Python, Go, JavaScript, etc.&lt;/p>
-&lt;p>Tracing is a method of monitoring and profiling your application to understand how requests flow through your system.
+collect telemetry data. OpenTelemetry supports programming languages like Java, Python, Go, JavaScript, etc.&lt;/p&gt;
+&lt;p&gt;Tracing is a method of monitoring and profiling your application to understand how requests flow through your system.
 For example, you can view the associated database calls and requests to other services for a single API request. Tracing
-allows you to identify bottlenecks, latency issues, and other performance problems.&lt;/p>
-&lt;h2 id="what-is-jaeger">&lt;a href="#what-is-jaeger" class="header-anchor">&lt;/a>What is Jaeger?
-&lt;/h2>&lt;p>&lt;a class="link" href="https://www.jaegertracing.io/" target="_blank" rel="noopener"
->Jaeger&lt;/a> is an open-source, end-to-end distributed tracing system. Jaeger is popular for
+allows you to identify bottlenecks, latency issues, and other performance problems.&lt;/p&gt;
+&lt;h2 id="what-is-jaeger"&gt;&lt;a href="#what-is-jaeger" class="header-anchor"&gt;&lt;/a&gt;What is Jaeger?
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.jaegertracing.io/" target="_blank" rel="noopener"
+&gt;Jaeger&lt;/a&gt; is an open-source, end-to-end distributed tracing system. Jaeger is popular for
 tracing applications because of its scalability, ease of use, and integration with other tools. Jaeger provides a
-web-based UI for viewing traces and analyzing performance data.&lt;/p>
-&lt;h2 id="add-opentelemetry-instrumentation-to-your-application">&lt;a href="#add-opentelemetry-instrumentation-to-your-application" class="header-anchor">&lt;/a>Add OpenTelemetry instrumentation to your application
-&lt;/h2>&lt;p>To start with OpenTelemetry and Jaeger, you must instrument your application with OpenTelemetry libraries.&lt;/p>
-&lt;p>In our case, we used the OpenTelemetry Go SDK to instrument our Go application. We added the necessary dependencies to
-our project.&lt;/p>
-&lt;pre tabindex="0">&lt;code>go get go.opentelemetry.io/otel@v1.31.0
+web-based UI for viewing traces and analyzing performance data.&lt;/p&gt;
+&lt;h2 id="add-opentelemetry-instrumentation-to-your-application"&gt;&lt;a href="#add-opentelemetry-instrumentation-to-your-application" class="header-anchor"&gt;&lt;/a&gt;Add OpenTelemetry instrumentation to your application
+&lt;/h2&gt;&lt;p&gt;To start with OpenTelemetry and Jaeger, you must instrument your application with OpenTelemetry libraries.&lt;/p&gt;
+&lt;p&gt;In our case, we used the OpenTelemetry Go SDK to instrument our Go application. We added the necessary dependencies to
+our project.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;go get go.opentelemetry.io/otel@v1.31.0
 go get go.opentelemetry.io/otel/exporters/otlp/otlptrace@v1.31.0
 go get go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc@v1.31.0
 go get go.opentelemetry.io/otel/sdk@v1.31.0
 go get go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux@v0.56.0
 go get github.com/XSAM/otelsql@v0.35.0
-&lt;/code>&lt;/pre>&lt;p>The &lt;code>go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux&lt;/code> package is needed to instrument our
-&lt;code>gorilla/mux&lt;/code> HTTP router.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">mux&lt;/span>.&lt;span style="color:#a6e22e">NewRouter&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">r&lt;/span>.&lt;span style="color:#a6e22e">Use&lt;/span>(&lt;span style="color:#a6e22e">otelmux&lt;/span>.&lt;span style="color:#a6e22e">Middleware&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;fleet&amp;#34;&lt;/span>))
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>github.com/XSAM/otelsql&lt;/code> package is needed to instrument our SQL database queries.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#e6db74">&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> &lt;span style="color:#a6e22e">semconv&lt;/span> &lt;span style="color:#e6db74">&amp;#34;go.opentelemetry.io/otel/semconv/v1.26.0&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// ...&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">init&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#66d9ef">error&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> = &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Register&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;mysql&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithAttributes&lt;/span>(&lt;span style="color:#a6e22e">semconv&lt;/span>.&lt;span style="color:#a6e22e">DBSystemMySQL&lt;/span>),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanOptions&lt;/span>(&lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">SpanOptions&lt;/span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// DisableErrSkip ignores driver.ErrSkip errors, which are frequently returned by the MySQL&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// driver when certain optional methods or paths are not implemented/taken.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// For example, interpolateParams=false (the secure default) will not do a parametrized&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// sql.conn.query directly without preparing it first, causing driver.ErrSkip&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">DisableErrSkip&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.conn.reset_session since it takes ~1us and doesn&amp;#39;t provide useful&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// information&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">OmitConnResetSession&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Omitting span for sql.rows since it is very quick and typically doesn&amp;#39;t provide useful&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// information beyond what&amp;#39;s already reported by prepare/exec/query&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">OmitRows&lt;/span>: &lt;span style="color:#66d9ef">true&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// WithSpanNameFormatter allows us to customize the span name, which is especially useful for SQL&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// queries run outside an HTTPS transaction, which do not belong to a parent span, show up as their&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// own trace, and would otherwise be named &amp;#34;sql.conn.query&amp;#34; or &amp;#34;sql.conn.exec&amp;#34;.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">WithSpanNameFormatter&lt;/span>(&lt;span style="color:#66d9ef">func&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Context&lt;/span>, &lt;span style="color:#a6e22e">method&lt;/span> &lt;span style="color:#a6e22e">otelsql&lt;/span>.&lt;span style="color:#a6e22e">Method&lt;/span>, &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>) &lt;span style="color:#66d9ef">string&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span> &lt;span style="color:#f92672">==&lt;/span> &lt;span style="color:#e6db74">&amp;#34;&amp;#34;&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> string(&lt;span style="color:#a6e22e">method&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Append query with extra whitespaces removed&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Join&lt;/span>(&lt;span style="color:#a6e22e">strings&lt;/span>.&lt;span style="color:#a6e22e">Fields&lt;/span>(&lt;span style="color:#a6e22e">query&lt;/span>), &lt;span style="color:#e6db74">&amp;#34; &amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">query&lt;/span>) &amp;gt; &lt;span style="color:#ae81ff">100&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">query&lt;/span> = &lt;span style="color:#a6e22e">query&lt;/span>[:&lt;span style="color:#ae81ff">100&lt;/span>] &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;...&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> string(&lt;span style="color:#a6e22e">method&lt;/span>) &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#e6db74">&amp;#34;: &amp;#34;&lt;/span> &lt;span style="color:#f92672">+&lt;/span> &lt;span style="color:#a6e22e">query&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }),
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> )
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> panic(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, use &lt;code>otelTracedDriverName&lt;/code> to open a connection to your database.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">db&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">sql&lt;/span>.&lt;span style="color:#a6e22e">Open&lt;/span>(&lt;span style="color:#a6e22e">otelTracedDriverName&lt;/span>, &lt;span style="color:#e6db74">&amp;#34;user:password@tcp(localhost:3306)/database&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>When starting your application, you must create an OpenTelemetry exporter and a trace provider.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">ctx&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">context&lt;/span>.&lt;span style="color:#a6e22e">Background&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">client&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">otlptracegrpc&lt;/span>.&lt;span style="color:#a6e22e">NewClient&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otlpTraceExporter&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">otlptrace&lt;/span>.&lt;span style="color:#a6e22e">New&lt;/span>(&lt;span style="color:#a6e22e">ctx&lt;/span>, &lt;span style="color:#a6e22e">client&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> panic(&lt;span style="color:#e6db74">&amp;#34;Failed to initialize tracing&amp;#34;&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">batchSpanProcessor&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">NewBatchSpanProcessor&lt;/span>(&lt;span style="color:#a6e22e">otlpTraceExporter&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tracerProvider&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">NewTracerProvider&lt;/span>(&lt;span style="color:#a6e22e">trace&lt;/span>.&lt;span style="color:#a6e22e">WithSpanProcessor&lt;/span>(&lt;span style="color:#a6e22e">batchSpanProcessor&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">otel&lt;/span>.&lt;span style="color:#a6e22e">SetTracerProvider&lt;/span>(&lt;span style="color:#a6e22e">tracerProvider&lt;/span>)
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="launch-jaeger">&lt;a href="#launch-jaeger" class="header-anchor">&lt;/a>Launch Jaeger
-&lt;/h2>&lt;p>To view traces, you need to launch Jaeger. You can run Jaeger locally using Docker. Based on the
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux&lt;/code&gt; package is needed to instrument our
+&lt;code&gt;gorilla/mux&lt;/code&gt; HTTP router.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mux&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewRouter&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Use&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelmux&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Middleware&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;fleet&amp;#34;&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;github.com/XSAM/otelsql&lt;/code&gt; package is needed to instrument our SQL database queries.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;semconv&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;go.opentelemetry.io/otel/semconv/v1.26.0&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otelTracedDriverName&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;init&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otelTracedDriverName&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Register&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;semconv&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DBSystemMySQL&lt;/span&gt;),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithSpanOptions&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpanOptions&lt;/span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// DisableErrSkip ignores driver.ErrSkip errors, which are frequently returned by the MySQL&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// driver when certain optional methods or paths are not implemented/taken.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// For example, interpolateParams=false (the secure default) will not do a parametrized&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// sql.conn.query directly without preparing it first, causing driver.ErrSkip&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;DisableErrSkip&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Omitting span for sql.conn.reset_session since it takes ~1us and doesn&amp;#39;t provide useful&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// information&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;OmitConnResetSession&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Omitting span for sql.rows since it is very quick and typically doesn&amp;#39;t provide useful&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// information beyond what&amp;#39;s already reported by prepare/exec/query&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;OmitRows&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// WithSpanNameFormatter allows us to customize the span name, which is especially useful for SQL&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// queries run outside an HTTPS transaction, which do not belong to a parent span, show up as their&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// own trace, and would otherwise be named &amp;#34;sql.conn.query&amp;#34; or &amp;#34;sql.conn.exec&amp;#34;.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithSpanNameFormatter&lt;/span&gt;(&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Context&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;method&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otelsql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Method&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; string(&lt;span style="color:#a6e22e"&gt;method&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Append query with extra whitespaces removed&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;strings&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Join&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;strings&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fields&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;), &lt;span style="color:#e6db74"&gt;&amp;#34; &amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;) &amp;gt; &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;[:&lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;] &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;...&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; string(&lt;span style="color:#a6e22e"&gt;method&lt;/span&gt;) &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;: &amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;query&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }),
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; panic(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, use &lt;code&gt;otelTracedDriverName&lt;/code&gt; to open a connection to your database.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;sql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Open&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelTracedDriverName&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user:password@tcp(localhost:3306)/database&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When starting your application, you must create an OpenTelemetry exporter and a trace provider.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Background&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otlptracegrpc&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewClient&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otlpTraceExporter&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otlptrace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; panic(&lt;span style="color:#e6db74"&gt;&amp;#34;Failed to initialize tracing&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;batchSpanProcessor&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewBatchSpanProcessor&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otlpTraceExporter&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;tracerProvider&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewTracerProvider&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithSpanProcessor&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;batchSpanProcessor&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otel&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetTracerProvider&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tracerProvider&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="launch-jaeger"&gt;&lt;a href="#launch-jaeger" class="header-anchor"&gt;&lt;/a&gt;Launch Jaeger
+&lt;/h2&gt;&lt;p&gt;To view traces, you need to launch Jaeger. You can run Jaeger locally using Docker. Based on the
 &lt;a class="link" href="https://www.jaegertracing.io/docs/1.62/getting-started/" target="_blank" rel="noopener"
->Jaeger 1.62 Getting Started guide&lt;/a>, you can run the following
-command:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>docker run --rm --name jaeger &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -p 16686:16686 &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span> -p 4317:4317 &lt;span style="color:#ae81ff">\
-&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#ae81ff">&lt;/span>jaegertracing/all-in-one:1.62.0
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>In our example, we are only exposing two ports:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>4317&lt;/code> for the Jaeger collector, which receives trace data using OpenTelemetry Protocol (OTLP) over gRPC&lt;/li>
-&lt;li>&lt;code>16686&lt;/code> for the Jaeger UI&lt;/li>
-&lt;/ul>
-&lt;h2 id="launch-your-application">&lt;a href="#launch-your-application" class="header-anchor">&lt;/a>Launch your application
-&lt;/h2>&lt;p>Before starting your application, you must set the OpenTelemetry endpoint to send traces to Jaeger. For example:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>export OTEL_SERVICE_NAME&lt;span style="color:#f92672">=&lt;/span>fleet
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>export OTEL_EXPORTER_OTLP_ENDPOINT&lt;span style="color:#f92672">=&lt;/span>http://localhost:4317
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now, you can start your application.&lt;/p>
-&lt;h2 id="view-traces-in-jaeger">&lt;a href="#view-traces-in-jaeger" class="header-anchor">&lt;/a>View traces in Jaeger
-&lt;/h2>&lt;p>Open your browser and navigate to &lt;a class="link" href="http://localhost:16686" target="_blank" rel="noopener"
->http://localhost:16686&lt;/a> to view traces in the Jaeger UI.
-Select your &lt;strong>Service&lt;/strong> name and click &lt;strong>Find Traces&lt;/strong>.&lt;/p>
-&lt;p>You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
-example below shows the HTTP request details and multiple SQL queries.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
-alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables.">
-&lt;/figure>
-&lt;h2 id="use-cases-for-opentelemetry-and-jaeger">&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor">&lt;/a>Use cases for OpenTelemetry and Jaeger
-&lt;/h2>&lt;p>In a local software development environment, OpenTelemetry and Jaeger can be used to:&lt;/p>
-&lt;ul>
-&lt;li>Fix bottlenecks and latency issues&lt;/li>
-&lt;li>Understand how requests flow through your system&lt;/li>
-&lt;/ul>
-&lt;p>If a bottleneck is known or suspected, Jaeger can help you identify the root cause. For example, you can see which
-database queries are taking the most time and optimize them.&lt;/p>
-&lt;p>When developing new features, Jaeger can help you understand how requests flow through your system. This telemetry data
-provides a quick check to ensure your new feature works as expected.&lt;/p>
-&lt;p>In a production environment, OpenTelemetry and Jaeger can be used to:&lt;/p>
-&lt;ul>
-&lt;li>Monitor and profile your applications&lt;/li>
-&lt;li>Troubleshoot performance issues&lt;/li>
-&lt;li>Optimize your applications and improve user experience&lt;/li>
-&lt;li>Ensure your applications meet service level objectives (SLOs)&lt;/li>
-&lt;/ul>
-&lt;h2 id="problems-with-opentelemetry-and-jaeger">&lt;a href="#problems-with-opentelemetry-and-jaeger" class="header-anchor">&lt;/a>Problems with OpenTelemetry and Jaeger
-&lt;/h2>&lt;p>OpenTelemetry and Jaeger are powerful tools, yet their development use seems limited to fixing performance bottlenecks.
+&gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
+command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --rm --name jaeger &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; -p 16686:16686 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt; -p 4317:4317 &lt;span style="color:#ae81ff"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;jaegertracing/all-in-one:1.62.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In our example, we are only exposing two ports:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;4317&lt;/code&gt; for the Jaeger collector, which receives trace data using OpenTelemetry Protocol (OTLP) over gRPC&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;16686&lt;/code&gt; for the Jaeger UI&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="launch-your-application"&gt;&lt;a href="#launch-your-application" class="header-anchor"&gt;&lt;/a&gt;Launch your application
+&lt;/h2&gt;&lt;p&gt;Before starting your application, you must set the OpenTelemetry endpoint to send traces to Jaeger. For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export OTEL_SERVICE_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;fleet
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export OTEL_EXPORTER_OTLP_ENDPOINT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http://localhost:4317
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can start your application.&lt;/p&gt;
+&lt;h2 id="view-traces-in-jaeger"&gt;&lt;a href="#view-traces-in-jaeger" class="header-anchor"&gt;&lt;/a&gt;View traces in Jaeger
+&lt;/h2&gt;&lt;p&gt;Open your browser and navigate to &lt;a class="link" href="http://localhost:16686" target="_blank" rel="noopener"
+&gt;http://localhost:16686&lt;/a&gt; to view traces in the Jaeger UI.
+Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Find Traces&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
+example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
+alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+&lt;/figure&gt;
+&lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
+&lt;/h2&gt;&lt;p&gt;In a local software development environment, OpenTelemetry and Jaeger can be used to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fix bottlenecks and latency issues&lt;/li&gt;
+&lt;li&gt;Understand how requests flow through your system&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If a bottleneck is known or suspected, Jaeger can help you identify the root cause. For example, you can see which
+database queries are taking the most time and optimize them.&lt;/p&gt;
+&lt;p&gt;When developing new features, Jaeger can help you understand how requests flow through your system. This telemetry data
+provides a quick check to ensure your new feature works as expected.&lt;/p&gt;
+&lt;p&gt;In a production environment, OpenTelemetry and Jaeger can be used to:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Monitor and profile your applications&lt;/li&gt;
+&lt;li&gt;Troubleshoot performance issues&lt;/li&gt;
+&lt;li&gt;Optimize your applications and improve user experience&lt;/li&gt;
+&lt;li&gt;Ensure your applications meet service level objectives (SLOs)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="problems-with-opentelemetry-and-jaeger"&gt;&lt;a href="#problems-with-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Problems with OpenTelemetry and Jaeger
+&lt;/h2&gt;&lt;p&gt;OpenTelemetry and Jaeger are powerful tools, yet their development use seems limited to fixing performance bottlenecks.
 They cannot be used for general debugging out of the box since they don&amp;rsquo;t provide enough detail for each specific
-request, such as the request body.&lt;/p>
-&lt;p>In addition, missing spans can be a problem. If your application is not instrumented correctly, you may not see all the
+request, such as the request body.&lt;/p&gt;
+&lt;p&gt;In addition, missing spans can be a problem. If your application is not instrumented correctly, you may not see all the
 spans you expect or know about in Jaeger. Our application lacks spans for some API endpoints, Redis transactions,
 outbound HTTP requests, and asynchronous processes. Adding all of these spans requires additional development and QA
-efforts.&lt;/p>
-&lt;p>The Jaeger UI itself is basic and lacks some features. For example, regex search is missing out of the box, unless
-Elasticsearch/OpenSearch storage is added.&lt;/p>
-&lt;p>Our chosen SQL instrumentation library, &lt;a class="link" href="https://github.com/XSAM/otelsql" target="_blank" rel="noopener"
->github.com/XSAM/otelsql&lt;/a>, could be better. It
+efforts.&lt;/p&gt;
+&lt;p&gt;The Jaeger UI itself is basic and lacks some features. For example, regex search is missing out of the box, unless
+Elasticsearch/OpenSearch storage is added.&lt;/p&gt;
+&lt;p&gt;Our chosen SQL instrumentation library, &lt;a class="link" href="https://github.com/XSAM/otelsql" target="_blank" rel="noopener"
+&gt;github.com/XSAM/otelsql&lt;/a&gt;, could be better. It
 does not provide a way to trace the transaction lifecycle, and it creates many spans at the root level, clogging the
-Jaeger UI.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry: A developer&amp;rsquo;s best friend for production-ready code&lt;/a>&lt;/strong>&lt;br>
-How we changed our minds about OpenTelemetry and now advocate for developers to use it during development.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
-Essential metrics to track when evaluating your application&amp;rsquo;s performance under load.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../optimizing-performance-of-go-app/" >How to benchmark performance of Go serializers&lt;/a>&lt;/strong>&lt;br>
-Learn effective techniques for measuring and optimizing Go code performance.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="example-code-on-github">&lt;a href="#example-code-on-github" class="header-anchor">&lt;/a>Example code on GitHub
-&lt;/h2>&lt;p>&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
->Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a>&lt;/p>
-&lt;h2 id="watch-opentelemetry-with-jaeger-video">&lt;a href="#watch-opentelemetry-with-jaeger-video" class="header-anchor">&lt;/a>Watch OpenTelemetry with Jaeger video
-&lt;/h2>&lt;div class="video-wrapper">
+Jaeger UI.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-for-devs/" &gt;OpenTelemetry: A developer&amp;rsquo;s best friend for production-ready code&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+How we changed our minds about OpenTelemetry and now advocate for developers to use it during development.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../software-load-testing/" &gt;Top 5 metrics for software load testing performance&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Essential metrics to track when evaluating your application&amp;rsquo;s performance under load.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;How to benchmark performance of Go serializers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn effective techniques for measuring and optimizing Go code performance.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
+&lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
+&gt;Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="watch-opentelemetry-with-jaeger-video"&gt;&lt;a href="#watch-opentelemetry-with-jaeger-video" class="header-anchor"&gt;&lt;/a&gt;Watch OpenTelemetry with Jaeger video
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/eQhdvU2gsmQ"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" />&lt;ul>
-&lt;li>&lt;a class="link" href="#creating-go-benchmark" >Creating a Go benchmark&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#running-go-benchmarks" >Running Go benchmarks&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="what-is-benchmarking">&lt;a href="#what-is-benchmarking" class="header-anchor">&lt;/a>What is benchmarking?
-&lt;/h2>&lt;p>Performance optimization is a critical part of software development. Once your application has been released and is
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#creating-go-benchmark" &gt;Creating a Go benchmark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#running-go-benchmarks" &gt;Running Go benchmarks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-is-benchmarking"&gt;&lt;a href="#what-is-benchmarking" class="header-anchor"&gt;&lt;/a&gt;What is benchmarking?
+&lt;/h2&gt;&lt;p&gt;Performance optimization is a critical part of software development. Once your application has been released and is
 being used by real users, you may need to optimize its performance. One way to do this is to benchmark your code to
 identify bottlenecks and improve its performance. Benchmarking provides you with data to make informed decisions about
-what parts of your code can be sped up and by how much.&lt;/p>
-&lt;p>Benchmarking is the process of measuring your code&amp;rsquo;s performance. It involves running your code multiple times and
+what parts of your code can be sped up and by how much.&lt;/p&gt;
+&lt;p&gt;Benchmarking is the process of measuring your code&amp;rsquo;s performance. It involves running your code multiple times and
 measuring how long it takes to execute. By running your code multiple times, you can get an average execution time,
-which is more reliable than a one-off report.&lt;/p>
-&lt;h2 id="identifying-the-bottlenecks">&lt;a href="#identifying-the-bottlenecks" class="header-anchor">&lt;/a>Identifying the bottlenecks
-&lt;/h2>&lt;p>In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
+which is more reliable than a one-off report.&lt;/p&gt;
+&lt;h2 id="identifying-the-bottlenecks"&gt;&lt;a href="#identifying-the-bottlenecks" class="header-anchor"&gt;&lt;/a&gt;Identifying the bottlenecks
+&lt;/h2&gt;&lt;p&gt;In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
 was taking a long time for some of our users. First, we used
 &lt;a class="link" href="https://github.com/google/pprof/blob/main/doc/README.md" target="_blank" rel="noopener"
->Go pprof&lt;/a> to enable profiling and generated a flame graph to
-identify the bottlenecks in our code.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
-alt="Flame graph showing the execution time of different parts of the Go app">&lt;figcaption>
-&lt;h4>Go pprof flame graph&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
-libraries to find the fastest one for our use case.&lt;/p>
-&lt;h2 id="creating-go-benchmark">&lt;a href="#creating-go-benchmark" class="header-anchor">&lt;/a>Creating a Go benchmark
-&lt;/h2>&lt;p>In Go, you can write benchmarks using the built-in testing package. Benchmarks are written similarly to unit tests but
-with the &lt;strong>Benchmark&lt;/strong> prefix instead of the &lt;strong>Test&lt;/strong> prefix.&lt;/p>
-&lt;p>Before creating and running the benchmark, we generated 1000 test JSON files in the &lt;code>testdata&lt;/code> directory.&lt;/p>
-&lt;p>To benchmark JSON decoding, we created the following benchmark.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;encoding/json&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;os&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;testing&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkJSONImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Starting the function name with &lt;code>Benchmark&lt;/code> indicates to &lt;code>go test&lt;/code> that this is a benchmark.&lt;/p>
-&lt;p>The testing package adjusts the number of iterations through the &lt;code>for i := 0; i &amp;lt; b.N; i++&lt;/code> loop until the function
-lasts long enough to be timed reliably.&lt;/p>
-&lt;p>The &lt;code>b.StopTimer()&lt;/code> and &lt;code>b.StartTimer()&lt;/code> calls exclude part of the code from the benchmark.&lt;/p>
-&lt;h2 id="running-go-benchmarks">&lt;a href="#running-go-benchmarks" class="header-anchor">&lt;/a>Running Go benchmarks
-&lt;/h2>&lt;p>To run all benchmarks, add &lt;code>-bench=.&lt;/code> flag to &lt;code>go test&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test -bench&lt;span style="color:#f92672">=&lt;/span>.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result will look like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>goos: darwin
+&gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
+identify the bottlenecks in our code.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
+alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
+libraries to find the fastest one for our use case.&lt;/p&gt;
+&lt;h2 id="creating-go-benchmark"&gt;&lt;a href="#creating-go-benchmark" class="header-anchor"&gt;&lt;/a&gt;Creating a Go benchmark
+&lt;/h2&gt;&lt;p&gt;In Go, you can write benchmarks using the built-in testing package. Benchmarks are written similarly to unit tests but
+with the &lt;strong&gt;Benchmark&lt;/strong&gt; prefix instead of the &lt;strong&gt;Test&lt;/strong&gt; prefix.&lt;/p&gt;
+&lt;p&gt;Before creating and running the benchmark, we generated 1000 test JSON files in the &lt;code&gt;testdata&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;To benchmark JSON decoding, we created the following benchmark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;encoding/json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;testing&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkJSONImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Read in the file (do not time)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StopTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;%&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ReadFile&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sprintf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StartTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt; []&lt;span style="color:#a6e22e"&gt;Sample&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDecoder&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewReader&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Decode&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;) &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Starting the function name with &lt;code&gt;Benchmark&lt;/code&gt; indicates to &lt;code&gt;go test&lt;/code&gt; that this is a benchmark.&lt;/p&gt;
+&lt;p&gt;The testing package adjusts the number of iterations through the &lt;code&gt;for i := 0; i &amp;lt; b.N; i++&lt;/code&gt; loop until the function
+lasts long enough to be timed reliably.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;b.StopTimer()&lt;/code&gt; and &lt;code&gt;b.StartTimer()&lt;/code&gt; calls exclude part of the code from the benchmark.&lt;/p&gt;
+&lt;h2 id="running-go-benchmarks"&gt;&lt;a href="#running-go-benchmarks" class="header-anchor"&gt;&lt;/a&gt;Running Go benchmarks
+&lt;/h2&gt;&lt;p&gt;To run all benchmarks, add &lt;code&gt;-bench=.&lt;/code&gt; flag to &lt;code&gt;go test&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go test -bench&lt;span style="color:#f92672"&gt;=&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result will look like this:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;goos: darwin
 goarch: arm64
 pkg: serializer
 cpu: Apple M2 Pro
 BenchmarkJSONImport-12 357 3324997 ns/op
 PASS
 ok serializer 1.868s
-&lt;/code>&lt;/pre>&lt;p>It tells us that unmarshalling a single file with &lt;code>json.Decode&lt;/code> takes an average of 3.3 milliseconds. The benchmark ran
-the loop 357 times.&lt;/p>
-&lt;h2 id="benchmarking-encodinggob">&lt;a href="#benchmarking-encodinggob" class="header-anchor">&lt;/a>Benchmarking encoding/gob
-&lt;/h2>&lt;p>Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
->encoding/gob&lt;/a> library.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkGobImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// decode gob&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">gob&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Running the two benchmarks gives us:&lt;/p>
-&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3279579 ns/op
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It tells us that unmarshalling a single file with &lt;code&gt;json.Decode&lt;/code&gt; takes an average of 3.3 milliseconds. The benchmark ran
+the loop 357 times.&lt;/p&gt;
+&lt;h2 id="benchmarking-encodinggob"&gt;&lt;a href="#benchmarking-encodinggob" class="header-anchor"&gt;&lt;/a&gt;Benchmarking encoding/gob
+&lt;/h2&gt;&lt;p&gt;Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
+&gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkGobImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Read in the file (do not time)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StopTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;%&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ReadFile&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sprintf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StartTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// decode gob&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt; []&lt;span style="color:#a6e22e"&gt;Sample&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;gob&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDecoder&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewReader&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Decode&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;) &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running the two benchmarks gives us:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;BenchmarkJSONImport-12 360 3279579 ns/op
 BenchmarkGobImport-12 2262 475469 ns/op
-&lt;/code>&lt;/pre>&lt;p>The benchmark data shows that decoding with &lt;code>encoding/gob&lt;/code> takes almost 7 times faster than using &lt;code>encoding/json&lt;/code>. This
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The benchmark data shows that decoding with &lt;code&gt;encoding/gob&lt;/code&gt; takes almost 7 times faster than using &lt;code&gt;encoding/json&lt;/code&gt;. This
 gives sufficient data to present to our management and argue for switching from JSON. In addition, we can benchmark
-other serialization libraries to see if any of them are even faster.&lt;/p>
-&lt;p>For additional data, we included reading the file in our benchmark numbers for a complete picture of the expected
-speedup:&lt;/p>
-&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3374064 ns/op
+other serialization libraries to see if any of them are even faster.&lt;/p&gt;
+&lt;p&gt;For additional data, we included reading the file in our benchmark numbers for a complete picture of the expected
+speedup:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;BenchmarkJSONImport-12 360 3374064 ns/op
 BenchmarkGobImport-12 2710 481935 ns/op
 BenchmarkJSONImportFile-12 306 3746758 ns/op
 BenchmarkGobImportFile-12 2176 554254 ns/op
-&lt;/code>&lt;/pre>&lt;h2 id="go-benchmark-code-on-github">&lt;a href="#go-benchmark-code-on-github" class="header-anchor">&lt;/a>Go benchmark code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
->https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry for developers: From skeptic to advocate&lt;/a>&lt;/strong>&lt;br>
-Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
-Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
-Discover the critical metrics to monitor when load testing your applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../go-test-execution-time/" >Accurately measuring Go test execution time&lt;/a>&lt;/strong>&lt;br>
-Master techniques for precise test timing measurements in Go projects.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../go-json-unmarshal/" >Go JSON unmarshaling with null, set, and missing fields&lt;/a>&lt;/strong>&lt;br>
-Handle complex JSON payloads effectively in your Go applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../fuzz-testing-with-go/" >Creating fuzz tests in Go&lt;/a>&lt;/strong>&lt;br>
-Strengthen your code with automated fuzz testing techniques.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="go-benchmark-code-on-github"&gt;&lt;a href="#go-benchmark-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Go benchmark code on GitHub
+&lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
+&gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-for-devs/" &gt;OpenTelemetry for developers: From skeptic to advocate&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;Is OpenTelemetry useful for the average software developer?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../software-load-testing/" &gt;Top 5 metrics for software load testing performance&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Discover the critical metrics to monitor when load testing your applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../go-test-execution-time/" &gt;Accurately measuring Go test execution time&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Master techniques for precise test timing measurements in Go projects.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../go-json-unmarshal/" &gt;Go JSON unmarshaling with null, set, and missing fields&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Handle complex JSON payloads effectively in your Go applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../fuzz-testing-with-go/" &gt;Creating fuzz tests in Go&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Strengthen your code with automated fuzz testing techniques.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-benchmark-go-serializers"&gt;&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor"&gt;&lt;/a&gt;Watch how to benchmark Go serializers
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/c0drQ2JUYmo"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

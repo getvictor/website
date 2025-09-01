@@ -1,162 +1,162 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on Victor on Software</title><link>https://victoronsoftware.com/tags/json/</link><description>Recent content in JSON on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" />&lt;h2 id="json-unmarshalling-use-cases">&lt;a href="#json-unmarshalling-use-cases" class="header-anchor">&lt;/a>JSON unmarshalling use cases
-&lt;/h2>&lt;p>When passing a JSON payload to a Go application, you may encounter situations where you must tell the difference between
-set, missing, or null fields.&lt;/p>
-&lt;p>For example, consider the following JSON payload:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;name&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Alice&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;age&amp;#34;&lt;/span>: &lt;span style="color:#ae81ff">30&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;address&amp;#34;&lt;/span>: {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;street&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;123 Main St&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#f92672">&amp;#34;city&amp;#34;&lt;/span>: &lt;span style="color:#e6db74">&amp;#34;Springfield&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We can unmarshal this JSON payload using JSON tags and the following Go structs:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Street&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;street&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">City&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;city&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we will not be able to tell the difference between these two JSON payloads:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: null }&lt;/code>&lt;/li>
-&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: &amp;quot;&amp;quot; }&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;p>Go&amp;rsquo;s zero values are not distinguishable from missing fields when unmarshalling JSON.&lt;/p>
-&lt;p>We can change the above struct to use pointers to identify null fields:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>However, we will still not be able to tell the difference between these two JSON payloads:&lt;/p>
-&lt;ul>
-&lt;li>&lt;code>{ &amp;quot;name&amp;quot;: null }&lt;/code>&lt;/li>
-&lt;li>&lt;code>{ }&lt;/code>&lt;/li>
-&lt;/ul>
-&lt;p>Both of these payloads will unmarshal into a &lt;code>Person&lt;/code> struct with all fields set to &lt;code>nil&lt;/code>, and we cannot distinguish
-between a missing field and a field set to &lt;code>null&lt;/code>.&lt;/p>
-&lt;p>One reason to distinguish between missing and null fields is to avoid overwriting existing values with &lt;code>null&lt;/code> values.
-For example, when &lt;code>name&lt;/code> is not specified in the JSON payload, we may want to keep the existing name value in the
-&lt;code>Person&lt;/code> struct. But we may want to clear the name when &lt;code>name&lt;/code> is defined as &lt;code>null&lt;/code>.&lt;/p>
-&lt;h2 id="detecting-null-set-and-missing-json-fields-with-go">&lt;a href="#detecting-null-set-and-missing-json-fields-with-go" class="header-anchor">&lt;/a>Detecting null, set, and missing JSON fields with Go
-&lt;/h2>&lt;p>We can use custom unmarshalling logic by implementing the &lt;a class="link" href="https://pkg.go.dev/encoding/json#Unmarshaler" target="_blank" rel="noopener"
->Unmarshaler&lt;/a>
-interface to detect the difference between null and missing fields. The &lt;code>UnmarshalJSON&lt;/code> method allows us to inspect the
-JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that &lt;code>UnmarshalJSON&lt;/code> is only
-called when the field is present in the JSON payload. So, we can mark a &lt;code>Set&lt;/code> flag as &lt;code>true&lt;/code> when the field is present
-and &lt;code>false&lt;/code> when it is not.&lt;/p>
-&lt;p>Here is an example implementation:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span> &lt;span style="color:#66d9ef">any&lt;/span>] &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Set&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Valid&lt;/span> &lt;span style="color:#66d9ef">bool&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Value&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// MarshalJSON implements the json.Marshaler interface.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Only Value is marshaled, and only if Valid is true.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">MarshalJSON&lt;/span>() ([]&lt;span style="color:#66d9ef">byte&lt;/span>, &lt;span style="color:#66d9ef">error&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> !&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>), &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Marshal&lt;/span>(&lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// UnmarshalJSON implements the json.Unmarshaler interface.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Set is always set to true, even if the JSON data was set to null.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Valid is set if the JSON data is not set to null.&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> (&lt;span style="color:#a6e22e">s&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">T&lt;/span>]) &lt;span style="color:#a6e22e">UnmarshalJSON&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span> []&lt;span style="color:#66d9ef">byte&lt;/span>) &lt;span style="color:#66d9ef">error&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Set&lt;/span> = &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> = &lt;span style="color:#66d9ef">false&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">Equal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, []byte(&lt;span style="color:#e6db74">&amp;#34;null&amp;#34;&lt;/span>)) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key was set to null, set value to zero/default value&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">zero&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span> = &lt;span style="color:#a6e22e">zero&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// The key isn&amp;#39;t set to null&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">v&lt;/span> &lt;span style="color:#a6e22e">T&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">v&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Value&lt;/span> = &lt;span style="color:#a6e22e">v&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">s&lt;/span>.&lt;span style="color:#a6e22e">Valid&lt;/span> = &lt;span style="color:#66d9ef">true&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">return&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We used a generic type &lt;code>T&lt;/code> to allow &lt;code>Any&lt;/code> to work with any type. The &lt;code>Valid&lt;/code> flag distinguishes between &lt;code>nil&lt;/code> and
-&lt;code>non-nil&lt;/code> values. The &lt;code>Set&lt;/code> flag is set to &lt;code>true&lt;/code> only when the field is present in the JSON payload.&lt;/p>
-&lt;p>Here is how we can use the &lt;code>Any&lt;/code> type in a &lt;code>Person&lt;/code> struct:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Person&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">string&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">int&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Address&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">Address&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;address&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="testing-the-custom-unmarshalling-logic">&lt;a href="#testing-the-custom-unmarshalling-logic" class="header-anchor">&lt;/a>Testing the custom unmarshalling logic
-&lt;/h2>&lt;p>The following example demonstrates how the &lt;code>Any&lt;/code> type works:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Form&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Name&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;name&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Age&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#e6db74">`json:&amp;#34;age&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">Config&lt;/span> &lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Form&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#a6e22e">Form&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;form&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">Member&lt;/span> &lt;span style="color:#a6e22e">Any&lt;/span>[&lt;span style="color:#66d9ef">bool&lt;/span>] &lt;span style="color:#e6db74">`json:&amp;#34;member&amp;#34;`&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>() {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">tests&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> []&lt;span style="color:#66d9ef">struct&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">description&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">JSON&lt;/span> &lt;span style="color:#66d9ef">string&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }{
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Nothing set&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set all fields&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only member field, and leave form fields unchanged&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;member&amp;#34;: true}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only the form field, and leave the member field unchanged&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Leave all fields unchanged&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Clear all fields&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;Set only form field&amp;#34;&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}`&lt;/span>,
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> },
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">c&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">Config&lt;/span>{}
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">_&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#66d9ef">range&lt;/span> &lt;span style="color:#a6e22e">tests&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;\nTest: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">description&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">_&lt;/span> = &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Unmarshal&lt;/span>([]byte(&lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">JSON&lt;/span>), &lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">c&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Input: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">test&lt;/span>.&lt;span style="color:#a6e22e">JSON&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;%+v\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">c&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">_&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">Marshal&lt;/span>(&lt;span style="color:#a6e22e">c&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Printf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;Output: %s\n&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">data&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The test output will show how the &lt;code>Any&lt;/code> type behaves when unmarshalling JSON payloads with different fields set,
-missing, or set to &lt;code>null&lt;/code>.&lt;/p>
-&lt;pre tabindex="0">&lt;code>Test: Nothing set
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JSON on Victor on Software</title><link>https://victoronsoftware.com/tags/json/</link><description>Recent content in JSON on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 09 Oct 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/json/index.xml" rel="self" type="application/rss+xml"/><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" /&gt;&lt;h2 id="json-unmarshalling-use-cases"&gt;&lt;a href="#json-unmarshalling-use-cases" class="header-anchor"&gt;&lt;/a&gt;JSON unmarshalling use cases
+&lt;/h2&gt;&lt;p&gt;When passing a JSON payload to a Go application, you may encounter situations where you must tell the difference between
+set, missing, or null fields.&lt;/p&gt;
+&lt;p&gt;For example, consider the following JSON payload:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Alice&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;age&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;30&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;address&amp;#34;&lt;/span&gt;: {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;street&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;123 Main St&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;city&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Springfield&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can unmarshal this JSON payload using JSON tags and the following Go structs:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Person&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Age&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;age&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;address&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Street&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;street&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;City&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;city&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we will not be able to tell the difference between these two JSON payloads:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{ &amp;quot;name&amp;quot;: null }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{ &amp;quot;name&amp;quot;: &amp;quot;&amp;quot; }&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Go&amp;rsquo;s zero values are not distinguishable from missing fields when unmarshalling JSON.&lt;/p&gt;
+&lt;p&gt;We can change the above struct to use pointers to identify null fields:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Person&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Age&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;age&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;address&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we will still not be able to tell the difference between these two JSON payloads:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;{ &amp;quot;name&amp;quot;: null }&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;{ }&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Both of these payloads will unmarshal into a &lt;code&gt;Person&lt;/code&gt; struct with all fields set to &lt;code&gt;nil&lt;/code&gt;, and we cannot distinguish
+between a missing field and a field set to &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;One reason to distinguish between missing and null fields is to avoid overwriting existing values with &lt;code&gt;null&lt;/code&gt; values.
+For example, when &lt;code&gt;name&lt;/code&gt; is not specified in the JSON payload, we may want to keep the existing name value in the
+&lt;code&gt;Person&lt;/code&gt; struct. But we may want to clear the name when &lt;code&gt;name&lt;/code&gt; is defined as &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="detecting-null-set-and-missing-json-fields-with-go"&gt;&lt;a href="#detecting-null-set-and-missing-json-fields-with-go" class="header-anchor"&gt;&lt;/a&gt;Detecting null, set, and missing JSON fields with Go
+&lt;/h2&gt;&lt;p&gt;We can use custom unmarshalling logic by implementing the &lt;a class="link" href="https://pkg.go.dev/encoding/json#Unmarshaler" target="_blank" rel="noopener"
+&gt;Unmarshaler&lt;/a&gt;
+interface to detect the difference between null and missing fields. The &lt;code&gt;UnmarshalJSON&lt;/code&gt; method allows us to inspect the
+JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that &lt;code&gt;UnmarshalJSON&lt;/code&gt; is only
+called when the field is present in the JSON payload. So, we can mark a &lt;code&gt;Set&lt;/code&gt; flag as &lt;code&gt;true&lt;/code&gt; when the field is present
+and &lt;code&gt;false&lt;/code&gt; when it is not.&lt;/p&gt;
+&lt;p&gt;Here is an example implementation:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;any&lt;/span&gt;] &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Set&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Valid&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Value&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// MarshalJSON implements the json.Marshaler interface.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Only Value is marshaled, and only if Valid is true.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;s&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;]) &lt;span style="color:#a6e22e"&gt;MarshalJSON&lt;/span&gt;() ([]&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; !&lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Valid&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; []byte(&lt;span style="color:#e6db74"&gt;&amp;#34;null&amp;#34;&lt;/span&gt;), &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Marshal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Value&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// UnmarshalJSON implements the json.Unmarshaler interface.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Set is always set to true, even if the JSON data was set to null.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Valid is set if the JSON data is not set to null.&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; (&lt;span style="color:#a6e22e"&gt;s&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;]) &lt;span style="color:#a6e22e"&gt;UnmarshalJSON&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;byte&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Set&lt;/span&gt; = &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Valid&lt;/span&gt; = &lt;span style="color:#66d9ef"&gt;false&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Equal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, []byte(&lt;span style="color:#e6db74"&gt;&amp;#34;null&amp;#34;&lt;/span&gt;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// The key was set to null, set value to zero/default value&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;zero&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Value&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;zero&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// The key isn&amp;#39;t set to null&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;v&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;T&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Unmarshal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;v&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Value&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;v&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;s&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Valid&lt;/span&gt; = &lt;span style="color:#66d9ef"&gt;true&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We used a generic type &lt;code&gt;T&lt;/code&gt; to allow &lt;code&gt;Any&lt;/code&gt; to work with any type. The &lt;code&gt;Valid&lt;/code&gt; flag distinguishes between &lt;code&gt;nil&lt;/code&gt; and
+&lt;code&gt;non-nil&lt;/code&gt; values. The &lt;code&gt;Set&lt;/code&gt; flag is set to &lt;code&gt;true&lt;/code&gt; only when the field is present in the JSON payload.&lt;/p&gt;
+&lt;p&gt;Here is how we can use the &lt;code&gt;Any&lt;/code&gt; type in a &lt;code&gt;Person&lt;/code&gt; struct:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Person&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;] &lt;span style="color:#e6db74"&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Age&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#66d9ef"&gt;int&lt;/span&gt;] &lt;span style="color:#e6db74"&gt;`json:&amp;#34;age&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#a6e22e"&gt;Address&lt;/span&gt;] &lt;span style="color:#e6db74"&gt;`json:&amp;#34;address&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="testing-the-custom-unmarshalling-logic"&gt;&lt;a href="#testing-the-custom-unmarshalling-logic" class="header-anchor"&gt;&lt;/a&gt;Testing the custom unmarshalling logic
+&lt;/h2&gt;&lt;p&gt;The following example demonstrates how the &lt;code&gt;Any&lt;/code&gt; type works:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Form&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Name&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;name&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Age&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;int&lt;/span&gt; &lt;span style="color:#e6db74"&gt;`json:&amp;#34;age&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Config&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Form&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#a6e22e"&gt;Form&lt;/span&gt;] &lt;span style="color:#e6db74"&gt;`json:&amp;#34;form&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Member&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Any&lt;/span&gt;[&lt;span style="color:#66d9ef"&gt;bool&lt;/span&gt;] &lt;span style="color:#e6db74"&gt;`json:&amp;#34;member&amp;#34;`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;tests&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;struct&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;description&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;JSON&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }{
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Nothing set&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Set all fields&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Set only member field, and leave form fields unchanged&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{&amp;#34;member&amp;#34;: true}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Set only the form field, and leave the member field unchanged&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Leave all fields unchanged&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Clear all fields&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;Set only form field&amp;#34;&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;`{&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}`&lt;/span&gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;Config&lt;/span&gt;{}
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;test&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;range&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tests&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;\nTest: %s\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;test&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;description&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;_&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Unmarshal&lt;/span&gt;([]byte(&lt;span style="color:#a6e22e"&gt;test&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;JSON&lt;/span&gt;), &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Input: %s\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;test&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;JSON&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;%+v\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;_&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Marshal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;c&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Output: %s\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The test output will show how the &lt;code&gt;Any&lt;/code&gt; type behaves when unmarshalling JSON payloads with different fields set,
+missing, or set to &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;Test: Nothing set
 Input: {}
 {Form:{Set:false Valid:false Value:{Name: Age:0}} Member:{Set:false Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
@@ -184,187 +184,187 @@ Test: Set only form field
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}
 {Form:{Set:true Valid:true Value:{Name:Chris Age:35}} Member:{Set:true Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,&amp;#34;age&amp;#34;:35},&amp;#34;member&amp;#34;:null}
-&lt;/code>&lt;/pre>&lt;h2 id="complete-code-on-go-playground">&lt;a href="#complete-code-on-go-playground" class="header-anchor">&lt;/a>Complete code on Go Playground
-&lt;/h2>&lt;p>The complete &lt;a class="link" href="https://go.dev/play/p/AXxgO20M0kI" target="_blank" rel="noopener"
->Go code for unmarshalling JSON null, set, and missing fields&lt;/a> is
-available on the Go Playground.&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>Recently, we published an article on
-&lt;a class="link" href="../optimizing-performance-of-go-app/" >how to optimize the performance of a Go application&lt;/a>. We benchmarked JSON
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="complete-code-on-go-playground"&gt;&lt;a href="#complete-code-on-go-playground" class="header-anchor"&gt;&lt;/a&gt;Complete code on Go Playground
+&lt;/h2&gt;&lt;p&gt;The complete &lt;a class="link" href="https://go.dev/play/p/AXxgO20M0kI" target="_blank" rel="noopener"
+&gt;Go code for unmarshalling JSON null, set, and missing fields&lt;/a&gt; is
+available on the Go Playground.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Recently, we published an article on
+&lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;how to optimize the performance of a Go application&lt;/a&gt;. We benchmarked JSON
 decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
->gob&lt;/a> decoding in that article.&lt;/li>
-&lt;li>In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" >how to read program arguments from STDIN with Go&lt;/a>, which is
-more secure than using environment variables or command-line arguments.&lt;/li>
-&lt;li>Also, we explained &lt;a class="link" href="../go-modules-and-packages/" >the difference between Go modules and packages&lt;/a>, which is essential
-for organizing and managing Go code.&lt;/li>
-&lt;li>In addition, we &lt;a class="link" href="../method-overriding-in-go/" >explained method overriding in Go&lt;/a>.&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately">&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor">&lt;/a>Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
-&lt;/h2>&lt;div class="video-wrapper">
+&gt;gob&lt;/a&gt; decoding in that article.&lt;/li&gt;
+&lt;li&gt;In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" &gt;how to read program arguments from STDIN with Go&lt;/a&gt;, which is
+more secure than using environment variables or command-line arguments.&lt;/li&gt;
+&lt;li&gt;Also, we explained &lt;a class="link" href="../go-modules-and-packages/" &gt;the difference between Go modules and packages&lt;/a&gt;, which is essential
+for organizing and managing Go code.&lt;/li&gt;
+&lt;li&gt;In addition, we &lt;a class="link" href="../method-overriding-in-go/" &gt;explained method overriding in Go&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately"&gt;&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/yHhk5wGNxk4"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" />&lt;ul>
-&lt;li>&lt;a class="link" href="#creating-go-benchmark" >Creating a Go benchmark&lt;/a>&lt;/li>
-&lt;li>&lt;a class="link" href="#running-go-benchmarks" >Running Go benchmarks&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="what-is-benchmarking">&lt;a href="#what-is-benchmarking" class="header-anchor">&lt;/a>What is benchmarking?
-&lt;/h2>&lt;p>Performance optimization is a critical part of software development. Once your application has been released and is
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#creating-go-benchmark" &gt;Creating a Go benchmark&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#running-go-benchmarks" &gt;Running Go benchmarks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-is-benchmarking"&gt;&lt;a href="#what-is-benchmarking" class="header-anchor"&gt;&lt;/a&gt;What is benchmarking?
+&lt;/h2&gt;&lt;p&gt;Performance optimization is a critical part of software development. Once your application has been released and is
 being used by real users, you may need to optimize its performance. One way to do this is to benchmark your code to
 identify bottlenecks and improve its performance. Benchmarking provides you with data to make informed decisions about
-what parts of your code can be sped up and by how much.&lt;/p>
-&lt;p>Benchmarking is the process of measuring your code&amp;rsquo;s performance. It involves running your code multiple times and
+what parts of your code can be sped up and by how much.&lt;/p&gt;
+&lt;p&gt;Benchmarking is the process of measuring your code&amp;rsquo;s performance. It involves running your code multiple times and
 measuring how long it takes to execute. By running your code multiple times, you can get an average execution time,
-which is more reliable than a one-off report.&lt;/p>
-&lt;h2 id="identifying-the-bottlenecks">&lt;a href="#identifying-the-bottlenecks" class="header-anchor">&lt;/a>Identifying the bottlenecks
-&lt;/h2>&lt;p>In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
+which is more reliable than a one-off report.&lt;/p&gt;
+&lt;h2 id="identifying-the-bottlenecks"&gt;&lt;a href="#identifying-the-bottlenecks" class="header-anchor"&gt;&lt;/a&gt;Identifying the bottlenecks
+&lt;/h2&gt;&lt;p&gt;In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
 was taking a long time for some of our users. First, we used
 &lt;a class="link" href="https://github.com/google/pprof/blob/main/doc/README.md" target="_blank" rel="noopener"
->Go pprof&lt;/a> to enable profiling and generated a flame graph to
-identify the bottlenecks in our code.&lt;/p>
-&lt;figure>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
-alt="Flame graph showing the execution time of different parts of the Go app">&lt;figcaption>
-&lt;h4>Go pprof flame graph&lt;/h4>
-&lt;/figcaption>
-&lt;/figure>
-&lt;p>The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
-libraries to find the fastest one for our use case.&lt;/p>
-&lt;h2 id="creating-go-benchmark">&lt;a href="#creating-go-benchmark" class="header-anchor">&lt;/a>Creating a Go benchmark
-&lt;/h2>&lt;p>In Go, you can write benchmarks using the built-in testing package. Benchmarks are written similarly to unit tests but
-with the &lt;strong>Benchmark&lt;/strong> prefix instead of the &lt;strong>Test&lt;/strong> prefix.&lt;/p>
-&lt;p>Before creating and running the benchmark, we generated 1000 test JSON files in the &lt;code>testdata&lt;/code> directory.&lt;/p>
-&lt;p>To benchmark JSON decoding, we created the following benchmark.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">package&lt;/span> &lt;span style="color:#a6e22e">main&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f92672">import&lt;/span> (
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;encoding/json&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;fmt&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;os&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#e6db74">&amp;#34;testing&amp;#34;&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">const&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> = &lt;span style="color:#ae81ff">1000&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkJSONImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">json&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Starting the function name with &lt;code>Benchmark&lt;/code> indicates to &lt;code>go test&lt;/code> that this is a benchmark.&lt;/p>
-&lt;p>The testing package adjusts the number of iterations through the &lt;code>for i := 0; i &amp;lt; b.N; i++&lt;/code> loop until the function
-lasts long enough to be timed reliably.&lt;/p>
-&lt;p>The &lt;code>b.StopTimer()&lt;/code> and &lt;code>b.StartTimer()&lt;/code> calls exclude part of the code from the benchmark.&lt;/p>
-&lt;h2 id="running-go-benchmarks">&lt;a href="#running-go-benchmarks" class="header-anchor">&lt;/a>Running Go benchmarks
-&lt;/h2>&lt;p>To run all benchmarks, add &lt;code>-bench=.&lt;/code> flag to &lt;code>go test&lt;/code>:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>go test -bench&lt;span style="color:#f92672">=&lt;/span>.
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The result will look like this:&lt;/p>
-&lt;pre tabindex="0">&lt;code>goos: darwin
+&gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
+identify the bottlenecks in our code.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
+alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
+libraries to find the fastest one for our use case.&lt;/p&gt;
+&lt;h2 id="creating-go-benchmark"&gt;&lt;a href="#creating-go-benchmark" class="header-anchor"&gt;&lt;/a&gt;Creating a Go benchmark
+&lt;/h2&gt;&lt;p&gt;In Go, you can write benchmarks using the built-in testing package. Benchmarks are written similarly to unit tests but
+with the &lt;strong&gt;Benchmark&lt;/strong&gt; prefix instead of the &lt;strong&gt;Test&lt;/strong&gt; prefix.&lt;/p&gt;
+&lt;p&gt;Before creating and running the benchmark, we generated 1000 test JSON files in the &lt;code&gt;testdata&lt;/code&gt; directory.&lt;/p&gt;
+&lt;p&gt;To benchmark JSON decoding, we created the following benchmark.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;encoding/json&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;os&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;testing&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;const&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; = &lt;span style="color:#ae81ff"&gt;1000&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkJSONImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Read in the file (do not time)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StopTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;%&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ReadFile&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sprintf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;testdata/sample_%d.json&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StartTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt; []&lt;span style="color:#a6e22e"&gt;Sample&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;json&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDecoder&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewReader&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Decode&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;) &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Starting the function name with &lt;code&gt;Benchmark&lt;/code&gt; indicates to &lt;code&gt;go test&lt;/code&gt; that this is a benchmark.&lt;/p&gt;
+&lt;p&gt;The testing package adjusts the number of iterations through the &lt;code&gt;for i := 0; i &amp;lt; b.N; i++&lt;/code&gt; loop until the function
+lasts long enough to be timed reliably.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;b.StopTimer()&lt;/code&gt; and &lt;code&gt;b.StartTimer()&lt;/code&gt; calls exclude part of the code from the benchmark.&lt;/p&gt;
+&lt;h2 id="running-go-benchmarks"&gt;&lt;a href="#running-go-benchmarks" class="header-anchor"&gt;&lt;/a&gt;Running Go benchmarks
+&lt;/h2&gt;&lt;p&gt;To run all benchmarks, add &lt;code&gt;-bench=.&lt;/code&gt; flag to &lt;code&gt;go test&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go test -bench&lt;span style="color:#f92672"&gt;=&lt;/span&gt;.
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result will look like this:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;goos: darwin
 goarch: arm64
 pkg: serializer
 cpu: Apple M2 Pro
 BenchmarkJSONImport-12 357 3324997 ns/op
 PASS
 ok serializer 1.868s
-&lt;/code>&lt;/pre>&lt;p>It tells us that unmarshalling a single file with &lt;code>json.Decode&lt;/code> takes an average of 3.3 milliseconds. The benchmark ran
-the loop 357 times.&lt;/p>
-&lt;h2 id="benchmarking-encodinggob">&lt;a href="#benchmarking-encodinggob" class="header-anchor">&lt;/a>Benchmarking encoding/gob
-&lt;/h2>&lt;p>Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
->encoding/gob&lt;/a> library.&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">func&lt;/span> &lt;span style="color:#a6e22e">BenchmarkGobImport&lt;/span>(&lt;span style="color:#a6e22e">b&lt;/span> &lt;span style="color:#f92672">*&lt;/span>&lt;span style="color:#a6e22e">testing&lt;/span>.&lt;span style="color:#a6e22e">B&lt;/span>) {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">for&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#ae81ff">0&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span> &amp;lt; &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">N&lt;/span>; &lt;span style="color:#a6e22e">i&lt;/span>&lt;span style="color:#f92672">++&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// Read in the file (do not time)&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StopTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">fileNumber&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">i&lt;/span> &lt;span style="color:#f92672">%&lt;/span> &lt;span style="color:#a6e22e">files&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">data&lt;/span>, &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">os&lt;/span>.&lt;span style="color:#a6e22e">ReadFile&lt;/span>(&lt;span style="color:#a6e22e">fmt&lt;/span>.&lt;span style="color:#a6e22e">Sprintf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">fileNumber&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">StartTimer&lt;/span>()
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e">// decode gob&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">var&lt;/span> &lt;span style="color:#a6e22e">samples&lt;/span> []&lt;span style="color:#a6e22e">Sample&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">dec&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">gob&lt;/span>.&lt;span style="color:#a6e22e">NewDecoder&lt;/span>(&lt;span style="color:#a6e22e">bytes&lt;/span>.&lt;span style="color:#a6e22e">NewReader&lt;/span>(&lt;span style="color:#a6e22e">data&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">:=&lt;/span> &lt;span style="color:#a6e22e">dec&lt;/span>.&lt;span style="color:#a6e22e">Decode&lt;/span>(&lt;span style="color:#f92672">&amp;amp;&lt;/span>&lt;span style="color:#a6e22e">samples&lt;/span>); &lt;span style="color:#a6e22e">err&lt;/span> &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#66d9ef">nil&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatal&lt;/span>(&lt;span style="color:#a6e22e">err&lt;/span>)
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#66d9ef">if&lt;/span> len(&lt;span style="color:#a6e22e">samples&lt;/span>) &lt;span style="color:#f92672">!=&lt;/span> &lt;span style="color:#a6e22e">itemsPerFile&lt;/span> {
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#a6e22e">b&lt;/span>.&lt;span style="color:#a6e22e">Fatalf&lt;/span>(&lt;span style="color:#e6db74">&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span>, &lt;span style="color:#a6e22e">itemsPerFile&lt;/span>, len(&lt;span style="color:#a6e22e">samples&lt;/span>))
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> }
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>}
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Running the two benchmarks gives us:&lt;/p>
-&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3279579 ns/op
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It tells us that unmarshalling a single file with &lt;code&gt;json.Decode&lt;/code&gt; takes an average of 3.3 milliseconds. The benchmark ran
+the loop 357 times.&lt;/p&gt;
+&lt;h2 id="benchmarking-encodinggob"&gt;&lt;a href="#benchmarking-encodinggob" class="header-anchor"&gt;&lt;/a&gt;Benchmarking encoding/gob
+&lt;/h2&gt;&lt;p&gt;Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
+&gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkGobImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Read in the file (do not time)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StopTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;%&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;files&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;os&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ReadFile&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sprintf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;testdata/sample_%d.bin&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;fileNumber&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StartTimer&lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// decode gob&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt; []&lt;span style="color:#a6e22e"&gt;Sample&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;gob&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewDecoder&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;bytes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewReader&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;data&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;dec&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Decode&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;); &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatal&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;) &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt; {
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Fatalf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;expected %d samples, got %d&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;itemsPerFile&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;samples&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running the two benchmarks gives us:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;BenchmarkJSONImport-12 360 3279579 ns/op
 BenchmarkGobImport-12 2262 475469 ns/op
-&lt;/code>&lt;/pre>&lt;p>The benchmark data shows that decoding with &lt;code>encoding/gob&lt;/code> takes almost 7 times faster than using &lt;code>encoding/json&lt;/code>. This
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The benchmark data shows that decoding with &lt;code&gt;encoding/gob&lt;/code&gt; takes almost 7 times faster than using &lt;code&gt;encoding/json&lt;/code&gt;. This
 gives sufficient data to present to our management and argue for switching from JSON. In addition, we can benchmark
-other serialization libraries to see if any of them are even faster.&lt;/p>
-&lt;p>For additional data, we included reading the file in our benchmark numbers for a complete picture of the expected
-speedup:&lt;/p>
-&lt;pre tabindex="0">&lt;code>BenchmarkJSONImport-12 360 3374064 ns/op
+other serialization libraries to see if any of them are even faster.&lt;/p&gt;
+&lt;p&gt;For additional data, we included reading the file in our benchmark numbers for a complete picture of the expected
+speedup:&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;BenchmarkJSONImport-12 360 3374064 ns/op
 BenchmarkGobImport-12 2710 481935 ns/op
 BenchmarkJSONImportFile-12 306 3746758 ns/op
 BenchmarkGobImportFile-12 2176 554254 ns/op
-&lt;/code>&lt;/pre>&lt;h2 id="go-benchmark-code-on-github">&lt;a href="#go-benchmark-code-on-github" class="header-anchor">&lt;/a>Go benchmark code on GitHub
-&lt;/h2>&lt;p>The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
->https://github.com/getvictor/go-benchmark-serializers&lt;/a>&lt;/p>
-&lt;h2 id="further-reading">&lt;a href="#further-reading" class="header-anchor">&lt;/a>Further reading
-&lt;/h2>&lt;ul>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-for-devs/" >OpenTelemetry for developers: From skeptic to advocate&lt;/a>&lt;/strong>&lt;br>
-Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../opentelemetry-with-jaeger/" >Is OpenTelemetry useful for the average software developer?&lt;/a>&lt;/strong>&lt;br>
-Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../software-load-testing/" >Top 5 metrics for software load testing performance&lt;/a>&lt;/strong>&lt;br>
-Discover the critical metrics to monitor when load testing your applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../go-test-execution-time/" >Accurately measuring Go test execution time&lt;/a>&lt;/strong>&lt;br>
-Master techniques for precise test timing measurements in Go projects.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../go-json-unmarshal/" >Go JSON unmarshaling with null, set, and missing fields&lt;/a>&lt;/strong>&lt;br>
-Handle complex JSON payloads effectively in your Go applications.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;strong>&lt;a class="link" href="../fuzz-testing-with-go/" >Creating fuzz tests in Go&lt;/a>&lt;/strong>&lt;br>
-Strengthen your code with automated fuzz testing techniques.&lt;/p>
-&lt;/li>
-&lt;/ul>
-&lt;h2 id="watch-how-to-benchmark-go-serializers">&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor">&lt;/a>Watch how to benchmark Go serializers
-&lt;/h2>&lt;div class="video-wrapper">
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="go-benchmark-code-on-github"&gt;&lt;a href="#go-benchmark-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Go benchmark code on GitHub
+&lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
+&gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-for-devs/" &gt;OpenTelemetry for developers: From skeptic to advocate&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn how using OpenTelemetry during development leads to better production instrumentation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../opentelemetry-with-jaeger/" &gt;Is OpenTelemetry useful for the average software developer?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Explore the practical benefits and limitations of OpenTelemetry with Jaeger for development.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../software-load-testing/" &gt;Top 5 metrics for software load testing performance&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Discover the critical metrics to monitor when load testing your applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../go-test-execution-time/" &gt;Accurately measuring Go test execution time&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Master techniques for precise test timing measurements in Go projects.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../go-json-unmarshal/" &gt;Go JSON unmarshaling with null, set, and missing fields&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Handle complex JSON payloads effectively in your Go applications.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../fuzz-testing-with-go/" &gt;Creating fuzz tests in Go&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Strengthen your code with automated fuzz testing techniques.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-how-to-benchmark-go-serializers"&gt;&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor"&gt;&lt;/a&gt;Watch how to benchmark Go serializers
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/c0drQ2JUYmo"
 allowfullscreen
 title="YouTube Video"
->
-&lt;/iframe>
-&lt;/div>
-&lt;p>&lt;em>Note:&lt;/em> If you want to comment on this article, please do so on the YouTube video.&lt;/p></description></item></channel></rss>
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>
