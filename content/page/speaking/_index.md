@@ -26,29 +26,31 @@ fast without creating chaos.
 Whether speaking on AI's role in development, scaling architectures, or leading with openness, Victor helps engineers
 and leaders think like builders of resilient companies.
 
+<!--
 ## Upcoming speaking engagements
-
-**The Commit Your Code Conference 2025!**  
-**Date:** September 25-26, 2025  
-**Location:** Plano, Texas  
-**Topic:** Radical Transparency: Leading Engineering with Openness Inside and Out
-
-**Heartland Developers Conference 2025**  
-**Date:** September 30-October 1, 2025  
-**Location:** Council Bluffs, Iowa  
-**Topics:**  
-Will AI Coding Agents Replace Software Developers?  
-Why Great Developers Draw: 4 Architecture Diagrams That Clarify Everything
+-->
 
 ## Past speaking engagements
 
+**Heartland Developers Conference 2025**  
+**Dates:** September 30-October 1, 2025  
+**Location:** Council Bluffs, Iowa  
+**Sessions:**  
+Will AI Coding Agents Replace Software Developers?  
+Why Great Developers Draw: 4 Architecture Diagrams That Clarify Everything
+
+**The Commit Your Code Conference 2025!**  
+**Dates:** September 25-26, 2025  
+**Location:** Plano, Texas  
+**Session:** [Radical Transparency: Leading Engineering with Openness](https://www.youtube.com/watch?v=5IZqRe7TUEg)
+
 **Open Source Summit North America 2025**  
-**Date:** June 23-25,2025  
+**Date:** June 23-25, 2025  
 **Location:** Denver, CO  
-**Topic:** [Radical Transparency: Lessons From Open-Sourcing Nearly All Company Documentation](https://www.youtube.com/watch?v=xfj_-5xGvYg)
+**Session:** [Radical Transparency: Lessons From Open-Sourcing Nearly All Company Documentation](https://www.youtube.com/watch?v=xfj_-5xGvYg)
 
 **DevDays Europe 2025**  
-**Date:** May 20-23, 2025  
+**Dates:** May 20-23, 2025  
 **Location:** Vilnius, Lithuania  
 **Sessions:**  
 [Keynote | Readable Code: The Secret to Clean, Productive Software](https://www.youtube.com/watch?v=lQBYQvyGPLE)  
