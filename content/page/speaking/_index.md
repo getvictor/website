@@ -26,9 +26,12 @@ fast without creating chaos.
 Whether speaking on AI's role in development, scaling architectures, or leading with openness, Victor helps engineers
 and leaders think like builders of resilient companies.
 
-<!--
 ## Upcoming speaking engagements
--->
+
+**XtremeJS 2025**  
+**Dates:** November 11, 2025  
+**Location:** Online  
+**Session:** HTTP Message Signatures Demystified: Stronger Security for JavaScript
 
 ## Past speaking engagements
 
