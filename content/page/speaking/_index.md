@@ -39,8 +39,8 @@ and leaders think like builders of resilient companies.
 **Dates:** September 30-October 1, 2025  
 **Location:** Council Bluffs, Iowa  
 **Sessions:**  
-Will AI Coding Agents Replace Software Developers?  
-Why Great Developers Draw: 4 Architecture Diagrams That Clarify Everything
+[Will AI Coding Agents Replace Software Developers?](https://www.youtube.com/watch?v=ATGrRb9gCHo)  
+[Why Great Developers Draw: 4 Architecture Diagrams That Clarify Everything](https://www.youtube.com/watch?v=ATGrRb9gCHo)
 
 **The Commit Your Code Conference 2025!**  
 **Dates:** September 25-26, 2025  
