@@ -1594,7 +1594,8 @@ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
 &gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="setting-up-the-environment"&gt;&lt;a href="#setting-up-the-environment" class="header-anchor"&gt;&lt;/a&gt;Setting up the environment
 &lt;/h2&gt;&lt;p&gt;We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt; article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p&gt;
 &lt;p&gt;In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p&gt;

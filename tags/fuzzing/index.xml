@@ -54,7 +54,8 @@ corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
 documentation mentions the following about the function under test:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
 &lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
 &lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in

@@ -699,7 +699,8 @@ detailed description along with inputs and outputs is key to getting the best re
 &lt;p&gt;For example, given the following prompt:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Write a Golang function that takes path.URL, makes a GET request to that URL, parses the JSON response, and returns
-the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p&gt;&lt;/blockquote&gt;
+the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;ChatGPT o1 model generated the following code:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// FetchAttributesAndData makes a GET request to the provided URL, parses&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// the JSON response, and returns the &amp;#34;attributes&amp;#34; and &amp;#34;data&amp;#34; fields.&lt;/span&gt;
@@ -744,7 +745,8 @@ can use a combination of AI and deterministic search to find the relevant code. 
 asked &lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
 &gt;Cursor&lt;/a&gt; IDE about our codebase:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Cursor provided a list of files and additional information on the top hits.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/cursor-example.png"&gt;&lt;figcaption&gt;
 &lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
@@ -788,7 +790,8 @@ you create the high-level plan.&lt;/p&gt;
 &lt;p&gt;We want to create a mock Google Android Management API server using an AI agent. The server is written in Golang and
 will interact with our MDM solution during testing. It should hold the state for enterprises, profiles, and fake
 devices enrolled in it. The server should have a mock PubSub webhook that will push notifications regarding ENROLLMENT
-and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p&gt;&lt;/blockquote&gt;
+and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Next, ask the AI agent to read the plan, update it, and create a more detailed plan. It may make sense to break the plan
 into smaller parts and treat each part as a separate project. In effect, you act as the AI agent&amp;rsquo;s project manager.&lt;/p&gt;
 &lt;p&gt;Make sure to have documentation and have the AI agent update it regularly. In addition to the README, you can have API

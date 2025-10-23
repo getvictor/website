@@ -166,28 +166,34 @@ transparency and accountability.&lt;/p&gt;
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
 same question, trying to keep my tone professional:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;And every week, Alex would say:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
 &lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
 &lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
 &lt;p&gt;I kept thinking:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
-matters?&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+matters?&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
 again with another non-update.&lt;/p&gt;
 &lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
 &lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
 wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
@@ -278,7 +284,8 @@ I&amp;rsquo;d love to have more visibility into the broader priorities and conte
 &lt;li&gt;Have a brief weekly sync where you share the key takeaways?&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
-contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;&lt;/blockquote&gt;
+contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
 &lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
@@ -349,7 +356,8 @@ instrumentation in production.&lt;/p&gt;
 Grafana, Datadog, etc.).&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
-to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;&lt;/blockquote&gt;
+to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="feature-1-api-request-and-response-bodies"&gt;&lt;a href="#feature-1-api-request-and-response-bodies" class="header-anchor"&gt;&lt;/a&gt;Feature 1: API request and response bodies
 &lt;/h2&gt;&lt;p&gt;Seeing actual request and response bodies is invaluable during development. While you&amp;rsquo;d avoid this in production for
 security reasons, it&amp;rsquo;s essential for debugging locally.&lt;/p&gt;
@@ -3157,7 +3165,8 @@ detailed description along with inputs and outputs is key to getting the best re
 &lt;p&gt;For example, given the following prompt:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Write a Golang function that takes path.URL, makes a GET request to that URL, parses the JSON response, and returns
-the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p&gt;&lt;/blockquote&gt;
+the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;ChatGPT o1 model generated the following code:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// FetchAttributesAndData makes a GET request to the provided URL, parses&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// the JSON response, and returns the &amp;#34;attributes&amp;#34; and &amp;#34;data&amp;#34; fields.&lt;/span&gt;
@@ -3202,7 +3211,8 @@ can use a combination of AI and deterministic search to find the relevant code. 
 asked &lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
 &gt;Cursor&lt;/a&gt; IDE about our codebase:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Cursor provided a list of files and additional information on the top hits.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/cursor-example.png"&gt;&lt;figcaption&gt;
 &lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
@@ -3246,7 +3256,8 @@ you create the high-level plan.&lt;/p&gt;
 &lt;p&gt;We want to create a mock Google Android Management API server using an AI agent. The server is written in Golang and
 will interact with our MDM solution during testing. It should hold the state for enterprises, profiles, and fake
 devices enrolled in it. The server should have a mock PubSub webhook that will push notifications regarding ENROLLMENT
-and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p&gt;&lt;/blockquote&gt;
+and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Next, ask the AI agent to read the plan, update it, and create a more detailed plan. It may make sense to break the plan
 into smaller parts and treat each part as a separate project. In effect, you act as the AI agent&amp;rsquo;s project manager.&lt;/p&gt;
 &lt;p&gt;Make sure to have documentation and have the AI agent update it regularly. In addition to the README, you can have API
@@ -11418,7 +11429,8 @@ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
 &gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="setting-up-the-environment"&gt;&lt;a href="#setting-up-the-environment" class="header-anchor"&gt;&lt;/a&gt;Setting up the environment
 &lt;/h2&gt;&lt;p&gt;We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt; article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p&gt;
 &lt;p&gt;In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p&gt;
@@ -12304,7 +12316,8 @@ corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
 documentation mentions the following about the function under test:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
 &lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
 &lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in

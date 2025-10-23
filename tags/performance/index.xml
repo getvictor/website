@@ -30,7 +30,8 @@ instrumentation in production.&lt;/p&gt;
 Grafana, Datadog, etc.).&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
-to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;&lt;/blockquote&gt;
+to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="feature-1-api-request-and-response-bodies"&gt;&lt;a href="#feature-1-api-request-and-response-bodies" class="header-anchor"&gt;&lt;/a&gt;Feature 1: API request and response bodies
 &lt;/h2&gt;&lt;p&gt;Seeing actual request and response bodies is invaluable during development. While you&amp;rsquo;d avoid this in production for
 security reasons, it&amp;rsquo;s essential for debugging locally.&lt;/p&gt;
