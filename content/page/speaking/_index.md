@@ -29,7 +29,7 @@ and leaders think like builders of resilient companies.
 ## Upcoming speaking engagements
 
 **XtremeJS 2025**  
-**Dates:** December 2, 2025  
+**Date:** December 2, 2025  
 **Location:** Online  
 **Session:** HTTP Message Signatures Demystified: Stronger Security for JavaScript
 
@@ -53,7 +53,7 @@ and leaders think like builders of resilient companies.
 **Session:** [Radical Transparency: Leading Engineering with Openness](https://www.youtube.com/watch?v=5IZqRe7TUEg)
 
 **Open Source Summit North America 2025**  
-**Date:** June 23-25, 2025  
+**Dates:** June 23-25, 2025  
 **Location:** Denver, CO  
 **Session:** [Radical Transparency: Lessons From Open-Sourcing Nearly All Company Documentation](https://www.youtube.com/watch?v=xfj_-5xGvYg)
 
