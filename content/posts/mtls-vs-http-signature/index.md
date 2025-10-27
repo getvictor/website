@@ -5,7 +5,7 @@ authors = ["Victor Lyuboslavsky"]
 image = "mtls-vs-http-signature.png"
 date = 2025-07-06
 categories = ["Security"]
-tags = ["Application Security", "mTLS", "TLS"]
+tags = ["Application Security", "mTLS", "TLS", "HTTP Message Signatures"]
 draft = false
 +++
 
