@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>HTTP Message Signatures on Victor on Software</title><link>https://victoronsoftware.com/tags/http-message-signatures/</link><description>Recent content in HTTP Message Signatures on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 06 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/http-message-signatures/index.xml" rel="self" type="application/rss+xml"/><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#what-is-mtls" &gt;What is mTLS?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#mtls-pros-and-cons" &gt;mTLS: pros and cons&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#what-is-an-http-message-signature" &gt;What is an HTTP message signature?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#http-message-signature-pros-and-cons" &gt;HTTP message signature: pros and cons&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#performance-considerations" &gt;Performance Considerations&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#what-about-replay-attacks" &gt;What about replay attacks?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#mtls-vs-http-message-signatures-choosing-the-right-tool" &gt;mTLS vs HTTP message signatures: choosing the right tool&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;HTTP is the backbone of modern system communication. It lets your service confirm that it&amp;rsquo;s talking to the device you
+enrolled, not some impostor. It helps your backend recognize a microservice, not a malicious bot. And when it comes to
+protecting those channels, you&amp;rsquo;ve got two popular weapons: mTLS and HTTP Message Signatures.&lt;/p&gt;
+&lt;p&gt;Both are powerful and secure, but they take radically different approaches. One is baked into the TLS handshake, tight
+and deeply integrated. The other is explicit and flexible, wrapping your HTTP messages in cryptographic armor. This post
+is a no-nonsense breakdown covering what they are, where they shine, and where they cause pain.&lt;/p&gt;
+&lt;h2 id="what-is-mtls"&gt;&lt;a href="#what-is-mtls" class="header-anchor"&gt;&lt;/a&gt;What is mTLS?
+&lt;/h2&gt;&lt;p&gt;In ordinary TLS (Transport Layer Security), only the server presents a certificate to the client. This way, the client
+knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
+server so that the server can verify the client&amp;rsquo;s identity.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
+alt="Mutual TLS (mTLS) handshake diagram"&gt;
+&lt;/figure&gt;
+&lt;p&gt;mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
+it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
+mutual authentication is required.&lt;/p&gt;
+&lt;p&gt;We covered mTLS in greater detail in our &lt;a class="link" href="../mtls/" &gt;series on building an mTLS client using the system keystore&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id="mtls-pros-and-cons"&gt;&lt;a href="#mtls-pros-and-cons" class="header-anchor"&gt;&lt;/a&gt;mTLS: pros and cons
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Pros&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Built-in support across OSes, browsers, and web servers.&lt;/li&gt;
+&lt;li&gt;Strong identity baked into the connection itself.&lt;/li&gt;
+&lt;li&gt;No need to change application logic: TLS handles it.&lt;/li&gt;
+&lt;li&gt;Integrates more broadly with native certificate stores (e.g., macOS Keychain), with more substantial support across
+existing OS-level and browser-based applications. However, your specific application may still need to implement its
+own integration to use these certificate stores.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Hard to scope by endpoint. You either enforce mTLS on the whole server or not.&lt;/li&gt;
+&lt;li&gt;Requires TLS termination at a layer that understands and enforces client authentication. For example, suppose a load
+balancer terminates the TLS connection (which is standard practice). In that case, it must handle client certificate
+verification and securely pass the authenticated identity to the downstream server.&lt;/li&gt;
+&lt;li&gt;Not great for public APIs. Many clients (e.g., mobile apps, SDKs) don&amp;rsquo;t handle client certificates well, making mTLS
+adoption difficult in heterogeneous environments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="what-is-an-http-message-signature"&gt;&lt;a href="#what-is-an-http-message-signature" class="header-anchor"&gt;&lt;/a&gt;What is an HTTP message signature?
+&lt;/h2&gt;&lt;p&gt;HTTP message signatures are precisely what they sound like: you take an HTTP request, select a few headers (or maybe the
+body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
+from someone it trusts.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+---
+title: HTTP message signature
+---
+sequenceDiagram
+autonumber
+participant Client
+participant Server
+Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
+Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
+Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
+Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
+Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
+Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
+Server-&amp;gt;&amp;gt;Server: Verify signature with public key
+alt Signature valid
+Server-&amp;gt;&amp;gt;Server: Process request
+else Signature invalid
+Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
+end
+&lt;/pre&gt;
+&lt;p&gt;HTTP signing works at the application layer. It does not replace TLS, but rides on top of it. That means you don&amp;rsquo;t have
+to worry about where TLS is terminated, and the HTTP signature can be verified at the ultimate destination server.&lt;/p&gt;
+&lt;p&gt;Many legacy systems have used their own approaches to HTTP signing. Apple&amp;rsquo;s MDM protocol relies on a detached
+&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc5652" target="_blank" rel="noopener"
+&gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
+payload signing with a shared secret for webhooks. These mechanisms take different paths to the same goal: verifying the
+integrity and origin of HTTP messages.&lt;/p&gt;
+&lt;p&gt;Today, more modern systems are beginning to align with &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc9421" target="_blank" rel="noopener"
+&gt;RFC 9421&lt;/a&gt;, a
+proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
+signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
+auditability and control.&lt;/p&gt;
+&lt;h2 id="http-message-signature-pros-and-cons"&gt;&lt;a href="#http-message-signature-pros-and-cons" class="header-anchor"&gt;&lt;/a&gt;HTTP message signature: pros and cons
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Pros&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fine-grained control: sign specific API paths, select which headers or body fields to include, and decide when to
+apply signing based on context.&lt;/li&gt;
+&lt;li&gt;Signature verification works independently of TLS termination, enabling integrity checks even after a load balancer or
+proxy has terminated the TLS connection.&lt;/li&gt;
+&lt;li&gt;Doesn&amp;rsquo;t require X.509 certificates: keys can be created/exchanged directly, avoiding certificate issuance and renewal
+workflows. However, certificates can still be used if needed.&lt;/li&gt;
+&lt;li&gt;Easier to debug: you can log and inspect the signature.&lt;/li&gt;
+&lt;li&gt;Can integrate with system keystores (e.g., TPM) when supported by the client application.&lt;/li&gt;
+&lt;li&gt;Signing/verification libraries for RFC 9421 are available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Cons&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You must integrate/create the signing logic instead of relying on the OS or framework.&lt;/li&gt;
+&lt;li&gt;You must manage replay attacks with nonce and/or timestamp protection&lt;/li&gt;
+&lt;li&gt;Choosing which headers to sign isn&amp;rsquo;t always obvious and can break interoperability. It can also break backward
+compatibility if header selection changes across client or server updates.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="performance-considerations"&gt;&lt;a href="#performance-considerations" class="header-anchor"&gt;&lt;/a&gt;Performance Considerations
+&lt;/h2&gt;&lt;p&gt;mTLS is fast. The authentication step happens once per connection during the TLS handshake, and it benefits from all the
+TLS acceleration and session reuse magic that your OS and hardware provide.&lt;/p&gt;
+&lt;p&gt;HTTP message signatures happen every time. Every request is signed. Every request is verified. You&amp;rsquo;re layering crypto on
+top of crypto. That means more CPU cycles, especially if your implementation isn&amp;rsquo;t careful or you aren&amp;rsquo;t using the most
+efficient algorithms, such as ECDSA P-256. Performance will take a hit if you canonicalize huge headers or sign things
+unnecessarily.&lt;/p&gt;
+&lt;p&gt;📌 &lt;strong&gt;Important caveat:&lt;/strong&gt; For most APIs, performance is dominated by network and I/O. Unless you operate at a very high
+scale or on constrained devices, the performance difference between mTLS and HTTP signatures might be negligible.&lt;/p&gt;
+&lt;h2 id="what-about-replay-attacks"&gt;&lt;a href="#what-about-replay-attacks" class="header-anchor"&gt;&lt;/a&gt;What about replay attacks?
+&lt;/h2&gt;&lt;p&gt;A replay attack occurs when a bad actor captures a legitimate request and replays it later to trigger the same action
+again, such as resubmitting a money transfer or resetting a password.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;mTLS&lt;/strong&gt; helps mitigate replay attacks by tying authentication to a specific TLS session. An attacker can&amp;rsquo;t simply
+replay a captured request from another machine or session because they won&amp;rsquo;t have access to the client&amp;rsquo;s private key and
+can&amp;rsquo;t establish a valid mTLS session. That said, mTLS alone does not prevent replays of application-layer data if an
+attacker somehow gains access to an active session (extremely unlikely).&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HTTP message signatures&lt;/strong&gt; require you to build your own defenses. Because there&amp;rsquo;s no TLS session binding to a client
+key, an attacker who captures a signed request can replay it from any machine. The attacker does not need the private
+key, just the full request and its signature. That usually means you must include a &lt;code&gt;created&lt;/code&gt; timestamp and/or &lt;code&gt;nonce&lt;/code&gt;
+in the signed headers and reject any request that&amp;rsquo;s too old or already used. One way to do that would be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Server checks that &lt;code&gt;created&lt;/code&gt; is within 10 minutes of current server time (since these fields are included in the
+signature, we know they have not been tampered with)&lt;/li&gt;
+&lt;li&gt;Server checks that the &lt;code&gt;nonce&lt;/code&gt; value has not been used within the last 10 minutes (nonce values can be cached with
+expiration in ValKey or Redis)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool"&gt;&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor"&gt;&lt;/a&gt;mTLS vs HTTP message signatures: choosing the right tool
+&lt;/h2&gt;&lt;p&gt;Here&amp;rsquo;s how they compare:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;mTLS&lt;/th&gt;
+&lt;th&gt;HTTP Message Signature&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Identity verification&lt;/td&gt;
+&lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
+&lt;td&gt;🟡 App-level with public key&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Integrity&lt;/td&gt;
+&lt;td&gt;🟢 Built into TLS&lt;/td&gt;
+&lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Granular control&lt;/td&gt;
+&lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
+&lt;td&gt;🟢 Easy&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Deployment complexity&lt;/td&gt;
+&lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
+&lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Public API suitability&lt;/td&gt;
+&lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
+&lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Certificate handling&lt;/td&gt;
+&lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
+&lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Integration support&lt;/td&gt;
+&lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
+&lt;td&gt;🟡 App libraries available&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Replay protection&lt;/td&gt;
+&lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
+&lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Performance&lt;/td&gt;
+&lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
+&lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Debuggability&lt;/td&gt;
+&lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
+&lt;td&gt;🟢 Signature is visible&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;So, which one should you use?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use &lt;strong&gt;mTLS&lt;/strong&gt; when both ends are under your control. It is fast, OS-integrated, and well-supported for internal
+services or environments with managed certificates.&lt;/li&gt;
+&lt;li&gt;Use &lt;strong&gt;HTTP message signatures&lt;/strong&gt; when you need per-request control, flexible client support, or operate in ecosystems
+where certificate management is impractical.&lt;/li&gt;
+&lt;li&gt;If you value &lt;strong&gt;fine-grained control and debuggability&lt;/strong&gt;, HTTP signatures are a better fit 🟢.&lt;/li&gt;
+&lt;li&gt;If you want &lt;strong&gt;high performance and strong identity with minimal app changes&lt;/strong&gt;, mTLS is the clear choice 🟢, as long as
+you can handle the setup 🔴.&lt;/li&gt;
+&lt;li&gt;In some architectures, &lt;strong&gt;combining both&lt;/strong&gt; may offer the best of both worlds: transport-level trust with
+application-level verification.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Different tools for different jobs. Just don&amp;rsquo;t skip authentication.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="../how-to-use-tpm/" &gt;Using TPM 2.0 for secure key storage&lt;/a&gt; Store private keys in hardware to protect API credentials,
+signing keys, and more.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-compare-mtls-and-http-message-signatures"&gt;&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;Watch us compare mTLS and HTTP message signatures
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/aDMdLCzXn1U"
+allowfullscreen
+title="YouTube Video"
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>
