@@ -385,15 +385,21 @@ if err != nil {
 
 ## Further reading
 
-- **[Mutual TLS intro and hands-on example: mTLS Hello World](../mtls-hello-world/)** _A quick and practical
-  introduction to mutual TLS (mTLS), including how client certificate authentication works and how to try it with a
-  simple example._
+- **[HTTP message signatures](../http-message-signatures/)**  
+  Explore RFC 9421 for securing API requests with cryptographic signatures. See how industry leaders implement message
+  signing and learn practical strategies for key distribution and replay attack prevention.
 
-- **[Comparing mTLS and HTTP signatures](../mtls-vs-http-signature/)** A practical guide to securing HTTP requests with
-  transport-layer or application-layer authentication.
+- **[Mutual TLS intro and hands-on example: mTLS Hello World](../mtls-hello-world/)**  
+  A quick and practical introduction to mutual TLS (mTLS), including how client certificate authentication works and how
+  to try it with a simple example.
 
-- **[What is a VLAN and why you need it in your home network](../why-you-need-vlan/)** _Learn how VLANs isolate devices
-  to improve home network security and what you need to configure on your router, switch, and access points._
+- **[Comparing mTLS and HTTP signatures](../mtls-vs-http-signature/)**  
+  A practical guide to securing HTTP requests with transport-layer or application-layer authentication. Understand the
+  tradeoffs between connection-level and message-level security approaches.
+
+- **[What is a VLAN and why you need it in your home network](../why-you-need-vlan/)**  
+  Learn how VLANs isolate devices to improve home network security and what you need to configure on your router,
+  switch, and access points.
 
 ## Watch the explanation of securing private keys with TPM
 

@@ -1,6 +1,6 @@
 +++
-title = "HTTP message signatures"
-description = "TODO"
+title = "Understanding HTTP message signatures: A developer's guide"
+description = "Master HTTP message signatures for API security. Learn the RFC 9421 standard, see real implementations from industry leaders, and get practical Node.js code examples"
 authors = ["Victor Lyuboslavsky"]
 image = "TODO"
 date = 2025-10-23
@@ -9,7 +9,11 @@ tags = ["Application Security", "mTLS", "JWT", "HTTP Message Signatures"]
 draft = false
 +++
 
-TODO: Jump links
+- [What are HTTP message signatures?](#what-are-http-message-signatures)
+- [How HTTP message signatures compare to alternatives](#how-http-message-signatures-compare-to-alternatives)
+- [Technical details of HTTP message signatures](#technical-details-of-http-message-signatures)
+- [Example implementation](#example-implementation)
+- [Does your API need message-level authentication?](#does-your-api-need-message-level-authentication)
 
 If you've ever tried to improve security in a real organization, you know how it feels. You come up with what seems like
 a good idea, but the moment you share it, someone says:
@@ -365,7 +369,232 @@ so implementations stay compatible.
 
 ## Example implementation
 
-TODO: Add code examples from our demo app
+We implemented a simple demo app that demonstrates how to sign and verify HTTP requests with RFC 9421 in Node.js. The
+app is available on GitHub: https://github.com/getvictor/http-message-signatures
+
+There are many JavaScript libraries that implement HTTP message signatures. Many companies also don't use libraries and
+do their own implementation of the standard.
+
+{{< figure src="node-http-message-signature-libraries.png" alt="npm search results showing five Node.js HTTP message signature libraries" >}}
+
+For our demo we chose https://github.com/dhensby/node-http-message-signatures for the following reasons:
+
+1. Cleaner, more intuitive API
+
+- Simpler function signatures and better TypeScript support
+- More conventional Node.js patterns
+- Easier to integrate with Web Crypto API
+
+2. Better documentation and examples
+
+- Clear, comprehensive examples in the README
+- Well-documented API surface
+- Good inline code comments
+
+3. Proven stability
+
+- Version 1.0.4
+- Widely used
+
+4. Better compatibility
+
+- No unusual dependencies (only `structured-headers`)
+- Easy integration with Express middleware
+
+Before sending a signed request, the client needs to give the server its public key. The server can then use that key to
+verify the signature. We chose to use a dedicated `/admin` endpoint for this purpose.
+
+Once server has the client's public key. Here's a snippet of the client code that signs a request:
+
+```typescript
+export async function signAndSendRequest(
+  keys: ClientKeys,
+  method: string,
+  path: string,
+  body?: any,
+  tamper: boolean = false
+): Promise<Response> {
+  const url = `${BASE_URL}${path}`;
+  const bodyString = body ? JSON.stringify(body) : undefined;
+
+  // Compute Content-Digest for the body
+  let contentDigest: string | undefined;
+  if (bodyString) {
+    contentDigest = computeDigest(bodyString, 'sha-256');
+  }
+
+  // Prepare the message object for signing
+  // SignRequest comes from 'http-message-signatures' library
+  const message: SignRequest & { body?: string } = {
+    method: method.toUpperCase(),
+    url,
+    headers: {
+      'content-type': 'application/json',
+    },
+  };
+
+  if (contentDigest) {
+    message.headers['content-digest'] = contentDigest;
+  }
+
+  if (bodyString) {
+    message.body = bodyString;
+  }
+
+  // Create signer function
+  const signer = async (data: Buffer): Promise<Buffer> => {
+    const signature = await webcrypto.subtle.sign('Ed25519', keys.privateKey, data);
+    return Buffer.from(signature);
+  };
+
+  // Generate nonce for replay protection
+  const nonce = generateNonce();
+
+  // Sign the message, using `signMessage` of `http-message-signatures` library
+  const signedMessage = await httpbis.signMessage(
+    {
+      key: {
+        id: keys.kid,
+        alg: 'ed25519',
+        sign: signer,
+      },
+      fields: contentDigest
+        ? ['@method', '@target-uri', 'content-type', 'content-digest']
+        : ['@method', '@target-uri'],
+      params: ['keyid', 'alg', 'created', 'expires', 'nonce'],
+      paramValues: {
+        created: new Date(),
+        expires: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+        nonce: nonce,
+      },
+    },
+    message
+  );
+
+  const signature = signedMessage.headers['signature'] || signedMessage.headers['Signature'];
+  const signatureInput = signedMessage.headers['signature-input'] || signedMessage.headers['Signature-Input'];
+```
+
+The signing process: compute the Content-Digest hash for the body, build a message object with method and headers,
+create an Ed25519 signer function, configure which components to sign (`@method`, `@target-uri`, `content-digest`) with
+replay protection parameters (`created`, `expires`, `nonce`), and extract the signature headers.
+
+Here's a snippet of the server code that verifies the signature:
+
+```typescript
+export async function verifySignatureMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  const endpoint = req.path;
+  const method = req.method;
+
+  // Check for required headers
+  const signatureInputHeader = req.headers['signature-input'];
+  const signatureHeader = req.headers['signature'];
+  const contentDigestHeader = req.headers['content-digest'];
+  // ...
+
+  // Verify Content-Digest if present (do this early for efficiency)
+  // ...
+
+  // Perform cryptographic signature verification
+  try {
+    // Construct the message object for verification
+    const message = {
+      method: req.method,
+      url: `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+      headers: {} as Record<string, string>,
+    };
+
+    // Copy headers to lowercase keys (RFC 9421 requires lowercase)
+    // ...
+
+    // Map algorithm names to library format
+    const mapAlgorithmToLibraryFormat = (alg: string): string => {
+      const mapping: Record<string, string> = {
+        'EdDSA': 'ed25519',
+        // ...
+      };
+      return mapping[alg] || alg.toLowerCase();
+    };
+
+    // Clock skew tolerance for timestamp validation
+    const CLOCK_SKEW_SECONDS = 5 * 60; // 5 minutes
+
+    // Verify the signature using the library
+    // The keyLookup callback receives parsed parameters from the library
+    const verificationResult = await httpbis.verifyMessage(
+      {
+        keyLookup: async (params: SignatureParameters) => {
+          const kid = params.keyid;
+          // Look up the key
+          const keyRecord = db.getKey(kid);
+          // Validate the key and make sure it is not revoked
+          // ...
+
+          // Check for nonce parameter (replay protection)
+          if (params.nonce) {
+            // Check if nonce has been used before (replay detection)
+            if (db.isNonceUsed(params.nonce)) {
+              // fail
+            }
+          }
+
+          // Import the public key
+          let publicKey: webcrypto.CryptoKey;
+          if (keyRecord.algorithm === 'EdDSA') {
+            publicKey = await webcrypto.subtle.importKey(
+              'jwk',
+              keyRecord.jwk as any,
+              { name: 'Ed25519', namedCurve: 'Ed25519' } as any,
+              true,
+              ['verify']
+            );
+          } // else ...
+
+          // Create a verifier function
+          const createVerifierForKey = async (data: Buffer, signature: Buffer): Promise<boolean | null> => {
+            let algorithm: string | { name: string; hash: string };
+            if (keyRecord.algorithm === 'EdDSA') {
+              algorithm = 'Ed25519';
+            } // else ...
+            return await webcrypto.subtle.verify(algorithm, publicKey, signature, data);
+          };
+
+          // Return the verifying key
+          return {
+            id: kid,
+            algs: [mapAlgorithmToLibraryFormat(keyRecord.algorithm)],
+            verify: createVerifierForKey,
+          };
+        },
+        tolerance: CLOCK_SKEW_SECONDS,
+      },
+      message
+    );
+
+    // verifyMessage returns true on success, false/null on failure
+    if (!verificationResult) {
+      res.status(401).json(SignatureErrors.invalidSignature('Signature verification failed'));
+      return;
+    }
+
+    // Store the nonce to prevent replay (if present)
+    // ...
+    next();
+  } catch (error: any) {
+    res.status(401).json(SignatureErrors.invalidSignature(error.message || 'Verification error'));
+    return;
+  }
+```
+
+The verification process reconstructs the message object from the incoming request and calls the library's
+`verifyMessage` function. The `keyLookup` callback retrieves the client's public key using the `keyid` parameter, checks
+if the nonce has been used (replay protection), imports the key via Web Crypto API, and returns a verifier function. The
+library handles timestamp validation using the configured clock skew tolerance (5 minutes). If verification succeeds, we
+store the nonce and proceed. If it fails, we return 401 Unauthorized.
 
 ## Replay attacks
 
@@ -380,6 +609,32 @@ need the complete request with its signature headers intact.
 Consider this scenario: you send a signed API request to transfer $100. The signature proves the request came from you
 and hasn't been modified. But if an attacker captures that request, they can send it again. And again. The signature is
 still valid because the request hasn't changed.
+
+```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#E3F2FD','primaryTextColor':'#1565C0','primaryBorderColor':'#1976D2','lineColor':'#424242','secondaryColor':'#FFF3E0','tertiaryColor':'#E8F5E9'}}}%%
+sequenceDiagram
+    autonumber
+    participant Client as 🖥️ Client
+    participant Attacker as 🎭 Attacker
+    participant Server as ☁️ Server
+
+    Note over Client,Server: Legitimate request
+    Client->>Server: Signed request<br/>(Transfer $100)
+    Server->>Server: Verify signature ✓
+    Server-->>Client: 200 OK (transferred)
+
+    Note over Client,Server: Attacker intercepts and replays
+    Attacker->>Attacker: Capture request<br/>(with valid signature)
+    Attacker->>Server: Replay same request
+
+    alt Without replay protection
+        Server->>Server: Verify signature ✓<br/>(signature is still valid!)
+        Server-->>Attacker: 200 OK (transferred again!)
+    else With created timestamp
+        Server->>Server: Verify signature ✓<br/>Check timestamp ✗ (too old)
+        Server-->>Attacker: 401 Unauthorized
+    end
+```
 
 ### Defending against replay attacks
 
@@ -461,25 +716,48 @@ with realistic load. Choose your algorithms based on actual measurements, not ju
 
 ## Does your API need message-level authentication?
 
-Not every API needs HTTP message signatures. If you're building a simple internal service with API keys over TLS, you're probably fine. But there are specific situations where message signatures solve real problems.
+Not every API needs HTTP message signatures. If you're building a simple internal service with API keys over TLS, you're
+probably fine. But there are specific situations where message signatures solve real problems.
 
 Ask yourself these questions:
 
-**Do you care if the request gets modified in transit?** If a proxy or intermediary changes the request body or headers between the client and your application server, would that be a security problem? API keys and JWTs don't protect against this. Message signatures do.
+**Do you care if the request gets modified in transit?** If a proxy or intermediary changes the request body or headers
+between the client and your application server, would that be a security problem? API keys and JWTs don't protect
+against this. Message signatures do.
 
-**Do you need to verify requests at the application server?** If your load balancer terminates TLS, can your application trust that the request actually came from the authenticated client? Or could something between the load balancer and your app have modified it?
+**Do you need to verify requests at the application server?** If your load balancer terminates TLS, can your application
+trust that the request actually came from the authenticated client? Or could something between the load balancer and
+your app have modified it?
 
-**Can't use mTLS everywhere?** Maybe you have public-facing APIs where client certificate management is impractical. Or you need per-endpoint authentication control, not all-or-nothing connection security. Message signatures work at the application layer, giving you more flexibility.
+**Can't use mTLS everywhere?** Maybe you have public-facing APIs where client certificate management is impractical. Or
+you need per-endpoint authentication control, not all-or-nothing connection security. Message signatures work at the
+application layer, giving you more flexibility.
 
-**Are you integrating with federated systems?** If you're building something like Mastodon where servers need to trust messages from other servers they've never seen before, message signatures with published public keys solve that cleanly.
+**Are you integrating with federated systems?** If you're building something like Mastodon where servers need to trust
+messages from other servers they've never seen before, message signatures with published public keys solve that cleanly.
 
-**Do you want a standard instead of custom schemes?** Tired of implementing different signature verification for every vendor's API? Want your clients to use a standard approach instead of your custom homebrew scheme?
+**Do you want a standard instead of custom schemes?** Tired of implementing different signature verification for every
+vendor's API? Want your clients to use a standard approach instead of your custom homebrew scheme?
 
-If you answered yes to any of these, HTTP message signatures are worth evaluating. If not, simpler approaches might be a better fit.
+If you answered yes to any of these, HTTP message signatures are worth evaluating. If not, simpler approaches might be a
+better fit.
 
-The standard exists. The libraries are available. CDNs are already supporting it. The barrier to adoption is lower than you think.
+The standard exists. The libraries are available. CDNs are already supporting it. The barrier to adoption is lower than
+you think.
 
 ## Further reading
+
+- **[mTLS vs HTTP signature faceoff](../mtls-vs-http-signature/)**  
+  Compare transport-layer security with application-layer message authentication. Learn which approach fits your
+  architecture and when combining both methods provides the strongest protection.
+
+- **[Mutual TLS (mTLS): building a client using the system keystore](../mtls/)**  
+  Discover how to implement mutual TLS authentication while securely storing certificates and private keys using native
+  system keystores on macOS and Windows.
+
+- **[How to use TPM 2.0 to secure private keys](../how-to-use-tpm/)**  
+  Protect your signing keys with hardware-backed security. This practical guide shows you how to generate, store, and
+  use cryptographic keys with TPM 2.0 modules.
 
 ## Watch us TODO
 

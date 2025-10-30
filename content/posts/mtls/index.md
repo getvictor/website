@@ -53,6 +53,10 @@ with the Windows certificate store to store the mTLS certificates and keys.
 
 Where do mTLS and HTTP message signatures fit, and how to choose the right one for your architecture.
 
+### [HTTP message signatures](../http-message-signatures/)
+
+A comprehensive guide to RFC 9421 covering technical implementation details, real-world adoption by OpenAI and Cloudflare, performance considerations, and practical defense strategies against replay attacks.
+
 ### Mutual TLS (mTLS): building a client using the system keystore video playlist
 
 {{< youtubeplaylist PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W >}}

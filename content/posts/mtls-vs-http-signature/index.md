@@ -189,8 +189,13 @@ Different tools for different jobs. Just don't skip authentication.
 
 ## Further reading
 
-- [Using TPM 2.0 for secure key storage](../how-to-use-tpm/) Store private keys in hardware to protect API credentials,
-  signing keys, and more.
+- **[HTTP message signatures](../http-message-signatures/)**  
+  Deep dive into RFC 9421 with practical implementation guidance. Understand how HTTP message signatures work, when to
+  use them, and see real-world examples from OpenAI, Cloudflare, and Mastodon.
+
+- **[Using TPM 2.0 for secure key storage](../how-to-use-tpm/)**  
+  Store private keys in hardware to protect API credentials, signing keys, and more. Learn how to leverage TPM modules
+  for hardware-backed cryptographic operations.
 
 ## Watch us compare mTLS and HTTP message signatures
 
