@@ -112,21 +112,36 @@ HTTP message signatures fix that. Instead of just authenticating the connection,
 headers, a hash of the body, and more). The server can verify not only who sent the message, but also that nothing was
 modified along the way.
 
-### JWT: stateless but vulnerable to replay
+### JWT: a fancier API key
 
 JWT (JSON Web Token) is everywhere. JWTs became the de facto identity token format in OAuth 2.0, where they're sent in
 the Authorization header. That pattern is now universal for most API tokens, even if you don't use OAuth explicitly. The
-industry standard across Google, AWS Cognito, Auth0, Okta, GitHub, and others is `Authorization: Bearer <JWT>`.
+industry standard across Google, AWS, Okta, GitHub, and others is `Authorization: Bearer <JWT>`.
+
+```
+Authorization: Bearer <JWT-header>.<JWT-payload>.<JWT-signature>
+
+Header:
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+
+Payload:
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1730630400
+}
+```
 
 The problem is that a JWT only signs its own contents (the claims inside the token itself). It doesn't sign the HTTP
-request. If someone intercepts a valid JWT, they can replay it in a completely different request. They could change the
+request. If someone intercepts a valid JWT, they can use it in a completely different request. They could change the
 method from GET to DELETE, modify the request body, or alter other headers. The server will validate the JWT and accept
 it, because the token itself is legitimate.
 
 HTTP message signatures prevent request modification by binding the signature to the specific request components
-(method, path, headers, body). An attacker can't change a signed request without breaking the signature. However, HTTP
-message signatures alone don't prevent replay of the exact same request. For that, you need to include `created`
-timestamps and/or `nonce` values in the signed parameters, which we cover in the technical details section below.
+(method, path, headers, body). An attacker can't change a signed request without breaking the signature.
 
 ### mTLS: strong but operationally complex
 
@@ -721,9 +736,8 @@ probably fine. But there are specific situations where message signatures solve 
 
 Ask yourself these questions:
 
-**Do you care if the request gets modified in transit?** If a proxy or intermediary changes the request body or headers
-between the client and your application server, would that be a security problem? API keys and JWTs don't protect
-against this. Message signatures do.
+**How easy is it for someone modify the message between your client and server?** And if it happens, how big of a
+security problem is it?
 
 **Do you need to verify requests at the application server?** If your load balancer terminates TLS, can your application
 trust that the request actually came from the authenticated client? Or could something between the load balancer and
@@ -759,8 +773,8 @@ you think.
   Protect your signing keys with hardware-backed security. This practical guide shows you how to generate, store, and
   use cryptographic keys with TPM 2.0 modules.
 
-## Watch us TODO
+## Watch the conference talk based on this article
 
-{{< youtube TODO >}}
+{{< youtube 6QxkfPy0k4U >}}
 
 _Note:_ If you want to comment on this article, please do so on the YouTube video.
