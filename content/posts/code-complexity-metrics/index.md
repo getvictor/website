@@ -129,8 +129,11 @@ In the next article of this **technical debt** series, we
 
 ## Further reading
 
-- [Track your team’s engineering performance with open-source tools](../engineering-metrics-no-cost/)  
+- **[Track your team’s engineering performance with open-source tools](../engineering-metrics-no-cost/)**  
   A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.
+
+- **[The modular monolith that wasn't](../modular-monolith-attempt/)**  
+  A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.
 
 - Recently, we [showed an example and key takeaways from literate programming](../literate-programming-lessons/).
 - We also wrote [an overview of using AI in software development](../ai-for-software-developers/).

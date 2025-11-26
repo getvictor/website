@@ -140,7 +140,13 @@ independent can require extra thought and coordination.
 
 ## Further reading
 
+- **[The modular monolith that wasn't](../modular-monolith-attempt/)**  
+  A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.
+
 - Check out our other articles in the **technical debt** series. Links are at the top of this article.
+
+### And also
+
 - Recently, examined [the 4 key Mermaid diagrams for software developers](../mermaid-intro/).
 - Previously, we [explained the difference between Go modules and Go packages](../go-modules-and-packages/).
 
