@@ -1,9 +1,9 @@
 +++
-title = "TODO"
-description = "TODO"
+title = "The modular monolith that wasn't"
+description = "Our first attempt at modularizing a 500K-line codebase taught us more about team dynamics than architecture"
 authors = ["Victor Lyuboslavsky"]
-image = "TODO"
-date = 2025-11-24
+image = "modular-monolith-attempt.png"
+date = 2025-11-26
 categories = ["Software Development"]
 tags = ["Software Architecture", "Developer Experience", "Technical Debt"]
 draft = false
@@ -40,7 +40,7 @@ Our web app is a 10-year-old monolith. It's a Go REST API built on top of a MySQ
 
 ```mermaid
 flowchart TD
-    A["API layer\n(controllers + service)"] --> B["Persistence layer\n(datastore)"]
+    A["API layer<br>(controllers + service)"] --> B["Persistence layer<br>(datastore)"]
     B --> C[(MySQL Database)]
 ```
 
@@ -60,11 +60,13 @@ compiled binary.
 ```mermaid
 flowchart TD
   subgraph Legacy code
-    A["API layer\n(controllers + service)"] --> B["Persistence layer\n(datastore)"]
+    direction TB
+    A["API layer<br>(controllers + service)"] --> B["Persistence layer<br>(datastore)"]
     B --> C[(MySQL database)]
   end
   subgraph New feature
-    D["API layer\n(controllers + service)"] --> E["Persistence layer\n(datastore)"]
+    direction TB
+    D["API layer<br>(controllers + service)"] --> E["Persistence layer<br>(datastore)"]
     E --> F[(MySQL database)]
   end
 ```
@@ -86,8 +88,7 @@ I put up the PR, and it just sat there. Our guidance is to review PRs within 24 
 one.
 
 In retrospect, I should have done a better job communicating to the team that I was actually going to do what I
-proposed. Some engineers felt surprised by the changes and didn't feel like they had a voice in the
-approach.
+proposed. Some engineers felt surprised by the changes and didn't feel like they had a voice in the approach.
 
 ## First compromise
 
@@ -98,10 +99,12 @@ of traction on my PR, I decided to take a step back and unsplit the MySQL layer.
 ```mermaid
 flowchart TD
   subgraph New feature
-    D["API layer\n(controllers + service)"] --> E["Persistence layer\n(datastore)"]
+    direction TB
+    D["API layer<br>(controllers + service)"] --> E["Persistence layer<br>(datastore)"]
   end
   subgraph Legacy code
-    A["API layer\n(controllers + service)"] --> B["Persistence layer\n(datastore)"]
+    direction TB
+    A["API layer<br>(controllers + service)"] --> B["Persistence layer<br>(datastore)"]
   end
   E --> C[(MySQL database)]
   B --> C
@@ -127,12 +130,12 @@ So, I backed out the changes to the persistence layer.
 ```mermaid
 flowchart TD
   subgraph New feature
-    D["API layer\n(controllers + service)"]
+    D["API layer<br>(controllers + service)"]
   end
   subgraph Legacy code
-    A["API layer\n(controllers + service)"]
+    A["API layer<br>(controllers + service)"]
   end
-  D --> B["Persistence layer\n(datastore)"]
+  D --> B["Persistence layer<br>(datastore)"]
   A --> B
   B --> C[(MySQL database)]
 ```
@@ -146,10 +149,10 @@ into the legacy code.
 ```mermaid
 flowchart TD
   subgraph "API layer"
-    D["Android\n(controllers + service)"]
-    E["Legacy + some Android\n(controllers + service)"]
+    D["Android<br>(controllers + service)"]
+    E["Legacy + some Android<br>(controllers + service)"]
   end
-  E --> B["Persistence layer\n(datastore)"]
+  E --> B["Persistence layer<br>(datastore)"]
   D --> B
   B --> C[(MySQL database)]
   E --> D
@@ -198,6 +201,12 @@ The important thing is to assign the ownership of the API endpoint to a specific
 though the API endpoint may largely be an orchestrator, it is important to know what module it belongs to.
 
 ## Further reading
+
+- **[6 business benefits of software modularity and cohesion](../software-modularity/)**  
+  Understand why modularity matters for scaling teams and reducing complexity in growing codebases.
+
+- **[Top code complexity metrics every software dev should know](../code-complexity-metrics/)**  
+  Ways to measure and track code complexity to improve maintainability.
 
 ## Watch us TODO
 
