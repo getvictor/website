@@ -1,4 +1,185 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>posts on Victor on Software</title><link>https://victoronsoftware.com/posts/</link><description>Recent content in posts on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Wed, 26 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>The modular monolith that wasn't</title><link>https://victoronsoftware.com/posts/modular-monolith-attempt/</link><pubDate>Wed, 26 Nov 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/modular-monolith-attempt/</guid><description>&lt;img src="https://victoronsoftware.com/posts/modular-monolith-attempt/modular-monolith-attempt.png" alt="Featured image of post The modular monolith that wasn't" /&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a class="link" href="#our-web-app-architecture" &gt;Our web app architecture&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#evolutionary-architecture-proposal" &gt;Evolutionary architecture proposal&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#initial-implementation" &gt;Initial implementation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#first-compromise" &gt;First compromise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#second-compromise" &gt;Second compromise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#architectural-drift" &gt;Architectural drift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="link" href="#lessons-learned" &gt;Lessons learned&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A year ago, I embarked on a journey to improve the architecture of our large 500K+ line open source
+&lt;a class="link" href="https://github.com/fleetdm/fleet" target="_blank" rel="noopener"
+&gt;device management codebase&lt;/a&gt;, and things haven&amp;rsquo;t been quite as smooth as I&amp;rsquo;d hoped.&lt;/p&gt;
+&lt;p&gt;Although I&amp;rsquo;ve been in tech for over 25 years, I haven&amp;rsquo;t worked on large web apps before. I&amp;rsquo;ve spent most of my time in
+the semiconductor industry, working on several small software projects. However, I was aware of this going in, and I
+wanted to learn more about software architecture so that I could enhance the developer experience.&lt;/p&gt;
+&lt;p&gt;To expand my knowledge, I listened to software podcasts and read books such as &amp;ldquo;Fundamentals of Software Architecture,&amp;rdquo;
+&amp;ldquo;Learning Domain-Driven Design,&amp;rdquo; and &amp;ldquo;Clean Architecture,&amp;rdquo; among others.&lt;/p&gt;
+&lt;p&gt;The books largely agreed on &lt;a class="link" href="../software-modularity" &gt;the benefits of modularity and cohesion&lt;/a&gt;. Software should be
+modular because that makes each module less complex, and hence easier to understand and maintain. The software inside a
+module should be cohesive. In other words, the functionality of a module should belong together. Modularity is the best
+way to scale a large software project. Then, engineers can focus on their own work in their respective modules and
+minimize merge conflicts with other engineers.&lt;/p&gt;
+&lt;p&gt;This all made sense to me, and it seemed like a well-trodden path by other software projects, especially those that
+transitioned from a monolith to microservices. In our case, we did not plan to transition to microservices because our
+customers required us to run our server on-premises, and we wanted to keep deployments simple. However, we could
+transition to a more modular architecture, known as a modular monolith.&lt;/p&gt;
+&lt;h2 id="our-web-app-architecture"&gt;&lt;a href="#our-web-app-architecture" class="header-anchor"&gt;&lt;/a&gt;Our web app architecture
+&lt;/h2&gt;&lt;p&gt;Our web app is a 10-year-old monolith. It&amp;rsquo;s a Go REST API built on top of a MySQL database.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+B --&amp;gt; C[(MySQL Database)]
+&lt;/pre&gt;
+&lt;p&gt;The above diagram is a simplified core of our application. We have a single Go package for the API layer, which includes
+controllers (Go handlers) and service (business logic). The service layer calls the persistence layer, which constructs
+the SQL queries and executes them against our MySQL database. The API layer is one huge Go package, and the persistence
+layer is another separate huge Go package.&lt;/p&gt;
+&lt;h2 id="evolutionary-architecture-proposal"&gt;&lt;a href="#evolutionary-architecture-proposal" class="header-anchor"&gt;&lt;/a&gt;Evolutionary architecture proposal
+&lt;/h2&gt;&lt;p&gt;At one of our engineering all-hands meetings, I gave a presentation about how we could
+&lt;a class="link" href="../scaling-codebase-evolutionary-architecture" &gt;scale our codebase to a more modular architecture&lt;/a&gt;. One of the core
+ideas of the presentation was that when working on a new feature, we could create a new module, a vertical slice, that
+would mirror the structure of the legacy code. The approach would be similar to microservices, but still within a single
+compiled binary.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+subgraph Legacy code
+direction TB
+A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+B --&amp;gt; C[(MySQL database)]
+end
+subgraph New feature
+direction TB
+D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+E --&amp;gt; F[(MySQL database)]
+end
+&lt;/pre&gt;
+&lt;p&gt;The presentation seemed to go well, with general agreement. One comment was along the lines of &amp;ldquo;won&amp;rsquo;t we have to redo
+the architecture every time we reorganize our team structure?&amp;rdquo; The answer is maybe. The vertical slices must make sense
+from a product perspective. Also, the vertical slices can be small enough that a single team can own multiple slices. If
+an engineering team splits into two, they can split their slices between them. If the team had one big slice, then it
+makes sense to split that slice into two or more smaller slices.&lt;/p&gt;
+&lt;h2 id="initial-implementation"&gt;&lt;a href="#initial-implementation" class="header-anchor"&gt;&lt;/a&gt;Initial implementation
+&lt;/h2&gt;&lt;p&gt;We started working on a new feature, which seemed like an ideal candidate to try the new approach. The feature supported
+Android MDM (Mobile Device Management). It would be a new platform for us with a new API. I created the new structure
+for the Android feature. I created new packages in a dedicated directory. Most of the work was untangling the common
+parts so they could be reused between the legacy code and the new feature.&lt;/p&gt;
+&lt;p&gt;I put up the PR, and it just sat there. Our guidance is to review PRs within 24 hours, but no one wanted to touch this
+one.&lt;/p&gt;
+&lt;p&gt;In retrospect, I should have done a better job communicating to the team that I was actually going to do what I
+proposed. Some engineers felt surprised by the changes and didn&amp;rsquo;t feel like they had a voice in the approach.&lt;/p&gt;
+&lt;h2 id="first-compromise"&gt;&lt;a href="#first-compromise" class="header-anchor"&gt;&lt;/a&gt;First compromise
+&lt;/h2&gt;&lt;p&gt;Having two MySQL schemas made our migrations more complicated. It also made it impossible to JOIN tables across schemas.
+It would have made our deployments more complicated, even if the schemas were both in the same database. With the lack
+of traction on my PR, I decided to take a step back and unsplit the MySQL layer.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+subgraph New feature
+direction TB
+D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+end
+subgraph Legacy code
+direction TB
+A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+end
+E --&amp;gt; C[(MySQL database)]
+B --&amp;gt; C
+&lt;/pre&gt;
+&lt;p&gt;After several lengthy conversations with the PR reviewer and a few minor adjustments, we merged the PR.&lt;/p&gt;
+&lt;h2 id="second-compromise"&gt;&lt;a href="#second-compromise" class="header-anchor"&gt;&lt;/a&gt;Second compromise
+&lt;/h2&gt;&lt;p&gt;Around the same time, we instituted an ADR (Architecture Decision Record) process. I retroactively wrote two ADRs, one
+to split the API layer and one to split the persistence layer for the Android feature. The
+&lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29850" target="_blank" rel="noopener"
+&gt;ADR to split the API layer was approved&lt;/a&gt;, but the
+&lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29853" target="_blank" rel="noopener"
+&gt;ADR to split the persistence layer was rejected&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Engineers voiced their concerns, which included:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;We&amp;rsquo;ve had this structure for a while, and people know how it works. Why do we need this change?&lt;/li&gt;
+&lt;li&gt;With separate persistence layers, it will be much harder to do DB transactions across the two layers.&lt;/li&gt;
+&lt;li&gt;This change is too big. Let&amp;rsquo;s try something incremental, like splitting the API layer only.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So, I reverted the persistence layer changes.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+subgraph New feature
+D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+end
+subgraph Legacy code
+A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+end
+D --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+A --&amp;gt; B
+B --&amp;gt; C[(MySQL database)]
+&lt;/pre&gt;
+&lt;h2 id="architectural-drift"&gt;&lt;a href="#architectural-drift" class="header-anchor"&gt;&lt;/a&gt;Architectural drift
+&lt;/h2&gt;&lt;p&gt;I moved to another product team, where I worked on other parts of the codebase, and other engineers continued to work on
+the Android part of the codebase. Without architectural oversight and strong commitment from the engineering team, the
+Android feature seeped into the legacy code.&lt;/p&gt;
+&lt;pre class="mermaid"&gt;
+flowchart TD
+subgraph &amp;#34;API layer&amp;#34;
+D[&amp;#34;Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+E[&amp;#34;Legacy + some Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+end
+E --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+D --&amp;gt; B
+B --&amp;gt; C[(MySQL database)]
+E --&amp;gt; D
+&lt;/pre&gt;
+&lt;p&gt;So, what do we have now? Certainly, at a high level, the codebase doesn&amp;rsquo;t appear to be very modular. Arguably, it is
+even more complex and harder to maintain than it was before. There is no clear separation between the legacy code and
+the Android feature.&lt;/p&gt;
+&lt;p&gt;But it&amp;rsquo;s not all bad news. Some positives remain:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Most Android-specific controllers are in a separate package, which makes them easier to change and reason about.&lt;/li&gt;
+&lt;li&gt;Some Android-specific code is now isolated, which accelerates development and testing within that package.&lt;/li&gt;
+&lt;li&gt;We broke apart some common code out of the legacy package, which makes it easier to create new API layers.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="lessons-learned"&gt;&lt;a href="#lessons-learned" class="header-anchor"&gt;&lt;/a&gt;Lessons learned
+&lt;/h2&gt;&lt;p&gt;We will continue our efforts to modularize and further improve our architecture. Let&amp;rsquo;s sum up what we&amp;rsquo;ve learned from
+our first attempt.&lt;/p&gt;
+&lt;h3 id="team-buy-in"&gt;&lt;a href="#team-buy-in" class="header-anchor"&gt;&lt;/a&gt;Team buy-in
+&lt;/h3&gt;&lt;p&gt;We need a strong commitment from the engineers and managers to the new architecture and the specific architectural split
+we&amp;rsquo;re proposing. Without this commitment, it is easy for engineers to revert to old patterns and begin making
+architectural compromises. Without a manager&amp;rsquo;s commitment, it is easy for the manager to encourage engineers to complete
+the user story as quickly as possible without regard for the architecture.&lt;/p&gt;
+&lt;h3 id="better-architectural-governance"&gt;&lt;a href="#better-architectural-governance" class="header-anchor"&gt;&lt;/a&gt;Better architectural governance
+&lt;/h3&gt;&lt;p&gt;We need to have automated dependency checks to make sure developers aren&amp;rsquo;t adding new dependencies that go against the
+new architecture. We plan on investigating &lt;a class="link" href="https://github.com/arch-go/arch-go" target="_blank" rel="noopener"
+&gt;arch-go&lt;/a&gt; in the future. Since we don&amp;rsquo;t
+see many off-the-shelf tools for architectural governance of Go projects, we&amp;rsquo;ll have to build our own as well.&lt;/p&gt;
+&lt;p&gt;In addition to automated checks, it makes sense for the architect to regularly review the codebase as a whole and
+related PRs to catch any deviations from the architecture. With today&amp;rsquo;s AI agents, it should be straightforward to
+create a prompt for the AI agent to perform this analysis.&lt;/p&gt;
+&lt;h3 id="controllers-must-access-multiple-services"&gt;&lt;a href="#controllers-must-access-multiple-services" class="header-anchor"&gt;&lt;/a&gt;Controllers must access multiple services
+&lt;/h3&gt;&lt;p&gt;We can&amp;rsquo;t assume that a controller only needs to access our service layer. Sometimes, a controller needs to access
+multiple services. In our case, an Android controller may need to access both the legacy service layer and the new
+Android service. And similarly for a legacy controller. Hence, both the legacy and the new API layers must have
+interface handles to each other.&lt;/p&gt;
+&lt;p&gt;The important thing is to assign ownership of the API endpoint to a specific module and a specific team. Although the
+API endpoint may primarily serve as an orchestrator, it is essential to determine which module it belongs to.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../software-modularity/" &gt;6 business benefits of software modularity and cohesion&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Understand why modularity matters for scaling teams and reducing complexity in growing codebases.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../code-complexity-metrics/" &gt;Top code complexity metrics every software dev should know&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Ways to measure and track code complexity to improve maintainability.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-us-todo"&gt;&lt;a href="#watch-us-todo" class="header-anchor"&gt;&lt;/a&gt;Watch us TODO
+&lt;/h2&gt;&lt;div class="video-wrapper"&gt;
+&lt;iframe loading="lazy"
+src="https://www.youtube.com/embed/lrM3conC-L8"
+allowfullscreen
+title="YouTube Video"
+&gt;
+&lt;/iframe&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
 things. But just because an AI can work in parallel does not mean you should. The real question is: when is it worth
 multitasking, and when will it hurt your results?&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m a firm believer that humans cannot multitask. Every popular psychology book I have read, and I have read quite a
@@ -2859,7 +3040,16 @@ CI run. However, as the number of modules grows, this process can become complic
 independent can require extra thought and coordination.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;Check out our other articles in the &lt;strong&gt;technical debt&lt;/strong&gt; series. Links are at the top of this article.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../modular-monolith-attempt/" &gt;The modular monolith that wasn&amp;rsquo;t&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Check out our other articles in the &lt;strong&gt;technical debt&lt;/strong&gt; series. Links are at the top of this article.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="and-also"&gt;&lt;a href="#and-also" class="header-anchor"&gt;&lt;/a&gt;And also
+&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;Recently, examined &lt;a class="link" href="../mermaid-intro/" &gt;the 4 key Mermaid diagrams for software developers&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Previously, we &lt;a class="link" href="../go-modules-and-packages/" &gt;explained the difference between Go modules and Go packages&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
@@ -3107,8 +3297,12 @@ complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocogni
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;a class="link" href="../engineering-metrics-no-cost/" &gt;Track your team’s engineering performance with open-source tools&lt;/a&gt;&lt;br&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../engineering-metrics-no-cost/" &gt;Track your team’s engineering performance with open-source tools&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
 A step-by-step guide to setting up meaningful metrics using free-tier infrastructure—no SaaS subscriptions required.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../modular-monolith-attempt/" &gt;The modular monolith that wasn&amp;rsquo;t&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Recently, we &lt;a class="link" href="../literate-programming-lessons/" &gt;showed an example and key takeaways from literate programming&lt;/a&gt;.&lt;/p&gt;
@@ -3793,6 +3987,11 @@ below.&lt;/p&gt;
 &lt;a class="link" href="../code-complexity-metrics/" &gt;go over the top code complexity metrics every software engineer should know&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;a class="link" href="../modular-monolith-attempt/" &gt;The modular monolith that wasn&amp;rsquo;t&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="and-also"&gt;&lt;a href="#and-also" class="header-anchor"&gt;&lt;/a&gt;And also
+&lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we covered &lt;a class="link" href="../track-engineering-metrics/" &gt;how to easily track engineering metrics&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Previously, we demonstrated
 &lt;a class="link" href="../github-code-review-issues/" &gt;the most significant issues with GitHub&amp;rsquo;s code review process&lt;/a&gt;.&lt;/li&gt;
