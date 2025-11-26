@@ -13,8 +13,8 @@ A year ago I embarked on a journey to improve the architecture of our large 500K
 [device management codebase](https://github.com/fleetdm/fleet), and things haven't been quite as smooth as I'd hoped.
 
 Although I've been in tech for over 25 years, I haven't worked on large web apps before. I've spent most of my time in
-the semiconductor industry, and I've worked on a few smallish software projects. But I knew that going in. I knew that I
-wanted to learn more about software architecture, so that I could improve the developer experience.
+the semiconductor industry, working on a few smallish software projects. But I knew that going in, and I wanted to learn
+more about software architecture so that I could improve the developer experience.
 
 One of the things I did was listen to software podcasts and read books, including:
 
@@ -36,8 +36,7 @@ more modular architecture, called a modular monolith.
 
 ## Our web app architecture
 
-Our web app is a 10-year-old monolith. It's built with Go, and it's a REST API. It's built on top of a MySQL database.
-Our app is open source.
+Our web app is a 10-year-old monolith. It's a Go REST API built on top of a MySQL database.
 
 ```mermaid
 flowchart TD
@@ -48,14 +47,14 @@ flowchart TD
 The above diagram is a simplified core of our application. We have a single Go package for the API layer, which includes
 controllers (Go handlers) and service (business logic). The service layer calls the persistence layer, which constructs
 the SQL queries and executes them against our MySQL database. The API layer is one huge Go package, and the persistence
-layer is a another separate huge Go package.
+layer is another separate huge Go package.
 
 ## Evolutionary architecture proposal
 
 At one of our engineering all-hands meetings, I gave a presentation about how we could
-[scale our codebase a more modular architecture](../scaling-codebase-evolutionary-architecture). One of the core ideas
-of the presentation was that when working on a new feature, we could create a new module, a vertical slice, that would
-mirror the structure of the legacy code. The approach would be similar to microservices, but still within a single
+[scale our codebase to a more modular architecture](../scaling-codebase-evolutionary-architecture). One of the core
+ideas of the presentation was that when working on a new feature, we could create a new module, a vertical slice, that
+would mirror the structure of the legacy code. The approach would be similar to microservices, but still within a single
 compiled binary.
 
 ```mermaid
@@ -86,8 +85,8 @@ untangling the common parts so they can be reused between the legacy code and th
 I put up the PR, and it just sat there. Our guidance is to review PRs within 24 hours, but no one wanted to touch this
 one.
 
-In retrospect, I should have done a better job giving a heads up to the team that I was actually going to do what I
-proposed to the whole team. Some engineers felt surprised by the changes and didn't feel like they had a voice in the
+In retrospect, I should have done a better job communicating to the team that I was actually going to do what I
+proposed. Some engineers felt surprised by the changes and didn't feel like they had a voice in the
 approach.
 
 ## First compromise
@@ -176,7 +175,7 @@ learned from our first attempt.
 We need to have a strong commitment from the engineers and managers for the new architecture and for the specific
 architectural split we're proposing. Without this commitment, it is easy for engineers to fall back into old patterns
 and start making architectural compromises. Without a manager's commitment, it is easy for the manager to encourage
-engineers to do whatever is fastest to get the story done.
+engineers to do whatever is fastest to get the user story done.
 
 ### Better architectural governance
 
