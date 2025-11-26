@@ -9,30 +9,34 @@ tags = ["Software Architecture", "Developer Experience", "Technical Debt"]
 draft = false
 +++
 
-A year ago I embarked on a journey to improve the architecture of our large 500K+ line open source
+- [Our web app architecture](#our-web-app-architecture)
+- [Evolutionary architecture proposal](#evolutionary-architecture-proposal)
+- [Initial implementation](#initial-implementation)
+- [First compromise](#first-compromise)
+- [Second compromise](#second-compromise)
+- [Architectural drift](#architectural-drift)
+- [Lessons learned](#lessons-learned)
+
+A year ago, I embarked on a journey to improve the architecture of our large 500K+ line open source
 [device management codebase](https://github.com/fleetdm/fleet), and things haven't been quite as smooth as I'd hoped.
 
 Although I've been in tech for over 25 years, I haven't worked on large web apps before. I've spent most of my time in
-the semiconductor industry, working on a few smallish software projects. But I knew that going in, and I wanted to learn
-more about software architecture so that I could improve the developer experience.
+the semiconductor industry, working on several small software projects. However, I was aware of this going in, and I
+wanted to learn more about software architecture so that I could enhance the developer experience.
 
-One of the things I did was listen to software podcasts and read books, including:
-
-- Fundamentals of Software Architecture
-- Learning Domain-Driven Design
-- Clean Architecture
-- and many others
+To expand my knowledge, I listened to software podcasts and read books such as "Fundamentals of Software Architecture,"
+"Learning Domain-Driven Design," and "Clean Architecture," among others.
 
 The books largely agreed on [the benefits of modularity and cohesion](../software-modularity). Software should be
 modular because that makes each module less complex, and hence easier to understand and maintain. The software inside a
 module should be cohesive. In other words, the functionality of a module should belong together. Modularity is the best
-way to scale a large software project. Then, engineers can focus on work in their own modules and minimize merge
-conflicts with other engineers.
+way to scale a large software project. Then, engineers can focus on their own work in their respective modules and
+minimize merge conflicts with other engineers.
 
 This all made sense to me, and it seemed like a well-trodden path by other software projects, especially those that
-transitioned from a monolith to microservices. In our case, we were not going to transition to microservices, because
-our customers needed to run our server on-prem, and we wanted to keep deployments simple. But we could transition to a
-more modular architecture, called a modular monolith.
+transitioned from a monolith to microservices. In our case, we did not plan to transition to microservices because our
+customers required us to run our server on-premises, and we wanted to keep deployments simple. However, we could
+transition to a more modular architecture, known as a modular monolith.
 
 ## Our web app architecture
 
@@ -72,17 +76,17 @@ flowchart TD
 ```
 
 The presentation seemed to go well, with general agreement. One comment was along the lines of "won't we have to redo
-the architecture every time we reorganize our team structure?" The answer is maybe. The vertical slices have to make
-sense from the product perspective. Also, the vertical slices can be small enough that a single team can own multiple
-slices. If an engineering team splits in two, they can split their slices between them. If the team had one big slice,
-then it makes sense to split that slice into two or more smaller slices.
+the architecture every time we reorganize our team structure?" The answer is maybe. The vertical slices must make sense
+from a product perspective. Also, the vertical slices can be small enough that a single team can own multiple slices. If
+an engineering team splits into two, they can split their slices between them. If the team had one big slice, then it
+makes sense to split that slice into two or more smaller slices.
 
 ## Initial implementation
 
-We started working on a new feature, which seemed like an ideal candidate to try the new approach. The feature was
-supporting Android MDM (Mobile Device Management). It would be a new platform with a new API. I did the work of creating
-the new structure for the Android feature. I created new packages in a dedicated directory. Most of the work was
-untangling the common parts so they can be reused between the legacy code and the new feature.
+We started working on a new feature, which seemed like an ideal candidate to try the new approach. The feature supported
+Android MDM (Mobile Device Management). It would be a new platform for us with a new API. I created the new structure
+for the Android feature. I created new packages in a dedicated directory. Most of the work was untangling the common
+parts so they could be reused between the legacy code and the new feature.
 
 I put up the PR, and it just sat there. Our guidance is to review PRs within 24 hours, but no one wanted to touch this
 one.
@@ -110,7 +114,7 @@ flowchart TD
   B --> C
 ```
 
-After some long conversations with the PR reviewer, and a few smaller changes, we merged the PR.
+After several lengthy conversations with the PR reviewer and a few minor adjustments, we merged the PR.
 
 ## Second compromise
 
@@ -125,7 +129,7 @@ Engineers voiced their concerns, which included:
 - With separate persistence layers, it will be much harder to do DB transactions across the two layers.
 - This change is too big. Let's try something incremental, like splitting the API layer only.
 
-So, I backed out the changes to the persistence layer.
+So, I reverted the persistence layer changes.
 
 ```mermaid
 flowchart TD
@@ -143,8 +147,8 @@ flowchart TD
 ## Architectural drift
 
 I moved to another product team, where I worked on other parts of the codebase, and other engineers continued to work on
-Android. Without architectural oversight and strong commitment from the engineering team, the Android feature seeped
-into the legacy code.
+the Android part of the codebase. Without architectural oversight and strong commitment from the engineering team, the
+Android feature seeped into the legacy code.
 
 ```mermaid
 flowchart TD
@@ -158,27 +162,27 @@ flowchart TD
   E --> D
 ```
 
-So, what do we have now? Certainly, at a high level, the codebase doesn't look very modular. Arguably, it is even more
-complex and harder to maintain than it was before. There is no clear separation between the legacy code and the Android
-feature.
+So, what do we have now? Certainly, at a high level, the codebase doesn't appear to be very modular. Arguably, it is
+even more complex and harder to maintain than it was before. There is no clear separation between the legacy code and
+the Android feature.
 
 But it's not all bad news. Some positives remain:
 
 - Most Android-specific controllers are in a separate package, which makes them easier to change and reason about.
-- Some Android-specific code is now in a separate package, which speeds up development and testing in that package.
+- Some Android-specific code is now isolated, which accelerates development and testing within that package.
 - We broke apart some common code out of the legacy package, which makes it easier to create new API layers.
 
 ## Lessons learned
 
-We will continue our modularization efforts, and we will continue to improve our architecture. Let's sum up what we've
-learned from our first attempt.
+We will continue our efforts to modularize and further improve our architecture. Let's sum up what we've learned from
+our first attempt.
 
-### Team buy in
+### Team buy-in
 
-We need to have a strong commitment from the engineers and managers for the new architecture and for the specific
-architectural split we're proposing. Without this commitment, it is easy for engineers to fall back into old patterns
-and start making architectural compromises. Without a manager's commitment, it is easy for the manager to encourage
-engineers to do whatever is fastest to get the user story done.
+We need a strong commitment from the engineers and managers to the new architecture and the specific architectural split
+we're proposing. Without this commitment, it is easy for engineers to revert to old patterns and begin making
+architectural compromises. Without a manager's commitment, it is easy for the manager to encourage engineers to complete
+the user story as quickly as possible without regard for the architecture.
 
 ### Better architectural governance
 
@@ -187,8 +191,8 @@ new architecture. We plan on investigating [arch-go](https://github.com/arch-go/
 see many off-the-shelf tools for architectural governance of Go projects, we'll have to build our own as well.
 
 In addition to automated checks, it makes sense for the architect to regularly review the codebase as a whole and
-related PRs to catch any deviations from the architecture. With today's AI agents, it should be easy to make a prompt
-for the AI agent to do this analysis.
+related PRs to catch any deviations from the architecture. With today's AI agents, it should be straightforward to
+create a prompt for the AI agent to perform this analysis.
 
 ### Controllers must access multiple services
 
@@ -197,8 +201,8 @@ multiple services. In our case, an Android controller may need to access both th
 Android service. And similarly for a legacy controller. Hence, both the legacy and the new API layers must have
 interface handles to each other.
 
-The important thing is to assign the ownership of the API endpoint to a specific module, and to a specific team. Even
-though the API endpoint may largely be an orchestrator, it is important to know what module it belongs to.
+The important thing is to assign ownership of the API endpoint to a specific module and a specific team. Although the
+API endpoint may primarily serve as an orchestrator, it is essential to determine which module it belongs to.
 
 ## Further reading
 
@@ -210,6 +214,6 @@ though the API endpoint may largely be an orchestrator, it is important to know 
 
 ## Watch us TODO
 
-{{< youtube TODO >}}
+{{< youtube lrM3conC-L8 >}}
 
 _Note:_ If you want to comment on this article, please do so on the YouTube video.
