@@ -212,7 +212,7 @@ API endpoint may primarily serve as an orchestrator, it is essential to determin
 - **[Top code complexity metrics every software dev should know](../code-complexity-metrics/)**  
   Ways to measure and track code complexity to improve maintainability.
 
-## Watch us TODO
+## Watch us discuss our modular monolith attempt
 
 {{< youtube lrM3conC-L8 >}}
 
