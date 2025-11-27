@@ -170,7 +170,7 @@ Understand why modularity matters for scaling teams and reducing complexity in g
 Ways to measure and track code complexity to improve maintainability.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id="watch-us-todo"&gt;&lt;a href="#watch-us-todo" class="header-anchor"&gt;&lt;/a&gt;Watch us TODO
+&lt;h2 id="watch-us-discuss-our-modular-monolith-attempt"&gt;&lt;a href="#watch-us-discuss-our-modular-monolith-attempt" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss our modular monolith attempt
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
 &lt;iframe loading="lazy"
 src="https://www.youtube.com/embed/lrM3conC-L8"
@@ -402,6 +402,7 @@ title: The hidden work iceberg
 ---
 graph TD
 subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
+direction TB
 Spacer1[&amp;#34; &amp;#34;]
 A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
 A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
