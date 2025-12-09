@@ -28,17 +28,22 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**XtremeJS 2025**  
-**Date:** December 2, 2025  
-**Location:** Online  
-**Session:** HTTP Message Signatures Demystified: Stronger Security for JavaScript
-
 **CodeMash 2026**  
 **Dates:** January 13-16, 2026  
 **Location:** Sandusky, Ohio  
 **Session:** Evolutionary Architecture: Turning a Layered Monolith into a Modular Future
 
+**FOSDEM 2026**  
+**Dates:** January 31-February 1, 2026  
+**Location:** Brussels, Belgium  
+**Session:** An Endpoint Telemetry Blueprint for Security Teams
+
 ## Past speaking engagements
+
+**XtremeJS 2025**  
+**Date:** December 2, 2025  
+**Location:** Online  
+**Session:** [HTTP Message Signatures Demystified: Stronger Security for JavaScript](https://www.youtube.com/watch?v=6QxkfPy0k4U)
 
 **Heartland Developers Conference 2025**  
 **Dates:** September 30-October 1, 2025  
