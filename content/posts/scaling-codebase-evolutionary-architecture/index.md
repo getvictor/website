@@ -155,6 +155,11 @@ In the next article of this **technical debt** series, we
 
 ## Further reading
 
+- **[The modular monolith that wasn't](../modular-monolith-attempt/)**  
+  A real-world account of attempting to modularize a 500K-line codebase and the lessons learned.
+
+### And also
+
 - Recently, we covered [how to easily track engineering metrics](../track-engineering-metrics/).
 - Previously, we demonstrated
   [the most significant issues with GitHub's code review process](../github-code-review-issues/).

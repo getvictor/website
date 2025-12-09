@@ -92,6 +92,7 @@ title: The hidden work iceberg
 ---
 graph TD
     subgraph Above["🌊 Above water<br/>What management sees"]
+        direction TB
         Spacer1[" "]
         A1["Weekly Status Updates<br/>✓ 'Working on it'"]
         A2["Sprint Deliverables<br/>✓ 'In progress'"]
