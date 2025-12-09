@@ -337,17 +337,24 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../mtls-hello-world/" &gt;Mutual TLS intro and hands-on example: mTLS Hello World&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;A quick and practical
-introduction to mutual TLS (mTLS), including how client certificate authentication works and how to try it with a
-simple example.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../http-message-signatures/" &gt;HTTP message signatures&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Explore RFC 9421 for securing API requests with cryptographic signatures. See how industry leaders implement message
+signing and learn practical strategies for key distribution and replay attack prevention.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../mtls-vs-http-signature/" &gt;Comparing mTLS and HTTP signatures&lt;/a&gt;&lt;/strong&gt; A practical guide to securing HTTP requests with
-transport-layer or application-layer authentication.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../mtls-hello-world/" &gt;Mutual TLS intro and hands-on example: mTLS Hello World&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A quick and practical introduction to mutual TLS (mTLS), including how client certificate authentication works and how
+to try it with a simple example.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../why-you-need-vlan/" &gt;What is a VLAN and why you need it in your home network&lt;/a&gt;&lt;/strong&gt; &lt;em&gt;Learn how VLANs isolate devices
-to improve home network security and what you need to configure on your router, switch, and access points.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../mtls-vs-http-signature/" &gt;Comparing mTLS and HTTP signatures&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A practical guide to securing HTTP requests with transport-layer or application-layer authentication. Understand the
+tradeoffs between connection-level and message-level security approaches.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../why-you-need-vlan/" &gt;What is a VLAN and why you need it in your home network&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Learn how VLANs isolate devices to improve home network security and what you need to configure on your router,
+switch, and access points.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm"&gt;&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor"&gt;&lt;/a&gt;Watch the explanation of securing private keys with TPM
@@ -507,6 +514,8 @@ connect to an mTLS server with applications that use the Windows certificate sto
 with the Windows certificate store to store the mTLS certificates and keys.&lt;/p&gt;
 &lt;h3 id="mtls-vs-http-signature-faceoff-securing-your-apis"&gt;&lt;a href="#mtls-vs-http-signature-faceoff-securing-your-apis" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="../mtls-vs-http-signature/" &gt;mTLS vs HTTP signature faceoff: securing your APIs&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;Where do mTLS and HTTP message signatures fit, and how to choose the right one for your architecture.&lt;/p&gt;
+&lt;h3 id="http-message-signatures"&gt;&lt;a href="#http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="../http-message-signatures/" &gt;HTTP message signatures&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;A comprehensive guide to RFC 9421 covering technical implementation details, real-world adoption by OpenAI and Cloudflare, performance considerations, and practical defense strategies against replay attacks.&lt;/p&gt;
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist"&gt;&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor"&gt;&lt;/a&gt;Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3&gt;
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"&gt;

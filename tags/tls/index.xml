@@ -204,8 +204,16 @@ application-level verification.&lt;/li&gt;
 &lt;p&gt;Different tools for different jobs. Just don&amp;rsquo;t skip authentication.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;a class="link" href="../how-to-use-tpm/" &gt;Using TPM 2.0 for secure key storage&lt;/a&gt; Store private keys in hardware to protect API credentials,
-signing keys, and more.&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../http-message-signatures/" &gt;HTTP message signatures&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Deep dive into RFC 9421 with practical implementation guidance. Understand how HTTP message signatures work, when to
+use them, and see real-world examples from OpenAI, Cloudflare, and Mastodon.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../how-to-use-tpm/" &gt;Using TPM 2.0 for secure key storage&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Store private keys in hardware to protect API credentials, signing keys, and more. Learn how to leverage TPM modules
+for hardware-backed cryptographic operations.&lt;/p&gt;
+&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-compare-mtls-and-http-message-signatures"&gt;&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;Watch us compare mTLS and HTTP message signatures
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
@@ -243,6 +251,8 @@ connect to an mTLS server with applications that use the Windows certificate sto
 with the Windows certificate store to store the mTLS certificates and keys.&lt;/p&gt;
 &lt;h3 id="mtls-vs-http-signature-faceoff-securing-your-apis"&gt;&lt;a href="#mtls-vs-http-signature-faceoff-securing-your-apis" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="../mtls-vs-http-signature/" &gt;mTLS vs HTTP signature faceoff: securing your APIs&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;Where do mTLS and HTTP message signatures fit, and how to choose the right one for your architecture.&lt;/p&gt;
+&lt;h3 id="http-message-signatures"&gt;&lt;a href="#http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="../http-message-signatures/" &gt;HTTP message signatures&lt;/a&gt;
+&lt;/h3&gt;&lt;p&gt;A comprehensive guide to RFC 9421 covering technical implementation details, real-world adoption by OpenAI and Cloudflare, performance considerations, and practical defense strategies against replay attacks.&lt;/p&gt;
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist"&gt;&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor"&gt;&lt;/a&gt;Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3&gt;
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"&gt;
