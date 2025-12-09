@@ -2,8 +2,8 @@
 title = "Understanding HTTP message signatures: A developer's guide"
 description = "Master HTTP message signatures for API security. Learn the RFC 9421 standard, see real implementations from industry leaders, and get practical Node.js code examples"
 authors = ["Victor Lyuboslavsky"]
-image = "TODO"
-date = 2025-10-23
+image = "http-message-signatures.png"
+date = 2025-12-09
 categories = ["Security", "Software Development"]
 tags = ["Application Security", "mTLS", "JWT", "HTTP Message Signatures"]
 draft = false
