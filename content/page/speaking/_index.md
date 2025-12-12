@@ -36,7 +36,9 @@ and leaders think like builders of resilient companies.
 **FOSDEM 2026**  
 **Dates:** January 31-February 1, 2026  
 **Location:** Brussels, Belgium  
-**Session:** An Endpoint Telemetry Blueprint for Security Teams
+**Sessions:**  
+An Endpoint Telemetry Blueprint for Security Teams  
+Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
 
 ## Past speaking engagements
 
