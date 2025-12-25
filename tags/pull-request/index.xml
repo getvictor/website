@@ -43,7 +43,7 @@ alt="List of files, with code owners showing when hovering over the blue icon ne
 &lt;/ul&gt;
 &lt;p&gt;From the top directory containing your git repository, run the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;&lt;/span&gt;| xargs codeowners | tr -s &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | cut -f2- -d &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | sort -u
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| xargs codeowners | tr -s &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | cut -f2- -d &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | sort -u
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where &lt;code&gt;$MY_PR_NUMBER&lt;/code&gt; is the number of your pull request.&lt;/p&gt;
 &lt;p&gt;The first part of the command, &lt;code&gt;gh pr view $MY_PR_NUMBER --json files&lt;/code&gt;, gets the list of changed files in the pull
 request in JSON format. The second part, &lt;code&gt;jq -r '.files[] .path'&lt;/code&gt;, extracts the file paths from the JSON. The third
