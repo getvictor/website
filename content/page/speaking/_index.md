@@ -31,7 +31,7 @@ and leaders think like builders of resilient companies.
 **CodeMash 2026**  
 **Dates:** January 13-16, 2026  
 **Location:** Sandusky, Ohio  
-**Session:** Evolutionary Architecture: Turning a Layered Monolith into a Modular Future
+**Session:** Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
 
 **FOSDEM 2026**  
 **Dates:** January 31-February 1, 2026  
@@ -39,6 +39,16 @@ and leaders think like builders of resilient companies.
 **Sessions:**  
 An Endpoint Telemetry Blueprint for Security Teams  
 Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
+
+**NDC Security 2026**  
+**Dates:** March 2-5, 2026  
+**Location:** Oslo, Norway  
+**Session:** How to Know Your Client Is Real: Hardware-Backed Authentication Patterns
+
+**SCALE 23x**  
+**Dates:** March 5-8, 2026  
+**Location:** Pasadena, California  
+**Session:** Why Engineers Work on the Wrong Things and How Transparency Fixes It
 
 ## Past speaking engagements
 
