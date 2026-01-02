@@ -31,14 +31,14 @@ and leaders think like builders of resilient companies.
 **CodeMash 2026**  
 **Dates:** January 13-16, 2026  
 **Location:** Sandusky, Ohio  
-**Session:** Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
+**Session:** Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 **FOSDEM 2026**  
 **Dates:** January 31-February 1, 2026  
 **Location:** Brussels, Belgium  
 **Sessions:**  
 An Endpoint Telemetry Blueprint for Security Teams  
-Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
+Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 **NDC Security 2026**  
 **Dates:** March 2-5, 2026  
@@ -49,6 +49,12 @@ Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
 **Dates:** March 5-8, 2026  
 **Location:** Pasadena, California  
 **Session:** Why Engineers Work on the Wrong Things and How Transparency Fixes It
+
+**CodeStock 2026**  
+**Dates:** April 9-10, 2026  
+**Location:** Knoxville, Tennessee  
+**Sessions:** Shift Observability Left: Why It Starts in Dev  
+Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 ## Past speaking engagements
 
