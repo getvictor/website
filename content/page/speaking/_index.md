@@ -53,7 +53,8 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **CodeStock 2026**  
 **Dates:** April 9-10, 2026  
 **Location:** Knoxville, Tennessee  
-**Sessions:** Shift Observability Left: Why It Starts in Dev  
+**Sessions:**  
+Shift Observability Left: Why It Starts in Dev  
 Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 ## Past speaking engagements
