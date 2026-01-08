@@ -57,6 +57,11 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 Shift Observability Left: Why It Starts in Dev  
 Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
+**Arc of AI 2026**  
+**Dates:** April 13-16, 2026  
+**Location:** Austin, Texas  
+**Session:** Will AI Coding Agents Replace Software Developers?
+
 ## Past speaking engagements
 
 **XtremeJS 2025**  
