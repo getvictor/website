@@ -13,6 +13,8 @@ menu:
 
 {{< figure src="speaking-headline.png" alt="Victor giving keynote" >}}
 
+[Upcoming](#upcoming-speaking-engagements) | [Past](#past-speaking-engagements) | [Topics](#speaking-topics) | [Contact](#contact-for-speaking-engagements)
+
 ## Bio
 
 Victor Lyuboslavsky is a software engineering leader, author, and international speaker with over 25 years of experience
@@ -60,7 +62,12 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Arc of AI 2026**  
 **Dates:** April 13-16, 2026  
 **Location:** Austin, Texas  
-**Session:** Will AI Coding Agents Replace Software Developers?
+**Session:** Don’t Let AI Trash Your Codebase
+
+**NDC Toronto 2026**  
+**Dates:** May 5-8, 2026  
+**Location:** Toronto, Canada  
+**Session:** Don’t Let AI Trash Your Codebase
 
 ## Past speaking engagements
 
