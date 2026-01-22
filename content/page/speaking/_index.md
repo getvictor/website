@@ -13,7 +13,8 @@ menu:
 
 {{< figure src="speaking-headline.png" alt="Victor giving keynote" >}}
 
-[Upcoming](#upcoming-speaking-engagements) | [Past](#past-speaking-engagements) | [Topics](#speaking-topics) | [Contact](#contact-for-speaking-engagements)
+[Upcoming](#upcoming-speaking-engagements) | [Past](#past-speaking-engagements) | [Topics](#speaking-topics) |
+[Contact](#contact-for-speaking-engagements)
 
 ## Bio
 
@@ -29,11 +30,6 @@ Whether speaking on AI's role in development, scaling architectures, or leading 
 and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
-
-**CodeMash 2026**  
-**Dates:** January 13-16, 2026  
-**Location:** Sandusky, Ohio  
-**Session:** Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 **FOSDEM 2026**  
 **Dates:** January 31-February 1, 2026  
@@ -70,6 +66,11 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Session:** Don’t Let AI Trash Your Codebase
 
 ## Past speaking engagements
+
+**CodeMash 2026**  
+**Dates:** January 13-16, 2026  
+**Location:** Sandusky, Ohio  
+**Session:** [Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain](https://www.youtube.com/watch?v=v35RdwNVEeg)
 
 **XtremeJS 2025**  
 **Date:** December 2, 2025  
