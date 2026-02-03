@@ -31,12 +31,10 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**FOSDEM 2026**  
-**Dates:** January 31-February 1, 2026  
-**Location:** Brussels, Belgium  
-**Sessions:**  
-An Endpoint Telemetry Blueprint for Security Teams  
-Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
+**IntelliC0N 2026**  
+**Dates:** February 5-6, 2026  
+**Location:** Austin, Texas  
+**Session:** Open Source Endpoint Telemetry Blueprint: From Collection to Threat Intelligence
 
 **NDC Security 2026**  
 **Dates:** March 2-5, 2026  
@@ -66,6 +64,13 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Session:** Don’t Let AI Trash Your Codebase
 
 ## Past speaking engagements
+
+**FOSDEM 2026**  
+**Dates:** January 31-February 1, 2026  
+**Location:** Brussels, Belgium  
+**Sessions:**  
+An Endpoint Telemetry Blueprint for Security Teams  
+[Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain](https://video.fosdem.org/2026/ub5132/MCH3DR-go-modular-monolith-refactoring.av1.webm)
 
 **CodeMash 2026**  
 **Dates:** January 13-16, 2026  
