@@ -15,10 +15,10 @@ the built-in macOS installer. This custom installer can provide additional featu
 &lt;/h2&gt;&lt;p&gt;The &lt;code&gt;pkgbuild&lt;/code&gt; command is a command-line tool included with macOS. It allows you to create macOS install packages from
 the command line.&lt;/p&gt;
 &lt;p&gt;First, create a directory for your script files:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir Scripts
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir Scripts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create a script file in the above directory called &lt;code&gt;postinstall&lt;/code&gt; that contains the script you want to run. Below is an
 example script for testing:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# installer script variables:&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# $0 = path to the script&lt;/span&gt;
@@ -42,15 +42,15 @@ example script for testing:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exit &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above script creates a directory &lt;code&gt;/opt/hello&lt;/code&gt; and writes various script variables to a file &lt;code&gt;/opt/hello/hello.txt&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Make sure the script is executable:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x Scripts/postinstall
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x Scripts/postinstall
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create the installation package using the &lt;code&gt;pkgbuild&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkgbuild --nopayload --scripts Scripts --identifier com.victoronsoftware.pkgbuild-demo --version 1.0 PkgbuildDemo.pkg
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkgbuild --nopayload --scripts Scripts --identifier com.victoronsoftware.pkgbuild-demo --version 1.0 PkgbuildDemo.pkg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command creates an install package &lt;code&gt;PkgbuildDemo.pkg&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;--nopayload&lt;/code&gt; flag tells &lt;code&gt;pkgbuild&lt;/code&gt; that there are no application files to include in the package. The &lt;code&gt;--scripts&lt;/code&gt;
 flag specifies the directory containing the scripts to run during the installation. The scripts directory may also
 contain additional files needed by the script.&lt;/p&gt;
 &lt;p&gt;At this point, you can try installing the package on a test macOS system:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo installer -pkg PkgbuildDemo.pkg -target /
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo installer -pkg PkgbuildDemo.pkg -target /
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-a-script-only-install-package-using-the-packages-app"&gt;&lt;a href="#create-a-script-only-install-package-using-the-packages-app" class="header-anchor"&gt;&lt;/a&gt;Create a script-only install package using the Packages app
 &lt;/h2&gt;&lt;p&gt;One popular GUI tool for creating macOS installer packages is the
 &lt;a class="link" href="http://s.sudre.free.fr/Software/Packages/about.html" target="_blank" rel="noopener"
@@ -79,7 +79,7 @@ alt="Suspicious Package app showing the contents of the postinstall script."&gt;
 &lt;p&gt;To sign the package, you need a Developer ID Installer certificate. The Apple Developer Program currently costs 99 USD
 per membership year. To sign your package, place the certificate and corresponding private key (together called an
 &amp;ldquo;identity&amp;rdquo;) into your keychain. Then, you can sign the package using the &lt;code&gt;productsign&lt;/code&gt; command-line utility:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;productsign --sign &lt;span style="color:#e6db74"&gt;&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span&gt; ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;productsign --sign &lt;span style="color:#e6db74"&gt;&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span&gt; ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can notarize your package with Apple using the &lt;code&gt;notarytool&lt;/code&gt; command-line utility. For more information, see
 &lt;a class="link" href="https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution?language=objc" target="_blank" rel="noopener"
 &gt;Notarizing macOS software before distribution&lt;/a&gt;.&lt;/p&gt;
@@ -116,7 +116,7 @@ technology.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;We will create a simple Hello World program using the Go programming language for this example.&lt;/p&gt;
 &lt;p&gt;With Go installed, we can build our program using the &lt;code&gt;go build&lt;/code&gt; command. For example, given the source code in
 &lt;code&gt;main.go&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -124,7 +124,7 @@ technology.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;hello world&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can build the program for Windows using:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;GOOS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;windows GOARCH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;amd64 go build -o hello-world.exe main.go
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;GOOS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;windows GOARCH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;amd64 go build -o hello-world.exe main.go
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="download-and-install-inno-setup"&gt;&lt;a href="#download-and-install-inno-setup" class="header-anchor"&gt;&lt;/a&gt;Download and install Inno Setup
 &lt;/h2&gt;&lt;p&gt;We will need to use a Windows machine to create an EXE installer.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://www.jrsoftware.org/isinfo.php" target="_blank" rel="noopener"

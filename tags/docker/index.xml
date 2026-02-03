@@ -17,7 +17,7 @@ the exposure of database credentials.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;We can run a MySQL database in a Docker container using the
 &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
 &gt;official MySQL Docker image&lt;/a&gt;. We create &lt;code&gt;docker-compose.yml&lt;/code&gt; like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [
@@ -33,14 +33,14 @@ the exposure of database credentials.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;3306:3306&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And we run &lt;code&gt;docker-compose up&lt;/code&gt; to start the MySQL database.&lt;/p&gt;
 &lt;p&gt;We can access the MySQL database by using the MySQL client:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql -h 127.0.0.1 -P &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt; -uroot -ptoor
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql -h 127.0.0.1 -P &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt; -uroot -ptoor
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we can see, the passwords are stored in plain text in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file. We want to avoid storing
 sensitive data in plain text.&lt;/p&gt;
 &lt;h2 id="securing-database-secrets-with-docker-secrets"&gt;&lt;a href="#securing-database-secrets-with-docker-secrets" class="header-anchor"&gt;&lt;/a&gt;Securing database secrets with Docker secrets
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.docker.com/compose/use-secrets/" target="_blank" rel="noopener"
 &gt;Docker secrets&lt;/a&gt; allow us to store sensitive data, such as passwords,
 securely. We can create secrets and use them in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;secrets&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;secrets&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql_root_password&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;file&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./mysql_root_password.txt&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql_password&lt;/span&gt;:
@@ -73,7 +73,7 @@ the &lt;code&gt;ps&lt;/code&gt; command, like: &lt;code&gt;ps eww &amp;lt;docker
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="securing-database-secrets-with-sql-commands"&gt;&lt;a href="#securing-database-secrets-with-sql-commands" class="header-anchor"&gt;&lt;/a&gt;Securing database secrets with SQL commands
 &lt;/h2&gt;&lt;p&gt;To secure the MySQL database without exposing the secrets on the server, we can use MySQL commands to set the passwords.
 We spin up MySQL with the following &lt;code&gt;docker-compose.yml&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [

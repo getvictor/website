@@ -24,7 +24,7 @@ access to the following keychains from the above list:</p><pre tabindex=0><code>
 </code></pre><p>Root certificates are missing. And the APSD (Apple Push Service Daemon) keychain is missing, which is used for device
 management, among other things.</p><p>So, how can app developers and IT professionals continue to have access to ALL of these keychain files?</p><p>One way is to continue using deprecated APIs until they stop working. We recommend making a secure copy of the keychain
 files before accessing them with the APIs.</p><p>Another option is to use the macOS <a class=link href=https://ss64.com/osx/security.html target=_blank rel=noopener>security</a> command line tool. For example, to
-list root certificates, do the following:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
+list root certificates, do the following:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
 </span></span></code></pre></div><p>A third, and hardest, option is to parse the
 <a class=link href=https://github.com/libyal/dtformats/blob/main/documentation/MacOS%20keychain%20database%20file%20format.asciidoc target=_blank rel=noopener>keychain files</a>
 yourself. Some details on the keychain format are available. Please leave a comment if you or someone else has created a

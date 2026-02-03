@@ -48,7 +48,7 @@ provides context when debugging.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In our TODO app, we recorded request and response bodies as events:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -63,12 +63,12 @@ alt="SigNoz showing API request and response bodies as events in a trace span"&g
 &lt;/h2&gt;&lt;p&gt;Database queries often cause performance bottlenecks. OpenTelemetry captures both query timing and the actual SQL
 executed.&lt;/p&gt;
 &lt;p&gt;Standard instrumentation shows parameterized queries:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
 alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
 &lt;/figure&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = ? AND status = ?&amp;#34;&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement.formatted&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = 123 AND status = &amp;#39;active&amp;#39;&amp;#34;&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
@@ -89,7 +89,7 @@ incoming requests.&lt;/p&gt;
 alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/figure&gt;
 &lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Before making the request&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Before making the request&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Int&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;size&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;requestBody&lt;/span&gt;)),
@@ -129,7 +129,7 @@ the branches and leaves.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In our TODO app, we inject trace context into all log entries:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;With&lt;/span&gt;(
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;logger&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;log&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;With&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;trace_id&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpanContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;TraceID&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;span_id&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SpanContext&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;SpanID&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;)
@@ -155,7 +155,7 @@ alt="SigNoz showing errors"&gt;
 &lt;/ol&gt;
 &lt;p&gt;This propagation helps identify error origins and their path through application layers.&lt;/p&gt;
 &lt;p&gt;Example error instrumentation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Simple error recording&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Simple error recording&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;RecordError&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetStatus&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;codes&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Error&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Error&lt;/span&gt;())
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -442,7 +442,7 @@ CloudFront uses to verify signed URLs.&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Use OpenSSL to generate a private key and a public key:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl genrsa -out private_key.pem &lt;span style="color:#ae81ff"&gt;2048&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl genrsa -out private_key.pem &lt;span style="color:#ae81ff"&gt;2048&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl rsa -pubout -in private_key.pem -out public_key.pem
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
 &lt;li&gt;Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
@@ -465,7 +465,7 @@ CloudFront uses to verify signed URLs.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;Now, the CloudFront URL will only serve content to users using a signed URL with the private key. Accessing content
 without a signed URL will result in an access denied 403 error.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;Error&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;Error&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;Code&amp;gt;&lt;/span&gt;MissingKey&lt;span style="color:#f92672"&gt;&amp;lt;/Code&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;Message&amp;gt;&lt;/span&gt;Missing Key-Pair-Id query parameter or cookie value&lt;span style="color:#f92672"&gt;&amp;lt;/Message&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/Error&amp;gt;&lt;/span&gt;
@@ -475,12 +475,12 @@ without a signed URL will result in an access denied 403 error.&lt;/p&gt;
 &gt;examples for several languages&lt;/a&gt;.
 We will show an example using the Go SDK.&lt;/p&gt;
 &lt;p&gt;In a new directory, create a Go project and add the AWS SDK as a dependency:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod init cloudfront-signed-urls
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod init cloudfront-signed-urls
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go get github.com/aws/aws-sdk-go-v2/feature/cloudfront/sign@v1.8.3
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Copy the &lt;code&gt;private_key.pem&lt;/code&gt; file to the project directory and create a new Go file with the following code:&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/7ace01fbf8ef160517cd6cd74a551b20.js"&gt;&lt;/script&gt;
 &lt;p&gt;Run the Go program to generate a signed URL:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672"&gt;=&lt;/span&gt;1736178766&amp;amp;Signature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;K1HFGXOMBB6TFF
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;2025/01/06 08:52:46 Signed URL: https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires&lt;span style="color:#f92672"&gt;=&lt;/span&gt;1736178766&amp;amp;Signature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id&lt;span style="color:#f92672"&gt;=&lt;/span&gt;K1HFGXOMBB6TFF
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The signed URL will expire in 1 hour.&lt;/p&gt;
 &lt;h2 id="potential-issues"&gt;&lt;a href="#potential-issues" class="header-anchor"&gt;&lt;/a&gt;Potential issues
 &lt;/h2&gt;&lt;ul&gt;
@@ -535,7 +535,7 @@ configure the agent&amp;rsquo;s behavior.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;launchd&lt;/code&gt; uses property list (&lt;code&gt;.plist&lt;/code&gt;) files to define the configuration of agents and daemons. These files specify the
 program to run, the arguments to pass, the environment variables to set, and other settings.&lt;/p&gt;
 &lt;p&gt;Here is an example of a &lt;code&gt;.plist&lt;/code&gt; file for a launchd daemon:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;plist&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;version=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
@@ -613,16 +613,16 @@ program to run, the arguments to pass, the environment variables to set, and oth
 &lt;h3 id="how-to-view-the-contents-of-a-plist-file"&gt;&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor"&gt;&lt;/a&gt;How to view the contents of a &lt;code&gt;.plist&lt;/code&gt; file
 &lt;/h3&gt;&lt;p&gt;&lt;code&gt;.plist&lt;/code&gt; files come in several formats, including binary, XML, and JSON.&lt;/p&gt;
 &lt;p&gt;You can view the contents of a &lt;code&gt;.plist&lt;/code&gt; file using the &lt;code&gt;plutil&lt;/code&gt; (property list utility) command. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;plutil -p /System/Library/LaunchDaemons/com.apple.analyticsd.plist
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;plutil -p /System/Library/LaunchDaemons/com.apple.analyticsd.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;plutil&lt;/code&gt; can also convert between different &lt;code&gt;.plist&lt;/code&gt; formats. For example, to convert a binary &lt;code&gt;.plist&lt;/code&gt; file to XML,
 run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp /System/Library/LaunchDaemons/com.apple.analyticsd.plist my.plist
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp /System/Library/LaunchDaemons/com.apple.analyticsd.plist my.plist
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;plutil -convert xml1 my.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="can-i-use-a-plist-file-for-cron-like-scheduling"&gt;&lt;a href="#can-i-use-a-plist-file-for-cron-like-scheduling" class="header-anchor"&gt;&lt;/a&gt;Can I use a &lt;code&gt;.plist&lt;/code&gt; file for cron-like scheduling?
 &lt;/h3&gt;&lt;p&gt;Yes, you can use &lt;code&gt;launchd&lt;/code&gt; to schedule tasks in a &lt;code&gt;.plist&lt;/code&gt; file. &lt;code&gt;launchd&lt;/code&gt; is the recommended alternative to &lt;code&gt;cron&lt;/code&gt; on
 macOS. The &lt;code&gt;StartCalendarInterval&lt;/code&gt; key specifies when the task should run. For example, to run a task every day at 5 AM,
 you can add the following to your &lt;code&gt;.plist&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StartCalendarInterval&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StartCalendarInterval&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Hour&lt;span style="color:#f92672"&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;integer&amp;gt;&lt;/span&gt;5&lt;span style="color:#f92672"&gt;&amp;lt;/integer&amp;gt;&lt;/span&gt;
@@ -636,27 +636,27 @@ started it. The process should be a child of &lt;code&gt;launchd&lt;/code&gt;.&l
 agents and daemons started by the user, while the &lt;code&gt;sudo launchctl list&lt;/code&gt; lists all agents and daemons started by the
 system.&lt;/p&gt;
 &lt;p&gt;For example, to find the identifier of the process with PID &lt;code&gt;62303&lt;/code&gt;, run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt; /usr/bin/sudo launchctl list; launchctl list &lt;span style="color:#f92672"&gt;)&lt;/span&gt; | grep &lt;span style="color:#ae81ff"&gt;62303&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt; /usr/bin/sudo launchctl list; launchctl list &lt;span style="color:#f92672"&gt;)&lt;/span&gt; | grep &lt;span style="color:#ae81ff"&gt;62303&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output will show the identifier, such as:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;62303 0 com.fleetdm.orbit
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can now look in the standard locations for the &lt;code&gt;com.fleetdm.orbit.plist&lt;/code&gt; file. Alternatively, you can use the
 &lt;code&gt;launchctl dumpstate&lt;/code&gt; command to dump the state of all launchd jobs, including the &lt;code&gt;.plist&lt;/code&gt; files that started them. For
 example, in a macOS system with Fleet&amp;rsquo;s orbit running, you can run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;launchctl dumpstate | grep -B &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -A &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt; -E &lt;span style="color:#e6db74"&gt;&amp;#34;active count = [1-9]&amp;#34;&lt;/span&gt; | grep com.fleetdm.orbit
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;launchctl dumpstate | grep -B &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; -A &lt;span style="color:#ae81ff"&gt;4&lt;/span&gt; -E &lt;span style="color:#e6db74"&gt;&amp;#34;active count = [1-9]&amp;#34;&lt;/span&gt; | grep com.fleetdm.orbit
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And the output will show the path to the &lt;code&gt;.plist&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;system/com.fleetdm.orbit &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;system/com.fleetdm.orbit &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;{&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; path &lt;span style="color:#f92672"&gt;=&lt;/span&gt; /Library/LaunchDaemons/com.fleetdm.orbit.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can now view the contents of the &lt;code&gt;.plist&lt;/code&gt; file to understand how the process was started.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;plutil -p /Library/LaunchDaemons/com.fleetdm.orbit.plist
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;plutil -p /Library/LaunchDaemons/com.fleetdm.orbit.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-and-edit-plist-files-with-plistbuddy"&gt;&lt;a href="#create-and-edit-plist-files-with-plistbuddy" class="header-anchor"&gt;&lt;/a&gt;Create and edit .plist files with PlistBuddy
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;PlistBuddy&lt;/code&gt; is a powerful built-in macOS tool for creating and editing &lt;code&gt;.plist&lt;/code&gt; files. You can use it to automate the
 creation and modification of launchd agents and daemons.&lt;/p&gt;
 &lt;p&gt;You can create and edit &lt;code&gt;.plist&lt;/code&gt; files using the &lt;code&gt;PlistBuddy&lt;/code&gt;. For example, to create a new &lt;code&gt;.plist&lt;/code&gt; file with a
 key-value pair, run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74"&gt;&amp;#34;Add :Label string com.fleetdm.orbit&amp;#34;&lt;/span&gt; com.fleetdm.orbit.plist
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74"&gt;&amp;#34;Add :Label string com.fleetdm.orbit&amp;#34;&lt;/span&gt; com.fleetdm.orbit.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To edit an existing &lt;code&gt;.plist&lt;/code&gt; file, use the &lt;code&gt;-c&lt;/code&gt; flag with the &lt;code&gt;Set&lt;/code&gt; command. For example, to change the above &lt;code&gt;Label&lt;/code&gt;
 key to &lt;code&gt;com.fleetdm.orbit2&lt;/code&gt;, run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74"&gt;&amp;#34;Set :Label com.fleetdm.orbit2&amp;#34;&lt;/span&gt; com.fleetdm.orbit.plist
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/libexec/PlistBuddy -c &lt;span style="color:#e6db74"&gt;&amp;#34;Set :Label com.fleetdm.orbit2&amp;#34;&lt;/span&gt; com.fleetdm.orbit.plist
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Run &lt;code&gt;/usr/libexec/PlistBuddy --help&lt;/code&gt; for more information on using &lt;code&gt;PlistBuddy&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
@@ -921,10 +921,10 @@ the built-in macOS installer. This custom installer can provide additional featu
 &lt;/h2&gt;&lt;p&gt;The &lt;code&gt;pkgbuild&lt;/code&gt; command is a command-line tool included with macOS. It allows you to create macOS install packages from
 the command line.&lt;/p&gt;
 &lt;p&gt;First, create a directory for your script files:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir Scripts
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir Scripts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create a script file in the above directory called &lt;code&gt;postinstall&lt;/code&gt; that contains the script you want to run. Below is an
 example script for testing:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# installer script variables:&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# $0 = path to the script&lt;/span&gt;
@@ -948,15 +948,15 @@ example script for testing:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;exit &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above script creates a directory &lt;code&gt;/opt/hello&lt;/code&gt; and writes various script variables to a file &lt;code&gt;/opt/hello/hello.txt&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Make sure the script is executable:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x Scripts/postinstall
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;chmod +x Scripts/postinstall
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Create the installation package using the &lt;code&gt;pkgbuild&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkgbuild --nopayload --scripts Scripts --identifier com.victoronsoftware.pkgbuild-demo --version 1.0 PkgbuildDemo.pkg
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;pkgbuild --nopayload --scripts Scripts --identifier com.victoronsoftware.pkgbuild-demo --version 1.0 PkgbuildDemo.pkg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command creates an install package &lt;code&gt;PkgbuildDemo.pkg&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;--nopayload&lt;/code&gt; flag tells &lt;code&gt;pkgbuild&lt;/code&gt; that there are no application files to include in the package. The &lt;code&gt;--scripts&lt;/code&gt;
 flag specifies the directory containing the scripts to run during the installation. The scripts directory may also
 contain additional files needed by the script.&lt;/p&gt;
 &lt;p&gt;At this point, you can try installing the package on a test macOS system:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo installer -pkg PkgbuildDemo.pkg -target /
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo installer -pkg PkgbuildDemo.pkg -target /
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-a-script-only-install-package-using-the-packages-app"&gt;&lt;a href="#create-a-script-only-install-package-using-the-packages-app" class="header-anchor"&gt;&lt;/a&gt;Create a script-only install package using the Packages app
 &lt;/h2&gt;&lt;p&gt;One popular GUI tool for creating macOS installer packages is the
 &lt;a class="link" href="http://s.sudre.free.fr/Software/Packages/about.html" target="_blank" rel="noopener"
@@ -985,7 +985,7 @@ alt="Suspicious Package app showing the contents of the postinstall script."&gt;
 &lt;p&gt;To sign the package, you need a Developer ID Installer certificate. The Apple Developer Program currently costs 99 USD
 per membership year. To sign your package, place the certificate and corresponding private key (together called an
 &amp;ldquo;identity&amp;rdquo;) into your keychain. Then, you can sign the package using the &lt;code&gt;productsign&lt;/code&gt; command-line utility:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;productsign --sign &lt;span style="color:#e6db74"&gt;&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span&gt; ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;productsign --sign &lt;span style="color:#e6db74"&gt;&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span&gt; ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can notarize your package with Apple using the &lt;code&gt;notarytool&lt;/code&gt; command-line utility. For more information, see
 &lt;a class="link" href="https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution?language=objc" target="_blank" rel="noopener"
 &gt;Notarizing macOS software before distribution&lt;/a&gt;.&lt;/p&gt;
@@ -1041,10 +1041,10 @@ go get go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmu
 go get github.com/XSAM/otelsql@v0.35.0
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;go.opentelemetry.io/contrib/instrumentation/github.com/gorilla/mux/otelmux&lt;/code&gt; package is needed to instrument our
 &lt;code&gt;gorilla/mux&lt;/code&gt; HTTP router.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mux&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewRouter&lt;/span&gt;()
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;mux&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewRouter&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Use&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelmux&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Middleware&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;fleet&amp;#34;&lt;/span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;github.com/XSAM/otelsql&lt;/code&gt; package is needed to instrument our SQL database queries.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/XSAM/otelsql&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;semconv&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;go.opentelemetry.io/otel/semconv/v1.26.0&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// ...&lt;/span&gt;
@@ -1086,9 +1086,9 @@ go get github.com/XSAM/otelsql@v0.35.0
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, use &lt;code&gt;otelTracedDriverName&lt;/code&gt; to open a connection to your database.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;sql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Open&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelTracedDriverName&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user:password@tcp(localhost:3306)/database&amp;#34;&lt;/span&gt;)
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;db&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;sql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Open&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;otelTracedDriverName&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;user:password@tcp(localhost:3306)/database&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When starting your application, you must create an OpenTelemetry exporter and a trace provider.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Background&lt;/span&gt;()
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;context&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Background&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otlptracegrpc&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewClient&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;otlpTraceExporter&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;otlptrace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;ctx&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;client&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;!=&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
@@ -1102,7 +1102,7 @@ go get github.com/XSAM/otelsql@v0.35.0
 &lt;a class="link" href="https://www.jaegertracing.io/docs/1.62/getting-started/" target="_blank" rel="noopener"
 &gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
 command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --rm --name jaeger &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --rm --name jaeger &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 16686:16686 &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 4317:4317 &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;jaegertracing/all-in-one:1.62.0
@@ -1113,7 +1113,7 @@ command:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="launch-your-application"&gt;&lt;a href="#launch-your-application" class="header-anchor"&gt;&lt;/a&gt;Launch your application
 &lt;/h2&gt;&lt;p&gt;Before starting your application, you must set the OpenTelemetry endpoint to send traces to Jaeger. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export OTEL_SERVICE_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;fleet
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export OTEL_SERVICE_NAME&lt;span style="color:#f92672"&gt;=&lt;/span&gt;fleet
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export OTEL_EXPORTER_OTLP_ENDPOINT&lt;span style="color:#f92672"&gt;=&lt;/span&gt;http://localhost:4317
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can start your application.&lt;/p&gt;
 &lt;h2 id="view-traces-in-jaeger"&gt;&lt;a href="#view-traces-in-jaeger" class="header-anchor"&gt;&lt;/a&gt;View traces in Jaeger
@@ -1208,7 +1208,7 @@ Action. Anything unnecessary can be removed or modified to suit your requirement
 &lt;code&gt;.node-version&lt;/code&gt; file. If you&amp;rsquo;re using &lt;a class="link" href="https://github.com/nvm-sh/nvm/blob/master/README.md" target="_blank" rel="noopener"
 &gt;nvm (Node Version Manager)&lt;/a&gt;,
 you can run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node --version
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Our example is based on
@@ -1219,7 +1219,7 @@ you can run:&lt;/p&gt;
 &lt;code&gt;npm install @actions/github&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The template provides a basic structure for your GitHub Action. Update the &lt;code&gt;action.yml&lt;/code&gt; file with your action&amp;rsquo;s name,
 description, author, and updated inputs/outputs.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Code review&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Code review&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Improved code review process&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;author&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Victor on Software&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -1239,7 +1239,7 @@ description, author, and updated inputs/outputs.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;main&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dist/index.js&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, our new action will have a single input, &lt;code&gt;github-token&lt;/code&gt;, the GitHub secret token to use the GitHub API.&lt;/p&gt;
 &lt;p&gt;Next, we can modify the code in the &lt;code&gt;src/main.ts&lt;/code&gt; file to implement our custom logic.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;core&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/core&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;core&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/core&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;github&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/github&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;readFileSync&lt;/span&gt; } &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -1313,7 +1313,7 @@ source code. For this example, we must refactor the code to make it more testabl
 &lt;/h2&gt;&lt;h3 id="add-workflows-and-reviewers-file"&gt;&lt;a href="#add-workflows-and-reviewers-file" class="header-anchor"&gt;&lt;/a&gt;Add workflows and REVIEWERS file
 &lt;/h3&gt;&lt;p&gt;You can use the &lt;code&gt;uses&lt;/code&gt; keyword in a workflow file to try your action in another repository. Create a new workflow file
 in the repository&amp;rsquo;s &lt;code&gt;.github/workflows/&lt;/code&gt; directory where you want to test your action. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Code review&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Code review&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_dispatch&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# Manual (for debug)&lt;/span&gt;
@@ -1340,7 +1340,7 @@ GitHub Actions treats the &lt;code&gt;pull_request&lt;/code&gt; workflow runs an
 we want the same workflow run to be triggered by both events. This is a common pitfall when working with GitHub Actions.
 We need to add another workflow file that listens for &lt;code&gt;pull_request_review&lt;/code&gt; events and triggers the &lt;code&gt;pull_request&lt;/code&gt;
 workflow run to fix this.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Rerun checks after review&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Rerun checks after review&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request_review&lt;/span&gt;:
@@ -1452,10 +1452,10 @@ available, but many have been abandoned and do not work with NDES.&lt;/p&gt;
 use the latest code from the &lt;code&gt;main&lt;/code&gt; branch, with the following commit hash: &lt;code&gt;781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Follow the instructions from the above URL to install the &lt;code&gt;scep&lt;/code&gt; client. We built it for macOS M1 using the following
 command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make scepclient-darwin-arm64
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;make scepclient-darwin-arm64
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After building the client, obtain a new enrollment challenge password and run the following command to request a
 certificate from the NDES server:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir test
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mkdir test
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cd test
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;../scepclient-darwin-arm64 -key-encipherment-selector -cn &lt;span style="color:#e6db74"&gt;&amp;#34;ScepClient&amp;#34;&lt;/span&gt; -challenge &lt;span style="color:#e6db74"&gt;&amp;#34;ABBFE34CF11C2C04&amp;#34;&lt;/span&gt; -server-url &lt;span style="color:#e6db74"&gt;&amp;#34;https://my-ndes.com/certsrv/mscep/mscep.dll&amp;#34;&lt;/span&gt; -debug -private-key ./ndes-pk
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We recommend running the above command in a separate directory because the SCEP client generates several
@@ -1464,7 +1464,7 @@ of generating new ones from the command line flags.&lt;/p&gt;
 &lt;p&gt;The above command will generate a new certificate request and send it to the NDES server. The server will respond with a
 signed certificate, which the client will save to the current directory as a &lt;code&gt;client.pem&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;As a final step, verify that the certificate and the private key match by building a PKCS#12 file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/openssl pkcs12 -export -inkey ndes-pk -in client.pem -out client.p12
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/usr/bin/openssl pkcs12 -export -inkey ndes-pk -in client.pem -out client.p12
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id="test-ndes-using-apple-mdm-profile"&gt;&lt;a href="#test-ndes-using-apple-mdm-profile" class="header-anchor"&gt;&lt;/a&gt;Test NDES using Apple MDM profile
 &lt;/h1&gt;&lt;p&gt;For our final test, we will use an Apple MDM profile to request a certificate from the NDES server. We will use a macOS
 VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding the MDM profile manually via &lt;strong&gt;System Settings&lt;/strong&gt; -&amp;gt;
@@ -1473,7 +1473,7 @@ VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding t
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/scep?language=objc" target="_blank" rel="noopener"
 &gt;Device Management SCEP payload&lt;/a&gt; with the
 NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;plist&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;version=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
@@ -1697,7 +1697,7 @@ the exposure of database credentials.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;We can run a MySQL database in a Docker container using the
 &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
 &gt;official MySQL Docker image&lt;/a&gt;. We create &lt;code&gt;docker-compose.yml&lt;/code&gt; like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [
@@ -1713,14 +1713,14 @@ the exposure of database credentials.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;3306:3306&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And we run &lt;code&gt;docker-compose up&lt;/code&gt; to start the MySQL database.&lt;/p&gt;
 &lt;p&gt;We can access the MySQL database by using the MySQL client:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql -h 127.0.0.1 -P &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt; -uroot -ptoor
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;mysql -h 127.0.0.1 -P &lt;span style="color:#ae81ff"&gt;3306&lt;/span&gt; -uroot -ptoor
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;As we can see, the passwords are stored in plain text in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file. We want to avoid storing
 sensitive data in plain text.&lt;/p&gt;
 &lt;h2 id="securing-database-secrets-with-docker-secrets"&gt;&lt;a href="#securing-database-secrets-with-docker-secrets" class="header-anchor"&gt;&lt;/a&gt;Securing database secrets with Docker secrets
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.docker.com/compose/use-secrets/" target="_blank" rel="noopener"
 &gt;Docker secrets&lt;/a&gt; allow us to store sensitive data, such as passwords,
 securely. We can create secrets and use them in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;secrets&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;secrets&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql_root_password&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;file&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./mysql_root_password.txt&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql_password&lt;/span&gt;:
@@ -1753,7 +1753,7 @@ the &lt;code&gt;ps&lt;/code&gt; command, like: &lt;code&gt;ps eww &amp;lt;docker
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="securing-database-secrets-with-sql-commands"&gt;&lt;a href="#securing-database-secrets-with-sql-commands" class="header-anchor"&gt;&lt;/a&gt;Securing database secrets with SQL commands
 &lt;/h2&gt;&lt;p&gt;To secure the MySQL database without exposing the secrets on the server, we can use MySQL commands to set the passwords.
 We spin up MySQL with the following &lt;code&gt;docker-compose.yml&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;command&lt;/span&gt;: [
@@ -1841,7 +1841,7 @@ triggering other actions.&lt;/p&gt;
 &lt;h2 id="checking-whether-webhook-indicates-an-outdated-os"&gt;&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor"&gt;&lt;/a&gt;Checking whether webhook indicates an outdated OS
 &lt;/h2&gt;&lt;p&gt;At the same time, we also check whether the webhook was triggered by a policy indicating an outdated OS. From previous
 testing, we know that the webhook payload will look like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;timestamp&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2024-03-28T13:57:31.668954-05:00&amp;#34;&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;host_id&amp;#34;&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;11058&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;host_display_name&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;Victor&amp;#39;s Virtual Machine (2)&amp;#34;&lt;/span&gt;,
@@ -1891,7 +1891,7 @@ version. We use the
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
 &gt;ScheduleOSUpdate&lt;/a&gt;
 command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;plist&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;version=&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span style="color:#f92672"&gt;&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
@@ -2002,16 +2002,16 @@ alt="Choose Droplet authentication method"&gt;
 alt="Droplet details"&gt;
 &lt;/figure&gt;
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From there, we can SSH into the first droplet using its IPv6 address.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@2604:a880:4:1d0::4d3:3000
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@2604:a880:4:1d0::4d3:3000
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Install the &lt;code&gt;net-tools&lt;/code&gt; package to use the &lt;code&gt;ifconfig&lt;/code&gt; command.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install net-tools
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="disable-ipv4-on-linux-server"&gt;&lt;a href="#disable-ipv4-on-linux-server" class="header-anchor"&gt;&lt;/a&gt;Step 3: Disable IPv4 on the Linux server
 &lt;/h2&gt;&lt;p&gt;To disable IPv4 on the first droplet, edit the &lt;code&gt;/etc/netplan/50-cloud-init.yaml&lt;/code&gt; network configuration file by removing
 all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown below.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;network&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;ethernets&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;eth0&lt;/span&gt;:
@@ -2031,7 +2031,7 @@ all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown bel
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;via&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;2604&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;a880:4:1d0::1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;set-name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;eth0&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Apply the changes.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can view the network configuration using the &lt;code&gt;ifconfig&lt;/code&gt; command. It should look like:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
 inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
@@ -2062,9 +2062,9 @@ IPv4 on the loopback interface at this point since many tools may break.&lt;/p&g
 &lt;h2 id="transfer-files-between-ipv4-and-ipv6-only-servers"&gt;&lt;a href="#transfer-files-between-ipv4-and-ipv6-only-servers" class="header-anchor"&gt;&lt;/a&gt;Transfer files between IPv4 and IPv6-only servers
 &lt;/h2&gt;&lt;p&gt;To transfer files between the IPv4 and IPv6-only servers, you can use the &lt;code&gt;scp&lt;/code&gt; command. First, transfer to the droplet
 that supports both IPv4 and IPv6, like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@143.198.235.211:~
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@143.198.235.211:~
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, SSH into that droplet and transfer the file to the IPv6-only droplet:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@&lt;span style="color:#ae81ff"&gt;\[&lt;/span&gt;2604:a880:4:1d0::4d3:3000&lt;span style="color:#ae81ff"&gt;\]&lt;/span&gt;:~
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;scp fleet-osquery_1.24.0_amd64.deb root@&lt;span style="color:#ae81ff"&gt;\[&lt;/span&gt;2604:a880:4:1d0::4d3:3000&lt;span style="color:#ae81ff"&gt;\]&lt;/span&gt;:~
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
 &lt;/h2&gt;&lt;p&gt;In this tutorial, we created a Linux VM using IPv6, with IPv4 disabled. We also transferred files between an IPv4 and an
 IPv6-only server. IPv6 is the future of the Internet, and learning how to use it is essential. You can now create your
@@ -2129,7 +2129,7 @@ alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
 inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
 pass data back to the main workflow.&lt;/p&gt;
 &lt;p&gt;Here is an example of a reusable workflow. It uses the same schema as a regular workflow.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable workflow&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_call&lt;/span&gt;:
@@ -2184,7 +2184,7 @@ pass data back to the main workflow.&lt;/p&gt;
 output called &lt;code&gt;reusable_output&lt;/code&gt;. It also downloads an artifact called &lt;code&gt;input_file&lt;/code&gt;, processes a file, and uploads an
 artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The main workflow calls the reusable workflow using the &lt;code&gt;uses&lt;/code&gt; keyword.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;job-2&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;job-2&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;job-1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# We do not need to check out the repository to use the reusable workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./.github/workflows/reusable-workflow.yml&lt;/span&gt;
@@ -2214,7 +2214,7 @@ Secrets must be passed explicitly as inputs or environment variables. Also, ther
 share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p&gt;
 &lt;p&gt;Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named
 &lt;code&gt;action.yml&lt;/code&gt; or similar.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable steps (AKA composite action)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable steps (AKA composite action)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Demonstrate how to use reusable steps in a workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Schema: https://json.schemastore.org/github-action.json&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -2249,7 +2249,7 @@ share files since the reusable steps run on the same runner and in the same work
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The composite action is called via the &lt;code&gt;uses&lt;/code&gt; setting on a step. Our action accepts an input called &lt;code&gt;reusable_input&lt;/code&gt; and
 generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also processes a file called &lt;code&gt;filename&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The following code snippet shows how to use the composite action in a job.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Use reusable steps&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Use reusable steps&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;reusable-steps&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./.github/reusable-steps&lt;/span&gt; &lt;span style="color:#75715e"&gt;# To use this syntax, we must have the repository checked out&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
@@ -2323,7 +2323,7 @@ public applications, you should obtain a code signing certificate from a trusted
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificate and key needed for code signing. It also generates a certificate
 authority (CA) and signs the code signing certificate with the CA.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# -e: Immediately exit if any command has a non-zero exit status.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# -x: Print all executed commands to the terminal.&lt;/span&gt;
@@ -2348,7 +2348,7 @@ authority (CA) and signs the code signing certificate with the CA.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="building-the-application"&gt;&lt;a href="#building-the-application" class="header-anchor"&gt;&lt;/a&gt;Building the application
 &lt;/h2&gt;&lt;p&gt;We will build a simple &amp;ldquo;Hello World&amp;rdquo; Windows application using the Go programming language for this example. We compile
 the application with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export GOOS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;windows
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export GOOS&lt;span style="color:#f92672"&gt;=&lt;/span&gt;windows
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;export GOARCH&lt;span style="color:#f92672"&gt;=&lt;/span&gt;amd64
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go build ./hello-world.go
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go build process generates the &lt;code&gt;hello-world.exe&lt;/code&gt; Windows executable.&lt;/p&gt;
@@ -2358,7 +2358,7 @@ the application with:&lt;/p&gt;
 that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code&gt;signtool,&lt;/code&gt; &lt;code&gt;osslsigncode&lt;/code&gt; is cross-platform and can
 be used on Linux and macOS.&lt;/p&gt;
 &lt;p&gt;To sign the code, we use the following script:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# -e: Immediately exit if any command has a non-zero exit status.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# -x: Print all executed commands to the terminal.&lt;/span&gt;
@@ -2397,7 +2397,7 @@ be used on Linux and macOS.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In addition to signing the code, we timestamp the signature using the Comodo server. Timestamping makes sure the
 signature remains valid even after the certificate expires or is invalidated.&lt;/p&gt;
 &lt;p&gt;We can use &lt;code&gt;osslsigncode&lt;/code&gt; to verify the signature:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/usr/bin/env bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;input_file&lt;span style="color:#f92672"&gt;=&lt;/span&gt;$1
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;osslsigncode verify -CAfile ./certs/ca.crt &lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;$input_file&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="distributing-and-manually-verifying-the-signed-code"&gt;&lt;a href="#distributing-and-manually-verifying-the-signed-code" class="header-anchor"&gt;&lt;/a&gt;Distributing and manually verifying the signed code
@@ -2414,7 +2414,7 @@ alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
 command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
@@ -2543,7 +2543,7 @@ alt="Search for database migrations in Fleet&amp;#39;s GitBook"&gt;
 &lt;p&gt;To keep the forks in sync with the parent repositories, we use Github Actions. Github Actions are
 free for open source projects. Searching GitHub for &lt;strong&gt;sync-fork&lt;/strong&gt; returned several examples. We
 ended up using the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Sync Fork&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Sync Fork&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;schedule&lt;/span&gt;:
@@ -2620,13 +2620,13 @@ alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual
 router via the serial interface from the PVE command line:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We updated the WAN interface to use &lt;strong&gt;eth0&lt;/strong&gt;. At this point, the LAN interface &lt;strong&gt;eth1&lt;/strong&gt; had access to the internet.&lt;/p&gt;
 &lt;p&gt;In addition, we added a second LAN interface for the network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We made sure firewall configurations
 for both LAN interfaces were the same.&lt;/p&gt;
 &lt;p&gt;Next, from the PVE command line, we updated the PVE IP and gateway to point at the router by modifying the following
 files.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/hosts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After rebooting PVE, we had access to the internet and to the PVE Web GUI from our new LAN.&lt;/p&gt;
 &lt;h2 id="updating-router-software"&gt;&lt;a href="#updating-router-software" class="header-anchor"&gt;&lt;/a&gt;Updating router software

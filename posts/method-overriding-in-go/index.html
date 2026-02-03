@@ -14,7 +14,7 @@ When a subclass overrides a method, the subclass&rsquo;s method is called instea
 is of the subclass type. Method overriding is an example of polymorphism, where the same method name can have different
 implementations depending on the object&rsquo;s type.</p><p>Go does not have classes, but it has structs and interfaces that can be used to achieve similar functionality.</p><h2 id=embedded-structs><a href=#embedded-structs class=header-anchor></a>Embedded structs</h2><p>Go favors composition over inheritance. Multiple smaller types can be combined to create a larger type. A clean way to
 do this is through <a class=link href=https://golang.org/doc/effective_go#embedding target=_blank rel=noopener>embedded structs</a>. When a struct embeds another
-struct, it inherits the embedded struct&rsquo;s fields and methods. For example, consider the following code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+struct, it inherits the embedded struct&rsquo;s fields and methods. For example, consider the following code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
 </span></span><span style=display:flex><span>
@@ -49,7 +49,7 @@ Composed:
 Hello, World! 0
 Hello, World! 1
 </code></pre><p>The composed struct forwards the method call to the embedded struct.</p><figure><img src=/posts/method-overriding-in-go/embedded-struct.png alt="MyPrint struct inside the MyComposedPrint struct."></figure><h2 id=method-overriding-with-embedded-structs><a href=#method-overriding-with-embedded-structs class=header-anchor></a>Method overriding with embedded structs</h2><p>To override a method in Go, you can define a method with the same name and parameters in the composed struct. For
-example, consider the following code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+example, consider the following code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
 </span></span><span style=display:flex><span>

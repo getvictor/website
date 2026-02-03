@@ -42,7 +42,7 @@ alt="List of files, with code owners showing when hovering over the blue icon ne
 &gt;https://github.com/hmarr/codeowners&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;From the top directory containing your git repository, run the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| xargs codeowners | tr -s &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | cut -f2- -d &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | sort -u
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where &lt;code&gt;$MY_PR_NUMBER&lt;/code&gt; is the number of your pull request.&lt;/p&gt;
 &lt;p&gt;The first part of the command, &lt;code&gt;gh pr view $MY_PR_NUMBER --json files&lt;/code&gt;, gets the list of changed files in the pull
@@ -129,7 +129,7 @@ Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
 first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge branch
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
 to the two parent commits: &lt;code&gt;e493ac8 2afb078&lt;/code&gt;:&lt;/p&gt;
@@ -168,7 +168,7 @@ alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
 &lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;except the final merge commit would be slightly different:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&amp;gt; branch)
@@ -178,7 +178,7 @@ Date: Sat Jun 22 17:32:01 2024 -0500
 Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The merged changes on &lt;code&gt;branch&lt;/code&gt; can be pushed to the remote repository without issues because the remote branch can be
 fast-forwarded to the new commit.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="what-is-a-fast-forward-merge"&gt;&lt;a href="#what-is-a-fast-forward-merge" class="header-anchor"&gt;&lt;/a&gt;What is a fast-forward merge?
 &lt;/h2&gt;&lt;p&gt;A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
 target branch to the commit of the source branch. It is a fast-forward merge because the target branch is moved forward
@@ -190,7 +190,7 @@ that is not a fast-forward.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
 of the merge commit.&lt;/p&gt;
 &lt;p&gt;This command resets the &lt;code&gt;branch&lt;/code&gt; to the commit before the merge:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="git-rebase"&gt;&lt;a href="#git-rebase" class="header-anchor"&gt;&lt;/a&gt;git rebase
 &lt;/h2&gt;&lt;p&gt;Another way to combine changes from one branch into another is to use &lt;code&gt;git rebase&lt;/code&gt;. This command applies the changes
 from the source branch to the target branch by reapplying the commits from the source branch to the target branch.&lt;/p&gt;
@@ -252,7 +252,7 @@ must be made through a pull request. We want to update the &lt;code&gt;feature&l
 branch.&lt;/p&gt;
 &lt;p&gt;We can do this by merging the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;feature&lt;/code&gt; branch, creating a new branch, and creating a pull
 request.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout feature
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout feature
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout -b feature-update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update

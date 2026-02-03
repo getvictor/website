@@ -60,7 +60,7 @@ Author: Victor on Software &lt;&gt;
 Date:   Sat Jun 22 17:25:40 2024 -0500
 
     first commit
-</code></pre><p>We merge the <code>branch</code> into the <code>main</code> branch:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout main
+</code></pre><p>We merge the <code>branch</code> into the <code>main</code> branch:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout main
 </span></span><span style=display:flex><span>git merge branch
 </span></span></code></pre></div><p>The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
 to the two parent commits: <code>e493ac8 2afb078</code>:</p><pre tabindex=0><code>commit 09d569bd079162643462dde112246f4167f14889 (HEAD -&gt; main)
@@ -105,7 +105,7 @@ Author: Victor on Software &lt;&gt;
 Date:   Sat Jun 22 17:25:40 2024 -0500
 
     first commit
-</code></pre><figure><img src=/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg alt="git merge of two branches after merge"><figcaption><h4>git merge of two branches after merge</h4></figcaption></figure><p>The result would be the same if <strong>instead</strong> we merged the <code>main</code> branch into the <code>branch</code> branch:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout branch
+</code></pre><figure><img src=/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg alt="git merge of two branches after merge"><figcaption><h4>git merge of two branches after merge</h4></figcaption></figure><p>The result would be the same if <strong>instead</strong> we merged the <code>main</code> branch into the <code>branch</code> branch:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout branch
 </span></span><span style=display:flex><span>git merge main
 </span></span></code></pre></div><p>except the final merge commit would be slightly different:</p><pre tabindex=0><code>commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&gt; branch)
 Merge: 2afb078 e493ac8
@@ -114,12 +114,12 @@ Date:   Sat Jun 22 17:32:01 2024 -0500
 
     Merge branch &#39;main&#39; into branch
 </code></pre><p>The merged changes on <code>branch</code> can be pushed to the remote repository without issues because the remote branch can be
-fast-forwarded to the new commit.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git push origin branch
+fast-forwarded to the new commit.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>git push origin branch
 </span></span></code></pre></div><h2 id=what-is-a-fast-forward-merge><a href=#what-is-a-fast-forward-merge class=header-anchor></a>What is a fast-forward merge?</h2><p>A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
 target branch to the commit of the source branch. It is a fast-forward merge because the target branch is moved forward
 to the new commit.</p><p>A fast-forward merge does not lose any history &ndash; it is always possible to undo a fast-forward merge.</p><p><code>git push</code> does not, by default, allow a merge that is not a fast-forward. Use the&rsquo;- force&rsquo; option to enable a merge
 that is not a fast-forward.</p><h2 id=undo-a-git-merge><a href=#undo-a-git-merge class=header-anchor></a>Undo a git merge</h2><p>The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
-of the merge commit.</p><p>This command resets the <code>branch</code> to the commit before the merge:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
+of the merge commit.</p><p>This command resets the <code>branch</code> to the commit before the merge:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
 </span></span></code></pre></div><h2 id=git-rebase><a href=#git-rebase class=header-anchor></a>git rebase</h2><p>Another way to combine changes from one branch into another is to use <code>git rebase</code>. This command applies the changes
 from the source branch to the target branch by reapplying the commits from the source branch to the target branch.</p><p>The <code>git rebase</code> command will modify the commit history of the source branch. In our pull request examples, we will use
 <code>git merge</code> instead of <code>git rebase</code> to preserve all the commit histories.</p><h2 id=pull-request-after-merge><a href=#pull-request-after-merge class=header-anchor></a>Pull request after a merge</h2><p>When working on a feature branch, developers often want to update their branch with the latest changes from the main to
@@ -146,7 +146,7 @@ Date:   Sat Jun 22 21:25:39 2024 -0500
 </code></pre><p>The PR merge commit points to the previous merge commit and the last commit on <code>main</code>.</p><figure><img src=/posts/git-merges-and-pull-requests/pull-request-commit-history.svg alt="Diagram of commit history after pull request"><figcaption><h4>Diagram of commit history after pull request</h4></figcaption></figure><h2 id=update-protected-branch><a href=#update-protected-branch class=header-anchor></a>Updating a protected feature branch</h2><p>We have two branches in this example: <code>main</code> and <code>feature</code>. Both branches are protected, meaning that changes to them
 must be made through a pull request. We want to update the <code>feature</code> branch with the latest changes from the <code>main</code>
 branch.</p><p>We can do this by merging the <code>main</code> branch into the <code>feature</code> branch, creating a new branch, and creating a pull
-request.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout feature
+request.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none><code class=language-shell data-lang=shell><span style=display:flex><span>git checkout feature
 </span></span><span style=display:flex><span>git merge main
 </span></span><span style=display:flex><span>git checkout -b feature-update
 </span></span><span style=display:flex><span>git push origin feature-update

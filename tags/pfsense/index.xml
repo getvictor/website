@@ -38,13 +38,13 @@ alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual
 router via the serial interface from the PVE command line:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We updated the WAN interface to use &lt;strong&gt;eth0&lt;/strong&gt;. At this point, the LAN interface &lt;strong&gt;eth1&lt;/strong&gt; had access to the internet.&lt;/p&gt;
 &lt;p&gt;In addition, we added a second LAN interface for the network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We made sure firewall configurations
 for both LAN interfaces were the same.&lt;/p&gt;
 &lt;p&gt;Next, from the PVE command line, we updated the PVE IP and gateway to point at the router by modifying the following
 files.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/hosts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After rebooting PVE, we had access to the internet and to the PVE Web GUI from our new LAN.&lt;/p&gt;
 &lt;h2 id="updating-router-software"&gt;&lt;a href="#updating-router-software" class="header-anchor"&gt;&lt;/a&gt;Updating router software

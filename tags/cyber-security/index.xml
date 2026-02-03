@@ -133,19 +133,19 @@ store the parent key explicitly. It can be recreated when needed.&lt;/p&gt;
 &lt;/h4&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/tpm2-software/tpm2-tools" target="_blank" rel="noopener"
 &gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
 the TPM2 Software Stack (tss). Install it on Ubuntu/Debian like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install tpm2-tools
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;tpm2-tss&lt;/code&gt; should already be installed or pulled in as part of &lt;code&gt;tpm2-tools&lt;/code&gt; installation. You can check for these
 libraries with: &lt;code&gt;dpkg -l | grep libtss2&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;To interact with the TPM device using &lt;code&gt;tpm2-tools&lt;/code&gt;, the user must either be root or a member of the &lt;code&gt;tss&lt;/code&gt; group, which
 has access to &lt;code&gt;/dev/tpmrm0&lt;/code&gt;. To add the user to the &lt;code&gt;tss&lt;/code&gt; group, you can:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo usermod -aG tss $USER
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo usermod -aG tss $USER
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then &lt;strong&gt;log out and log back in&lt;/strong&gt; for the group change to take effect.&lt;/p&gt;
 &lt;p&gt;Our examples use &lt;code&gt;tpm2-tools&lt;/code&gt; version 5.6. See
 &lt;a class="link" href="https://tpm2-tools.readthedocs.io/en/latest/" target="_blank" rel="noopener"
 &gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
 key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimary&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_createprimary &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_createprimary &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hierarchy&lt;span style="color:#f92672"&gt;=&lt;/span&gt;owner &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-algorithm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;rsa &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hash-algorithm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sha256 &lt;span style="color:#ae81ff"&gt;\
@@ -154,7 +154,7 @@ key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimar
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;parent.ctx&lt;/code&gt; context file, which can be used in later commands.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the parent key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
 &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create a parent key template with the required attributes&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create a parent key template with the required attributes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;parentTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgRSA&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;NameAlg&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgSHA256&lt;/span&gt;,
@@ -197,7 +197,7 @@ key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimar
 &lt;strong&gt;wrapped (encrypted)&lt;/strong&gt; by the parent key and is not usable on its own—it must be &lt;strong&gt;unwrapped (loaded)&lt;/strong&gt; by the TPM
 using the correct parent key.&lt;/p&gt;
 &lt;p&gt;To create a child ECC key using &lt;code&gt;tpm2-tools&lt;/code&gt;, use the &lt;code&gt;tpm2-create&lt;/code&gt; command, like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_create &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_create &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --parent-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;parent.ctx &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-algorithm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;ecc_nist_p256 &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hash-algorithm&lt;span style="color:#f92672"&gt;=&lt;/span&gt;sha256 &lt;span style="color:#ae81ff"&gt;\
@@ -206,7 +206,7 @@ using the correct parent key.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --private&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.priv
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;child.pub&lt;/code&gt; and &lt;code&gt;child.priv&lt;/code&gt; files which can be used in later commands.&lt;/p&gt;
 &lt;p&gt;To load the child key into the TPM using &lt;code&gt;tpm2-tools&lt;/code&gt;, use the &lt;code&gt;tpm2_load&lt;/code&gt; command, like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_load &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_load &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --parent-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;parent.ctx &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --public&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.pub &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --private&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.priv &lt;span style="color:#ae81ff"&gt;\
@@ -215,7 +215,7 @@ using the correct parent key.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the child key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
 &gt;go-tpm&lt;/a&gt; library,
 loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create an ECC key template for the child key&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create an ECC key template for the child key&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;eccTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgECC&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;NameAlg&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgSHA256&lt;/span&gt;,
@@ -279,7 +279,7 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;h2 id="tpm-signing"&gt;&lt;a href="#tpm-signing" class="header-anchor"&gt;&lt;/a&gt;TPM signing
 &lt;/h2&gt;&lt;p&gt;TPM can sign data using the child key. The output signature is in raw binary.&lt;/p&gt;
 &lt;p&gt;To sign using &lt;code&gt;tpm2-tools&lt;/code&gt;, use the &lt;code&gt;tpm2_sign&lt;/code&gt; command, like:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create dummy data and a dummy digest&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Create dummy data and a dummy digest&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;echo &lt;span style="color:#e6db74"&gt;&amp;#34;hello world&amp;#34;&lt;/span&gt; &amp;gt; data.in.raw
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat data.in.raw | openssl dgst -sha256 -binary &amp;gt; digest.bin
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Sign the digest&lt;/span&gt;
@@ -305,7 +305,7 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data.in.raw
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Below is an example of signing using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
 &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sign&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sign&lt;/span&gt;{
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sign&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sign&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;KeyHandle&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;childKeyHandle&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Digest&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPM2BDigest&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Buffer&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;digest&lt;/span&gt;,
@@ -540,7 +540,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;h2 id="generating-mtls-certificates-and-keys"&gt;&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generating mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
 &gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force certs
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force certs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Private keys for CAs&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl genrsa -out certs/server-ca.key &lt;span style="color:#ae81ff"&gt;2048&lt;/span&gt;
@@ -565,7 +565,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Remove-Item certs/client.req
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The maximum validity period for a TLS certificate is 398 days.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;localhost.ext&lt;/code&gt; file is used to specify the subject alternative name (SAN) for the server certificate. The &lt;code&gt;localhost.ext&lt;/code&gt; file contains the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[alt_names]
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[alt_names]
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DNS.1 = localhost
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;DNS.2 = myhost
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can access the server using either &lt;code&gt;localhost&lt;/code&gt; or &lt;code&gt;myhost&lt;/code&gt; names.&lt;/p&gt;
@@ -583,14 +583,14 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/ul&gt;
 &lt;h2 id="importing-the-client-certificate-and-key-into-the-windows-certificate-store"&gt;&lt;a href="#importing-the-client-certificate-and-key-into-the-windows-certificate-store" class="header-anchor"&gt;&lt;/a&gt;Importing the client certificate and key into the Windows certificate store
 &lt;/h2&gt;&lt;p&gt;We will import the client certificate and key into the user certificate store using the following powershell script.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Import the server CA&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Import the server CA&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\server-ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Import the client CA so that client TLS certificates can be verified&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\client-ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Import the client TLS certificate and key&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-PfxCertificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\client.pfx&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\CurrentUser\My
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The command result should be similar to the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\Root
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; PSParentPath: Microsoft.PowerShell.Security\Certificate::LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Thumbprint Subject
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---------- -------
@@ -606,7 +606,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;By default, the private key is marked as non-exportable. A user or an application cannot export the private key from the certificate store. They can only access the private key via Windows APIs. Using a non-exportable private key is the recommended security approach. You can use the &lt;code&gt;-Exportable&lt;/code&gt; parameter if you need to export the private key.&lt;/p&gt;
 &lt;h2 id="verifying-imported-certificates-and-keys"&gt;&lt;a href="#verifying-imported-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Verifying imported certificates and keys
 &lt;/h2&gt;&lt;p&gt;As an extra step, we can verify that the certificates and keys exist in the Windows certificate store. We can use the &lt;code&gt;certlm&lt;/code&gt; Local Machine Certificate Manager GUI, &lt;code&gt;certmgr&lt;/code&gt; User Certificate Manager GUI, or the &lt;code&gt;Get-ChildItem&lt;/code&gt; powershell command.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root |
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Get-ChildItem -Path Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Where-Object{$_.Subject &lt;span style="color:#f92672"&gt;-match&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;testServerCA&amp;#39;&lt;/span&gt;} |
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; Test-Certificate -Policy SSL
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -618,12 +618,12 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;li&gt;https://&amp;lt;your_host&amp;gt;:8889 for mTLS&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;We can run Docker on WSL (Windows Subsystem for Linux) or another machine. We will run it on a different machine, so we need to copy the &lt;code&gt;certs&lt;/code&gt; directory to the machine running Docker. When running the server on a different machine, we must update the &lt;code&gt;C:\Windows\System32\drivers\etc\hosts&lt;/code&gt; file to point to the other machine.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;10.0.0.5 myhost
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;10.0.0.5 myhost
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients"&gt;&lt;a href="#connecting-to-the-tls-and-mtls-servers-with-clients" class="header-anchor"&gt;&lt;/a&gt;Connecting to the TLS and mTLS servers with clients
 &lt;/h2&gt;&lt;p&gt;Because we added the server CA to the root certificate store, we can now access the TLS server without any additional flags:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8888&lt;/span&gt;/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8888&lt;/span&gt;/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Result:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusCode : 200
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusCode : 200
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusDescription : OK
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content : TLS Hello World!
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -643,9 +643,9 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ParsedHtml : System.__ComObject
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RawContentLength : 17
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, we cannot access the mTLS server directly.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8889&lt;/span&gt;/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8889&lt;/span&gt;/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The client attempted the TLS handshake, but the server rejected the connection because the client did not provide a certificate. Result:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest : 400 Bad Request
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest : 400 Bad Request
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;No required SSL certificate was sent
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nginx/1.25.3
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;At line:1 char:1
@@ -654,9 +654,9 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; + CategoryInfo : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can, however, provide the client certificate thumbprint to access the mTLS server. We saw the thumbprint of the client certificate earlier when we imported it into the Windows certificate store.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8889&lt;/span&gt;/hello-world.txt -CertificateThumbprint E2EBB991E3849E32E934D8465FAE42787D34C9ED
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Invoke-WebRequest -Uri https&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;//myhost&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;8889&lt;/span&gt;/hello-world.txt -CertificateThumbprint E2EBB991E3849E32E934D8465FAE42787D34C9ED
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Result:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusCode : 200
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusCode : 200
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;StatusDescription : OK
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Content : mTLS Hello World!
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -676,7 +676,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ParsedHtml : System.__ComObject
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;RawContentLength : 18
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Edge browser can access the mTLS server. We can verify this by opening the following URL:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
 alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
@@ -723,7 +723,7 @@ title="YouTube Video"
 &lt;p&gt;The system keychain is located at &lt;code&gt;/Library/Keychains/System.keychain&lt;/code&gt;. It contains the root certificates and other certificates. The login keychain is located at &lt;code&gt;/Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db&lt;/code&gt;. It contains the user&amp;rsquo;s certificates and private keys. In this example, we will use the system keychain, which all users on the system can access.&lt;/p&gt;
 &lt;h2 id="generating-mtls-certificates-and-keys"&gt;&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generating mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the following script to generate the mTLS certificates and keys. It resembles the script from the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script generates certificates and keys needed for mTLS.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -752,7 +752,7 @@ title="YouTube Video"
 &lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain"&gt;&lt;a href="#importing-client-mtls-certificates-and-keys-into-the-macos-keychain" class="header-anchor"&gt;&lt;/a&gt;Importing client mTLS certificates and keys into the macOS keychain
 &lt;/h2&gt;&lt;p&gt;We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
 &gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script imports mTLS certificates and keys into the Apple Keychain.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -769,11 +769,11 @@ title="YouTube Video"
 &lt;h2 id="verifying-imported-certificates-and-keys"&gt;&lt;a href="#verifying-imported-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Verifying imported certificates and keys
 &lt;/h2&gt;&lt;p&gt;As an extra step, we can verify the client and server certificates before using them in an application.&lt;/p&gt;
 &lt;p&gt;We can verify the server certificate by running the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security verify-cert -c certs/server.crt -p ssl -s localhost -k /Library/Keychains/System.keychain
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security verify-cert -c certs/server.crt -p ssl -s localhost -k /Library/Keychains/System.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output should include:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;...certificate verification successful.
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The Apple keychain automatically combines the certificate and the private key into an identity. We can verify the client identity by running the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security find-identity -p ssl-client /Library/Keychains/System.keychain
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security find-identity -p ssl-client /Library/Keychains/System.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The list of identities should include:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Policy: SSL (client)
 Matching identities
@@ -791,9 +791,9 @@ Valid identities only
 &lt;/ul&gt;
 &lt;h2 id="connecting-to-the-tls-and-mtls-servers-with-clients"&gt;&lt;a href="#connecting-to-the-tls-and-mtls-servers-with-clients" class="header-anchor"&gt;&lt;/a&gt;Connecting to the TLS and mTLS servers with clients
 &lt;/h2&gt;&lt;p&gt;Because the server CA was added to the system keychain, curl can now access the TLS server without any additional flags:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8888/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8888/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, the built-in curl client cannot access the mTLS server. We use the &lt;code&gt;-v&lt;/code&gt; option for additional information:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -v https://localhost:8889/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl -v https://localhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The output:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;* Trying [::1]:8889...
 * Connected to localhost (::1) port 8889
@@ -924,7 +924,7 @@ open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificates and keys for the client and the server. It also creates two certificate
 authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the
 certificates, but we will use separate CAs for this example.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script generates files needed for mTLS.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -962,7 +962,7 @@ DNS.1 = localhost
 &gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
 &lt;p&gt;Using &lt;code&gt;docker compose&lt;/code&gt;, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We
 will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;version&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;nginx-tls&lt;/span&gt;:
@@ -1012,13 +1012,13 @@ root /www/data;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;hello-world.txt&lt;/code&gt; files contain a simple text message.&lt;/p&gt;
 &lt;h2 id="connect-to-the-mtls-server-with-curl-client"&gt;&lt;a href="#connect-to-the-mtls-server-with-curl-client" class="header-anchor"&gt;&lt;/a&gt;Connect to the mTLS server with curl client
 &lt;/h2&gt;&lt;p&gt;We can connect to the mTLS server with the &lt;code&gt;curl&lt;/code&gt; command line tool. We will use the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8889/hello-world.txt --cacert ./certs/server-ca.crt --cert ./certs/client.crt --key ./certs/client.key
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8889/hello-world.txt --cacert ./certs/server-ca.crt --cert ./certs/client.crt --key ./certs/client.key
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;--cacert&lt;/code&gt; option specifies the CA certificate that signed the server certificate. The &lt;code&gt;--cert&lt;/code&gt; and &lt;code&gt;--key&lt;/code&gt; options
 select the client certificate and key.&lt;/p&gt;
 &lt;p&gt;To connect to the ordinary TLS server, we do not need to specify the client certificate and key:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8888/hello-world.txt --cacert ./certs/server-ca.crt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl https://localhost:8888/hello-world.txt --cacert ./certs/server-ca.crt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Curl can use &lt;code&gt;--insecure&lt;/code&gt; to ignore the server certificate:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --insecure https://localhost:8888/hello-world.txt
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;curl --insecure https://localhost:8888/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, it is impossible to ignore the client certificate for mTLS. The server will reject the connection if the client
 does not provide a valid certificate.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
@@ -1109,7 +1109,7 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;Live queries enable administrators to ask near real-time questions of all online devices, such as checking the encryption status of SSH keys across endpoints, or obtaining the uptime of each server within their purview. This enables them to promptly identify and address any issues, thereby reducing downtime and maintaining operational efficiency. These tasks, which would be time-consuming and complex if done manually, are streamlined through live queries, offering real-time insights into the status and posture of the entire fleet of devices helping IT and security.&lt;/p&gt;
 &lt;h2 id="live-queries-under-the-hood"&gt;&lt;a href="#live-queries-under-the-hood" class="header-anchor"&gt;&lt;/a&gt;Live queries under the hood
 &lt;/h2&gt;&lt;p&gt;Live queries can be run from the web UI, the command-line interface called &lt;code&gt;fleetctl&lt;/code&gt;, or the REST API. The user creates a query and selects which devices will run that query. Here is an example using &lt;code&gt;fleetctl&lt;/code&gt; to obtain the operating system name and version for all devices:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fleetctl query --query &lt;span style="color:#e6db74"&gt;&amp;#34;select name, version from os_version;&amp;#34;&lt;/span&gt; --labels &lt;span style="color:#e6db74"&gt;&amp;#34;All Hosts&amp;#34;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fleetctl query --query &lt;span style="color:#e6db74"&gt;&amp;#34;select name, version from os_version;&amp;#34;&lt;/span&gt; --labels &lt;span style="color:#e6db74"&gt;&amp;#34;All Hosts&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When a client initiates a live query, the server first creates a &lt;strong&gt;Query Campaign&lt;/strong&gt; record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png"
 alt="Query campaign"&gt;&lt;figcaption&gt;
@@ -1117,7 +1117,7 @@ alt="Query campaign"&gt;&lt;figcaption&gt;
 &lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;As devices called &lt;strong&gt;Hosts&lt;/strong&gt; in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;queries&amp;#34;&lt;/span&gt;: {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;fleet_distributed_query_140&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT name, version FROM os_version;&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; },
@@ -1230,13 +1230,13 @@ alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual
 router via the serial interface from the PVE command line:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We updated the WAN interface to use &lt;strong&gt;eth0&lt;/strong&gt;. At this point, the LAN interface &lt;strong&gt;eth1&lt;/strong&gt; had access to the internet.&lt;/p&gt;
 &lt;p&gt;In addition, we added a second LAN interface for the network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We made sure firewall configurations
 for both LAN interfaces were the same.&lt;/p&gt;
 &lt;p&gt;Next, from the PVE command line, we updated the PVE IP and gateway to point at the router by modifying the following
 files.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/network/interfaces
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/etc/hosts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After rebooting PVE, we had access to the internet and to the PVE Web GUI from our new LAN.&lt;/p&gt;
 &lt;h2 id="updating-router-software"&gt;&lt;a href="#updating-router-software" class="header-anchor"&gt;&lt;/a&gt;Updating router software
@@ -1285,7 +1285,7 @@ files before accessing them with the APIs.&lt;/p&gt;
 &lt;p&gt;Another option is to use the macOS &lt;a class="link" href="https://ss64.com/osx/security.html" target="_blank" rel="noopener"
 &gt;security&lt;/a&gt; command line tool. For example, to
 list root certificates, do the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A third, and hardest, option is to parse the
 &lt;a class="link" href="https://github.com/libyal/dtformats/blob/main/documentation/MacOS%20keychain%20database%20file%20format.asciidoc" target="_blank" rel="noopener"
 &gt;keychain files&lt;/a&gt;

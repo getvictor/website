@@ -23,7 +23,7 @@ Action. Anything unnecessary can be removed or modified to suit your requirement
 &lt;code&gt;.node-version&lt;/code&gt; file. If you&amp;rsquo;re using &lt;a class="link" href="https://github.com/nvm-sh/nvm/blob/master/README.md" target="_blank" rel="noopener"
 &gt;nvm (Node Version Manager)&lt;/a&gt;,
 you can run:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node --version
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Our example is based on
@@ -34,7 +34,7 @@ you can run:&lt;/p&gt;
 &lt;code&gt;npm install @actions/github&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The template provides a basic structure for your GitHub Action. Update the &lt;code&gt;action.yml&lt;/code&gt; file with your action&amp;rsquo;s name,
 description, author, and updated inputs/outputs.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Code review&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Code review&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Improved code review process&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;author&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;Victor on Software&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -54,7 +54,7 @@ description, author, and updated inputs/outputs.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;main&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;dist/index.js&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;In this example, our new action will have a single input, &lt;code&gt;github-token&lt;/code&gt;, the GitHub secret token to use the GitHub API.&lt;/p&gt;
 &lt;p&gt;Next, we can modify the code in the &lt;code&gt;src/main.ts&lt;/code&gt; file to implement our custom logic.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;core&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/core&amp;#39;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;core&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/core&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;github&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;@actions/github&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;readFileSync&lt;/span&gt; } &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -128,7 +128,7 @@ source code. For this example, we must refactor the code to make it more testabl
 &lt;/h2&gt;&lt;h3 id="add-workflows-and-reviewers-file"&gt;&lt;a href="#add-workflows-and-reviewers-file" class="header-anchor"&gt;&lt;/a&gt;Add workflows and REVIEWERS file
 &lt;/h3&gt;&lt;p&gt;You can use the &lt;code&gt;uses&lt;/code&gt; keyword in a workflow file to try your action in another repository. Create a new workflow file
 in the repository&amp;rsquo;s &lt;code&gt;.github/workflows/&lt;/code&gt; directory where you want to test your action. For example:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Code review&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Code review&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_dispatch&lt;/span&gt;: &lt;span style="color:#75715e"&gt;# Manual (for debug)&lt;/span&gt;
@@ -155,7 +155,7 @@ GitHub Actions treats the &lt;code&gt;pull_request&lt;/code&gt; workflow runs an
 we want the same workflow run to be triggered by both events. This is a common pitfall when working with GitHub Actions.
 We need to add another workflow file that listens for &lt;code&gt;pull_request_review&lt;/code&gt; events and triggers the &lt;code&gt;pull_request&lt;/code&gt;
 workflow run to fix this.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Rerun checks after review&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Rerun checks after review&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;pull_request_review&lt;/span&gt;:
@@ -238,7 +238,7 @@ This is another issue, but we will not discuss it in this article.&lt;/p&gt;
 &gt;&lt;code&gt;CODEOWNERS&lt;/code&gt; file to define individuals or teams responsible for each file in the repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;CODEOWNERS&lt;/code&gt; file format favors fine-grained code ownership, where the last matching pattern takes precedence over
 previous patterns. Here is an example from the GitHub documentation:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# In this example, @octocat owns any file in the `/apps`
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# In this example, @octocat owns any file in the `/apps`
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# directory in the root of your repository except for the `/apps/github`
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# subdirectory, as this subdirectory has its own owner @doctocat
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/apps/ @octocat
@@ -252,7 +252,7 @@ results in longer PR turnaround times, slower development velocity, and missed c
 which means one reviewer for one PR. This approach is feasible by manually inverting the
 &lt;code&gt;last matching pattern takes precedence&lt;/code&gt; rule in the &lt;code&gt;CODEOWNERS&lt;/code&gt; file by always including the owner(s) from the
 previous pattern. For example, we would rewrite the above owners as:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/apps/ @octocat
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/apps/ @octocat
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;/apps/github @octocat @doctocat
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Keeping the &lt;code&gt;CODEOWNERS&lt;/code&gt; file in this format may be cumbersome to do manually, but it can be done with a script.&lt;/p&gt;
 &lt;h2 id="issue-2-re-approvals-for-every-push"&gt;&lt;a href="#issue-2-re-approvals-for-every-push" class="header-anchor"&gt;&lt;/a&gt;Issue 2: Re-approvals for every push
@@ -382,7 +382,7 @@ alt="List of files, with code owners showing when hovering over the blue icon ne
 &gt;https://github.com/hmarr/codeowners&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;From the top directory containing your git repository, run the following:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;| xargs codeowners | tr -s &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | cut -f2- -d &lt;span style="color:#e6db74"&gt;&amp;#39; &amp;#39;&lt;/span&gt; | sort -u
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Where &lt;code&gt;$MY_PR_NUMBER&lt;/code&gt; is the number of your pull request.&lt;/p&gt;
 &lt;p&gt;The first part of the command, &lt;code&gt;gh pr view $MY_PR_NUMBER --json files&lt;/code&gt;, gets the list of changed files in the pull
@@ -469,7 +469,7 @@ Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
 first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge branch
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The resulting commit history shows all the commits from both branched as well as the final empty merge commit pointing
 to the two parent commits: &lt;code&gt;e493ac8 2afb078&lt;/code&gt;:&lt;/p&gt;
@@ -508,7 +508,7 @@ alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
 &lt;/figcaption&gt;
 &lt;/figure&gt;
 &lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;except the final merge commit would be slightly different:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit 06713a38ed38c12f599c6e810ee50d4cacfe2de7 (HEAD -&amp;gt; branch)
@@ -518,7 +518,7 @@ Date: Sat Jun 22 17:32:01 2024 -0500
 Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The merged changes on &lt;code&gt;branch&lt;/code&gt; can be pushed to the remote repository without issues because the remote branch can be
 fast-forwarded to the new commit.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="what-is-a-fast-forward-merge"&gt;&lt;a href="#what-is-a-fast-forward-merge" class="header-anchor"&gt;&lt;/a&gt;What is a fast-forward merge?
 &lt;/h2&gt;&lt;p&gt;A fast-forward merge is a merge where the base branch (target branch) has no new commits. In this case, git moves the
 target branch to the commit of the source branch. It is a fast-forward merge because the target branch is moved forward
@@ -530,7 +530,7 @@ that is not a fast-forward.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The above merge can be undone by resetting the branch to the commit before the merge, which is one of the parent commits
 of the merge commit.&lt;/p&gt;
 &lt;p&gt;This command resets the &lt;code&gt;branch&lt;/code&gt; to the commit before the merge:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git reset --hard 2afb078875a84095327ab2ef7c83711534c5eef8
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="git-rebase"&gt;&lt;a href="#git-rebase" class="header-anchor"&gt;&lt;/a&gt;git rebase
 &lt;/h2&gt;&lt;p&gt;Another way to combine changes from one branch into another is to use &lt;code&gt;git rebase&lt;/code&gt;. This command applies the changes
 from the source branch to the target branch by reapplying the commits from the source branch to the target branch.&lt;/p&gt;
@@ -592,7 +592,7 @@ must be made through a pull request. We want to update the &lt;code&gt;feature&l
 branch.&lt;/p&gt;
 &lt;p&gt;We can do this by merging the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;feature&lt;/code&gt; branch, creating a new branch, and creating a pull
 request.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout feature
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout feature
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout -b feature-update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update
@@ -727,7 +727,7 @@ alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
 inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
 pass data back to the main workflow.&lt;/p&gt;
 &lt;p&gt;Here is an example of a reusable workflow. It uses the same schema as a regular workflow.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable workflow&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;on&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;workflow_call&lt;/span&gt;:
@@ -782,7 +782,7 @@ pass data back to the main workflow.&lt;/p&gt;
 output called &lt;code&gt;reusable_output&lt;/code&gt;. It also downloads an artifact called &lt;code&gt;input_file&lt;/code&gt;, processes a file, and uploads an
 artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The main workflow calls the reusable workflow using the &lt;code&gt;uses&lt;/code&gt; keyword.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;job-2&lt;/span&gt;:
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;job-2&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;needs&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;job-1&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;# We do not need to check out the repository to use the reusable workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./.github/workflows/reusable-workflow.yml&lt;/span&gt;
@@ -812,7 +812,7 @@ Secrets must be passed explicitly as inputs or environment variables. Also, ther
 share files since the reusable steps run on the same runner and in the same work area as the main job.&lt;/p&gt;
 &lt;p&gt;Here is an example of a composite action. It uses a different schema than a workflow. Also, the file must be named
 &lt;code&gt;action.yml&lt;/code&gt; or similar.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable steps (AKA composite action)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Reusable steps (AKA composite action)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;description&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Demonstrate how to use reusable steps in a workflow&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Schema: https://json.schemastore.org/github-action.json&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -847,7 +847,7 @@ share files since the reusable steps run on the same runner and in the same work
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The composite action is called via the &lt;code&gt;uses&lt;/code&gt; setting on a step. Our action accepts an input called &lt;code&gt;reusable_input&lt;/code&gt; and
 generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also processes a file called &lt;code&gt;filename&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The following code snippet shows how to use the composite action in a job.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Use reusable steps&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#f92672"&gt;name&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;Use reusable steps&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;id&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;reusable-steps&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;uses&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;./.github/reusable-steps&lt;/span&gt; &lt;span style="color:#75715e"&gt;# To use this syntax, we must have the repository checked out&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;with&lt;/span&gt;:
