@@ -31,16 +31,6 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**NDC Security 2026**  
-**Dates:** March 2-5, 2026  
-**Location:** Oslo, Norway  
-**Session:** How to Know Your Client Is Real: Hardware-Backed Authentication Patterns
-
-**SCALE 23x**  
-**Dates:** March 5-8, 2026  
-**Location:** Pasadena, California  
-**Session:** Why Engineers Work on the Wrong Things and How Transparency Fixes It
-
 **CodeStock 2026**  
 **Dates:** April 9-10, 2026  
 **Location:** Knoxville, Tennessee  
@@ -53,12 +43,27 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Location:** Austin, Texas  
 **Session:** Don’t Let AI Trash Your Codebase
 
+**DevOpsDays Austin 2026**  
+**Dates:** May 5-6, 2026  
+**Location:** Austin, Texas  
+**Session:** An Endpoint Telemetry Blueprint for Security Teams
+
 **NDC Toronto 2026**  
 **Dates:** May 5-8, 2026  
 **Location:** Toronto, Canada  
 **Session:** Don’t Let AI Trash Your Codebase
 
 ## Past speaking engagements
+
+**SCALE 23x**  
+**Dates:** March 5-8, 2026  
+**Location:** Pasadena, California  
+**Session:** Why Engineers Work on the Wrong Things and How Transparency Fixes It
+
+**NDC Security 2026**  
+**Dates:** March 2-5, 2026  
+**Location:** Oslo, Norway  
+**Session:** How to Know Your Client Is Real: Hardware-Backed Authentication Patterns
 
 **IntelliC0N 2026**  
 **Dates:** February 5-6, 2026  
