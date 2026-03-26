@@ -63,7 +63,7 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **NDC Security 2026**  
 **Dates:** March 2-5, 2026  
 **Location:** Oslo, Norway  
-**Session:** How to Know Your Client Is Real: Hardware-Backed Authentication Patterns
+**Session:** [How to Know Your Client Is Real: Hardware-Backed Authentication Patterns](https://www.youtube.com/watch?v=4oDBH93usyY)
 
 **IntelliC0N 2026**  
 **Dates:** February 5-6, 2026  
