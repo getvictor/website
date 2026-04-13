@@ -31,13 +31,6 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**CodeStock 2026**  
-**Dates:** April 9-10, 2026  
-**Location:** Knoxville, Tennessee  
-**Sessions:**  
-Shift Observability Left: Why It Starts in Dev  
-Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
-
 **Arc of AI 2026**  
 **Dates:** April 13-16, 2026  
 **Location:** Austin, Texas  
@@ -54,6 +47,13 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Session:** Don’t Let AI Trash Your Codebase
 
 ## Past speaking engagements
+
+**CodeStock 2026**  
+**Dates:** April 9-10, 2026  
+**Location:** Knoxville, Tennessee  
+**Sessions:**  
+[Shift Observability Left: Why It Starts in Dev](https://www.youtube.com/watch?v=IEa1CvdW52c)  
+Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 
 **SCALE 23x**  
 **Dates:** March 5-8, 2026  
