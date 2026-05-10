@@ -31,9 +31,16 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**Arc of AI 2026**  
-**Dates:** April 13-16, 2026  
-**Location:** Austin, Texas  
+**Conf42 Golang 2026**  
+**Date:** May 21, 2026  
+**Location:** Online  
+**Session:** Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
+
+## Past speaking engagements
+
+**NDC Toronto 2026**  
+**Dates:** May 5-8, 2026  
+**Location:** Toronto, Canada  
 **Session:** Don’t Let AI Trash Your Codebase
 
 **DevOpsDays Austin 2026**  
@@ -41,12 +48,10 @@ and leaders think like builders of resilient companies.
 **Location:** Austin, Texas  
 **Session:** An Endpoint Telemetry Blueprint for Security Teams
 
-**NDC Toronto 2026**  
-**Dates:** May 5-8, 2026  
-**Location:** Toronto, Canada  
-**Session:** Don’t Let AI Trash Your Codebase
-
-## Past speaking engagements
+**Arc of AI 2026**  
+**Dates:** April 13-16, 2026  
+**Location:** Austin, Texas  
+**Session:** [Don’t Let AI Trash Your Codebase](https://www.youtube.com/watch?v=wOknGjuapuI)
 
 **CodeStock 2026**  
 **Dates:** April 9-10, 2026  
