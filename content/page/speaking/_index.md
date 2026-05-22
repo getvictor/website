@@ -29,14 +29,12 @@ fast without creating chaos.
 Whether speaking on AI's role in development, scaling architectures, or leading with openness, Victor helps engineers
 and leaders think like builders of resilient companies.
 
-## Upcoming speaking engagements
+## Past speaking engagements
 
 **Conf42 Golang 2026**  
 **Date:** May 21, 2026  
 **Location:** Online  
-**Session:** Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain
-
-## Past speaking engagements
+**Session:** [Modularizing a 10-Year Monolith: The Architecture, The People, and the Pain](https://www.youtube.com/watch?v=RHrPkuTbIVw)
 
 **NDC Toronto 2026**  
 **Dates:** May 5-8, 2026  
