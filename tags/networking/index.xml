@@ -8,8 +8,9 @@ from communicating with devices in another VLAN. For example, you can create a s
 Things) devices, such as smart light bulbs and thermostats, to prevent them from accessing your primary network. You can
 also create a separate VLAN for guest devices to prevent them from accessing your main network and other VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-basic.png"
-alt="Router with three VLANS -- office, IoT, and guest."&gt;
+ alt="Router with three VLANS -- office, IoT, and guest."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For example, if a hacker gains access to a device in the IoT VLAN, they won&amp;rsquo;t be able to access devices in the office
 VLAN or the guest VLAN. This isolation limits the damage that a hacker can do to your network.&lt;/p&gt;
 &lt;h2 id="how-does-vlan-work"&gt;&lt;a href="#how-does-vlan-work" class="header-anchor"&gt;&lt;/a&gt;How does VLAN work?
@@ -21,8 +22,9 @@ can route packets between different VLANs based on their VLAN tags.&lt;/p&gt;
 network need to be configured, and some older or cheaper hardware, such as no-configuration network switches, may not
 support VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-full.png"
-alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
+ alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="selecting-vlan-tags-and-ip-ranges"&gt;&lt;a href="#selecting-vlan-tags-and-ip-ranges" class="header-anchor"&gt;&lt;/a&gt;Selecting VLAN tags and IP ranges
 &lt;/h3&gt;&lt;p&gt;Before configuring VLANs, decide how many VLAN tags you need and what each tag will represent. Also, determine what IP
 ranges will map to each VLAN. Some people map the VLAN ID to the third octet of the IP address. For example, VLAN 333
@@ -50,8 +52,9 @@ all VLANs but must configure it to assign IP addresses from different ranges for
 example, you may not allow devices on the Guest VLAN to access devices on the other VLANs.&lt;/p&gt;
 &lt;p&gt;Below is an example of our firewall rules for the GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-firewall.png"
-alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+ alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The rules allow access to our local DNS server to block inappropriate content. The rules block all private networking
 IPs (as defined by RFC 1918) except the VLAN&amp;rsquo;s subnet.&lt;/p&gt;
 &lt;ul&gt;
@@ -65,22 +68,24 @@ part of the Office VLAN and port 2 to be part of the IoT VLAN. A single port can
 required for a wireless access point.&lt;/p&gt;
 &lt;p&gt;Below is an example of the network switch configuration for our GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-network-switch.png"
-alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+ alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The tagged ports include three wireless access points and the router port.&lt;/p&gt;
 &lt;h3 id="wireless-access-point-wap"&gt;&lt;a href="#wireless-access-point-wap" class="header-anchor"&gt;&lt;/a&gt;Wireless Access Point (WAP)
 &lt;/h3&gt;&lt;p&gt;You need to configure the SSIDs (Service Set Identifiers) for each VLAN on your wireless access point. In our case, we
 created a WLAN for each VLAN—Office, IoT, and Guest. Each WLAN is associated with a VLAN tag, which we set in the
 advanced options of the WLAN configuration, as shown below.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-wlan-config.png"
-alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
+ alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="guest-network"&gt;&lt;a href="#guest-network" class="header-anchor"&gt;&lt;/a&gt;Guest network
 &lt;/h2&gt;&lt;p&gt;Before adding a VLAN for our guest network, we used the &amp;ldquo;Guest Mode&amp;rdquo; feature on our WAP (Wireless Access Point). This
 feature was secure because it isolated guest devices from our primary network. However, the user experience for our
 guests was terrible.&lt;/p&gt;
 &lt;p&gt;The guest network directed users to a &lt;a class="link" href="https://en.wikipedia.org/wiki/Captive_portal" target="_blank" rel="noopener"
-&gt;captive portal&lt;/a&gt; before granting
+ &gt;captive portal&lt;/a&gt; before granting
 them Internet access. Some child guests could not access the captive portal due to parental device restrictions. Guests'
 devices also had trouble reconnecting to the guest network on a subsequent visit &amp;ndash; they were not automatically
 reconnected.&lt;/p&gt;
@@ -91,8 +96,9 @@ testing or security reasons.&lt;/p&gt;
 &lt;p&gt;On a wired connection, you can specify the VLAN ID in your device&amp;rsquo;s network settings. For example, you can add a virtual
 interface with a specific VLAN tag on macOS.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-macos-config.png"
-alt="macOS network settings with VLAN ID specified."&gt;
+ alt="macOS network settings with VLAN ID specified."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="debugging-notes"&gt;&lt;a href="#debugging-notes" class="header-anchor"&gt;&lt;/a&gt;Debugging notes
 &lt;/h2&gt;&lt;p&gt;While setting up our VLANs, we encountered the issue of our computer not getting an IP address from the DHCP. After
 reviewing the settings on our router and switch, we found that our settings did not save for some reason. Make sure to
@@ -112,13 +118,14 @@ reload your settings after making changes to ensure they stick.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network"&gt;&lt;a href="#watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss what is a VLAN and why you need it in your home network
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/R8vq50uRxik"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/R8vq50uRxik" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Create an IPv6-only Linux server in 3 easy steps</title><link>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</link><pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/ipv6-only.png" alt="Featured image of post Create an IPv6-only Linux server in 3 easy steps" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out
 of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p&gt;
@@ -134,9 +141,9 @@ IPv6, with IPv4 disabled.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;h2 id="prerequisites"&gt;&lt;a href="#prerequisites" class="header-anchor"&gt;&lt;/a&gt;Prerequisites
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
-&gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
+ &gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
 at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
-&gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
+ &gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
 sizes. We will create a new droplet with IPv6.&lt;/p&gt;
 &lt;h2 id="create-linux-server-with-ipv6-enabled"&gt;&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor"&gt;&lt;/a&gt;Step 1: Create droplets with IPv6 enabled
@@ -146,18 +153,21 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
-alt="Enable IPv6 checkbox"&gt;
+ alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
-alt="Choose Droplet authentication method"&gt;
+ alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
-alt="Droplet details"&gt;
+ alt="Droplet details"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From there, we can SSH into the first droplet using its IPv6 address.&lt;/p&gt;
@@ -191,28 +201,30 @@ all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown bel
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can view the network configuration using the &lt;code&gt;ifconfig&lt;/code&gt; command. It should look like:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
-ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
-RX packets 5179 bytes 3832240 (3.8 MB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 5099 bytes 696019 (696.0 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
+ ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
+ RX packets 5179 bytes 3832240 (3.8 MB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 5099 bytes 696019 (696.0 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
-RX packets 12 bytes 916 (916.0 B)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 43 bytes 2266 (2.2 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
+ RX packets 12 bytes 916 (916.0 B)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 43 bytes 2266 (2.2 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 lo: flags=73&amp;lt;UP,LOOPBACK,RUNNING&amp;gt; mtu 65536
-inet 127.0.0.1 netmask 255.0.0.0
-inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
-loop txqueuelen 1000 (Local Loopback)
-RX packets 233 bytes 22136 (22.1 KB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 233 bytes 22136 (22.1 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet 127.0.0.1 netmask 255.0.0.0
+ inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
+ loop txqueuelen 1000 (Local Loopback)
+ RX packets 233 bytes 22136 (22.1 KB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 233 bytes 22136 (22.1 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can see that the &lt;code&gt;eth0&lt;/code&gt; interface has an IPv6 address but no IPv4 address. The &lt;code&gt;eth1&lt;/code&gt; interface also has an IPv6
 address. The &lt;code&gt;lo&lt;/code&gt; interface is the loopback interface and still uses the IPv4 &lt;code&gt;127.0.0.1&lt;/code&gt; address. We will not disable
 IPv4 on the loopback interface at this point since many tools may break.&lt;/p&gt;
@@ -230,20 +242,21 @@ own IPv6-only servers and experiment with them.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" &gt;why you need VLANs in your home network&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="create-an-ipv6-only-linux-server-video"&gt;&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor"&gt;&lt;/a&gt;Create an IPv6-only Linux server video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/BjdHmyzfe80"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/BjdHmyzfe80" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Setting up a virtual router (pfSense on Proxmox)</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router (pfSense on Proxmox)" /&gt;&lt;p&gt;Traditionally, network routers used dedicated bare metal machines. However, in the last several years, we’ve seen a rise
 in software-based routers that can be deployed either on bare metal, on a VM, or even on a container. This means these
 virtual routers can be used to replace existing router software on an older router. They can run in the cloud. Or they
 can be installed on do-it-yourself (DIY) hardware. A couple popular open source software-based routers are
 &lt;a class="link" href="https://www.pfsense.org/" target="_blank" rel="noopener"
-&gt;pfSense&lt;/a&gt; and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
-&gt;OPNsense&lt;/a&gt;.&lt;/p&gt;
+ &gt;pfSense&lt;/a&gt; and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
+ &gt;OPNsense&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="why-use-a-virtual-router"&gt;&lt;a href="#why-use-a-virtual-router" class="header-anchor"&gt;&lt;/a&gt;Why use a virtual router?
 &lt;/h2&gt;&lt;p&gt;For one, these routers offer enterprise-level features such as build-in VPN support, traffic analysis, and extensive
 diagnostics, among others. Another reason is that having a virtual router gives you the ability to experiment &amp;ndash; you can
@@ -252,29 +265,31 @@ may be only one of many VMs that you run on your hardware. You can use the same 
 ad-blocking service, a media server, and other applications.&lt;/p&gt;
 &lt;h2 id="advanced-virtual-router-installation-and-set-up"&gt;&lt;a href="#advanced-virtual-router-installation-and-set-up" class="header-anchor"&gt;&lt;/a&gt;Advanced virtual router installation and set up
 &lt;/h2&gt;&lt;p&gt;When setting up our virtual router, we chose to use &lt;a class="link" href="https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough" target="_blank" rel="noopener"
-&gt;PCI Passthrough&lt;/a&gt;
+ &gt;PCI Passthrough&lt;/a&gt;
 to allow the virtual router direct access to the NIC hardware. Direct access to hardware improves the latency of our
 internet traffic. In addition, we wanted our hypervisor to sit behind the router, and not be exposed to the public. This
 reduces the attack surface for potential bad agents. However, routing hypervisor traffic through the router made our
 setup a bit tricker. It is like the chicken or the egg dilemma &amp;ndash; how do you put your hypervisor behind the router when
 the hypervisor is responsible for managing the router? Below is the approach we used when installing pfSense on top of
 &lt;a class="link" href="https://www.proxmox.com/en/proxmox-virtual-environment/overview" target="_blank" rel="noopener"
-&gt;Proxmox Virtual Environment (PVE)&lt;/a&gt;.&lt;/p&gt;
+ &gt;Proxmox Virtual Environment (PVE)&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For the initial installation, we did not use PCI Passthrough and instead used a virtual network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We
 configured the router VM to start on boot.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-1.jpg"
-alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the router and enabled
 access to it through the serial interface, which we used in the next step. Then, we put the system into its final
 configuration.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-2.jpg"
-alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual
 router via the serial interface from the PVE command line:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
@@ -300,10 +315,11 @@ accessing the router via the serial interface to update the WAN/LAN interfaces.&
 &lt;/h2&gt;&lt;p&gt;Recently, we have been &lt;a class="link" href="../why-you-need-vlan/" &gt;setting up VLANs on our home network&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="setting-up-a-virtual-router-video"&gt;&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor"&gt;&lt;/a&gt;Setting up a virtual router video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/uj_lB__QDTc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item></channel></rss>
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/uj_lB__QDTc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item></channel></rss>

@@ -8,7 +8,7 @@ automatically approve Pull Requests that meet specific criteria.&lt;/p&gt;
 &lt;h2 id="start-with-githubs-action-template"&gt;&lt;a href="#start-with-githubs-action-template" class="header-anchor"&gt;&lt;/a&gt;Start with GitHub&amp;rsquo;s Action template
 &lt;/h2&gt;&lt;p&gt;GitHub provides a
 &lt;a class="link" href="https://github.com/actions/typescript-action" target="_blank" rel="noopener"
-&gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
+ &gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
 this template to get started quickly. The template includes the necessary files and structure to create a new GitHub
 Action. Anything unnecessary can be removed or modified to suit your requirements.&lt;/p&gt;
 &lt;p&gt;Follow the instructions in the template&amp;rsquo;s README to set up your action.&lt;/p&gt;
@@ -21,14 +21,14 @@ Action. Anything unnecessary can be removed or modified to suit your requirement
 &lt;/ol&gt;
 &lt;p&gt;Check out your new repository, go to the cloned repo directory, and make sure your node version matches the one in the
 &lt;code&gt;.node-version&lt;/code&gt; file. If you&amp;rsquo;re using &lt;a class="link" href="https://github.com/nvm-sh/nvm/blob/master/README.md" target="_blank" rel="noopener"
-&gt;nvm (Node Version Manager)&lt;/a&gt;,
+ &gt;nvm (Node Version Manager)&lt;/a&gt;,
 you can run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node --version
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Our example is based on
 &lt;a class="link" href="https://github.com/actions/typescript-action/tree/0467e124e81b527a246cabdaef9c3b433febf9a8" target="_blank" rel="noopener"
-&gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
+ &gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="implement-your-custom-github-action"&gt;&lt;a href="#implement-your-custom-github-action" class="header-anchor"&gt;&lt;/a&gt;Implement your custom GitHub Action
 &lt;/h2&gt;&lt;p&gt;Install the template&amp;rsquo;s dependencies with &lt;code&gt;npm install&lt;/code&gt;. In addition, install the &lt;code&gt;@actions/github&lt;/code&gt; package with
 &lt;code&gt;npm install @actions/github&lt;/code&gt;.&lt;/p&gt;
@@ -119,7 +119,7 @@ file points at the &lt;code&gt;dist/index.js&lt;/code&gt; bundled version of you
 &lt;p&gt;This step can easily be forgotten, and you may wonder why your changes are not reflected in the action. You can
 configure our IDE to do &lt;code&gt;npm run bundle&lt;/code&gt; automatically on save, create a check as a
 &lt;a class="link" href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks" target="_blank" rel="noopener"
-&gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
+ &gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
 up-to-date, or rely on the &lt;code&gt;Check Transpiled Javascript&lt;/code&gt; workflow in the &lt;code&gt;.github/workflows/&lt;/code&gt; directory.&lt;/p&gt;
 &lt;p&gt;Now, commit your changes and push them to your repository.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We will not cover testing in this article, but you should add tests to the &lt;code&gt;__tests__/&lt;/code&gt; directory for your
@@ -179,8 +179,9 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
-alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+ alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
 &lt;/h3&gt;&lt;p&gt;Commit your changes to a new branch and create a pull request. The &lt;code&gt;Code review&lt;/code&gt; workflow should run automatically and
 show the Failed status.&lt;/p&gt;
@@ -200,16 +201,17 @@ show the Failed status.&lt;/p&gt;
 &lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" &gt;how to use GitHub Actions for general-purpose tasks&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The code for our simple GitHub Action is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/code-review-demo" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-how-to-create-a-custom-github-action-using-typescript"&gt;&lt;a href="#watch-how-to-create-a-custom-github-action-using-typescript" class="header-anchor"&gt;&lt;/a&gt;Watch how to create a custom GitHub Action using TypeScript
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NFIwPxz5La8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NFIwPxz5La8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top 3 issues with GitHub code review process</title><link>https://victoronsoftware.com/posts/github-code-review-issues/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-code-review-issues/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/developer-on-tightrope-headline.png" alt="Featured image of post Top 3 issues with GitHub code review process" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#issue-1-codeowners-is-not-scalable" &gt;CODEOWNERS is not scalable&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#issue-2-re-approvals-for-every-push" &gt;Re-approvals for every push&lt;/a&gt;&lt;/li&gt;
@@ -220,14 +222,15 @@ GitHub code reviews. The default GitHub code review process is not scalable and 
 &lt;h2 id="how-to-set-up-a-github-code-review-process"&gt;&lt;a href="#how-to-set-up-a-github-code-review-process" class="header-anchor"&gt;&lt;/a&gt;How to set up a GitHub code review process
 &lt;/h2&gt;&lt;p&gt;GitHub admins can create a
 &lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
-&gt;branch protection rule&lt;/a&gt;
+ &gt;branch protection rule&lt;/a&gt;
 that requires a code review before merging the code to the main branch.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a representative branch protection rule:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
-alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
-&lt;h4&gt;PR branch protection rule&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;PR branch protection rule&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
 &lt;code&gt;CODEOWNERS&lt;/code&gt; file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p&gt;
 &lt;p&gt;In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" &gt;how to find the required code owners for a PR&lt;/a&gt;.
@@ -235,7 +238,7 @@ This is another issue, but we will not discuss it in this article.&lt;/p&gt;
 &lt;h2 id="issue-1-codeowners-is-not-scalable"&gt;&lt;a href="#issue-1-codeowners-is-not-scalable" class="header-anchor"&gt;&lt;/a&gt;Issue 1: CODEOWNERS is not scalable
 &lt;/h2&gt;&lt;p&gt;GitHub uses a
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
-&gt;&lt;code&gt;CODEOWNERS&lt;/code&gt; file to define individuals or teams responsible for each file in the repository&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;CODEOWNERS&lt;/code&gt; file to define individuals or teams responsible for each file in the repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;CODEOWNERS&lt;/code&gt; file format favors fine-grained code ownership, where the last matching pattern takes precedence over
 previous patterns. Here is an example from the GitHub documentation:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# In this example, @octocat owns any file in the `/apps`
@@ -260,8 +263,9 @@ previous pattern. For example, we would rewrite the above owners as:&lt;/p&gt;
 experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p&gt;
 &lt;p&gt;The issue stems from the lack of fine-grained control over the following option:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
-alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
+ alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;With multiple code owners, every code owner must re-approve every change.&lt;/p&gt;
 &lt;p&gt;A code owner should not need to re-review code that didn&amp;rsquo;t change &amp;ndash; this is a waste of time and effort.&lt;/p&gt;
 &lt;p&gt;With a single code owner, the reviewer must re-approve trivial or irrelevant changes, such as:&lt;/p&gt;
@@ -331,20 +335,21 @@ Configure development environments that enhance team collaboration and reduce on
 &lt;/ul&gt;
 &lt;h2 id="watch-the-top-3-issues-with-github-code-reviews"&gt;&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor"&gt;&lt;/a&gt;Watch the top 3 issues with GitHub code reviews
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/RWnJ84vTK48"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/RWnJ84vTK48" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Find required code owner approvers for a PR in 3 steps</title><link>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</link><pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/find-code-owners-for-pull-request/</guid><description>&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-headline.png" alt="Featured image of post Find required code owner approvers for a PR in 3 steps" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#find-code-owners-from-command-line" &gt;Find code owners from the command line&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="what-are-github-code-owners"&gt;&lt;a href="#what-are-github-code-owners" class="header-anchor"&gt;&lt;/a&gt;What are GitHub code owners?
 &lt;/h2&gt;&lt;p&gt;GitHub
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
-&gt;CODEOWNERS&lt;/a&gt;
+ &gt;CODEOWNERS&lt;/a&gt;
 is a file that defines the individuals or teams responsible for code in a repository. When a user creates a pull
 request, GitHub uses the &lt;code&gt;CODEOWNERS&lt;/code&gt; file to suggest the appropriate reviewers for the pull request. This process helps
 ensure that the right people review the code changes.&lt;/p&gt;
@@ -367,19 +372,20 @@ and I didn&amp;rsquo;t know about it.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
 for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
-alt="List of files, with code owners showing when hovering over the blue icon next to the file"&gt;&lt;figcaption&gt;
-&lt;h4&gt;See the code owners on hover&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="List of files, with code owners showing when hovering over the blue icon next to the file"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;See the code owners on hover&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="find-code-owners-from-command-line"&gt;&lt;a href="#find-code-owners-from-command-line" class="header-anchor"&gt;&lt;/a&gt;Finding the code owners from the command line
 &lt;/h2&gt;&lt;p&gt;To automate the above steps, we will need the following prerequisites:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://cli.github.com/" target="_blank" rel="noopener"
-&gt;GitHub CLI&lt;/a&gt; installed and logged in&lt;/li&gt;
+ &gt;GitHub CLI&lt;/a&gt; installed and logged in&lt;/li&gt;
 &lt;li&gt;Command-line JSON processor &lt;a class="link" href="https://jqlang.github.io/jq/download/" target="_blank" rel="noopener"
-&gt;jq&lt;/a&gt; installed&lt;/li&gt;
+ &gt;jq&lt;/a&gt; installed&lt;/li&gt;
 &lt;li&gt;A CODEOWNERS parser installed, such as &lt;a class="link" href="https://github.com/hmarr/codeowners" target="_blank" rel="noopener"
-&gt;https://github.com/hmarr/codeowners&lt;/a&gt;&lt;/li&gt;
+ &gt;https://github.com/hmarr/codeowners&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;From the top directory containing your git repository, run the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;gh pr view $MY_PR_NUMBER --json files | jq -r &lt;span style="color:#e6db74"&gt;&amp;#39;.files[] .path&amp;#39;&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;\
@@ -405,13 +411,14 @@ duplicates.&lt;/p&gt;
 &lt;a class="link" href="../github-reusable-workflows-and-steps" &gt;how to create reusable workflows and steps in GitHub Actions&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request"&gt;&lt;a href="#watch-how-to-find-the-minimum-required-code-owners-for-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Watch how to find the minimum required code owners for a pull request
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/RHW-ZELnuSg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/RHW-ZELnuSg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How git merge works with GitHub pull requests</title><link>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</link><pubDate>Wed, 26 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/git-merges-and-pull-requests/</guid><description>&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merges-and-pull-requests-feature.png" alt="Featured image of post How git merge works with GitHub pull requests" /&gt;&lt;p&gt;This article covers how &lt;code&gt;git merge&lt;/code&gt; works with GitHub pull requests. We will focus on the use case where developers want
 to keep their feature branches updated with the main branch. After completing the feature work, developers create a pull
 request to merge their feature branch into the main branch.&lt;/p&gt;
@@ -430,44 +437,59 @@ branches.&lt;/p&gt;
 parent commits: one from the current branch and one from the merged branch.&lt;/p&gt;
 &lt;p&gt;In the following example, we have a &lt;code&gt;branch&lt;/code&gt; that we want to merge into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
-alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
-&lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;main&lt;/code&gt; branch shows the commit history:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit e493ac8fea4e0efe125a561b9014313bec41a489 (HEAD -&amp;gt; main, origin/main)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:31:12 2024 -0500
-m3
+
+ m3
+
 commit b79e810cb86405061dc979ce4fc05fe36a724256
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:29:41 2024 -0500
-m2
+
+ m2
+
 commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:26:55 2024 -0500
-m1
+
+ m1
+
 commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
-first commit
+
+ first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;And the &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;branch&lt;/code&gt; shows the commit history:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit 2afb078875a84095327ab2ef7c83711534c5eef8 (HEAD -&amp;gt; branch, origin/branch)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:30:20 2024 -0500
-b2
+
+ b2
+
 commit 9fc53c2ca9a58637a5d433de4c6150b832d4d275
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:28:25 2024 -0500
-b1
+
+ b1
+
 commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:26:55 2024 -0500
-m1
+
+ m1
+
 commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
-first commit
+
+ first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout main
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge branch
@@ -477,36 +499,50 @@ to the two parent commits: &lt;code&gt;e493ac8 2afb078&lt;/code&gt;:&lt;/p&gt;
 Merge: e493ac8 2afb078
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 21:03:01 2024 -0500
-Merge branch &amp;#39;branch&amp;#39;
+
+ Merge branch &amp;#39;branch&amp;#39;
+
 commit e493ac8fea4e0efe125a561b9014313bec41a489 (origin/main)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:31:12 2024 -0500
-m3
+
+ m3
+
 commit 2afb078875a84095327ab2ef7c83711534c5eef8 (origin/branch, branch)
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:30:20 2024 -0500
-b2
+
+ b2
+
 commit b79e810cb86405061dc979ce4fc05fe36a724256
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:29:41 2024 -0500
-m2
+
+ m2
+
 commit 9fc53c2ca9a58637a5d433de4c6150b832d4d275
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:28:25 2024 -0500
-b1
+
+ b1
+
 commit eaccad9476b472dbfb3cdfbd17088425be75b7b1
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:26:55 2024 -0500
-m1
+
+ m1
+
 commit 4265c0a30b7b6f03d93331bc112261393c97ee1d
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:25:40 2024 -0500
-first commit
+
+ first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
-alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
-&lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git checkout branch
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git merge main
@@ -515,7 +551,8 @@ alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
 Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 17:32:01 2024 -0500
-Merge branch &amp;#39;main&amp;#39; into branch
+
+ Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The merged changes on &lt;code&gt;branch&lt;/code&gt; can be pushed to the remote repository without issues because the remote branch can be
 fast-forwarded to the new commit.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin branch
@@ -542,18 +579,20 @@ make sure their feature works with the newest code. We start this process with t
 where we merge the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch.&lt;/p&gt;
 &lt;p&gt;After the merge, the developer can create a GitHub pull request to merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
-alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Note that the commit history only shows the commits from the &lt;code&gt;branch&lt;/code&gt; and the merge commit. The &lt;code&gt;main&lt;/code&gt; commits are not
 shown in the pull request.&lt;/p&gt;
 &lt;p&gt;GitHub shows a few options for merging the pull request:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
-alt="Merge pull request"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Merge pull request&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Merge pull request"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Merge pull request&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Create a merge commit&lt;/strong&gt;: This option creates a new merge commit combining the changes from the &lt;code&gt;branch&lt;/code&gt; and the
 &lt;code&gt;main&lt;/code&gt; branches. This is the default option.&lt;/li&gt;
@@ -564,28 +603,34 @@ from the &lt;code&gt;branch&lt;/code&gt; onto the &lt;code&gt;main&lt;/code&gt; 
 &lt;/ul&gt;
 &lt;p&gt;Selecting &lt;strong&gt;Create a merge commit&lt;/strong&gt; results in the following commit history:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
-alt="Commit history after pull request"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Commit history after pull request&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Commit history after pull request"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Commit history after pull request&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The last two commits are both merge commits.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit 1eb0af8c0e9ad16a0267d8abd1ce667f125ab7e8 (HEAD -&amp;gt; main, origin/main)
 Merge: e493ac8 22d2107
 Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
 Date: Sun Jun 23 07:35:57 2024 -0500
-Merge pull request #1 from getvictor/branch
-My pull request
+
+ Merge pull request #1 from getvictor/branch
+
+ My pull request
+
 commit 22d2107b49bca56e67b7d4e800d93f93378a0956 (origin/branch, branch)
 Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sat Jun 22 21:25:39 2024 -0500
-Merge branch &amp;#39;main&amp;#39; into branch
+
+ Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The PR merge commit points to the previous merge commit and the last commit on &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
-alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="update-protected-branch"&gt;&lt;a href="#update-protected-branch" class="header-anchor"&gt;&lt;/a&gt;Updating a protected feature branch
 &lt;/h2&gt;&lt;p&gt;We have two branches in this example: &lt;code&gt;main&lt;/code&gt; and &lt;code&gt;feature&lt;/code&gt;. Both branches are protected, meaning that changes to them
 must be made through a pull request. We want to update the &lt;code&gt;feature&lt;/code&gt; branch with the latest changes from the &lt;code&gt;main&lt;/code&gt;
@@ -598,68 +643,82 @@ request.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And create a pull request to merge &lt;code&gt;feature-update&lt;/code&gt; into &lt;code&gt;feature&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
-alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;This pull request shows all the commits from the &lt;code&gt;main&lt;/code&gt; branch and the merge commit. This commit history is problematic
 because the PR may trigger a code review from the
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
-&gt;code owners&lt;/a&gt;
+ &gt;code owners&lt;/a&gt;
 of the files that were already reviewed in previous pull requests to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
-alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;After the merge, the &lt;code&gt;feature&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
-alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Now, we create a pull request to merge the update &lt;code&gt;feature&lt;/code&gt; branch into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
-alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
-&lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;After the merge, the &lt;code&gt;main&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
-alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The last three commits are merge commits.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;commit 59caaf1cc5103099f850c32f1729c5ffe3525404 (HEAD -&amp;gt; main, origin/main)
 Merge: e493ac8 dcbc117
 Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
 Date: Sun Jun 23 08:56:53 2024 -0500
-Merge pull request #3 from getvictor/feature
-Feature
+
+ Merge pull request #3 from getvictor/feature
+
+ Feature
+
 commit dcbc117e5811e683f1074d947bc25da21b5fa5f6 (origin/feature)
 Merge: 2afb078 373dd82
 Author: Victor Lyuboslavsky &amp;lt;******&amp;gt;
 Date: Sun Jun 23 08:45:44 2024 -0500
-Merge pull request #2 from getvictor/feature-update
-Feature update
+
+ Merge pull request #2 from getvictor/feature-update
+
+ Feature update
+
 commit 373dd82672a4879bfcf3b29c4feb97004359adfe (origin/feature-update, feature-update, feature)
 Merge: 2afb078 e493ac8
 Author: Victor on Software &amp;lt;&amp;gt;
 Date: Sun Jun 23 08:03:22 2024 -0500
-Merge branch &amp;#39;main&amp;#39; into feature
+
+ Merge branch &amp;#39;main&amp;#39; into feature
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
-alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="merging-a-pull-request-with-squash-and-merge"&gt;&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor"&gt;&lt;/a&gt;Merging a pull request with &lt;strong&gt;Squash and merge&lt;/strong&gt;
 &lt;/h3&gt;&lt;p&gt;If the final pull request is merged with &lt;strong&gt;Squash and merge&lt;/strong&gt;, the commit history will look like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
-alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The last commit is a single commit that combines all the changes from the &lt;code&gt;feature&lt;/code&gt; branch. The merge commits and all
 other commits are eliminated.&lt;/p&gt;
 &lt;p&gt;The downside of &lt;strong&gt;Squash and merge&lt;/strong&gt; is that the commit history is lost. The commit history is useful for debugging,
@@ -671,33 +730,35 @@ branch.&lt;/p&gt;
 &lt;a class="link" href="../find-code-owners-for-pull-request" &gt;how to find the minimum required code owner approvers for a pull request&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-git-merge-works-with-github-pull-requests"&gt;&lt;a href="#watch-how-git-merge-works-with-github-pull-requests" class="header-anchor"&gt;&lt;/a&gt;Watch how git merge works with GitHub pull requests
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Djpc7ymvuzU"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Djpc7ymvuzU" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#reusable-workflows" &gt;GitHub reusable workflows&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#reusable-steps-composite-action" &gt;GitHub reusable steps (composite action)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
+ &gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
 approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
-alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
-&lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The entry point for GitHub Actions is the &lt;code&gt;.github/workflows&lt;/code&gt; directory in your repository. This directory contains one
 or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
 runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
 separate command.&lt;/p&gt;
 &lt;h2 id="why-reuse"&gt;&lt;a href="#why-reuse" class="header-anchor"&gt;&lt;/a&gt;Why reuse?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
-&gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
+ &gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
 GitHub Actions code allows you to:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li&gt;
@@ -718,10 +779,11 @@ GitHub Actions code allows you to:&lt;/p&gt;
 &lt;h2 id="reusable-workflows"&gt;&lt;a href="#reusable-workflows" class="header-anchor"&gt;&lt;/a&gt;Reusable workflows
 &lt;/h2&gt;&lt;p&gt;A reusable workflow replaces a job in the main workflow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
-alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p&gt;
 &lt;p&gt;For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not
 inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
@@ -794,17 +856,19 @@ artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
-alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="reusable-steps-composite-action"&gt;&lt;a href="#reusable-steps-composite-action" class="header-anchor"&gt;&lt;/a&gt;Reusable steps (composite action)
 &lt;/h2&gt;&lt;p&gt;Reusable steps replace a regular step in a job. We will use a &lt;code&gt;composite action&lt;/code&gt; for reusable steps in our example.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
-alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
 outputs to pass data back to the main workflow.&lt;/p&gt;
 &lt;p&gt;Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
@@ -857,10 +921,11 @@ generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also pro
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
-alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For a reusable TypeScript action example, see the
 &lt;a class="link" href="../typescript-github-action/" &gt;How to create a custom GitHub Action using TypeScript&lt;/a&gt; article.&lt;/p&gt;
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
@@ -871,7 +936,7 @@ great way to reduce errors and increase productivity.&lt;/p&gt;
 work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../track-engineering-metrics/" &gt;Automate tracking of engineering metrics with GitHub Actions&lt;/a&gt;&lt;/li&gt;
@@ -882,13 +947,14 @@ work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video"&gt;&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor"&gt;&lt;/a&gt;GitHub Actions reusable workflows and steps video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/ciHJzV6TZB8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/ciHJzV6TZB8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Use GitHub Actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub Actions for general-purpose tasks" /&gt;&lt;h2 id="what-are-github-actions"&gt;&lt;a href="#what-are-github-actions" class="header-anchor"&gt;&lt;/a&gt;What are GitHub Actions?
 &lt;/h2&gt;&lt;p&gt;GitHub Actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins,
 CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
@@ -906,8 +972,9 @@ use them as an extension of your application to perform tasks such as:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
-alt="GitHub Action block diagram"&gt;
+ alt="GitHub Action block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a
 database and then send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p&gt;
 &lt;p&gt;Although GitHub Actions in open-source repositories are public, they can still use secrets that are not accessible to
@@ -923,13 +990,14 @@ Then, it publishes the generated files as a new release. As a final step, it del
 careful with process-intensive actions.&lt;/p&gt;
 &lt;h2 id="use-github-actions-for-general-purpose-tasks-video"&gt;&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor"&gt;&lt;/a&gt;Use GitHub Actions for general-purpose tasks video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/y4Jct7eWLmY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/y4Jct7eWLmY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;How to reuse workflows and steps in GitHub Actions&lt;/a&gt;&lt;/li&gt;

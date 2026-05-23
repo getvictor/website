@@ -4,7 +4,7 @@
 &lt;/ul&gt;
 &lt;h2 id="what-is-a-zero-trust-development-environment"&gt;&lt;a href="#what-is-a-zero-trust-development-environment" class="header-anchor"&gt;&lt;/a&gt;What is a Zero Trust development environment?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust-security/" target="_blank" rel="noopener"
-&gt;Zero Trust&lt;/a&gt; is a security model
+ &gt;Zero Trust&lt;/a&gt; is a security model
 that assumes no trust, even inside the network. Every request is authenticated, authorized, and encrypted in a Zero
 Trust environment. This approach helps protect against data breaches and insider threats.&lt;/p&gt;
 &lt;p&gt;In our example use case, we create a development environment in a cloud instance, which includes a MySQL database
@@ -16,7 +16,7 @@ the exposure of database credentials.&lt;/p&gt;
 &lt;h2 id="launching-mysql-docker-container"&gt;&lt;a href="#launching-mysql-docker-container" class="header-anchor"&gt;&lt;/a&gt;Launching MySQL Docker container
 &lt;/h2&gt;&lt;p&gt;We can run a MySQL database in a Docker container using the
 &lt;a class="link" href="https://hub.docker.com/_/mysql" target="_blank" rel="noopener"
-&gt;official MySQL Docker image&lt;/a&gt;. We create &lt;code&gt;docker-compose.yml&lt;/code&gt; like:&lt;/p&gt;
+ &gt;official MySQL Docker image&lt;/a&gt;. We create &lt;code&gt;docker-compose.yml&lt;/code&gt; like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;services&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;image&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;mysql:8.0&lt;/span&gt;
@@ -38,7 +38,7 @@ the exposure of database credentials.&lt;/p&gt;
 sensitive data in plain text.&lt;/p&gt;
 &lt;h2 id="securing-database-secrets-with-docker-secrets"&gt;&lt;a href="#securing-database-secrets-with-docker-secrets" class="header-anchor"&gt;&lt;/a&gt;Securing database secrets with Docker secrets
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.docker.com/compose/use-secrets/" target="_blank" rel="noopener"
-&gt;Docker secrets&lt;/a&gt; allow us to store sensitive data, such as passwords,
+ &gt;Docker secrets&lt;/a&gt; allow us to store sensitive data, such as passwords,
 securely. We can create secrets and use them in the &lt;code&gt;docker-compose.yml&lt;/code&gt; file.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;secrets&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;mysql_root_password&lt;/span&gt;:
@@ -95,7 +95,7 @@ We spin up MySQL with the following &lt;code&gt;docker-compose.yml&lt;/code&gt;:
 &amp;#34;FLUSH PRIVILEGES;&amp;#34; \
 | mysql -h 127.0.0.1 -P 3306 -uroot -ptoor --connect-expired-password
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;In the above command, we use &lt;a class="link" href="https://support.1password.com/command-line/" target="_blank" rel="noopener"
-&gt;1Password&lt;/a&gt; as our secrets manager. We read
+ &gt;1Password&lt;/a&gt; as our secrets manager. We read
 the secrets from 1Password and pass them to the MySQL client to set the passwords.&lt;/p&gt;
 &lt;h2 id="additional-security-considerations"&gt;&lt;a href="#additional-security-considerations" class="header-anchor"&gt;&lt;/a&gt;Additional security considerations
 &lt;/h2&gt;&lt;p&gt;This article focused on securing the MySQL passwords. However, there are additional security considerations when running
@@ -111,11 +111,12 @@ MySQL in a Zero Trust environment:&lt;/p&gt;
 replication to create a high-availability setup for your MySQL databases.&lt;/p&gt;
 &lt;h2 id="watch-how-to-secure-a-mysql-docker-container-for-zero-trust"&gt;&lt;a href="#watch-how-to-secure-a-mysql-docker-container-for-zero-trust" class="header-anchor"&gt;&lt;/a&gt;Watch how to secure a MySQL Docker container for Zero Trust
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/GgEPIvFbnT0"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/GgEPIvFbnT0" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

@@ -74,7 +74,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;excludeHost?&lt;/span&gt;: &lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The content script &lt;code&gt;src/content.ts&lt;/code&gt; needs to be updated to handle the new &lt;code&gt;excludeHost&lt;/code&gt; setting. See the updated file &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/blob/main/5-options-page/src/content.ts" target="_blank" rel="noopener"
-&gt;here&lt;/a&gt;.&lt;/p&gt;
+ &gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We need to update the extension&amp;rsquo;s manifest to include the new options page. Add the following to the &lt;code&gt;manifest.json&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;options_page&amp;#34;&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#34;static/options.html&amp;#34;&lt;/span&gt;
@@ -89,10 +89,11 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="testing-the-options-page"&gt;&lt;a href="#testing-the-options-page" class="header-anchor"&gt;&lt;/a&gt;Testing the options page
 &lt;/h2&gt;&lt;p&gt;To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code&gt;Options&lt;/code&gt; item. Clicking on this item will open the options page.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-dropdown.png"
-alt="New Options selection"&gt;&lt;figcaption&gt;
-&lt;h4&gt;New Options selection&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="New Options selection"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;New Options selection&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="adding-a-link-to-the-options-page"&gt;&lt;a href="#adding-a-link-to-the-options-page" class="header-anchor"&gt;&lt;/a&gt;Adding a link to the options page
 &lt;/h2&gt;&lt;p&gt;We can add a link to the popup to make it easier for users to access the options page. Update the &lt;code&gt;popup.html&lt;/code&gt; file to include a link to the options page:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-html" data-lang="html"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -128,10 +129,11 @@ alt="New Options selection"&gt;&lt;figcaption&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We will now see the &lt;code&gt;Advanced options&lt;/code&gt; link in the popup. Clicking on the link will take the user to the options page.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-options-link.png"
-alt="Popup with Advanced options link"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Popup with Advanced options link&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Popup with Advanced options link"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Popup with Advanced options link&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="embedded-options-page"&gt;&lt;a href="#embedded-options-page" class="header-anchor"&gt;&lt;/a&gt;Embedded options page
 &lt;/h2&gt;&lt;p&gt;Instead of a full options page, Chrome extensions can use an embedded options page. However, this approach was confusing and not user-friendly because Chrome takes the user to the extension details page. We recommend using a dedicated options page. To try an embedded options page, add the following to the &lt;code&gt;manifest.json&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
@@ -144,14 +146,15 @@ alt="Popup with Advanced options link"&gt;&lt;figcaption&gt;
 &lt;/h2&gt;&lt;p&gt;In the next part of this series, we will focus on the look of our popup and options page. We will &lt;a class="link" href="../add-css-framework-to-chrome-extension" &gt;add CSS to make Chrome extension pages visually appealing and user-friendly&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="options-page-code-on-github"&gt;&lt;a href="#options-page-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Options page code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/5-options-page&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="options-page-video"&gt;&lt;a href="#options-page-video" class="header-anchor"&gt;&lt;/a&gt;Options page video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/PdfUQirKlJA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/PdfUQirKlJA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

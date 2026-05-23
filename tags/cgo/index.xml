@@ -140,7 +140,7 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;p&gt;The CGO code uses a lot of casting and data conversion. Let&amp;rsquo;s break down the following segment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;unsafe&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Pointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;)))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;C.CString&lt;/code&gt; converts a Go string to a C string. It is one of the CGO special functions to convert between Go and C types. See &lt;a class="link" href="https://pkg.go.dev/cmd/cgo" target="_blank" rel="noopener"
-&gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
+ &gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;unsafe.Pointer&lt;/code&gt; converts a C pointer to a generic Go pointer. And &lt;code&gt;(*C.UInt8)&lt;/code&gt; casts the Go pointer back to a C pointer.&lt;/p&gt;
 &lt;p&gt;Unfortunately, CGO cannot cast a C string to a &lt;code&gt;(*C.UInt8)&lt;/code&gt; directly. The following will fail to compile:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;))
@@ -154,10 +154,11 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/ul&gt;
 &lt;h2 id="cgo-hello-world-fail-video"&gt;&lt;a href="#cgo-hello-world-fail-video" class="header-anchor"&gt;&lt;/a&gt;CGO Hello World fail video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/C9h8YO1NwPM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item></channel></rss>
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/C9h8YO1NwPM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item></channel></rss>

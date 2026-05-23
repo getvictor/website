@@ -22,7 +22,7 @@ generally inefficient since each CI job must compile the same package separately
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go list ./...
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To identify time-consuming packages, you can run your test suite with the &lt;code&gt;-json&lt;/code&gt; switch and save the results. Then,
 find the elapsed time of each package and sort the times. This operation can be done with &lt;a class="link" href="https://jqlang.org/" target="_blank" rel="noopener"
-&gt;jq&lt;/a&gt;:&lt;/p&gt;
+ &gt;jq&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat test-result.json | jq -s &lt;span style="color:#e6db74"&gt;&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="split-up-the-go-test-suite"&gt;&lt;a href="#split-up-the-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Split up the Go test suite
 &lt;/h2&gt;&lt;p&gt;You can specify the packages at the end of the &lt;code&gt;go test&lt;/code&gt; command to run a subset of packages in a CI job. For example:&lt;/p&gt;
@@ -30,7 +30,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, manually create groups of packages and identify them with a name.&lt;/p&gt;
 &lt;p&gt;To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
 &lt;a class="link" href="https://linux.die.net/man/1/comm" target="_blank" rel="noopener"
-&gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
+ &gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;comm -23 &amp;lt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;go list ./... | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &amp;lt;&lt;span style="color:#f92672"&gt;({&lt;/span&gt; go list ./cmd/fleetctl/... &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; go list ./server/service/... ;&lt;span style="color:#f92672"&gt;}&lt;/span&gt; | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command returns the packages unique to the first list, which includes all the packages (&lt;code&gt;./...&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p&gt;
@@ -81,7 +81,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-parallel-go-test-jobs-in-ci"&gt;&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor"&gt;&lt;/a&gt;Create parallel Go test jobs in CI
 &lt;/h2&gt;&lt;p&gt;The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
 &lt;a class="link" href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow" target="_blank" rel="noopener"
-&gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
+ &gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test-go&lt;/span&gt;:
@@ -108,13 +108,14 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;p&gt;In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" &gt;the state of fuzz testing in Go&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite"&gt;&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Watch how to break apart a large Go test suite
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/AFVlbf5LZwc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/AFVlbf5LZwc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#accurately-measuring-test-execution-time" &gt;Accurately measuring test execution time&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -124,7 +125,7 @@ title="YouTube Video"
 &lt;h2 id="problems-with-current-measurement-tools"&gt;&lt;a href="#problems-with-current-measurement-tools" class="header-anchor"&gt;&lt;/a&gt;Problems with current measurement tools
 &lt;/h2&gt;&lt;p&gt;We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p&gt;
 &lt;p&gt;For example, running the &lt;code&gt;gotestsum tool slowest&lt;/code&gt; command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
-&gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
+ &gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestPolicies 3m31s
@@ -149,8 +150,9 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
-alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+ alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
 &lt;p&gt;Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your test functions. This behavior is controlled by the &lt;code&gt;-parallel&lt;/code&gt; flag, which also defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p&gt;
 &lt;p&gt;Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your subtest functions.&lt;/p&gt;
@@ -223,10 +225,10 @@ alt="Sequence diagram of a go test run with two packages, two tests, and two sub
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p&gt;
 &lt;p&gt;When tests run in parallel, we typically see the &lt;code&gt;pause&lt;/code&gt; and &lt;code&gt;cont&lt;/code&gt; actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p&gt;
 &lt;p&gt;We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
 &lt;h2 id="accurate-test-execution-time-measurement-in-practice"&gt;&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor"&gt;&lt;/a&gt;Accurate test execution time measurement in practice
 &lt;/h2&gt;&lt;p&gt;By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
@@ -258,7 +260,7 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="goteststats-on-github"&gt;&lt;a href="#goteststats-on-github" class="header-anchor"&gt;&lt;/a&gt;&lt;code&gt;goteststats&lt;/code&gt; on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" &gt;optimizing the performance of Go applications&lt;/a&gt; and &lt;a class="link" href="../analyze-go-build/" &gt;analyzing Go build times&lt;/a&gt;.&lt;/li&gt;
@@ -270,13 +272,14 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately"&gt;&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to measure the execution time of Go tests accurately
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/caTDvS5vCjA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/caTDvS5vCjA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Add unit tests to Chrome extension (2024)</title><link>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</link><pubDate>Fri, 26 Jul 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/chrome-jest-headline.png" alt="Featured image of post Add unit tests to Chrome extension (2024)" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#add-jest-to-the-project" &gt;Add Jest testing framework&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#write-a-unit-test" &gt;Write a unit test&lt;/a&gt;&lt;/li&gt;
@@ -288,16 +291,16 @@ title="YouTube Video"
 it easier to refactor our code. In this article, we will add unit tests to our Chrome extension.&lt;/p&gt;
 &lt;h2 id="add-jest-to-the-project"&gt;&lt;a href="#add-jest-to-the-project" class="header-anchor"&gt;&lt;/a&gt;Add Jest to the project
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://jestjs.io/" target="_blank" rel="noopener"
-&gt;Jest&lt;/a&gt; is a popular JavaScript testing framework. We will use Jest to write and run unit tests for
+ &gt;Jest&lt;/a&gt; is a popular JavaScript testing framework. We will use Jest to write and run unit tests for
 our Chrome extension.&lt;/p&gt;
 &lt;p&gt;To install Jest, run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev jest jest-environment-jsdom ts-jest @types/jest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/jest" target="_blank" rel="noopener"
-&gt;jest&lt;/a&gt; is the testing framework&lt;/li&gt;
+ &gt;jest&lt;/a&gt; is the testing framework&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;jest-environment-jsdom&lt;/code&gt; simulates a browser environment for Jest tests&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/ts-jest" target="_blank" rel="noopener"
-&gt;ts-jest&lt;/a&gt; allows Jest to work with TypeScript&lt;/li&gt;
+ &gt;ts-jest&lt;/a&gt; allows Jest to work with TypeScript&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;@types/jest&lt;/code&gt; provides TypeScript definitions for Jest&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="configure-jest"&gt;&lt;a href="#configure-jest" class="header-anchor"&gt;&lt;/a&gt;Configure Jest
@@ -351,7 +354,7 @@ that folder, add a &lt;code&gt;chrome.ts&lt;/code&gt; file with the following co
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The empty &lt;code&gt;jest.fn()&lt;/code&gt; implementations can be replaced during testing with custom behavior using Jest&amp;rsquo;s mocking functions
 using &lt;a class="link" href="https://jestjs.io/docs/jest-object#jestspyonobject-methodname" target="_blank" rel="noopener"
-&gt;jest.spyOn&lt;/a&gt;.&lt;/p&gt;
+ &gt;jest.spyOn&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="write-a-unit-test"&gt;&lt;a href="#write-a-unit-test" class="header-anchor"&gt;&lt;/a&gt;Write a unit test
 &lt;/h2&gt;&lt;p&gt;We will test the &lt;code&gt;content.ts&lt;/code&gt; file in our first unit test. This file contains the logic for the content script that runs
 on web pages when the extension is active. The content script blurs a page element that contains a user-defined keyword.&lt;/p&gt;
@@ -382,16 +385,19 @@ on web pages when the extension is active. The content script blurs a page eleme
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx jest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The result of the test should look like:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt; console.debug
-blurred id:testDiv class: tag:DIV text:
-&amp;#34;My secret&amp;#34;
-at blurElement (src/content.ts:36:11)
-at Array.forEach (&amp;lt;anonymous&amp;gt;)
-at Array.forEach (&amp;lt;anonymous&amp;gt;)
-at Array.forEach (&amp;lt;anonymous&amp;gt;)
-at Array.forEach (&amp;lt;anonymous&amp;gt;)
-PASS src/content.test.ts
-blur
-✓ blur a secret (15 ms)
+ blurred id:testDiv class: tag:DIV text:
+ &amp;#34;My secret&amp;#34;
+
+ at blurElement (src/content.ts:36:11)
+ at Array.forEach (&amp;lt;anonymous&amp;gt;)
+ at Array.forEach (&amp;lt;anonymous&amp;gt;)
+ at Array.forEach (&amp;lt;anonymous&amp;gt;)
+ at Array.forEach (&amp;lt;anonymous&amp;gt;)
+
+ PASS src/content.test.ts
+ blur
+ ✓ blur a secret (15 ms)
+
 Test Suites: 1 passed, 1 total
 Tests: 1 passed, 1 total
 Snapshots: 0 total
@@ -414,7 +420,7 @@ coverage report, add the &lt;code&gt;--coverage&lt;/code&gt; flag to the Jest co
 File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ------------|---------|----------|---------|---------|--------------------------
 All files | 45.23 | 48.57 | 42.85 | 45.23 |
-content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
+ content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
 ------------|---------|----------|---------|---------|--------------------------
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The full report is available in the &lt;code&gt;coverage&lt;/code&gt; folder. Open the &lt;code&gt;coverage/lcov-report/index.html&lt;/code&gt; file in a browser to
 view the detailed coverage report.&lt;/p&gt;
@@ -426,17 +432,18 @@ coverage report, we can add the &lt;code&gt;collectCoverageFrom&lt;/code&gt; opt
 File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ---------------|---------|----------|---------|---------|--------------------------
 All files | 16.96 | 30.9 | 10.71 | 16.96 |
-background.ts | 0 | 0 | 0 | 0 | 1-21
-common.ts | 0 | 0 | 0 | 0 | 17-19
-content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
-options.ts | 0 | 0 | 0 | 0 | 2-31
-popup.ts | 0 | 0 | 0 | 0 | 1-86
+ background.ts | 0 | 0 | 0 | 0 | 1-21
+ common.ts | 0 | 0 | 0 | 0 | 17-19
+ content.ts | 45.23 | 48.57 | 42.85 | 45.23 | 22,26,50-54,62-69,88-117
+ options.ts | 0 | 0 | 0 | 0 | 2-31
+ popup.ts | 0 | 0 | 0 | 0 | 1-86
 ---------------|---------|----------|---------|---------|--------------------------
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
-alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
-&lt;h4&gt;HTML coverage report&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;HTML coverage report&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="adding-unit-tests-to-github-actions"&gt;&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor"&gt;&lt;/a&gt;Adding unit tests to GitHub Actions
 &lt;/h2&gt;&lt;p&gt;To make sure that our unit tests are run automatically on every push to the repository, we can add them to a GitHub
 Actions workflow. In the &lt;a class="link" href="../linting-and-formatting-typescript" &gt;Linting and formatting TypeScript&lt;/a&gt; article, we added
@@ -446,25 +453,26 @@ ESLint to GitHub Actions. We can add a step to run the Jest tests in the same wo
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#e6db74"&gt; npm run test&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="unit-test-code-on-github"&gt;&lt;a href="#unit-test-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Unit test code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/7-unit-tests&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="other-articles-on-unit-testing"&gt;&lt;a href="#other-articles-on-unit-testing" class="header-anchor"&gt;&lt;/a&gt;Other articles on Unit Testing
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../fuzz-testing-with-go" &gt;Explore fuzz testing with Go&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-we-set-up-unit-testing-for-our-chrome-extension"&gt;&lt;a href="#watch-how-we-set-up-unit-testing-for-our-chrome-extension" class="header-anchor"&gt;&lt;/a&gt;Watch how we set up unit testing for our Chrome extension
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/EA11fnr8x8g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/EA11fnr8x8g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Fuzz testing in Go</title><link>https://victoronsoftware.com/posts/fuzz-testing-with-go/</link><pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fuzz-testing-with-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fuzz-testing-with-go/fuzz.png" alt="Featured image of post Fuzz testing in Go" /&gt;&lt;p&gt;Fuzz testing is a software automated testing technique where random inputs are provided to the software under test. My
 background is in hardware verification, which uses sophisticated methodologies for pseudorandom testing, so I wanted to
 see what the Go library had to offer out of the box.&lt;/p&gt;
 &lt;p&gt;A &lt;a class="link" href="https://go.dev/doc/security/fuzz" target="_blank" rel="noopener"
-&gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
+ &gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;a normal unit test&lt;/li&gt;
 &lt;li&gt;a test with fuzzing&lt;/li&gt;
@@ -515,9 +523,11 @@ corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
 &lt;h2 id="initial-impressions"&gt;&lt;a href="#initial-impressions" class="header-anchor"&gt;&lt;/a&gt;Initial impressions
 &lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
 documentation mentions the following about the function under test:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
 &lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
 &lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in
@@ -555,11 +565,12 @@ such as database accesses. I will report my findings in a future post.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="go-fuzz-testing-video"&gt;&lt;a href="#go-fuzz-testing-video" class="header-anchor"&gt;&lt;/a&gt;Go fuzz testing video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/4emTXow54F4"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/4emTXow54F4" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

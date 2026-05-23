@@ -7,19 +7,22 @@
 &lt;/ul&gt;
 &lt;p&gt;If you&amp;rsquo;ve ever tried to improve security in a real organization, you know how it feels. You come up with what seems like
 a good idea, but the moment you share it, someone says:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s frustrating. You’re not trying to slow anyone down, you&amp;rsquo;re trying to make things safer.&lt;/p&gt;
 &lt;p&gt;That was me a few months ago. Our client/server API used a token stored in a file on a client, and we wanted to make it
 more secure. I proposed a custom security solution to the team, and was met with questions and doubts. But that
 rejection actually led me to something better. I really dug into the security solutions in the industry, and I found the
 standard called &lt;strong&gt;HTTP Message Signatures&lt;/strong&gt;, &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9421/" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;. It turns out the
+ &gt;RFC 9421&lt;/a&gt;. It turns out the
 solution already existed. I just didn&amp;rsquo;t know where to look.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/rfc-9421.png"
-alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
+ alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="what-are-http-message-signatures"&gt;&lt;a href="#what-are-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;What are HTTP message signatures?
 &lt;/h2&gt;&lt;p&gt;You sign receipts, contracts, and maybe your kid&amp;rsquo;s permission slip. A signature means: this came from me. But on the
 web, most messages are unsigned. Anyone could forge them. HTTP Message Signatures change that. They make digital
@@ -32,28 +35,32 @@ intercepted the message and modified the contents.&lt;/p&gt;
 signatures, the server must have the public key of the client. The client signs the message with its private key, and
 the server verifies the signature with the public key.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-box rgb(227, 242, 253) Client side
-participant C as 🖥️ Client
-participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
-end
-box rgb(232, 245, 233) Server side
-participant S as ☁️ Server
-participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
-end
-Note over C,SM: 1. Prepare and sign message
-C-&amp;gt;&amp;gt;+SM: Message contents
-SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
-SM--&amp;gt;&amp;gt;-C: Signature
-Note over C,S: 2. Send authenticated request
-C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
-Note over S,VM: 3. Verify authenticity
-S-&amp;gt;&amp;gt;+VM: Verify signature
-VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
-VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
+ autonumber
+ box rgb(227, 242, 253) Client side
+ participant C as 🖥️ Client
+ participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
+ end
+ box rgb(232, 245, 233) Server side
+ participant S as ☁️ Server
+ participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
+ end
+
+ Note over C,SM: 1. Prepare and sign message
+ C-&amp;gt;&amp;gt;+SM: Message contents
+ SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
+ SM--&amp;gt;&amp;gt;-C: Signature
+
+ Note over C,S: 2. Send authenticated request
+ C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
+
+ Note over S,VM: 3. Verify authenticity
+ S-&amp;gt;&amp;gt;+VM: Verify signature
+ VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
+ VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
 &lt;/pre&gt;
+
 &lt;p&gt;With HTTP message signatures, the client signs specific parts of the HTTP request, such as method, target URI, headers,
 and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;ul&gt;
@@ -64,18 +71,20 @@ and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;p&gt;HTTP message signatures are added in the HTTP request headers. This means that the signature can be added by a proxy.
 The client could be a legacy system, and we can simply add a proxy to make it more secure.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-participant LC as 🖥️ Legacy client
-participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
-participant S as ☁️ Server
-LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
-P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
-P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
-S-&amp;gt;&amp;gt;S: Verify signature
-S--&amp;gt;&amp;gt;P: Response
-P--&amp;gt;&amp;gt;LC: Response
+ participant LC as 🖥️ Legacy client
+ participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
+ participant S as ☁️ Server
+
+ LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
+ P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
+ P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
+ S-&amp;gt;&amp;gt;S: Verify signature
+ S--&amp;gt;&amp;gt;P: Response
+ P--&amp;gt;&amp;gt;LC: Response
 &lt;/pre&gt;
+
 &lt;h2 id="how-http-message-signatures-compare-to-alternatives"&gt;&lt;a href="#how-http-message-signatures-compare-to-alternatives" class="header-anchor"&gt;&lt;/a&gt;How HTTP message signatures compare to alternatives
 &lt;/h2&gt;&lt;h3 id="api-keys-simple-but-limited"&gt;&lt;a href="#api-keys-simple-but-limited" class="header-anchor"&gt;&lt;/a&gt;API keys: simple but limited
 &lt;/h3&gt;&lt;p&gt;API keys are like shared passwords. You include them in a header or query parameter, and the server knows someone with
@@ -91,16 +100,18 @@ modified along the way.&lt;/p&gt;
 the Authorization header. That pattern is now universal for most API tokens, even if you don&amp;rsquo;t use OAuth explicitly. The
 industry standard across Google, AWS, Okta, GitHub, and others is &lt;code&gt;Authorization: Bearer &amp;lt;JWT&amp;gt;&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Authorization: Bearer &amp;lt;JWT-header&amp;gt;.&amp;lt;JWT-payload&amp;gt;.&amp;lt;JWT-signature&amp;gt;
+
 Header:
 {
-&amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
-&amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
+ &amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
+ &amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
 }
+
 Payload:
 {
-&amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
-&amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
-&amp;#34;iat&amp;#34;: 1730630400
+ &amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
+ &amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
+ &amp;#34;iat&amp;#34;: 1730630400
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The problem is that a JWT only signs its own contents (the claims inside the token itself). It doesn&amp;rsquo;t sign the HTTP
 request. If someone intercepts a valid JWT, they can use it in a completely different request. They could change the
@@ -122,13 +133,13 @@ tradeoffs in detail in &lt;a class="link" href="../mtls-vs-http-signature/" &gt;
 &lt;/h2&gt;&lt;p&gt;HTTP message signatures are gaining real traction across the industry. Here&amp;rsquo;s who&amp;rsquo;s already using them and why.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OpenAI&lt;/strong&gt;
 &lt;a class="link" href="https://help.openai.com/en/articles/11845367-chatgpt-agent-allowlisting" target="_blank" rel="noopener"
-&gt;signs requests from their ChatGPT agent&lt;/a&gt; to
+ &gt;signs requests from their ChatGPT agent&lt;/a&gt; to
 solve the bot verification problem. You&amp;rsquo;ve probably heard complaints about small sites being overwhelmed by AI bots.
 Without signatures, it was nearly impossible to tell which AI company was responsible for the traffic. Now, CDNs and
 firewalls can verify that traffic actually came from OpenAI, not some impersonator trying to abuse their reputation.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Cloudflare&lt;/strong&gt;
 &lt;a class="link" href="https://blog.cloudflare.com/verified-bots-with-cryptography" target="_blank" rel="noopener"
-&gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
+ &gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
 Site owners can now whitelist legitimate bots while blocking the fakes. No more relying on IP ranges that constantly
 shift or user-agent headers that anyone can spoof. The cryptographic signature proves the bot&amp;rsquo;s identity.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Mastodon&lt;/strong&gt; uses HTTP message signatures to protect the federated network. Say you create a Mastodon account on
@@ -140,18 +151,18 @@ weren&amp;rsquo;t legitimate.&lt;/p&gt;
 activities from another, it requires cryptographic proof that the sending actor actually authored the request. Without
 signatures, any server could impersonate another and inject fake posts or manipulate feeds.
 &lt;a class="link" href="https://docs.joinmastodon.org/spec/security" target="_blank" rel="noopener"
-&gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
+ &gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
 between federated instances.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Amazon&lt;/strong&gt; requires HTTP message signatures for third-party payment providers accessing their Selling Partner API in the
 EU. This isn&amp;rsquo;t optional. It&amp;rsquo;s
 &lt;a class="link" href="https://developer-docs.amazon.com/sp-api/docs/tpp-registration-signature-guidance" target="_blank" rel="noopener"
-&gt;PSD2 compliance&lt;/a&gt;, which is the
+ &gt;PSD2 compliance&lt;/a&gt;, which is the
 Payment Services Directive 2 (PSD2) framework of the European Union. Payment providers must sign requests using their
 NCA (National Competent Authority) certificate to prove they&amp;rsquo;re authorized to access sensitive financial data. The
 certificate&amp;rsquo;s organization identifier must match the registered developer identity, or the request gets rejected.&lt;/p&gt;
 &lt;p&gt;Other standards are already building on top of HTTP message signatures.
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9635/" target="_blank" rel="noopener"
-&gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
+ &gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
 Authorization Protocol. Think of it as a more flexible alternative to OAuth 2.0. Say you want to give a third-party app
 permission to access your cloud storage. The app needs to request that access from the storage provider, and the
 provider needs to verify that the requests are actually coming from the legitimate app, not an imposter. GNAP uses HTTP
@@ -159,7 +170,7 @@ message signatures as one way for the app to prove its identity during the autho
 mTLS and other methods).&lt;/p&gt;
 &lt;p&gt;There&amp;rsquo;s also a draft for an
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;.
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;.
 The problem? RFC 9421 assumes verifiers already have the signer&amp;rsquo;s public key through some out-of-band mechanism. That
 creates deployment friction. The directory draft solves this by defining a standard
 &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt; endpoint where clients can publish their signing keys in JWKS format.
@@ -170,7 +181,7 @@ solution years ago, and migrating to a standard may not be high on the priority 
 broken.&lt;/p&gt;
 &lt;p&gt;Apple&amp;rsquo;s MDM (Mobile Device Management) protocol uses a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc5652/" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
+ &gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
 HMAC-SHA256 and a shared secret. These custom approaches accomplish the same goal (verifying message integrity and
 origin) but they&amp;rsquo;re not interoperable. Every vendor implements their own scheme, and clients have to learn each one.&lt;/p&gt;
 &lt;p&gt;The good news? RFC 9421 supports both asymmetric keys (like RSA and ECDSA) and symmetric keys (like HMAC-SHA256).
@@ -206,9 +217,10 @@ Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Content-Length: 18
 Signature-Input: sig1=(&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 Signature: sig1=:Base64SignatureGoesHere=:
+
 {&amp;#34;hello&amp;#34;: &amp;#34;world&amp;#34;}
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;Signature-Input&lt;/code&gt; header says: &amp;ldquo;I&amp;rsquo;m signing the HTTP method, the authority (host and port), the path, content-type,
 and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header contains the actual signature of those components.&lt;/p&gt;
@@ -229,7 +241,7 @@ and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header con
 someone from changing a GET to a DELETE.&lt;/p&gt;
 &lt;p&gt;To protect the request body, you don&amp;rsquo;t sign it directly. Instead, you calculate a cryptographic hash of the body and
 include it in a &lt;code&gt;Content-Digest&lt;/code&gt; header (defined in &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9530/" target="_blank" rel="noopener"
-&gt;RFC 9530&lt;/a&gt;). Then you
+ &gt;RFC 9530&lt;/a&gt;). Then you
 sign that header. For example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;code&gt;content-digest&lt;/code&gt; header becomes one of the signed components. If anyone tampers with the body, the hash won&amp;rsquo;t match
@@ -255,8 +267,8 @@ they can&amp;rsquo;t be tampered with.&lt;/p&gt;
 &amp;#34;content-type&amp;#34;: application/json
 &amp;#34;content-length&amp;#34;: 18
 &amp;#34;@signature-params&amp;#34;: (&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each component gets its own line with the component name in quotes, a colon, and the value. The last line contains the
 signature parameters. This text is what gets signed with the private key.&lt;/p&gt;
 &lt;h3 id="supported-algorithms"&gt;&lt;a href="#supported-algorithms" class="header-anchor"&gt;&lt;/a&gt;Supported algorithms
@@ -276,7 +288,7 @@ signature parameters. This text is what gets signed with the private key.&lt;/p&
 &lt;p&gt;But the list is extensible. The RFC allows implementations to support additional algorithms, including JSON Web
 Signature (JWS) algorithm identifiers. IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;official registry&lt;/a&gt; where new
+ &gt;official registry&lt;/a&gt; where new
 algorithms can be registered. This means the standard can evolve to support new cryptographic methods as they become
 available.&lt;/p&gt;
 &lt;h3 id="key-distribution-and-rotation"&gt;&lt;a href="#key-distribution-and-rotation" class="header-anchor"&gt;&lt;/a&gt;Key distribution and rotation
@@ -290,7 +302,7 @@ file, database).&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Well-known directory&lt;/strong&gt;: Use the
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;
 draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -301,19 +313,20 @@ draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directo
 multiple signatures in a single request (one with the old key, one with the new key) during rotation periods.&lt;/p&gt;
 &lt;p&gt;IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;registry of signature algorithms and parameters&lt;/a&gt;
+ &gt;registry of signature algorithms and parameters&lt;/a&gt;
 so implementations stay compatible.&lt;/p&gt;
 &lt;h2 id="example-implementation"&gt;&lt;a href="#example-implementation" class="header-anchor"&gt;&lt;/a&gt;Example implementation
 &lt;/h2&gt;&lt;p&gt;We implemented a simple demo app that demonstrates how to sign and verify HTTP requests with RFC 9421 in Node.js. The
 app is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;There are many JavaScript libraries that implement HTTP message signatures. Many companies also don&amp;rsquo;t use libraries and
 do their own implementation of the standard.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/node-http-message-signature-libraries.png"
-alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
+ alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For our demo we chose &lt;a class="link" href="https://github.com/dhensby/node-http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
+ &gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Cleaner, more intuitive API&lt;/li&gt;
 &lt;/ol&gt;
@@ -539,27 +552,31 @@ need the complete request with its signature headers intact.&lt;/p&gt;
 and hasn&amp;rsquo;t been modified. But if an attacker captures that request, they can send it again. And again. The signature is
 still valid because the request hasn&amp;rsquo;t changed.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-participant Client as 🖥️ Client
-participant Attacker as 🎭 Attacker
-participant Server as ☁️ Server
-Note over Client,Server: Legitimate request
-Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓
-Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
-Note over Client,Server: Attacker intercepts and replays
-Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
-Attacker-&amp;gt;&amp;gt;Server: Replay same request
-alt Without replay protection
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
-Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
-else With created timestamp
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
-Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
-end
+ autonumber
+ participant Client as 🖥️ Client
+ participant Attacker as 🎭 Attacker
+ participant Server as ☁️ Server
+
+ Note over Client,Server: Legitimate request
+ Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓
+ Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
+
+ Note over Client,Server: Attacker intercepts and replays
+ Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
+ Attacker-&amp;gt;&amp;gt;Server: Replay same request
+
+ alt Without replay protection
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
+ Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
+ else With created timestamp
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
+ Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
+ end
 &lt;/pre&gt;
+
 &lt;h3 id="defending-against-replay-attacks"&gt;&lt;a href="#defending-against-replay-attacks" class="header-anchor"&gt;&lt;/a&gt;Defending against replay attacks
 &lt;/h3&gt;&lt;p&gt;You need to make each signature single-use or time-limited. The standard way to do this is with the &lt;code&gt;created&lt;/code&gt; timestamp
 and &lt;code&gt;nonce&lt;/code&gt; parameters we discussed earlier:&lt;/p&gt;
@@ -656,13 +673,14 @@ use cryptographic keys with TPM 2.0 modules.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-conference-talk-based-on-this-article"&gt;&lt;a href="#watch-the-conference-talk-based-on-this-article" class="header-anchor"&gt;&lt;/a&gt;Watch the conference talk based on this article
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/6QxkfPy0k4U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/6QxkfPy0k4U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#what-is-mtls" &gt;What is mTLS?&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#mtls-pros-and-cons" &gt;mTLS: pros and cons&lt;/a&gt;&lt;/li&gt;
@@ -683,8 +701,9 @@ is a no-nonsense breakdown covering what they are, where they shine, and where t
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
 server so that the server can verify the client&amp;rsquo;s identity.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
 it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
 mutual authentication is required.&lt;/p&gt;
@@ -713,35 +732,38 @@ adoption difficult in heterogeneous environments&lt;/li&gt;
 body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
 from someone it trusts.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: HTTP message signature
 ---
 sequenceDiagram
-autonumber
-participant Client
-participant Server
-Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
-Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
-Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
-Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
-Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
-Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
-Server-&amp;gt;&amp;gt;Server: Verify signature with public key
-alt Signature valid
-Server-&amp;gt;&amp;gt;Server: Process request
-else Signature invalid
-Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
-end
+ autonumber
+ participant Client
+ participant Server
+
+ Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
+ Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
+ Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
+ Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
+
+ Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
+ Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
+ Server-&amp;gt;&amp;gt;Server: Verify signature with public key
+ alt Signature valid
+ Server-&amp;gt;&amp;gt;Server: Process request
+ else Signature invalid
+ Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
+ end
 &lt;/pre&gt;
+
 &lt;p&gt;HTTP signing works at the application layer. It does not replace TLS, but rides on top of it. That means you don&amp;rsquo;t have
 to worry about where TLS is terminated, and the HTTP signature can be verified at the ultimate destination server.&lt;/p&gt;
 &lt;p&gt;Many legacy systems have used their own approaches to HTTP signing. Apple&amp;rsquo;s MDM protocol relies on a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc5652" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
+ &gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
 payload signing with a shared secret for webhooks. These mechanisms take different paths to the same goal: verifying the
 integrity and origin of HTTP messages.&lt;/p&gt;
 &lt;p&gt;Today, more modern systems are beginning to align with &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc9421" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;, a
+ &gt;RFC 9421&lt;/a&gt;, a
 proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
 signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
 auditability and control.&lt;/p&gt;
@@ -794,65 +816,65 @@ expiration in ValKey or Redis)&lt;/li&gt;
 &lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool"&gt;&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor"&gt;&lt;/a&gt;mTLS vs HTTP message signatures: choosing the right tool
 &lt;/h2&gt;&lt;p&gt;Here&amp;rsquo;s how they compare:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Feature&lt;/th&gt;
-&lt;th&gt;mTLS&lt;/th&gt;
-&lt;th&gt;HTTP Message Signature&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Identity verification&lt;/td&gt;
-&lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
-&lt;td&gt;🟡 App-level with public key&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integrity&lt;/td&gt;
-&lt;td&gt;🟢 Built into TLS&lt;/td&gt;
-&lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Granular control&lt;/td&gt;
-&lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
-&lt;td&gt;🟢 Easy&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Deployment complexity&lt;/td&gt;
-&lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Public API suitability&lt;/td&gt;
-&lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
-&lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Certificate handling&lt;/td&gt;
-&lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
-&lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integration support&lt;/td&gt;
-&lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
-&lt;td&gt;🟡 App libraries available&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Replay protection&lt;/td&gt;
-&lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
-&lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Performance&lt;/td&gt;
-&lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Debuggability&lt;/td&gt;
-&lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
-&lt;td&gt;🟢 Signature is visible&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Feature&lt;/th&gt;
+ &lt;th&gt;mTLS&lt;/th&gt;
+ &lt;th&gt;HTTP Message Signature&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Identity verification&lt;/td&gt;
+ &lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
+ &lt;td&gt;🟡 App-level with public key&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integrity&lt;/td&gt;
+ &lt;td&gt;🟢 Built into TLS&lt;/td&gt;
+ &lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Granular control&lt;/td&gt;
+ &lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
+ &lt;td&gt;🟢 Easy&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Deployment complexity&lt;/td&gt;
+ &lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Public API suitability&lt;/td&gt;
+ &lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
+ &lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Certificate handling&lt;/td&gt;
+ &lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
+ &lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integration support&lt;/td&gt;
+ &lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
+ &lt;td&gt;🟡 App libraries available&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Replay protection&lt;/td&gt;
+ &lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
+ &lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Performance&lt;/td&gt;
+ &lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Debuggability&lt;/td&gt;
+ &lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
+ &lt;td&gt;🟢 Signature is visible&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;So, which one should you use?&lt;/p&gt;
 &lt;ul&gt;
@@ -882,11 +904,12 @@ for hardware-backed cryptographic operations.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-compare-mtls-and-http-message-signatures"&gt;&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;Watch us compare mTLS and HTTP message signatures
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/aDMdLCzXn1U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/aDMdLCzXn1U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

@@ -5,10 +5,11 @@ distributed lock.&lt;/p&gt;
 to receive a second callback while processing the first one. This second callback can lead to data inconsistency, race
 conditions, and deadlocks.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/data-consistency-problem.svg"
-alt="Sequence diagram demonstrating data inconsistency issue without a distributed lock"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Data inconsistency&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Sequence diagram demonstrating data inconsistency issue without a distributed lock"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Data inconsistency&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In the above diagram, two servers, A and B, are processing calendar events. Server B receives a callback from Google
 Calendar API stating that something has changed in the calendar. Google does not provide information about what event
 changed, so server B must fetch the event of interest from the calendar. While server B is fetching the event, server A
@@ -25,27 +26,28 @@ will prevent the second server from processing the event until the first server 
 &lt;/h2&gt;&lt;p&gt;We implemented a distributed lock using Redis. Redis is an in-memory data structure store that can be used as a
 database, cache, and message broker. To acquire the lock, our server sets a key in Redis with a unique value using the
 &lt;a class="link" href="https://redis.io/docs/latest/commands/set/" target="_blank" rel="noopener"
-&gt;Redis SET command&lt;/a&gt;.&lt;/p&gt;
+ &gt;Redis SET command&lt;/a&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;SET mykey &amp;#34;myvalue&amp;#34; NX PX 60000
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;NX&lt;/code&gt; option only sets the key if it does not exist. The &lt;code&gt;PX 60000&lt;/code&gt; option sets the key&amp;rsquo;s expiration time to 60
 seconds. This ensures that the lock is released if the server crashes or does not release it in a timely manner.&lt;/p&gt;
 &lt;p&gt;To release the lock, we &lt;code&gt;EVAL&lt;/code&gt; a Lua script that checks if the key&amp;rsquo;s value matches the unique value set by the server.
 If the values match, the script deletes the key using the
 &lt;a class="link" href="https://redis.io/docs/latest/commands/del/" target="_blank" rel="noopener"
-&gt;Redis DEL command&lt;/a&gt;.&lt;/p&gt;
+ &gt;Redis DEL command&lt;/a&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;if redis.call(&amp;#34;get&amp;#34;, KEYS[1]) == ARGV[1] then
-return redis.call(&amp;#34;del&amp;#34;, KEYS[1])
+ return redis.call(&amp;#34;del&amp;#34;, KEYS[1])
 else
-return 0
+ return 0
 end
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We only release the lock if the value matches, ensuring that the server that acquired the lock releases it.&lt;/p&gt;
 &lt;h2 id="distributed-lock-solution"&gt;&lt;a href="#distributed-lock-solution" class="header-anchor"&gt;&lt;/a&gt;Distributed lock solution
 &lt;/h2&gt;&lt;p&gt;With the distributed lock in place, we can make sure that only one server is processing a calendar event at a time.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-lock-solution.svg"
-alt="Sequence diagram demonstrating using distributed lock and a processing queue to solve data consistency issue"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Using distributed lock with a processing queue&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Sequence diagram demonstrating using distributed lock and a processing queue to solve data consistency issue"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Using distributed lock with a processing queue&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In the above diagram, server B receives a calendar callback and acquires a lock from Redis. Server A also gets a
 callback but cannot acquire the lock since it has already been taken by Server B. Instead of waiting, Server A puts the
 event in a processing queue. Once Server B finishes processing the event, it releases the lock. Server B then checks the
@@ -58,10 +60,11 @@ compete with other servers.&lt;/p&gt;
 &lt;h2 id="fairness-in-acquiring-the-lock"&gt;&lt;a href="#fairness-in-acquiring-the-lock" class="header-anchor"&gt;&lt;/a&gt;Fairness in acquiring the lock
 &lt;/h2&gt;&lt;p&gt;We implemented a fairness mechanism to ensure a priority process could acquire the lock.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-fair-lock.svg"
-alt="Sequence diagram demonstrating using a fairness mechanism to acquire a distributed lock"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Cron job is guaranteed to acquire the lock&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Sequence diagram demonstrating using a fairness mechanism to acquire a distributed lock"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Cron job is guaranteed to acquire the lock&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In the above diagram, the worker process has acquired the lock. Another process, a cron job, also needs to acquire the
 lock. The cron job is a priority process that needs to run at a specific time. The cron job tries to acquire the lock
 but fails because the worker process has it. The cron job sets a key in Redis that indicates that it wants to acquire
@@ -70,15 +73,16 @@ until it is successful.&lt;/p&gt;
 &lt;h2 id="distributed-lock-code-on-github"&gt;&lt;a href="#distributed-lock-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Distributed lock code on GitHub
 &lt;/h2&gt;&lt;p&gt;We implemented the distributed lock logic in Go. The crucial part of the code is in the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/7ae1fe95272fbbda7efe1e320552539768498839/server/service/redis_lock/redis_lock.go" target="_blank" rel="noopener"
-&gt;redis_lock.go&lt;/a&gt;
+ &gt;redis_lock.go&lt;/a&gt;
 file.&lt;/p&gt;
 &lt;h2 id="distributed-lock-video"&gt;&lt;a href="#distributed-lock-video" class="header-anchor"&gt;&lt;/a&gt;Distributed lock video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/833TqEPfF18"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/833TqEPfF18" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

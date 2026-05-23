@@ -9,7 +9,7 @@
 &lt;/ul&gt;
 &lt;p&gt;A year ago, I embarked on a journey to improve the architecture of our large 500K+ line open source
 &lt;a class="link" href="https://github.com/fleetdm/fleet" target="_blank" rel="noopener"
-&gt;device management codebase&lt;/a&gt;, and things haven&amp;rsquo;t been quite as smooth as I&amp;rsquo;d hoped.&lt;/p&gt;
+ &gt;device management codebase&lt;/a&gt;, and things haven&amp;rsquo;t been quite as smooth as I&amp;rsquo;d hoped.&lt;/p&gt;
 &lt;p&gt;Although I&amp;rsquo;ve been in tech for over 25 years, I haven&amp;rsquo;t worked on large web apps before. I&amp;rsquo;ve spent most of my time in
 the semiconductor industry, working on several small software projects. However, I was aware of this going in, and I
 wanted to learn more about software architecture so that I could enhance the developer experience.&lt;/p&gt;
@@ -27,10 +27,11 @@ transition to a more modular architecture, known as a modular monolith.&lt;/p&gt
 &lt;h2 id="our-web-app-architecture"&gt;&lt;a href="#our-web-app-architecture" class="header-anchor"&gt;&lt;/a&gt;Our web app architecture
 &lt;/h2&gt;&lt;p&gt;Our web app is a 10-year-old monolith. It&amp;rsquo;s a Go REST API built on top of a MySQL database.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-B --&amp;gt; C[(MySQL Database)]
+ flowchart TD
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ B --&amp;gt; C[(MySQL Database)]
 &lt;/pre&gt;
+
 &lt;p&gt;The above diagram is a simplified core of our application. We have a single Go package for the API layer, which includes
 controllers (Go handlers) and service (business logic). The service layer calls the persistence layer, which constructs
 the SQL queries and executes them against our MySQL database. The API layer is one huge Go package, and the persistence
@@ -42,18 +43,19 @@ ideas of the presentation was that when working on a new feature, we could creat
 would mirror the structure of the legacy code. The approach would be similar to microservices, but still within a single
 compiled binary.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph Legacy code
-direction TB
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-B --&amp;gt; C[(MySQL database)]
-end
-subgraph New feature
-direction TB
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-E --&amp;gt; F[(MySQL database)]
-end
+ flowchart TD
+ subgraph Legacy code
+ direction TB
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ B --&amp;gt; C[(MySQL database)]
+ end
+ subgraph New feature
+ direction TB
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ E --&amp;gt; F[(MySQL database)]
+ end
 &lt;/pre&gt;
+
 &lt;p&gt;The presentation seemed to go well, with general agreement. One comment was along the lines of &amp;ldquo;won&amp;rsquo;t we have to redo
 the architecture every time we reorganize our team structure?&amp;rdquo; The answer is maybe. The vertical slices must make sense
 from a product perspective. Also, the vertical slices can be small enough that a single team can own multiple slices. If
@@ -73,26 +75,27 @@ proposed. Some engineers felt surprised by the changes and didn&amp;rsquo;t feel
 It would have made our deployments more complicated, even if the schemas were both in the same database. With the lack
 of traction on my PR, I decided to take a step back and unsplit the MySQL layer.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph New feature
-direction TB
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-end
-subgraph Legacy code
-direction TB
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-end
-E --&amp;gt; C[(MySQL database)]
-B --&amp;gt; C
+ flowchart TD
+ subgraph New feature
+ direction TB
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ end
+ subgraph Legacy code
+ direction TB
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ end
+ E --&amp;gt; C[(MySQL database)]
+ B --&amp;gt; C
 &lt;/pre&gt;
+
 &lt;p&gt;After several lengthy conversations with the PR reviewer and a few minor adjustments, we merged the PR.&lt;/p&gt;
 &lt;h2 id="second-compromise"&gt;&lt;a href="#second-compromise" class="header-anchor"&gt;&lt;/a&gt;Second compromise
 &lt;/h2&gt;&lt;p&gt;Around the same time, we instituted an ADR (Architecture Decision Record) process. I retroactively wrote two ADRs, one
 to split the API layer and one to split the persistence layer for the Android feature. The
 &lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29850" target="_blank" rel="noopener"
-&gt;ADR to split the API layer was approved&lt;/a&gt;, but the
+ &gt;ADR to split the API layer was approved&lt;/a&gt;, but the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29853" target="_blank" rel="noopener"
-&gt;ADR to split the persistence layer was rejected&lt;/a&gt;.&lt;/p&gt;
+ &gt;ADR to split the persistence layer was rejected&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Engineers voiced their concerns, which included:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;We&amp;rsquo;ve had this structure for a while, and people know how it works. Why do we need this change?&lt;/li&gt;
@@ -101,32 +104,34 @@ to split the API layer and one to split the persistence layer for the Android fe
 &lt;/ul&gt;
 &lt;p&gt;So, I reverted the persistence layer changes.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph New feature
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-subgraph Legacy code
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-D --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-A --&amp;gt; B
-B --&amp;gt; C[(MySQL database)]
+ flowchart TD
+ subgraph New feature
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ subgraph Legacy code
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ D --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ A --&amp;gt; B
+ B --&amp;gt; C[(MySQL database)]
 &lt;/pre&gt;
+
 &lt;h2 id="architectural-drift"&gt;&lt;a href="#architectural-drift" class="header-anchor"&gt;&lt;/a&gt;Architectural drift
 &lt;/h2&gt;&lt;p&gt;I moved to another product team, where I worked on other parts of the codebase, and other engineers continued to work on
 the Android part of the codebase. Without architectural oversight and strong commitment from the engineering team, the
 Android feature seeped into the legacy code.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph &amp;#34;API layer&amp;#34;
-D[&amp;#34;Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-E[&amp;#34;Legacy + some Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-E --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-D --&amp;gt; B
-B --&amp;gt; C[(MySQL database)]
-E --&amp;gt; D
+ flowchart TD
+ subgraph &amp;#34;API layer&amp;#34;
+ D[&amp;#34;Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ E[&amp;#34;Legacy + some Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ E --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ D --&amp;gt; B
+ B --&amp;gt; C[(MySQL database)]
+ E --&amp;gt; D
 &lt;/pre&gt;
+
 &lt;p&gt;So, what do we have now? Certainly, at a high level, the codebase doesn&amp;rsquo;t appear to be very modular. Arguably, it is
 even more complex and harder to maintain than it was before. There is no clear separation between the legacy code and
 the Android feature.&lt;/p&gt;
@@ -147,7 +152,7 @@ the user story as quickly as possible without regard for the architecture.&lt;/p
 &lt;h3 id="better-architectural-governance"&gt;&lt;a href="#better-architectural-governance" class="header-anchor"&gt;&lt;/a&gt;Better architectural governance
 &lt;/h3&gt;&lt;p&gt;We need to have automated dependency checks to make sure developers aren&amp;rsquo;t adding new dependencies that go against the
 new architecture. We plan on investigating &lt;a class="link" href="https://github.com/arch-go/arch-go" target="_blank" rel="noopener"
-&gt;arch-go&lt;/a&gt; in the future. Since we don&amp;rsquo;t
+ &gt;arch-go&lt;/a&gt; in the future. Since we don&amp;rsquo;t
 see many off-the-shelf tools for architectural governance of Go projects, we&amp;rsquo;ll have to build our own as well.&lt;/p&gt;
 &lt;p&gt;In addition to automated checks, it makes sense for the architect to regularly review the codebase as a whole and
 related PRs to catch any deviations from the architecture. With today&amp;rsquo;s AI agents, it should be straightforward to
@@ -172,13 +177,14 @@ Ways to measure and track code complexity to improve maintainability.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-our-modular-monolith-attempt"&gt;&lt;a href="#watch-us-discuss-our-modular-monolith-attempt" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss our modular monolith attempt
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/lrM3conC-L8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/lrM3conC-L8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Why transparency beats everything else in engineering</title><link>https://victoronsoftware.com/posts/engineering-transparency/</link><pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-transparency/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-transparency/engineering-transparency-headline.png" alt="Featured image of post Why transparency beats everything else in engineering" /&gt;&lt;p&gt;Have you ever felt like you&amp;rsquo;re working in a fog? Where everyone&amp;rsquo;s busy, everyone&amp;rsquo;s trying, but somehow nothing important
 gets done? I&amp;rsquo;ve been there. The problem isn&amp;rsquo;t the people. It&amp;rsquo;s the system. And specifically, it&amp;rsquo;s the lack of
 transparency and accountability.&lt;/p&gt;
@@ -190,35 +196,47 @@ transparency and accountability.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
 same question, trying to keep my tone professional:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;And every week, Alex would say:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
 &lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
 &lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
 &lt;p&gt;I kept thinking:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
 matters?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
 again with another non-update.&lt;/p&gt;
 &lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
 &lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
 wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
@@ -241,45 +259,49 @@ frustrating, demoralizing fog. Everyone thought they were doing the right thing,
 direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p&gt;
 &lt;p&gt;As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: The hidden work iceberg
 ---
 graph TD
-subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
-direction TB
-Spacer1[&amp;#34; &amp;#34;]
-A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
-A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
-A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
-Spacer1 -.-&amp;gt; A1
-Spacer1 -.-&amp;gt; A2
-Spacer1 -.-&amp;gt; A3
-end
-subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
-direction TB
-subgraph Row1[&amp;#34; &amp;#34;]
-B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
-B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
-B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
-end
-subgraph Row2[&amp;#34; &amp;#34;]
-B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
-B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
-B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
-end
-subgraph Row3[&amp;#34; &amp;#34;]
-B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
-B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
-end
-end
-Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
-style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-style Row1 fill:none,stroke:none
-style Row2 fill:none,stroke:none
-style Row3 fill:none,stroke:none
-style Spacer1 fill:none,stroke:none
+ subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
+ direction TB
+ Spacer1[&amp;#34; &amp;#34;]
+ A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
+ A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
+ A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
+ Spacer1 -.-&amp;gt; A1
+ Spacer1 -.-&amp;gt; A2
+ Spacer1 -.-&amp;gt; A3
+ end
+
+ subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
+ direction TB
+ subgraph Row1[&amp;#34; &amp;#34;]
+ B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
+ B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
+ B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
+ end
+ subgraph Row2[&amp;#34; &amp;#34;]
+ B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
+ B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
+ B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
+ end
+ subgraph Row3[&amp;#34; &amp;#34;]
+ B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
+ B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
+ end
+ end
+
+ Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
+
+ style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+ style Row1 fill:none,stroke:none
+ style Row2 fill:none,stroke:none
+ style Row3 fill:none,stroke:none
+ style Spacer1 fill:none,stroke:none
 &lt;/pre&gt;
+
 &lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility"&gt;&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor"&gt;&lt;/a&gt;Taking action: What you can do when you have no visibility
 &lt;/h2&gt;&lt;p&gt;At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
 knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p&gt;
@@ -295,8 +317,9 @@ not meeting regularly with your manager&amp;rsquo;s manager, ask for a skip-leve
 recurring skip-level meeting.&lt;/p&gt;
 &lt;h3 id="how-to-ask-for-more-visibility"&gt;&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor"&gt;&lt;/a&gt;How to ask for more visibility
 &lt;/h3&gt;&lt;p&gt;Here&amp;rsquo;s a sample script you can adapt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
 I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p&gt;
 &lt;p&gt;Specifically, I&amp;rsquo;m interested in:&lt;/p&gt;
 &lt;ul&gt;
@@ -311,7 +334,8 @@ I&amp;rsquo;d love to have more visibility into the broader priorities and conte
 &lt;/ol&gt;
 &lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
 contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
 &lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
@@ -343,13 +367,14 @@ Learn how code clarity impacts team velocity and why transparency starts at the 
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-engineering-transparency"&gt;&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss engineering transparency
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/3oSdwkC7iiI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/3oSdwkC7iiI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>6 business benefits of software modularity and cohesion</title><link>https://victoronsoftware.com/posts/software-modularity/</link><pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-modularity/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-modularity/software-modularity-headline.png" alt="Featured image of post 6 business benefits of software modularity and cohesion" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Why readable code is essential&lt;/a&gt;&lt;/li&gt;
@@ -460,16 +485,17 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-us-explain-the-business-benefits-of-software-modularity"&gt;&lt;a href="#watch-us-explain-the-business-benefits-of-software-modularity" class="header-anchor"&gt;&lt;/a&gt;Watch us explain the business benefits of software modularity
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/UmSsmGFufTg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/UmSsmGFufTg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>6 lessons from literate programming</title><link>https://victoronsoftware.com/posts/literate-programming-lessons/</link><pubDate>Wed, 12 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/literate-programming-lessons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/literate-programming-lessons/literate-programming-headline.png" alt="Featured image of post 6 lessons from literate programming" /&gt;&lt;p&gt;This article examines the literate programming paradigm introduced in 1984 by
 &lt;a class="link" href="https://en.wikipedia.org/wiki/Donald_Knuth" target="_blank" rel="noopener"
-&gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
+ &gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
 lessons relevant to making today&amp;rsquo;s software more readable and maintainable.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#literate-programming-hello-world-example" &gt;Literate programming example&lt;/a&gt;&lt;/li&gt;
@@ -481,20 +507,21 @@ programming language source code is embedded into the program&amp;rsquo;s descri
 human can easily read without jumping back and forth between different sections of the code file. The writer completely
 controls the flow of the document, which can be reorganized in any fashion.&lt;/p&gt;
 &lt;p&gt;Knuth called his implementation of literate programming &lt;a class="link" href="https://en.wikipedia.org/wiki/Web_%28programming_system%29" target="_blank" rel="noopener"
-&gt;WEB&lt;/a&gt;
+ &gt;WEB&lt;/a&gt;
 to emphasize that a computer program is built from many different pieces. He picked the name before the World Wide Web
 was prominent. To produce source code, the user runs the &lt;strong&gt;tangle&lt;/strong&gt; command. To create documentation, the user runs the
 &lt;strong&gt;weave&lt;/strong&gt; command.&lt;/p&gt;
 &lt;h2 id="literate-programming-hello-world-example"&gt;&lt;a href="#literate-programming-hello-world-example" class="header-anchor"&gt;&lt;/a&gt;Literate programming &amp;ldquo;Hello World&amp;rdquo; example
 &lt;/h2&gt;&lt;h3 id="writing-a-literate-program"&gt;&lt;a href="#writing-a-literate-program" class="header-anchor"&gt;&lt;/a&gt;Writing a literate program
 &lt;/h3&gt;&lt;p&gt;To demonstrate literate programming, we will use the &lt;a class="link" href="https://github.com/nrnrnr/noweb" target="_blank" rel="noopener"
-&gt;noweb&lt;/a&gt; literate programming tool
+ &gt;noweb&lt;/a&gt; literate programming tool
 to write a simple program in Go.&lt;/p&gt;
 &lt;p&gt;We create a &lt;code&gt;hello.nw&lt;/code&gt; file and start it with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;This program teaches us how to print to the screen using:
 &amp;lt;&amp;lt;print&amp;gt;&amp;gt;=
 fmt.Println(message)
 @
+
 To print &amp;#34;Hello World&amp;#34;, pass a literal string to the function:
 &amp;lt;&amp;lt;message&amp;gt;&amp;gt;=
 &amp;#34;Hello World&amp;#34;
@@ -504,15 +531,16 @@ are macros that we can reuse in other sections of the document, such as:&lt;/p&g
 &lt;pre tabindex="0"&gt;&lt;code&gt;Now, we can create a function that prints a message:
 &amp;lt;&amp;lt;mypackage_print&amp;gt;&amp;gt;=
 func Print(message string) {
-&amp;lt;&amp;lt;print&amp;gt;&amp;gt;
+ &amp;lt;&amp;lt;print&amp;gt;&amp;gt;
 }
 @
+
 Finally, we can call this function from the main function:
 &amp;lt;&amp;lt;main_call&amp;gt;&amp;gt;=
 mypackage.Print(&amp;lt;&amp;lt;message&amp;gt;&amp;gt;)
 @
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;See &lt;a class="link" href="https://github.com/getvictor/noweb_example/blob/main/hello.nw" target="_blank" rel="noopener"
-&gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
+ &gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
 &lt;h3 id="generating-code-and-documentation-from-the-literate-program"&gt;&lt;a href="#generating-code-and-documentation-from-the-literate-program" class="header-anchor"&gt;&lt;/a&gt;Generating code and documentation from the literate program
 &lt;/h3&gt;&lt;p&gt;To install the noweb tool with &lt;code&gt;brew&lt;/code&gt; on macOS, run the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install noweb
@@ -548,7 +576,7 @@ none can mix arbitrary pieces of code with their documentation.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// This is a class.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Today, the closest mainstream approaches to literate programming are computational notebooks such as
 &lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
-&gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
+ &gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
 with others but not sufficient for larger software projects.&lt;/p&gt;
 &lt;p&gt;Some IDEs support rendering comments in a different style than the rest of the code, including rendering diagrams.
 However, no standard works across IDEs and version control hosting systems like GitHub.&lt;/p&gt;
@@ -581,7 +609,7 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;h2 id="see-literate-programming-example-code-on-github"&gt;&lt;a href="#see-literate-programming-example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;See literate programming example code on GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/getvictor/noweb_example" target="_blank" rel="noopener"
-&gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
+ &gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
@@ -590,13 +618,14 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;/ul&gt;
 &lt;h2 id="watch-the-literate-programming-example-and-takeaways"&gt;&lt;a href="#watch-the-literate-programming-example-and-takeaways" class="header-anchor"&gt;&lt;/a&gt;Watch the literate programming example and takeaways
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8cwxxioVbfA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8cwxxioVbfA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Ways to improve your code for readability&lt;/a&gt;&lt;/li&gt;
@@ -616,7 +645,7 @@ a module. Complex code is difficult to modify because engineers must spend consi
 Frequently, engineers will not understand the code well enough, so they&amp;rsquo;ll make a change to fix a bug, and the change
 will introduce a new bug somewhere else. Lack of understanding also leads to
 &lt;a class="link" href="https://victoronsoftware.com/posts/common-refactorings/#why-are-engineers-afraid-of-refactoring" target="_blank" rel="noopener"
-&gt;a fear of refactoring&lt;/a&gt;,
+ &gt;a fear of refactoring&lt;/a&gt;,
 because engineers don&amp;rsquo;t want to break the codebase.&lt;/p&gt;
 &lt;h2 id="code-complexity-metrics"&gt;&lt;a href="#code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Code complexity metrics
 &lt;/h2&gt;&lt;p&gt;Many code complexity measures overlap since they all try to measure the same thing.&lt;/p&gt;
@@ -643,13 +672,13 @@ manageable pieces. James Lewis from ThoughtWorks said that &amp;ldquo;a microser
 that one person should be able to understand the entire codebase. The smaller the piece of code, the easier it is to
 understand.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
-&gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
+ &gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
 in 1977, and one of his metrics was the Halstead volume, which is directly related to code size. We can approximate the
 Halstead volume by ignoring all comments and whitespace, then multiplying the average code line length by the number of
 lines of code. This approximation is a good enough metric for our purposes.&lt;/p&gt;
 &lt;h3 id="cyclomatic-complexity"&gt;&lt;a href="#cyclomatic-complexity" class="header-anchor"&gt;&lt;/a&gt;Cyclomatic complexity
 &lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
-&gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
+ &gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
 paths through a program&amp;rsquo;s source code. It is often used as the master metric for code complexity, uncovering
 maintainability and hard-to-test parts of the codebase.&lt;/p&gt;
 &lt;p&gt;A typical calculation of cyclomatic complexity is as follows:&lt;/p&gt;
@@ -662,7 +691,7 @@ metric encourages us to write smaller functions.&lt;/p&gt;
 &lt;h3 id="cognitive-complexity"&gt;&lt;a href="#cognitive-complexity" class="header-anchor"&gt;&lt;/a&gt;Cognitive complexity
 &lt;/h3&gt;&lt;p&gt;An alternative to cyclomatic complexity is
 &lt;a class="link" href="https://www.sonarsource.com/docs/CognitiveComplexity.pdf" target="_blank" rel="noopener"
-&gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
+ &gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
 cyclomatic complexity metric to focus on the human reader&amp;rsquo;s mental load &amp;ndash; on the maintainability, and not on the
 testability, of the code.&lt;/p&gt;
 &lt;p&gt;The key differences in the calculation are:&lt;/p&gt;
@@ -693,9 +722,9 @@ cognitive complexity metrics penalize it.&lt;/p&gt;
 considered complex code based on their experience, language, and code style.&lt;/p&gt;
 &lt;h3 id="go-complexity-metrics"&gt;&lt;a href="#go-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Go complexity metrics
 &lt;/h3&gt;&lt;p&gt;For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
-&gt;gocyclo&lt;/a&gt;. For measuring cognitive
+ &gt;gocyclo&lt;/a&gt;. For measuring cognitive
 complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocognit" target="_blank" rel="noopener"
-&gt;gocognit&lt;/a&gt;.&lt;/p&gt;
+ &gt;gocognit&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="what-is-modularity-and-why-is-it-important"&gt;&lt;a href="#what-is-modularity-and-why-is-it-important" class="header-anchor"&gt;&lt;/a&gt;What is modularity and why is it important
 &lt;/h3&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
 &lt;a class="link" href="../software-modularity/" &gt;explain what is modularity and why it is important for modern scalable software systems&lt;/a&gt;.&lt;/p&gt;
@@ -718,13 +747,14 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics"&gt;&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss and show examples of code complexity metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HzZQqrhX3cg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HzZQqrhX3cg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top code refactorings every software engineer should know</title><link>https://victoronsoftware.com/posts/common-refactorings/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/common-refactorings/</guid><description>&lt;img src="https://victoronsoftware.com/posts/common-refactorings/common-refactorings-headline.png" alt="Featured image of post Top code refactorings every software engineer should know" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#extract-method-aka-extract-function" &gt;Extract method (aka extract function)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#inline-variable" &gt;Inline variable&lt;/a&gt;&lt;/li&gt;
@@ -844,13 +874,14 @@ title="YouTube Video"
 &lt;/ul&gt;
 &lt;h2 id="watch-examples-of-top-code-refactorings"&gt;&lt;a href="#watch-examples-of-top-code-refactorings" class="header-anchor"&gt;&lt;/a&gt;Watch examples of top code refactorings
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Mzj9XQlieHk"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Mzj9XQlieHk" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to scale your codebase with evolutionary architecture</title><link>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</link><pubDate>Wed, 29 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</guid><description>&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-architecture-headline.png" alt="Featured image of post How to scale your codebase with evolutionary architecture" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous article:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Why readable code is important and how to refactor code for readability&lt;/a&gt;&lt;/li&gt;
@@ -879,9 +910,10 @@ discuss are common in software development, especially in startups and small com
 &lt;p&gt;The initial state of our example codebase is a web application developed in a mono-repository. The application was built
 from the ground up with a simple architecture, focusing on adding new features and finding product-market fit.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/current-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The current design divides the codebase into a few large modules. We use the term &lt;em&gt;module&lt;/em&gt; to mean a logical grouping of
 code in the same files and directories.&lt;/p&gt;
 &lt;p&gt;However, after a couple of years, the application has grown significantly in features, complexity, and team size. The
@@ -914,9 +946,10 @@ the codebase and start contributing.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;At this point in the company&amp;rsquo;s life, an exemplary architecture would be separate groups of modules corresponding to the
 three product teams.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/ideal-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Each team would be responsible for its own set of modules, which aligns with Agile principles. The modules would be
 loosely coupled, and the teams would be able to work independently on their features without affecting other teams. The
 amount of code that each engineer has to understand and change would be drastically reduced.&lt;/p&gt;
@@ -946,9 +979,10 @@ Instead of worrying about not making the right decisions in the past, consider w
 or two from now and start moving towards that.&lt;/p&gt;
 &lt;p&gt;For example, when adding a new prominent feature to the product, decouple it from the rest of the codebase.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Our example shows all the modules decoupled, but it may be OK to decouple one or two.&lt;/p&gt;
 &lt;p&gt;Decoupling a feature from the rest of the codebase has many benefits similar to those we listed above for &amp;ldquo;good
 architecture.&amp;rdquo; Additional benefits include:&lt;/p&gt;
@@ -965,11 +999,11 @@ we begin with a monolithic application that has a single database schema. We the
 schemas. It is the starting point and a reference for decoupling a new feature from the rest of the codebase. Since this
 code example is a bit long and requires some context regarding the current implementation, we will not cover it in this
 article. Instead, &lt;a class="link" href="https://www.youtube.com/watch?v=Li1GZzQVXWw&amp;amp;t=1070s" target="_blank" rel="noopener"
-&gt;jump to the code example section&lt;/a&gt; of the video
+ &gt;jump to the code example section&lt;/a&gt; of the video
 below.&lt;/p&gt;
 &lt;p&gt;Link to the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/compare/main...victor/feature-set-up" target="_blank" rel="noopener"
-&gt;source code example decoupling a new backend feature from the rest of the codebase&lt;/a&gt;.&lt;/p&gt;
+ &gt;source code example decoupling a new backend feature from the rest of the codebase&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="track-code-complexity-metrics"&gt;&lt;a href="#track-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Track code complexity metrics
 &lt;/h2&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
 &lt;a class="link" href="../code-complexity-metrics/" &gt;go over the top code complexity metrics every software engineer should know&lt;/a&gt;.&lt;/p&gt;
@@ -990,13 +1024,14 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-scale-your-codebase-with-evolutionary-architecture"&gt;&lt;a href="#watch-how-to-scale-your-codebase-with-evolutionary-architecture" class="header-anchor"&gt;&lt;/a&gt;Watch how to scale your codebase with evolutionary architecture
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Li1GZzQVXWw"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Li1GZzQVXWw" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#metrics-for-unreadable-code" &gt;Metrics for unreadable code&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#how-to-make-your-codebase-more-readable" &gt;How to make your codebase more readable&lt;/a&gt;
@@ -1043,7 +1078,7 @@ using linters or static analysis tools. Some examples of code style violations r
 &lt;/ul&gt;
 &lt;p&gt;Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
 linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
-&gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="how-to-make-your-codebase-more-readable"&gt;&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor"&gt;&lt;/a&gt;How to make your codebase more readable
 &lt;/h2&gt;&lt;p&gt;Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
 incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p&gt;
@@ -1054,9 +1089,10 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
 to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
 feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
@@ -1069,9 +1105,10 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding
 &lt;/h3&gt;&lt;p&gt;When entering a function, you should quickly understand what it does. The function code should be readable. If an
 engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p&gt;
@@ -1085,9 +1122,9 @@ with descriptive names.&lt;/p&gt;
 comments.&lt;/p&gt;
 &lt;p&gt;As an example of a function before and after refactoring, see this
 &lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
-&gt;refactoring example gist&lt;/a&gt;. For a full explanation,
+ &gt;refactoring example gist&lt;/a&gt;. For a full explanation,
 you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
-&gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
+ &gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
 &lt;p&gt;For more examples of common refactorings, see our article on
 &lt;a class="link" href="../common-refactorings/" &gt;top refactorings every software developer should know&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="use-unit-and-integration-tests"&gt;&lt;a href="#use-unit-and-integration-tests" class="header-anchor"&gt;&lt;/a&gt;Use unit and integration tests
@@ -1217,11 +1254,12 @@ Explore how AI tools can enhance productivity without replacing the need for rea
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-why-readable-code-is-important"&gt;&lt;a href="#watch-us-discuss-why-readable-code-is-important" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss why readable code is important
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HCGyWuE9zbY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HCGyWuE9zbY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

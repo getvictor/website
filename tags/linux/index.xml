@@ -13,9 +13,9 @@ IPv6, with IPv4 disabled.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;h2 id="prerequisites"&gt;&lt;a href="#prerequisites" class="header-anchor"&gt;&lt;/a&gt;Prerequisites
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
-&gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
+ &gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
 at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
-&gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
+ &gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
 sizes. We will create a new droplet with IPv6.&lt;/p&gt;
 &lt;h2 id="create-linux-server-with-ipv6-enabled"&gt;&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor"&gt;&lt;/a&gt;Step 1: Create droplets with IPv6 enabled
@@ -25,18 +25,21 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
-alt="Enable IPv6 checkbox"&gt;
+ alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
-alt="Choose Droplet authentication method"&gt;
+ alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
-alt="Droplet details"&gt;
+ alt="Droplet details"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From there, we can SSH into the first droplet using its IPv6 address.&lt;/p&gt;
@@ -70,28 +73,30 @@ all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown bel
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can view the network configuration using the &lt;code&gt;ifconfig&lt;/code&gt; command. It should look like:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
-ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
-RX packets 5179 bytes 3832240 (3.8 MB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 5099 bytes 696019 (696.0 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
+ ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
+ RX packets 5179 bytes 3832240 (3.8 MB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 5099 bytes 696019 (696.0 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
-RX packets 12 bytes 916 (916.0 B)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 43 bytes 2266 (2.2 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
+ RX packets 12 bytes 916 (916.0 B)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 43 bytes 2266 (2.2 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 lo: flags=73&amp;lt;UP,LOOPBACK,RUNNING&amp;gt; mtu 65536
-inet 127.0.0.1 netmask 255.0.0.0
-inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
-loop txqueuelen 1000 (Local Loopback)
-RX packets 233 bytes 22136 (22.1 KB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 233 bytes 22136 (22.1 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet 127.0.0.1 netmask 255.0.0.0
+ inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
+ loop txqueuelen 1000 (Local Loopback)
+ RX packets 233 bytes 22136 (22.1 KB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 233 bytes 22136 (22.1 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can see that the &lt;code&gt;eth0&lt;/code&gt; interface has an IPv6 address but no IPv4 address. The &lt;code&gt;eth1&lt;/code&gt; interface also has an IPv6
 address. The &lt;code&gt;lo&lt;/code&gt; interface is the loopback interface and still uses the IPv4 &lt;code&gt;127.0.0.1&lt;/code&gt; address. We will not disable
 IPv4 on the loopback interface at this point since many tools may break.&lt;/p&gt;
@@ -109,11 +114,12 @@ own IPv6-only servers and experiment with them.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" &gt;why you need VLANs in your home network&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="create-an-ipv6-only-linux-server-video"&gt;&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor"&gt;&lt;/a&gt;Create an IPv6-only Linux server video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/BjdHmyzfe80"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/BjdHmyzfe80" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

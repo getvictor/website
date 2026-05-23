@@ -5,24 +5,25 @@ you deep visibility that your team will actually want to look at.&lt;/p&gt;
 &lt;p&gt;In our previous &lt;a class="link" href="../track-engineering-metrics/" &gt;engineering metrics guide&lt;/a&gt;, we showed a basic way to track metrics using
 GitHub Actions and the Google Sheets API. The data in Google Sheets can be visualized using a tool like
 &lt;a class="link" href="https://lookerstudio.google.com/" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
+ &gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
 be dynamically sliced, diced, and drilled down into. Also, we wanted the tools to be free so we wouldn&amp;rsquo;t need to justify
 the costs to our management.&lt;/p&gt;
 &lt;h2 id="the-free-engineering-benchmarks-stack"&gt;&lt;a href="#the-free-engineering-benchmarks-stack" class="header-anchor"&gt;&lt;/a&gt;The free engineering benchmarks stack
 &lt;/h2&gt;&lt;p&gt;As in our previous example, we used &lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; to schedule our metrics
+ &gt;GitHub Actions&lt;/a&gt; to schedule our metrics
 collection and compute the data we wanted to track.&lt;/p&gt;
 &lt;p&gt;For visualizations, we decided on &lt;a class="link" href="https://grafana.com/oss/grafana/" target="_blank" rel="noopener"
-&gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
+ &gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
 is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
 up any infrastructure ourselves.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
-alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
+ alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
 compare our engineering metrics year over year. Due to its generous free tier, we decided to use
 &lt;a class="link" href="https://cloud.google.com/bigquery?hl=en" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Storage: The first 10 GiB per month is free.&lt;/li&gt;
 &lt;li&gt;Queries: The first 1 TiB of query data processed per month is free.&lt;/li&gt;
@@ -30,8 +31,9 @@ compare our engineering metrics year over year. Due to its generous free tier, w
 &lt;p&gt;We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
 roles, and created a JWT key for the service account to use with our app.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
-alt="Roles for the BigQuery service account."&gt;
+ alt="Roles for the BigQuery service account."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
 recommend enabling billing on the account and monitoring your usage to ensure you stay within the free limits.&lt;/p&gt;
 &lt;h2 id="picking-the-metric-to-track-pickup-time"&gt;&lt;a href="#picking-the-metric-to-track-pickup-time" class="header-anchor"&gt;&lt;/a&gt;Picking the metric to track: pickup time
@@ -48,7 +50,7 @@ from when the developer finishes their work until they get feedback on their wor
 &lt;a class="link" href="../github-reusable-workflows-and-steps/#reusable-steps-composite-action" &gt;reusable GitHub action&lt;/a&gt;. We decided to use
 JavaScript (not TypeScript) to simplify the action.&lt;/p&gt;
 &lt;p&gt;We used the &lt;a class="link" href="https://github.com/octokit/octokit.js" target="_blank" rel="noopener"
-&gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
+ &gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
 repo, extract the timeline events and review events from the PRs, and calculate the pickup time.&lt;/p&gt;
 &lt;p&gt;In our initial review of the data, we noticed occasional spikes in pickup time on Mondays. That&amp;rsquo;s because pull requests
 created on Friday were sitting around over the weekend until being reviewed on Monday. Since we don&amp;rsquo;t expect our
@@ -57,7 +59,7 @@ time-consuming implementation details. We created a unit test to make sure we go
 &lt;p&gt;We added a &lt;code&gt;--print-only&lt;/code&gt; option to our program to manually examine the data before we uploaded it to the analytical
 database.&lt;/p&gt;
 &lt;p&gt;To interface with BigQuery, we used &lt;a class="link" href="https://github.com/googleapis/nodejs-bigquery" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
+ &gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
 Our table schema was:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fields&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;review_date&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;DATE&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;mode&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;REQUIRED&amp;#39;&lt;/span&gt; },
@@ -84,8 +86,9 @@ pickup time chart. We had to decide how to visualize the data. We decided on:&lt
 &lt;/ul&gt;
 &lt;p&gt;We created Grafana variables to filter by username/group.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
-alt="List of Grafana dashboard variables, including user and user_group."&gt;
+ alt="List of Grafana dashboard variables, including user and user_group."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
 Below is the query we came up with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; daily &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; (
@@ -219,12 +222,14 @@ time from &lt;code&gt;first_review_time&lt;/code&gt; but displaying the data in 
 attempts to fix the problem by changing the time to noon: &lt;code&gt;TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The final chart looked like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
-alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
+ alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can inspect the data to drill down into the PR numbers for each data point:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
-alt="Raw data from the database query, including PR numbers."&gt;
+ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;With the PR numbers, we can explore our data using the following query:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Sample query to dig into the details. Replace the PR numbers list.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;engineering&lt;span style="color:#f92672"&gt;-&lt;/span&gt;metrics&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;123456&lt;/span&gt;.github_metrics.pr_pickup_time&lt;span style="color:#f92672"&gt;`&lt;/span&gt;
@@ -278,7 +283,7 @@ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;SERVICE_ACCOUNT_KEY_PATH&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;./service-account-key.json&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;Our code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/pickup-time" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -296,13 +301,14 @@ Why code readability matters—and how to measure and improve it for long-term p
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-set-up-free-engineering-metrics"&gt;&lt;a href="#watch-how-to-set-up-free-engineering-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch how to set up free engineering metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/okYOm8IPeKM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/okYOm8IPeKM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" /&gt;&lt;p&gt;Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
 improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
 article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
@@ -328,10 +334,10 @@ Google Sheet, automate the process with GitHub Actions, and display the data in 
 services. We will use the Go programming language in our example.&lt;/p&gt;
 &lt;h2 id="gathering-the-number-of-open-bugs"&gt;&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor"&gt;&lt;/a&gt;Gathering the number of open bugs
 &lt;/h2&gt;&lt;p&gt;The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
-&gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
+ &gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
 &lt;p&gt;There are also many quality client libraries for the API. We will use the
 &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
-&gt;go-github&lt;/a&gt; client.&lt;/p&gt;
+ &gt;go-github&lt;/a&gt; client.&lt;/p&gt;
 &lt;p&gt;Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span&gt;
@@ -367,15 +373,15 @@ automatically. The token is optional for public repositories but required for pr
 and &lt;code&gt;bug&lt;/code&gt;. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p&gt;
 &lt;h2 id="updating-the-google-sheets-spreadsheet"&gt;&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor"&gt;&lt;/a&gt;Updating the Google Sheets spreadsheet
 &lt;/h2&gt;&lt;p&gt;To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
-&gt;Google Sheets API&lt;/a&gt;
+ &gt;Google Sheets API&lt;/a&gt;
 with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
 spreadsheet using the API, see our previous article:
 &lt;a class="link" href="../google-sheets-api/" &gt;How to quickly edit Google Sheets spreadsheet using the API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;See our integrated
 &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
-&gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
+ &gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
 on GitHub.&lt;/p&gt;
 &lt;p&gt;In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
 you must set the &lt;code&gt;SPREADSHEET_ID&lt;/code&gt; and &lt;code&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code&gt; environment variables.&lt;/p&gt;
@@ -436,12 +442,13 @@ manually run the workflow to test it.&lt;/p&gt;
 &lt;h2 id="display-the-metrics-in-google-docs"&gt;&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor"&gt;&lt;/a&gt;Display the metrics in Google Docs
 &lt;/h2&gt;&lt;p&gt;To see the metrics in Google Docs or Google Slides, you can
 &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
-&gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
+ &gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
 &lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
-alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+ alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -464,16 +471,17 @@ Discover how to monitor and visualize your dev team&amp;rsquo;s performance with
 &lt;/ul&gt;
 &lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
-&gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
+ &gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch"&gt;&lt;a href="#watch" class="header-anchor"&gt;&lt;/a&gt;Watch
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yzT-1nuKvNI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yzT-1nuKvNI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to create a custom GitHub Action using TypeScript</title><link>https://victoronsoftware.com/posts/typescript-github-action/</link><pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/typescript-github-action/</guid><description>&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/typescript-github-action-headline.png" alt="Featured image of post How to create a custom GitHub Action using TypeScript" /&gt;&lt;p&gt;In this article, we&amp;rsquo;ll create a custom reusable GitHub Action using TypeScript. As covered in our article on
 &lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;reusing GitHub workflows and steps&lt;/a&gt;, GitHub Actions allow you to automate your
 software development workflows. By creating a custom GitHub Action, you can extend the functionality of GitHub Actions
@@ -484,7 +492,7 @@ automatically approve Pull Requests that meet specific criteria.&lt;/p&gt;
 &lt;h2 id="start-with-githubs-action-template"&gt;&lt;a href="#start-with-githubs-action-template" class="header-anchor"&gt;&lt;/a&gt;Start with GitHub&amp;rsquo;s Action template
 &lt;/h2&gt;&lt;p&gt;GitHub provides a
 &lt;a class="link" href="https://github.com/actions/typescript-action" target="_blank" rel="noopener"
-&gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
+ &gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
 this template to get started quickly. The template includes the necessary files and structure to create a new GitHub
 Action. Anything unnecessary can be removed or modified to suit your requirements.&lt;/p&gt;
 &lt;p&gt;Follow the instructions in the template&amp;rsquo;s README to set up your action.&lt;/p&gt;
@@ -497,14 +505,14 @@ Action. Anything unnecessary can be removed or modified to suit your requirement
 &lt;/ol&gt;
 &lt;p&gt;Check out your new repository, go to the cloned repo directory, and make sure your node version matches the one in the
 &lt;code&gt;.node-version&lt;/code&gt; file. If you&amp;rsquo;re using &lt;a class="link" href="https://github.com/nvm-sh/nvm/blob/master/README.md" target="_blank" rel="noopener"
-&gt;nvm (Node Version Manager)&lt;/a&gt;,
+ &gt;nvm (Node Version Manager)&lt;/a&gt;,
 you can run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node --version
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Our example is based on
 &lt;a class="link" href="https://github.com/actions/typescript-action/tree/0467e124e81b527a246cabdaef9c3b433febf9a8" target="_blank" rel="noopener"
-&gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
+ &gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="implement-your-custom-github-action"&gt;&lt;a href="#implement-your-custom-github-action" class="header-anchor"&gt;&lt;/a&gt;Implement your custom GitHub Action
 &lt;/h2&gt;&lt;p&gt;Install the template&amp;rsquo;s dependencies with &lt;code&gt;npm install&lt;/code&gt;. In addition, install the &lt;code&gt;@actions/github&lt;/code&gt; package with
 &lt;code&gt;npm install @actions/github&lt;/code&gt;.&lt;/p&gt;
@@ -595,7 +603,7 @@ file points at the &lt;code&gt;dist/index.js&lt;/code&gt; bundled version of you
 &lt;p&gt;This step can easily be forgotten, and you may wonder why your changes are not reflected in the action. You can
 configure our IDE to do &lt;code&gt;npm run bundle&lt;/code&gt; automatically on save, create a check as a
 &lt;a class="link" href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks" target="_blank" rel="noopener"
-&gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
+ &gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
 up-to-date, or rely on the &lt;code&gt;Check Transpiled Javascript&lt;/code&gt; workflow in the &lt;code&gt;.github/workflows/&lt;/code&gt; directory.&lt;/p&gt;
 &lt;p&gt;Now, commit your changes and push them to your repository.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We will not cover testing in this article, but you should add tests to the &lt;code&gt;__tests__/&lt;/code&gt; directory for your
@@ -655,8 +663,9 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
-alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+ alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
 &lt;/h3&gt;&lt;p&gt;Commit your changes to a new branch and create a pull request. The &lt;code&gt;Code review&lt;/code&gt; workflow should run automatically and
 show the Failed status.&lt;/p&gt;
@@ -676,36 +685,38 @@ show the Failed status.&lt;/p&gt;
 &lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" &gt;how to use GitHub Actions for general-purpose tasks&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The code for our simple GitHub Action is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/code-review-demo" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-how-to-create-a-custom-github-action-using-typescript"&gt;&lt;a href="#watch-how-to-create-a-custom-github-action-using-typescript" class="header-anchor"&gt;&lt;/a&gt;Watch how to create a custom GitHub Action using TypeScript
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NFIwPxz5La8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NFIwPxz5La8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to reuse workflows and steps in GitHub Actions (2024)</title><link>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</link><pubDate>Wed, 01 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20thumbnail.png" alt="Featured image of post How to reuse workflows and steps in GitHub Actions (2024)" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#reusable-workflows" &gt;GitHub reusable workflows&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#reusable-steps-composite-action" &gt;GitHub reusable steps (composite action)&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
+ &gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
 approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
-alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
-&lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The entry point for GitHub Actions is the &lt;code&gt;.github/workflows&lt;/code&gt; directory in your repository. This directory contains one
 or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
 runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
 separate command.&lt;/p&gt;
 &lt;h2 id="why-reuse"&gt;&lt;a href="#why-reuse" class="header-anchor"&gt;&lt;/a&gt;Why reuse?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
-&gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
+ &gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
 GitHub Actions code allows you to:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li&gt;
@@ -726,10 +737,11 @@ GitHub Actions code allows you to:&lt;/p&gt;
 &lt;h2 id="reusable-workflows"&gt;&lt;a href="#reusable-workflows" class="header-anchor"&gt;&lt;/a&gt;Reusable workflows
 &lt;/h2&gt;&lt;p&gt;A reusable workflow replaces a job in the main workflow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
-alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p&gt;
 &lt;p&gt;For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not
 inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
@@ -802,17 +814,19 @@ artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
-alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="reusable-steps-composite-action"&gt;&lt;a href="#reusable-steps-composite-action" class="header-anchor"&gt;&lt;/a&gt;Reusable steps (composite action)
 &lt;/h2&gt;&lt;p&gt;Reusable steps replace a regular step in a job. We will use a &lt;code&gt;composite action&lt;/code&gt; for reusable steps in our example.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
-alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
 outputs to pass data back to the main workflow.&lt;/p&gt;
 &lt;p&gt;Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
@@ -865,10 +879,11 @@ generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also pro
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
-alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For a reusable TypeScript action example, see the
 &lt;a class="link" href="../typescript-github-action/" &gt;How to create a custom GitHub Action using TypeScript&lt;/a&gt; article.&lt;/p&gt;
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
@@ -879,7 +894,7 @@ great way to reduce errors and increase productivity.&lt;/p&gt;
 work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../track-engineering-metrics/" &gt;Automate tracking of engineering metrics with GitHub Actions&lt;/a&gt;&lt;/li&gt;
@@ -890,13 +905,14 @@ work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video"&gt;&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor"&gt;&lt;/a&gt;GitHub Actions reusable workflows and steps video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/ciHJzV6TZB8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/ciHJzV6TZB8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Use GitHub Actions for general-purpose tasks</title><link>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</link><pubDate>Thu, 11 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/</guid><description>&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png" alt="Featured image of post Use GitHub Actions for general-purpose tasks" /&gt;&lt;h2 id="what-are-github-actions"&gt;&lt;a href="#what-are-github-actions" class="header-anchor"&gt;&lt;/a&gt;What are GitHub Actions?
 &lt;/h2&gt;&lt;p&gt;GitHub Actions are a way to automate your software development workflows. They are similar to CI/CD tools like Jenkins,
 CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
@@ -914,8 +930,9 @@ use them as an extension of your application to perform tasks such as:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
-alt="GitHub Action block diagram"&gt;
+ alt="GitHub Action block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a
 database and then send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p&gt;
 &lt;p&gt;Although GitHub Actions in open-source repositories are public, they can still use secrets that are not accessible to
@@ -931,13 +948,14 @@ Then, it publishes the generated files as a new release. As a final step, it del
 careful with process-intensive actions.&lt;/p&gt;
 &lt;h2 id="use-github-actions-for-general-purpose-tasks-video"&gt;&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor"&gt;&lt;/a&gt;Use GitHub Actions for general-purpose tasks video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/y4Jct7eWLmY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/y4Jct7eWLmY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;How to reuse workflows and steps in GitHub Actions&lt;/a&gt;&lt;/li&gt;

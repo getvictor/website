@@ -10,7 +10,7 @@ compilation and optimization times. They are kept prepared on the DB server, and
 must only pass the parameters to execute them.&lt;/p&gt;
 &lt;p&gt;Another benefit of using prepared statements is the protection they provide
 against &lt;a class="link" href="https://owasp.org/www-community/attacks/SQL_Injection" target="_blank" rel="noopener"
-&gt;SQL injection&lt;/a&gt;. The application does
+ &gt;SQL injection&lt;/a&gt;. The application does
 not need to properly escape the parameter values provided to the statement. Because of this
 protection, many experts recommend always using prepared statements for accessing the database.&lt;/p&gt;
 &lt;p&gt;However, by always using prepared statements for accessing the database, we force the SQL driver to
@@ -30,12 +30,12 @@ prepared statement for each one of those sessions.&lt;/p&gt;
 &lt;p&gt;For example, given 100 servers with 100 connections each, we have 10,000 connections to the
 database. Assuming a memory requirement of 50 KB per prepared statement (derived from the
 following &lt;a class="link" href="https://blog.searce.com/how-max-prepared-stmt-count-bring-down-the-production-mysql-system-6ca28e577663" target="_blank" rel="noopener"
-&gt;article&lt;/a&gt;),
+ &gt;article&lt;/a&gt;),
 we arrive at the maximum memory requirement of:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;10,000 * 50 KB = 500 MB per single saved prepared statement
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Some databases also have limits on the number of prepared statements. MySQL’s
 &lt;a class="link" href="https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html#sysvar_max_prepared_stmt_count" target="_blank" rel="noopener"
-&gt;max_prepared_stmt_count&lt;/a&gt; defaults to 16,382 for the entire server. Yes, this is a global limit, and
+ &gt;max_prepared_stmt_count&lt;/a&gt; defaults to 16,382 for the entire server. Yes, this is a global limit, and
 &lt;strong&gt;not&lt;/strong&gt; per session. In the above example, if the application uses prepared statements for every
 database access, then each database connection will always be using up 1 short-lived prepared
 statement. A short-lived prepared statement is the prepared statement, as we described above, that
@@ -60,13 +60,14 @@ statements is greater than the max_prepared_stmt_count of 16,382.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="sql-prepared-statements-are-broken-when-scaling-applications-video"&gt;&lt;a href="#sql-prepared-statements-are-broken-when-scaling-applications-video" class="header-anchor"&gt;&lt;/a&gt;SQL prepared statements are broken when scaling applications video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JHoEKmNj8t8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/JHoEKmNj8t8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;h2 id="other-articles-related-to-mysql"&gt;&lt;a href="#other-articles-related-to-mysql" class="header-anchor"&gt;&lt;/a&gt;Other articles related to MySQL
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" &gt;Optimize MySQL query performance: INSERT with subqueries&lt;/a&gt;&lt;/li&gt;

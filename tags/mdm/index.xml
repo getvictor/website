@@ -5,7 +5,7 @@
 &lt;/ul&gt;
 &lt;h1 id="what-is-a-windows-ndes-scep-server"&gt;&lt;a href="#what-is-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;What is a Windows NDES SCEP server?
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc8894" target="_blank" rel="noopener"
-&gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
+ &gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
 issue certificates with a Certificate Authority (CA) in a Public Key Infrastructure (PKI). It allows devices to request
 and receive certificates over a secure channel without user interaction. IT admins use SCEP for network devices, mobile
 devices, and other endpoints that need to authenticate themselves. The issued certificates can be used for various
@@ -32,15 +32,17 @@ corporate network, test it using the public URL or IP address.&lt;/p&gt;
 &lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
 like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
 considered when parsing this page with a script.&lt;/p&gt;
 &lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
 returns the following.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
 &lt;/h1&gt;&lt;p&gt;For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p&gt;
 &lt;p&gt;Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
@@ -51,7 +53,7 @@ password.&lt;/p&gt;
 &lt;/h1&gt;&lt;p&gt;For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
 available, but many have been abandoned and do not work with NDES.&lt;/p&gt;
 &lt;p&gt;We will use &lt;a class="link" href="https://github.com/micromdm/scep" target="_blank" rel="noopener"
-&gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
+ &gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
 use the latest code from the &lt;code&gt;main&lt;/code&gt; branch, with the following commit hash: &lt;code&gt;781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Follow the instructions from the above URL to install the &lt;code&gt;scep&lt;/code&gt; client. We built it for macOS M1 using the following
 command:&lt;/p&gt;
@@ -74,7 +76,7 @@ VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding t
 &lt;strong&gt;Profiles&lt;/strong&gt; should also work.&lt;/p&gt;
 &lt;p&gt;First, create a new
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/scep?language=objc" target="_blank" rel="noopener"
-&gt;Device Management SCEP payload&lt;/a&gt; with the
+ &gt;Device Management SCEP payload&lt;/a&gt; with the
 NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
@@ -148,25 +150,26 @@ with a signed certificate, which the device saves to the keychain.&lt;/p&gt;
 &lt;p&gt;In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" &gt;code signing a Windows application&lt;/a&gt;.&lt;/p&gt;
 &lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server"&gt;&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to test a Windows NDES SCEP server
 &lt;/h1&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JMHs6spfdvQ"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/JMHs6spfdvQ" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Building a webhook flow with Tines</title><link>https://victoronsoftware.com/posts/webhook-flow-with-tines/</link><pubDate>Wed, 05 Jun 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/webhook-flow-with-tines/</guid><description>&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/tines-fleet-webhook-workflow.png" alt="Featured image of post Building a webhook flow with Tines" /&gt;&lt;h2 id="what-is-a-webhook"&gt;&lt;a href="#what-is-a-webhook" class="header-anchor"&gt;&lt;/a&gt;What is a webhook?
 &lt;/h2&gt;&lt;p&gt;A webhook is a way for one application to send data to another application in real time. It is a simple way to trigger
 an action based on an event. In other words, a webhook is a custom HTTP callback.&lt;/p&gt;
 &lt;h2 id="what-is-tines"&gt;&lt;a href="#what-is-tines" class="header-anchor"&gt;&lt;/a&gt;What is Tines?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.tines.io/" target="_blank" rel="noopener"
-&gt;Tines&lt;/a&gt; is a no-code automation platform that allows you to automate repetitive tasks. It is a
+ &gt;Tines&lt;/a&gt; is a no-code automation platform that allows you to automate repetitive tasks. It is a
 powerful tool that can be used to automate workflows, such as sending emails, creating tickets, and updating databases.&lt;/p&gt;
 &lt;h2 id="what-is-fleet"&gt;&lt;a href="#what-is-fleet" class="header-anchor"&gt;&lt;/a&gt;What is Fleet?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
-&gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as
+ &gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as
 laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
-&gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet
+ &gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet
 server.&lt;/p&gt;
 &lt;h2 id="our-example-it-workflow"&gt;&lt;a href="#our-example-it-workflow" class="header-anchor"&gt;&lt;/a&gt;Our example IT workflow
 &lt;/h2&gt;&lt;p&gt;In this article, we will build a webhook flow with Tines. When a device has an outdated OS version, Tines will receive a
@@ -180,19 +183,21 @@ the failing policy. This article is an example of one such flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
-alt="Tines webhook action"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines webhook action&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines webhook action"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines webhook action&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="handling-errors"&gt;&lt;a href="#handling-errors" class="header-anchor"&gt;&lt;/a&gt;Handling errors
 &lt;/h2&gt;&lt;p&gt;Often, webhooks may contain error messages if there is an issue with the configuration, flow, etc. In this example, we
 add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
 webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
-alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
 triggering other actions.&lt;/p&gt;
 &lt;h2 id="checking-whether-webhook-indicates-an-outdated-os"&gt;&lt;a href="#checking-whether-webhook-indicates-an-outdated-os" class="header-anchor"&gt;&lt;/a&gt;Checking whether webhook indicates an outdated OS
@@ -220,10 +225,11 @@ testing, we know that the webhook payload will look like this:&lt;/p&gt;
 &lt;p&gt;We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
 up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
-alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;IF(FIND(calendar_webhook.body.failing_policies, LAMBDA(item, item.name = &amp;#34;macOS - OS version up to date&amp;#34;)).id &amp;gt; 0, TRUE)
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="getting-device-details-from-fleet"&gt;&lt;a href="#getting-device-details-from-fleet" class="header-anchor"&gt;&lt;/a&gt;Getting device details from Fleet
@@ -231,22 +237,24 @@ alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
 Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
 ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
-alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
 key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
-alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="creating-mdm-command-payload-to-update-os-version"&gt;&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor"&gt;&lt;/a&gt;Creating MDM command payload to update OS version
 &lt;/h2&gt;&lt;p&gt;We can create the MDM payload now that we have the device&amp;rsquo;s UUID. The payload contains the command to update the OS
 version. We use the
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/schedule_an_os_update?language=objc" target="_blank" rel="noopener"
-&gt;ScheduleOSUpdate&lt;/a&gt;
+ &gt;ScheduleOSUpdate&lt;/a&gt;
 command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
@@ -273,31 +281,35 @@ command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
 device. Note that the &lt;code&gt;&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code&gt; Tines function creates a unique UUID for this MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
-alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
 to encode the XML payload. It uses the Tines &lt;code&gt;BASE64_ENCODE&lt;/code&gt; function.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
-alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="run-mdm-command-on-device"&gt;&lt;a href="#run-mdm-command-on-device" class="header-anchor"&gt;&lt;/a&gt;Run MDM command on device
 &lt;/h2&gt;&lt;p&gt;Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
 POST request to the Fleet API to send the MDM command to the device.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
-alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The MDM command will run on the device, downloading and installing the OS update.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
-alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
-&lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
 &lt;/h2&gt;&lt;p&gt;In this article we built a webhook flow with Tines. We received a webhook callback from Fleet when a device had an
 outdated OS version. We then sent an MDM command to the device to update the OS version. This example demonstrates how
@@ -309,14 +321,15 @@ Tines can automate workflows and tasks in IT environments.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="building-a-webhook-flow-with-tines-video"&gt;&lt;a href="#building-a-webhook-flow-with-tines-video" class="header-anchor"&gt;&lt;/a&gt;Building a webhook flow with Tines video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/GFqmvv4nHqk"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/GFqmvv4nHqk" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;This article originally appeared in
 &lt;a class="link" href="https://fleetdm.com/guides/building-webhook-flows-with-fleet-and-tines" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>
+ &gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

@@ -15,7 +15,7 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;TPM 1.2 was standardized in 2009 as ISO/IEC 11889:2009. TPM 2.0, the most common today, came out in 2015 with the
 &lt;a class="link" href="https://www.iso.org/standard/66510.html" target="_blank" rel="noopener"
-&gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
+ &gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
 4).&lt;/p&gt;
 &lt;p&gt;Although many people think of TPM as a hardware chip, it has many possible implementations. They are:&lt;/p&gt;
 &lt;ul&gt;
@@ -28,37 +28,42 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;p&gt;In this article, we will focus on the use case of storing a private key in TPM 2.0.&lt;/p&gt;
 &lt;h2 id="tpm-architecture"&gt;&lt;a href="#tpm-architecture" class="header-anchor"&gt;&lt;/a&gt;TPM architecture
 &lt;/h2&gt;&lt;pre class="mermaid"&gt;
-graph TD
-subgraph TPM
-subgraph Memory
-VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
-NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
-end
-subgraph Crypto engine
-CC[Cryptographic Coprocessor]
-RNG[Random Number Generator]
-KGEN[Key Generation Logic]
-CC --&amp;gt;|Uses| RNG
-KGEN --&amp;gt;|Uses| RNG
-CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
-CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
-end
-subgraph Control logic
-PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
-MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
-end
-end
-style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
-style CC fill:#1f4e79,stroke:#fff,color:#fff
-style KGEN fill:#1f4e79,stroke:#fff,color:#fff
-style RNG fill:#2e7d32,stroke:#fff,color:#fff
-style NV fill:#5d4037,stroke:#fff,color:#fff
-style VM fill:#5d4037,stroke:#fff,color:#fff
-style PCR fill:#7b1fa2,stroke:#fff,color:#fff
-style MM fill:#37474f,stroke:#fff,color:#fff
-style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
-style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ graph TD
+ subgraph TPM
+ subgraph Memory
+ VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
+ NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
+ end
+
+ subgraph Crypto engine
+ CC[Cryptographic Coprocessor]
+ RNG[Random Number Generator]
+ KGEN[Key Generation Logic]
+ CC --&amp;gt;|Uses| RNG
+ KGEN --&amp;gt;|Uses| RNG
+ CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
+ CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
+ end
+
+ subgraph Control logic
+ PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
+ MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
+ end
+
+ end
+
+ style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
+ style CC fill:#1f4e79,stroke:#fff,color:#fff
+ style KGEN fill:#1f4e79,stroke:#fff,color:#fff
+ style RNG fill:#2e7d32,stroke:#fff,color:#fff
+ style NV fill:#5d4037,stroke:#fff,color:#fff
+ style VM fill:#5d4037,stroke:#fff,color:#fff
+ style PCR fill:#7b1fa2,stroke:#fff,color:#fff
+ style MM fill:#37474f,stroke:#fff,color:#fff
+ style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
 &lt;/pre&gt;
+
 &lt;p&gt;This TPM architecture diagram illustrates the internal components of a Trusted Platform Module, highlighting its secure
 cryptographic engine, non-volatile and volatile memory, and control subsystems. Key elements include the cryptographic
 coprocessor, random number generator, and key generation logic, all operating within a hardware-isolated boundary. The
@@ -68,35 +73,35 @@ unique, factory-installed identity key, and the Storage Root Key (SRK), which an
 &lt;h2 id="tpm-key-storage"&gt;&lt;a href="#tpm-key-storage" class="header-anchor"&gt;&lt;/a&gt;TPM key storage
 &lt;/h2&gt;&lt;p&gt;TPM defines four main authorization hierarchies, each rooted in a different seed and intended for various use cases:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Hierarchy&lt;/th&gt;
-&lt;th&gt;Seed Used&lt;/th&gt;
-&lt;th&gt;Purpose&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Hierarchy&lt;/th&gt;
+ &lt;th&gt;Seed Used&lt;/th&gt;
+ &lt;th&gt;Purpose&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Each hierarchy has:&lt;/p&gt;
 &lt;ul&gt;
@@ -131,7 +136,7 @@ you provide:&lt;/p&gt;
 store the parent key explicitly. It can be recreated when needed.&lt;/p&gt;
 &lt;h4 id="create-a-parent-key-example"&gt;&lt;a href="#create-a-parent-key-example" class="header-anchor"&gt;&lt;/a&gt;Create a parent key example
 &lt;/h4&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/tpm2-software/tpm2-tools" target="_blank" rel="noopener"
-&gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
+ &gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
 the TPM2 Software Stack (tss). Install it on Ubuntu/Debian like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install tpm2-tools
@@ -143,7 +148,7 @@ has access to &lt;code&gt;/dev/tpmrm0&lt;/code&gt;. To add the user to the &lt;c
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then &lt;strong&gt;log out and log back in&lt;/strong&gt; for the group change to take effect.&lt;/p&gt;
 &lt;p&gt;Our examples use &lt;code&gt;tpm2-tools&lt;/code&gt; version 5.6. See
 &lt;a class="link" href="https://tpm2-tools.readthedocs.io/en/latest/" target="_blank" rel="noopener"
-&gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
+ &gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
 key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimary&lt;/code&gt; command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_createprimary &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hierarchy&lt;span style="color:#f92672"&gt;=&lt;/span&gt;owner &lt;span style="color:#ae81ff"&gt;\
@@ -153,7 +158,7 @@ key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimar
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;parent.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;parent.ctx&lt;/code&gt; context file, which can be used in later commands.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the parent key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create a parent key template with the required attributes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;parentTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgRSA&lt;/span&gt;,
@@ -213,7 +218,7 @@ using the correct parent key.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;child.ctx&lt;/code&gt; context file which can be used later.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the child key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library,
+ &gt;go-tpm&lt;/a&gt; library,
 loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create an ECC key template for the child key&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;eccTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
@@ -274,7 +279,7 @@ loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p
 &lt;/ul&gt;
 &lt;p&gt;There is also a de facto standard for
 &lt;a class="link" href="https://www.hansenpartnership.com/draft-bottomley-tpm2-keys.html" target="_blank" rel="noopener"
-&gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
+ &gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
 OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;h2 id="tpm-signing"&gt;&lt;a href="#tpm-signing" class="header-anchor"&gt;&lt;/a&gt;TPM signing
 &lt;/h2&gt;&lt;p&gt;TPM can sign data using the child key. The output signature is in raw binary.&lt;/p&gt;
@@ -304,7 +309,7 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -signature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;signature.plain &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data.in.raw
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Below is an example of signing using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sign&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sign&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;KeyHandle&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;childKeyHandle&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Digest&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPM2BDigest&lt;/span&gt;{
@@ -359,13 +364,14 @@ switch, and access points.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm"&gt;&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor"&gt;&lt;/a&gt;Watch the explanation of securing private keys with TPM
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/zwnznp5KeQs"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/zwnznp5KeQs" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" /&gt;&lt;p&gt;Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
 give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
 changes, slow tests can become a bottleneck, delaying deployments.&lt;/p&gt;
@@ -390,7 +396,7 @@ generally inefficient since each CI job must compile the same package separately
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go list ./...
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To identify time-consuming packages, you can run your test suite with the &lt;code&gt;-json&lt;/code&gt; switch and save the results. Then,
 find the elapsed time of each package and sort the times. This operation can be done with &lt;a class="link" href="https://jqlang.org/" target="_blank" rel="noopener"
-&gt;jq&lt;/a&gt;:&lt;/p&gt;
+ &gt;jq&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat test-result.json | jq -s &lt;span style="color:#e6db74"&gt;&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="split-up-the-go-test-suite"&gt;&lt;a href="#split-up-the-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Split up the Go test suite
 &lt;/h2&gt;&lt;p&gt;You can specify the packages at the end of the &lt;code&gt;go test&lt;/code&gt; command to run a subset of packages in a CI job. For example:&lt;/p&gt;
@@ -398,7 +404,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, manually create groups of packages and identify them with a name.&lt;/p&gt;
 &lt;p&gt;To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
 &lt;a class="link" href="https://linux.die.net/man/1/comm" target="_blank" rel="noopener"
-&gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
+ &gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;comm -23 &amp;lt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;go list ./... | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &amp;lt;&lt;span style="color:#f92672"&gt;({&lt;/span&gt; go list ./cmd/fleetctl/... &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; go list ./server/service/... ;&lt;span style="color:#f92672"&gt;}&lt;/span&gt; | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command returns the packages unique to the first list, which includes all the packages (&lt;code&gt;./...&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p&gt;
@@ -449,7 +455,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-parallel-go-test-jobs-in-ci"&gt;&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor"&gt;&lt;/a&gt;Create parallel Go test jobs in CI
 &lt;/h2&gt;&lt;p&gt;The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
 &lt;a class="link" href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow" target="_blank" rel="noopener"
-&gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
+ &gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test-go&lt;/span&gt;:
@@ -476,13 +482,14 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;p&gt;In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" &gt;the state of fuzz testing in Go&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite"&gt;&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Watch how to break apart a large Go test suite
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/AFVlbf5LZwc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/AFVlbf5LZwc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" /&gt;&lt;p&gt;Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
 code changes cause an unexpectedly long recompile time. In this article, we show how to analyze your compilation times
 and take steps to improve them.&lt;/p&gt;
@@ -495,7 +502,7 @@ from scratch.&lt;/p&gt;
 on your development machine, but that may not be true on your CI/CD system. Ensure you use a build cache across multiple
 CI/CD runs. For example, the GitHub Actions
 &lt;a class="link" href="https://github.com/actions/setup-go?tab=readme-ov-file#caching-dependency-files-and-build-outputs" target="_blank" rel="noopener"
-&gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="analyze-a-go-build"&gt;&lt;a href="#analyze-a-go-build" class="header-anchor"&gt;&lt;/a&gt;Analyze a Go build
 &lt;/h2&gt;&lt;p&gt;We can clear the build cache with the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;go clean -cache
@@ -510,7 +517,7 @@ shells and OSes.&lt;/p&gt;
 executing user and system code. They are larger than the wall clock time because we use a multi-core machine.&lt;/p&gt;
 &lt;p&gt;The debug trace is in
 &lt;a class="link" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview" target="_blank" rel="noopener"
-&gt;Trace Event Format&lt;/a&gt; and looks
+ &gt;Trace Event Format&lt;/a&gt; and looks
 like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;Running build command&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608027038&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
@@ -524,15 +531,16 @@ like this:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;,{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;modfetch.download github.com/getsentry/sentry-go@v0.18.0&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608053496&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;...&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;and&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;so&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;on&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A widespread tool for visualizing Trace Event Format is &lt;a class="link" href="https://ui.perfetto.dev/" target="_blank" rel="noopener"
-&gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
+ &gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
-&gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
+ &gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
 we have 16 cores doesn&amp;rsquo;t help because Go is not parallelizing the build for this dependency. This dependency uses CGO,
 so the build takes time to compile C files.&lt;/p&gt;
 &lt;p&gt;We attempted to speed up the build by adding the &lt;code&gt;go-sqlite3&lt;/code&gt; dependency to our top &lt;code&gt;./cmd/fleet&lt;/code&gt; package, assuming the
@@ -544,9 +552,10 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
 takes ~300ms and is not parallelized. This step is part of the Go toolchain. Modifying a smaller package would reduce
 the recompile time. If you have a large package that is frequently modified, you can improve the build time by splitting
@@ -590,43 +599,44 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;code&gt;Deps&lt;/code&gt; field shows the package&amp;rsquo;s dependencies.&lt;/p&gt;
 &lt;p&gt;Although we can write our own tool to analyze the &lt;code&gt;actiongraph.json&lt;/code&gt; file, we can also use the
 &lt;a class="link" href="https://github.com/icio/actiongraph" target="_blank" rel="noopener"
-&gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
+ &gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go install github.com/icio/actiongraph@latest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can find the longest compile steps with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;actiongraph -f actiongraph.json top
-13.786s 16.14% build github.com/mattn/go-sqlite3
-1.396s 17.78% build runtime/cgo
-1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
-1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
-1.095s 22.13% build github.com/google/go-github/v37/github
-1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
-0.983s 24.55% build github.com/open-policy-agent/opa/ast
-0.975s 25.69% build github.com/klauspost/compress/zstd
-0.916s 26.76% build github.com/shoenig/go-m1cpu
-0.755s 27.64% build crypto/tls
-0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
-0.722s 29.36% build github.com/shirou/gopsutil/v3/process
-0.664s 30.14% build net
-0.626s 30.87% build github.com/open-policy-agent/opa/topdown
-0.625s 31.60% build runtime
-0.622s 32.33% build google.golang.org/protobuf/internal/impl
-0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
-0.605s 33.75% build golang.org/x/net/http2
-0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
-0.576s 35.10% build github.com/spf13/pflag
+ 13.786s 16.14% build github.com/mattn/go-sqlite3
+ 1.396s 17.78% build runtime/cgo
+ 1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
+ 1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
+ 1.095s 22.13% build github.com/google/go-github/v37/github
+ 1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
+ 0.983s 24.55% build github.com/open-policy-agent/opa/ast
+ 0.975s 25.69% build github.com/klauspost/compress/zstd
+ 0.916s 26.76% build github.com/shoenig/go-m1cpu
+ 0.755s 27.64% build crypto/tls
+ 0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
+ 0.722s 29.36% build github.com/shirou/gopsutil/v3/process
+ 0.664s 30.14% build net
+ 0.626s 30.87% build github.com/open-policy-agent/opa/topdown
+ 0.625s 31.60% build runtime
+ 0.622s 32.33% build google.golang.org/protobuf/internal/impl
+ 0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
+ 0.605s 33.75% build golang.org/x/net/http2
+ 0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
+ 0.576s 35.10% build github.com/spf13/pflag
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The tool also has a &lt;code&gt;graph&lt;/code&gt; subcommand to highlight all import paths from the build target to the package indicated by
 &lt;code&gt;--why&lt;/code&gt;. We can convert the &lt;code&gt;.dot&lt;/code&gt; file to an SVG file with the &lt;a class="link" href="https://graphviz.org/" target="_blank" rel="noopener"
-&gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
+ &gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;
 &lt;p&gt;There is no official documentation for the above debug flags. However, they can be found in the
 &lt;a class="link" href="https://go.dev/src/cmd/go/internal/work/build.go" target="_blank" rel="noopener"
-&gt;Go source code&lt;/a&gt;:&lt;/p&gt;
+ &gt;Go source code&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Undocumented, unstable debugging flags.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugActiongraph&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-actiongraph&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugRuntimeTrace&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-runtime-trace&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
@@ -639,13 +649,14 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-analyze-go-builds"&gt;&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor"&gt;&lt;/a&gt;Watch how to analyze Go builds
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/fs81KvxhwhI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/fs81KvxhwhI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top code refactorings every software engineer should know</title><link>https://victoronsoftware.com/posts/common-refactorings/</link><pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/common-refactorings/</guid><description>&lt;img src="https://victoronsoftware.com/posts/common-refactorings/common-refactorings-headline.png" alt="Featured image of post Top code refactorings every software engineer should know" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#extract-method-aka-extract-function" &gt;Extract method (aka extract function)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#inline-variable" &gt;Inline variable&lt;/a&gt;&lt;/li&gt;
@@ -765,13 +776,14 @@ title="YouTube Video"
 &lt;/ul&gt;
 &lt;h2 id="watch-examples-of-top-code-refactorings"&gt;&lt;a href="#watch-examples-of-top-code-refactorings" class="header-anchor"&gt;&lt;/a&gt;Watch examples of top code refactorings
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Mzj9XQlieHk"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Mzj9XQlieHk" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to find package dependencies of a Go package</title><link>https://victoronsoftware.com/posts/go-package-dependencies/</link><pubDate>Wed, 05 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-package-dependencies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-package-dependencies/go-dependencies-headline.png" alt="Featured image of post How to find package dependencies of a Go package" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#find-package-dependencies-using-go-list" &gt;Find package dependencies using &lt;code&gt;go list&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#find-package-dependencies-using-go-code" &gt;Find package dependencies using Go code&lt;/a&gt;&lt;/li&gt;
@@ -803,19 +815,19 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The leading &lt;code&gt;!&lt;/code&gt; inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command will return &lt;code&gt;1&lt;/code&gt;; if it is not, the command will return &lt;code&gt;0&lt;/code&gt;. You can use this command in your CI/CD pipelines to ensure that your package is not dependent on a specific package.&lt;/p&gt;
 &lt;h2 id="find-package-dependencies-using-go-code"&gt;&lt;a href="#find-package-dependencies-using-go-code" class="header-anchor"&gt;&lt;/a&gt;Find package dependencies using Go code
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://pkg.go.dev/golang.org/x/tools/go/packages" target="_blank" rel="noopener"
-&gt;packages&lt;/a&gt; is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code&gt;Load&lt;/code&gt; function to get a list of &lt;code&gt;Package&lt;/code&gt; values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
-&gt;Context.Import method from build package&lt;/a&gt; to recursively find dependencies.&lt;/p&gt;
+ &gt;packages&lt;/a&gt; is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code&gt;Load&lt;/code&gt; function to get a list of &lt;code&gt;Package&lt;/code&gt; values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
+ &gt;Context.Import method from build package&lt;/a&gt; to recursively find dependencies.&lt;/p&gt;
 &lt;p&gt;Below is an example architecture test you can add to your test suite.&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js"&gt;&lt;/script&gt;
 &lt;p&gt;The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
-&gt;https://github.com/matthewmcnew/archtest&lt;/a&gt;. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
-&gt;jump to the code example section&lt;/a&gt; of the video below for a full explanation.&lt;/p&gt;
+ &gt;https://github.com/matthewmcnew/archtest&lt;/a&gt;. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
+ &gt;jump to the code example section&lt;/a&gt; of the video below for a full explanation.&lt;/p&gt;
 &lt;p&gt;A failing run of our architecture test will look like this:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;=== RUN TestPackageDependencies
-arch_test.go:41: Error: package dependency not allowed. Dependency chain:
-github.com/fleetdm/fleet/v4/server/android/service
-github.com/fleetdm/fleet/v4/server/fleet
-github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
+ arch_test.go:41: Error: package dependency not allowed. Dependency chain:
+ github.com/fleetdm/fleet/v4/server/android/service
+ 	github.com/fleetdm/fleet/v4/server/fleet
+ 		github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 --- FAIL: TestPackageDependencies (14.66s)
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="find-how-a-dependency-is-included-in-the-build"&gt;&lt;a href="#find-how-a-dependency-is-included-in-the-build" class="header-anchor"&gt;&lt;/a&gt;Find how a dependency is included in the build
 &lt;/h2&gt;&lt;p&gt;In our article on &lt;a class="link" href="../analyze-go-build" &gt;analyzing Go build times&lt;/a&gt;, we show how to use the &lt;code&gt;-debug-actiongraph&lt;/code&gt; flag to find &lt;a class="link" href="../analyze-go-build#find-why-dependencies" &gt;why a dependency is included in the build&lt;/a&gt;.&lt;/p&gt;
@@ -827,13 +839,14 @@ github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-find-package-dependencies-of-a-go-package"&gt;&lt;a href="#watch-how-to-find-package-dependencies-of-a-go-package" class="header-anchor"&gt;&lt;/a&gt;Watch how to find package dependencies of a Go package
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yIZcbTQvpCE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yIZcbTQvpCE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Secure private CDN content with CloudFront signed URLs</title><link>https://victoronsoftware.com/posts/cloudfront-signed-urls/</link><pubDate>Wed, 08 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/cloudfront-signed-urls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/signed-url-headline.png" alt="Featured image of post Secure private CDN content with CloudFront signed URLs" /&gt;&lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#create-a-cloudfront-distribution" &gt;Create a CloudFront distribution&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#create-a-cloudfront-key-pair-and-add-it-to-a-key-group" &gt;Create a CloudFront key pair and add it to a key group&lt;/a&gt;&lt;/li&gt;
@@ -842,7 +855,7 @@ title="YouTube Video"
 &lt;/ol&gt;
 &lt;h2 id="what-is-cloudfront-cdn"&gt;&lt;a href="#what-is-cloudfront-cdn" class="header-anchor"&gt;&lt;/a&gt;What is CloudFront CDN?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
-&gt;Amazon CloudFront&lt;/a&gt; is a content delivery network (CDN) service that securely
+ &gt;Amazon CloudFront&lt;/a&gt; is a content delivery network (CDN) service that securely
 delivers data, videos, applications, and APIs to customers globally with low latency and high transfer speeds.
 CloudFront is a popular choice for serving users worldwide with static assets, such as images, videos, and software
 package files.&lt;/p&gt;
@@ -850,9 +863,10 @@ package files.&lt;/p&gt;
 requests a file from a CloudFront distribution, CloudFront checks its cache for the file. If the file is not in the
 cache, CloudFront retrieves it from the origin and caches it for future requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/users-requesting-from-cloudfront.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="what-are-cloudfront-signed-urls"&gt;&lt;a href="#what-are-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;What are CloudFront signed URLs?
 &lt;/h2&gt;&lt;p&gt;CloudFront signed URLs grant access to private content served by CloudFront. By default, CloudFront distributions are
 public and serve content to anyone who requests it. However, your signed URLs can restrict access according to some of
@@ -871,17 +885,17 @@ the following rules:&lt;/p&gt;
 &lt;p&gt;A signed URL looks like a regular CloudFront URL but contains additional query parameters that specify the access
 restrictions. Depending on the limits you apply, a signed URL may be quite lengthy.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires=1736178766&amp;amp;Signature=HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;amp;Key-Pair-Id=K1HFGXOMBB6TFF" target="_blank" rel="noopener"
-&gt;https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires=1736178766&amp;Signature=HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;Key-Pair-Id=K1HFGXOMBB6TFF&lt;/a&gt;&lt;/p&gt;
+ &gt;https://d1nsa5964r3p4i.cloudfront.net/hello-world.txt?Expires=1736178766&amp;Signature=HpcpyniNSBkS695mZhkZRjXo6UQ5JtXQ2sk0poLEMDMeF063IjsBj2O56rruzk3lomYFjqoxc3BdnFqEjrEXQSieSALiCufZ2LjTfWffs7f7qnNVZwlkg-upZd5KBfrCHSIyzMYSPhgWFPOpNRVqOc4NFXx8fxRLagK7NBKFAEfCAwo0~KMCSJiof0zWOdY0a8p0NNAbBn0uLqK7vZLwSttVpoK6ytWRaJlnemofWNvLaa~Et3p5wJJRfYGv73AK-pe4FMb8dc9vqGNSZaDAqw2SOdXrLhrpvSMjNmMO3OvTcGS9hVHMtJvBmgqvCMAWmHBK6v5C9BobSh4TCNLIuA__&amp;Key-Pair-Id=K1HFGXOMBB6TFF&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="how-to-create-cloudfront-signed-urls"&gt;&lt;a href="#how-to-create-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;How to create CloudFront signed URLs
 &lt;/h2&gt;&lt;p&gt;You must have an AWS account and an S3 bucket with private content as a prerequisite.&lt;/p&gt;
 &lt;h3 id="create-a-cloudfront-distribution"&gt;&lt;a href="#create-a-cloudfront-distribution" class="header-anchor"&gt;&lt;/a&gt;Create a CloudFront distribution
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
-&gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
+ &gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Choose &lt;strong&gt;Create Distribution&lt;/strong&gt;.&lt;/li&gt;
 &lt;li&gt;In the &lt;strong&gt;Origin domain&lt;/strong&gt; section, choose your S3 bucket as the origin.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/create-cloudfront-distribution.png"&gt;
-&lt;/figure&gt;
+ &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;In the &lt;strong&gt;Origin access&lt;/strong&gt; section, select &lt;strong&gt;Origin access control settings (recommended)&lt;/strong&gt; and click &lt;strong&gt;Create new
 OAC&lt;/strong&gt;.&lt;/li&gt;
@@ -908,7 +922,7 @@ CloudFront uses to verify signed URLs.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;openssl rsa -pubout -in private_key.pem -out public_key.pem
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start="2"&gt;
 &lt;li&gt;Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
-&gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
+ &gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;In the side menu, choose &lt;strong&gt;Key management&lt;/strong&gt; &amp;gt; &lt;strong&gt;Public keys&lt;/strong&gt;.&lt;/li&gt;
 &lt;li&gt;Click &lt;strong&gt;Create public key&lt;/strong&gt;.&lt;/li&gt;
 &lt;li&gt;Enter a name for the key, paste the contents of the &lt;code&gt;public_key.pem&lt;/code&gt; file, and click &lt;strong&gt;Create public key&lt;/strong&gt;.&lt;/li&gt;
@@ -920,7 +934,7 @@ CloudFront uses to verify signed URLs.&lt;/p&gt;
 &lt;h3 id="associate-the-key-group-with-the-cloudfront-distribution"&gt;&lt;a href="#associate-the-key-group-with-the-cloudfront-distribution" class="header-anchor"&gt;&lt;/a&gt;Associate the key group with the CloudFront distribution
 &lt;/h3&gt;&lt;ol&gt;
 &lt;li&gt;Open the &lt;a class="link" href="https://console.aws.amazon.com/cloudfront/" target="_blank" rel="noopener"
-&gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
+ &gt;CloudFront console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Click on the CloudFront distribution you created.&lt;/li&gt;
 &lt;li&gt;In the &lt;strong&gt;Behaviors&lt;/strong&gt; tab, select a behavior and click &lt;strong&gt;Edit&lt;/strong&gt;.&lt;/li&gt;
 &lt;li&gt;In the &lt;strong&gt;Restrict viewer access&lt;/strong&gt; section, select &lt;strong&gt;Yes&lt;/strong&gt;, choose the key group you created, and &lt;strong&gt;Save changes&lt;/strong&gt;.&lt;/li&gt;
@@ -934,7 +948,7 @@ without a signed URL will result in an access denied 403 error.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="generate-a-signed-url-using-aws-sdks"&gt;&lt;a href="#generate-a-signed-url-using-aws-sdks" class="header-anchor"&gt;&lt;/a&gt;Generate a signed URL using AWS SDKs
 &lt;/h3&gt;&lt;p&gt;You can generate signed URLs using the AWS SDKs for various programming languages. Amazon provides
 &lt;a class="link" href="https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-signed-urls.html#private-content-overview-sample-code" target="_blank" rel="noopener"
-&gt;examples for several languages&lt;/a&gt;.
+ &gt;examples for several languages&lt;/a&gt;.
 We will show an example using the Go SDK.&lt;/p&gt;
 &lt;p&gt;In a new directory, create a Go project and add the AWS SDK as a dependency:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go mod init cloudfront-signed-urls
@@ -948,7 +962,7 @@ We will show an example using the Go SDK.&lt;/p&gt;
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Server side encryption (SSE) may be an issue.
 &lt;a class="link" href="https://arpadt.com/articles/kms-encrypted-objects-via-cloudfront#32-sse-kms" target="_blank" rel="noopener"
-&gt;AWS-managed KMS keys are not supported by CloudFront&lt;/a&gt;.
+ &gt;AWS-managed KMS keys are not supported by CloudFront&lt;/a&gt;.
 One solution is to switch to a customer-managed KMS key.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
@@ -958,19 +972,20 @@ One solution is to switch to a customer-managed KMS key.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-start-using-cloudfront-signed-urls"&gt;&lt;a href="#watch-how-to-start-using-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;Watch how to start using CloudFront signed URLs
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/RzTZExHie88"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/RzTZExHie88" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to override methods in Go</title><link>https://victoronsoftware.com/posts/method-overriding-in-go/</link><pubDate>Wed, 01 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/method-overriding-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/method-overriding-headline.png" alt="Featured image of post How to override methods in Go" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#method-overriding-with-embedded-structs" &gt;Example of method overriding with embedded structs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="what-is-method-overriding"&gt;&lt;a href="#what-is-method-overriding" class="header-anchor"&gt;&lt;/a&gt;What is method overriding?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Method_overriding" target="_blank" rel="noopener"
-&gt;Method overriding&lt;/a&gt; is a feature of object-oriented programming
+ &gt;Method overriding&lt;/a&gt; is a feature of object-oriented programming
 languages that allows a subclass to provide a specific implementation of a method already defined in its superclass.
 When a subclass overrides a method, the subclass&amp;rsquo;s method is called instead of the superclass&amp;rsquo;s method when the object
 is of the subclass type. Method overriding is an example of polymorphism, where the same method name can have different
@@ -979,7 +994,7 @@ implementations depending on the object&amp;rsquo;s type.&lt;/p&gt;
 &lt;h2 id="embedded-structs"&gt;&lt;a href="#embedded-structs" class="header-anchor"&gt;&lt;/a&gt;Embedded structs
 &lt;/h2&gt;&lt;p&gt;Go favors composition over inheritance. Multiple smaller types can be combined to create a larger type. A clean way to
 do this is through &lt;a class="link" href="https://golang.org/doc/effective_go#embedding" target="_blank" rel="noopener"
-&gt;embedded structs&lt;/a&gt;. When a struct embeds another
+ &gt;embedded structs&lt;/a&gt;. When a struct embeds another
 struct, it inherits the embedded struct&amp;rsquo;s fields and methods. For example, consider the following code:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -1018,8 +1033,9 @@ Hello, World! 0
 Hello, World! 1
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The composed struct forwards the method call to the embedded struct.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/embedded-struct.png"
-alt="MyPrint struct inside the MyComposedPrint struct."&gt;
+ alt="MyPrint struct inside the MyComposedPrint struct."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="method-overriding-with-embedded-structs"&gt;&lt;a href="#method-overriding-with-embedded-structs" class="header-anchor"&gt;&lt;/a&gt;Method overriding with embedded structs
 &lt;/h2&gt;&lt;p&gt;To override a method in Go, you can define a method with the same name and parameters in the composed struct. For
 example, consider the following code:&lt;/p&gt;
@@ -1084,13 +1100,14 @@ library&amp;rsquo;s original interface.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-method-overriding-in-go-video"&gt;&lt;a href="#watch-method-overriding-in-go-video" class="header-anchor"&gt;&lt;/a&gt;Watch method overriding in Go video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/OW42Lv8HjUk"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/OW42Lv8HjUk" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" /&gt;&lt;p&gt;Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
 improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
 article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
@@ -1116,10 +1133,10 @@ Google Sheet, automate the process with GitHub Actions, and display the data in 
 services. We will use the Go programming language in our example.&lt;/p&gt;
 &lt;h2 id="gathering-the-number-of-open-bugs"&gt;&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor"&gt;&lt;/a&gt;Gathering the number of open bugs
 &lt;/h2&gt;&lt;p&gt;The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
-&gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
+ &gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
 &lt;p&gt;There are also many quality client libraries for the API. We will use the
 &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
-&gt;go-github&lt;/a&gt; client.&lt;/p&gt;
+ &gt;go-github&lt;/a&gt; client.&lt;/p&gt;
 &lt;p&gt;Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span&gt;
@@ -1155,15 +1172,15 @@ automatically. The token is optional for public repositories but required for pr
 and &lt;code&gt;bug&lt;/code&gt;. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p&gt;
 &lt;h2 id="updating-the-google-sheets-spreadsheet"&gt;&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor"&gt;&lt;/a&gt;Updating the Google Sheets spreadsheet
 &lt;/h2&gt;&lt;p&gt;To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
-&gt;Google Sheets API&lt;/a&gt;
+ &gt;Google Sheets API&lt;/a&gt;
 with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
 spreadsheet using the API, see our previous article:
 &lt;a class="link" href="../google-sheets-api/" &gt;How to quickly edit Google Sheets spreadsheet using the API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;See our integrated
 &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
-&gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
+ &gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
 on GitHub.&lt;/p&gt;
 &lt;p&gt;In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
 you must set the &lt;code&gt;SPREADSHEET_ID&lt;/code&gt; and &lt;code&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code&gt; environment variables.&lt;/p&gt;
@@ -1224,12 +1241,13 @@ manually run the workflow to test it.&lt;/p&gt;
 &lt;h2 id="display-the-metrics-in-google-docs"&gt;&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor"&gt;&lt;/a&gt;Display the metrics in Google Docs
 &lt;/h2&gt;&lt;p&gt;To see the metrics in Google Docs or Google Slides, you can
 &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
-&gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
+ &gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
 &lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
-alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+ alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -1252,16 +1270,17 @@ Discover how to monitor and visualize your dev team&amp;rsquo;s performance with
 &lt;/ul&gt;
 &lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
-&gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
+ &gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch"&gt;&lt;a href="#watch" class="header-anchor"&gt;&lt;/a&gt;Watch
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yzT-1nuKvNI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yzT-1nuKvNI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to quickly edit Google Sheets spreadsheet using the API</title><link>https://victoronsoftware.com/posts/google-sheets-api/</link><pubDate>Wed, 18 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/google-sheets-api/</guid><description>&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-headline.png" alt="Featured image of post How to quickly edit Google Sheets spreadsheet using the API" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#get-a-google-sheets-api-key" &gt;Get a Google Sheets API key&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#share-a-google-sheets-spreadsheet-with-the-service-account" &gt;Share a Google Sheets spreadsheet with the service account&lt;/a&gt;&lt;/li&gt;
@@ -1270,11 +1289,11 @@ title="YouTube Video"
 &lt;p&gt;When you need to edit a Google Sheets spreadsheet quickly, you can use the Google Sheets API. The API allows you to
 programmatically read, write, and update data in a Google Sheets spreadsheet. However, following the
 &lt;a class="link" href="https://developers.google.com/sheets/api/guides/concepts" target="_blank" rel="noopener"
-&gt;Google Sheets API documentation&lt;/a&gt; can be overwhelming. In this
+ &gt;Google Sheets API documentation&lt;/a&gt; can be overwhelming. In this
 article, we will show you how to get a Google Sheets API key and edit a Google Sheets spreadsheet using the API.&lt;/p&gt;
 &lt;h2 id="user-authentication-oauth-vs-api-key-jwt"&gt;&lt;a href="#user-authentication-oauth-vs-api-key-jwt" class="header-anchor"&gt;&lt;/a&gt;User authentication (OAuth) vs. API key (JWT)
 &lt;/h2&gt;&lt;p&gt;The problem is that the Google API documentation focuses on the &lt;a class="link" href="https://oauth.net/2/" target="_blank" rel="noopener"
-&gt;OAuth 2.0&lt;/a&gt; user authentication
+ &gt;OAuth 2.0&lt;/a&gt; user authentication
 flow. This flow is useful when you need to access Google Sheets on behalf of a user. For example, you&amp;rsquo;re creating your
 web app, and you need to read or write data in a Google Sheets spreadsheet owned by your web app user. The OAuth
 standard allows Google to authenticate the user and authorize your app to access the user&amp;rsquo;s data without exposing the
@@ -1287,28 +1306,28 @@ interaction. The API key (JWT) method interacts with two parties: your app and G
 &lt;/h2&gt;&lt;p&gt;To get a Google Sheets API key, follow these steps:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Go to the &lt;a class="link" href="https://console.cloud.google.com/" target="_blank" rel="noopener"
-&gt;Google Cloud Console&lt;/a&gt;.&lt;/li&gt;
+ &gt;Google Cloud Console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Create a new project or select an existing project.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
-alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
-&lt;/figure&gt;
+ alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
+ &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;In the new project, go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; and enable the &lt;strong&gt;Google Sheets API&lt;/strong&gt;. After enabling it, you should see
 it in the &lt;strong&gt;Enabled APIs &amp;amp; services&lt;/strong&gt; list.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
-alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
-&lt;/figure&gt;
+ alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
+ &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; &amp;gt; &lt;strong&gt;Credentials&lt;/strong&gt; and create a new Service Account. This account does not need any optional
 permissions.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
-alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
-&lt;/figure&gt;
+ alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
+ &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Create a new JSON key for the service account.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
-alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
-&lt;/figure&gt;
+ alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
+ &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
 credentials for your service account. Keep it secure. For example, we received
@@ -1331,8 +1350,9 @@ credentials for your service account. Keep it secure. For example, we received
 &lt;/h2&gt;&lt;p&gt;Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
 In our case, the service account email is &lt;code&gt;example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
-alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
+ alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Note the spreadsheet ID from the URL. For example, in the URL
 &lt;code&gt;https://docs.google.com/spreadsheets/d/1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4/edit&lt;/code&gt;, the spreadsheet ID is
 &lt;code&gt;1QCtnB6MXfFJLZsBE1E2vq5FxKBgh1Q0s727wRxFkmX4&lt;/code&gt;.&lt;/p&gt;
@@ -1410,8 +1430,9 @@ incremented value:&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js"&gt;&lt;/script&gt;
 &lt;p&gt;We can review the spreadsheet to verify that our code added the new row.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
-alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
+ alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../track-engineering-metrics/" &gt;Automate tracking of engineering metrics&lt;/a&gt;.&lt;/li&gt;
@@ -1423,13 +1444,14 @@ alt="Google Sheets spreadsheet with two rows containing populated Date and Value
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-edit-google-sheets-spreadsheet-using-the-api"&gt;&lt;a href="#watch-how-to-edit-google-sheets-spreadsheet-using-the-api" class="header-anchor"&gt;&lt;/a&gt;Watch how to edit Google Sheets spreadsheet using the API
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/J2UEYjQVhZ8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/J2UEYjQVhZ8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Go modules and packages — which one to use and when</title><link>https://victoronsoftware.com/posts/go-modules-and-packages/</link><pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-modules-and-packages/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.png" alt="Featured image of post Go modules and packages — which one to use and when" /&gt;&lt;h2 id="what-is-a-go-package"&gt;&lt;a href="#what-is-a-go-package" class="header-anchor"&gt;&lt;/a&gt;What is a Go package?
 &lt;/h2&gt;&lt;p&gt;A Go package is a collection of Go source files in the same directory that are compiled together. It can contain
 functions, types, and variables. Go packages organize code and provide a way to share code between different program
@@ -1444,25 +1466,26 @@ for all packages in a Go project — each package is compiled separately and can
 &lt;p&gt;The directory structure does not have to match the package dependencies. For example, given the following directory
 structure:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;service/
-service.go
-api/
-api.go
-db/
-db.go
+ service.go
+ api/
+ api.go
+ db/
+ db.go
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The packages &lt;code&gt;service&lt;/code&gt;, &lt;code&gt;api&lt;/code&gt;, and &lt;code&gt;db&lt;/code&gt; can be completely independent. The &lt;code&gt;service&lt;/code&gt; package does not include the
 &lt;code&gt;api.go&lt;/code&gt; and &lt;code&gt;db.go&lt;/code&gt; files because they are in a different directory. Go&amp;rsquo;s package dependency graph has no relation to
 the directory structure.&lt;/p&gt;
 &lt;h2 id="what-is-a-go-module"&gt;&lt;a href="#what-is-a-go-module" class="header-anchor"&gt;&lt;/a&gt;What is a Go module?
 &lt;/h2&gt;&lt;p&gt;A &lt;a class="link" href="https://go.dev/ref/mod" target="_blank" rel="noopener"
-&gt;Go module&lt;/a&gt;, introduced in Go 1.11, is a collection of Go packages that are versioned
+ &gt;Go module&lt;/a&gt;, introduced in Go 1.11, is a collection of Go packages that are versioned
 together. A Go module is defined by a &lt;code&gt;go.mod&lt;/code&gt; file located at the module&amp;rsquo;s root. The &lt;code&gt;go.mod&lt;/code&gt; file contains the module
 name and the versions of the dependencies the module uses.&lt;/p&gt;
 &lt;p&gt;A Go module can contain multiple packages, and the packages do not need to be related to each other.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.svg"
-alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
-&lt;h4&gt;Sample project with two modules&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Sample project with two modules&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;A Go module can exist at any level of the directory structure, even nested within another module. The Go toolchain
 treats all Go modules as independent entities, regardless of their location in the directory structure.&lt;/p&gt;
 &lt;h2 id="how-to-use-multiple-modules-in-one-go-workarea"&gt;&lt;a href="#how-to-use-multiple-modules-in-one-go-workarea" class="header-anchor"&gt;&lt;/a&gt;How to use multiple modules in one Go workarea
@@ -1494,7 +1517,7 @@ treats all Go modules as independent entities, regardless of their location in t
 this is impractical for local development and doesn&amp;rsquo;t make sense when we explicitly want to use multiple modules in one
 repository.&lt;/p&gt;
 &lt;p&gt;The proper way is to use a &lt;a class="link" href="https://go.dev/ref/mod#workspaces" target="_blank" rel="noopener"
-&gt;workspace, declared in the go.work file&lt;/a&gt;, introduced in
+ &gt;workspace, declared in the go.work file&lt;/a&gt;, introduced in
 Go 1.18.&lt;/p&gt;
 &lt;p&gt;In the top level of the workarea, create a &lt;code&gt;go.work&lt;/code&gt; file with all the modules in the subdirectories:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go work use -r .
@@ -1537,22 +1560,23 @@ makes sense, like:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="multiple-modules-in-one-go-project-on-github"&gt;&lt;a href="#multiple-modules-in-one-go-project-on-github" class="header-anchor"&gt;&lt;/a&gt;Multiple modules in one Go project on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/go-modules" target="_blank" rel="noopener"
-&gt;Example Go project with multiple modules&lt;/a&gt;&lt;/p&gt;
+ &gt;Example Go project with multiple modules&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository"&gt;&lt;a href="#watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository" class="header-anchor"&gt;&lt;/a&gt;Watch an explanation of Go modules and packages, along with an example of using multiple modules in one repository
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/EdV1rx5613g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/EdV1rx5613g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Is staticcheck linter useful for my Go project?</title><link>https://victoronsoftware.com/posts/staticcheck-go-linter/</link><pubDate>Wed, 06 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/staticcheck-go-linter/</guid><description>&lt;img src="https://victoronsoftware.com/posts/staticcheck-go-linter/staticcheck-go-linter-headline.png" alt="Featured image of post Is staticcheck linter useful for my Go project?" /&gt;&lt;h2 id="what-is-staticcheck"&gt;&lt;a href="#what-is-staticcheck" class="header-anchor"&gt;&lt;/a&gt;What is staticcheck?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://staticcheck.dev/" target="_blank" rel="noopener"
-&gt;Staticcheck&lt;/a&gt; is a Go linter that checks your Go code for bugs and performance issues. It is a
+ &gt;Staticcheck&lt;/a&gt; is a Go linter that checks your Go code for bugs and performance issues. It is a
 powerful tool that can help you find issues in your code before they become problematic. Staticcheck is one of the
 default linters in the &lt;a class="link" href="https://golangci-lint.run/" target="_blank" rel="noopener"
-&gt;golangci-lint&lt;/a&gt; tool.&lt;/p&gt;
+ &gt;golangci-lint&lt;/a&gt; tool.&lt;/p&gt;
 &lt;h2 id="run-staticcheck-on-your-go-project"&gt;&lt;a href="#run-staticcheck-on-your-go-project" class="header-anchor"&gt;&lt;/a&gt;Run staticcheck on your Go project
 &lt;/h2&gt;&lt;p&gt;In this example, we will enable staticcheck via the &lt;code&gt;golangci-lint&lt;/code&gt; tool in a large Go project. The &lt;code&gt;golangci-lint&lt;/code&gt; tool
 is a lint runner that runs many linters in parallel. It is a great tool to use in your CI/CD pipeline to catch issues
@@ -1560,7 +1584,7 @@ early.&lt;/p&gt;
 &lt;h3 id="install-golangci-lint"&gt;&lt;a href="#install-golangci-lint" class="header-anchor"&gt;&lt;/a&gt;Install golangci-lint
 &lt;/h3&gt;&lt;p&gt;To install the &lt;code&gt;golangci-lint&lt;/code&gt; tool, you can use one of the options in
 &lt;a class="link" href="https://golangci-lint.run/welcome/install/" target="_blank" rel="noopener"
-&gt;golangci-lint install documentation&lt;/a&gt;. We install it using the following
+ &gt;golangci-lint install documentation&lt;/a&gt;. We install it using the following
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.61.0
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Although the documentation does not recommend this way of installing from source, we use it to ensure that our version
@@ -1580,17 +1604,17 @@ run options with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --disable-all --enable staticcheck --timeout 10m --max-same-issues &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; --max-issues-per-linter &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt; --exclude-dirs ./node_modules
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="analyze-and-fix-staticcheck-issues"&gt;&lt;a href="#analyze-and-fix-staticcheck-issues" class="header-anchor"&gt;&lt;/a&gt;Analyze and fix staticcheck issues
 &lt;/h2&gt;&lt;h3 id="sa1019---using-a-deprecated-function-variable-constant-or-field"&gt;&lt;a href="#sa1019---using-a-deprecated-function-variable-constant-or-field" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
-&gt;SA1019 - Using a deprecated function, variable, constant or field&lt;/a&gt;
+ &gt;SA1019 - Using a deprecated function, variable, constant or field&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;After running the linter, the first thing we notice is a considerable number of
 &lt;a class="link" href="https://staticcheck.dev/docs/checks#SA1019" target="_blank" rel="noopener"
-&gt;SA1019&lt;/a&gt; fails flagging deprecations, such as:&lt;/p&gt;
+ &gt;SA1019&lt;/a&gt; fails flagging deprecations, such as:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;cmd/osquery-perf/agent.go:2574:2: SA1019: rand.Seed has been deprecated since Go 1.20 and an alternative has been available since Go 1.0: As of Go 1.20 there is no reason to call Seed with a random value. Programs that call Seed with a known value to get a specific sequence of results should use New(NewSource(seed)) to obtain a local random generator. (staticcheck)
-rand.Seed(*randSeed)
-^
+ rand.Seed(*randSeed)
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;or&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server/service/appconfig.go:970:5: SA1019: customSettings[i].Labels is deprecated: the Labels field is now deprecated, it is superseded by LabelsIncludeAll, so any value set via this field will be transferred to LabelsIncludeAll. (staticcheck)
-customSettings[i].Labels = nil
-^
+ customSettings[i].Labels = nil
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The first fail flags a Go library depreciation issue. Although we could fix it, we are not worried because of Go&amp;rsquo;s
 commitment to backward compatibility.&lt;/p&gt;
 &lt;p&gt;The second &lt;code&gt;SA1019&lt;/code&gt; deprecation fail flags an internal depreciation within our app. However, we must maintain many
@@ -1603,24 +1627,24 @@ turned off by the sheer number of these fails and will simply turn off &lt;code&
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;staticcheck&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;checks&lt;/span&gt;: [&lt;span style="color:#e6db74"&gt;&amp;#34;all&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1000&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1003&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1016&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1020&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1021&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-ST1022&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;-SA1019&amp;#34;&lt;/span&gt;]
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://staticcheck.dev/docs/configuration/#example-configuration" target="_blank" rel="noopener"
-&gt;default staticcheck checks&lt;/a&gt; and turn off
+ &gt;default staticcheck checks&lt;/a&gt; and turn off
 the &lt;code&gt;SA1019&lt;/code&gt; check.&lt;/p&gt;
 &lt;p&gt;We then run &lt;code&gt;golangci-lint&lt;/code&gt; with the custom configuration file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;golangci-lint run --disable-all --enable staticcheck --config staticcheck.yml
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa1032---wrong-order-of-arguments-to-errorsis"&gt;&lt;a href="#sa1032---wrong-order-of-arguments-to-errorsis" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA1032" target="_blank" rel="noopener"
-&gt;SA1032 - Wrong order of arguments to errors.Is&lt;/a&gt;
+ &gt;SA1032 - Wrong order of arguments to errors.Is&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;After rerunning the linter, we saw a &lt;code&gt;SA1032&lt;/code&gt; fail:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server/datastore/mysql/vpp.go:1090:6: SA1032: arguments have the wrong order (staticcheck)
-if errors.Is(sql.ErrNoRows, err) {
-^
+ if errors.Is(sql.ErrNoRows, err) {
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This failure is a good catch and a potential bug. We fix it by swapping the arguments:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;errors&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Is&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;err&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;sql&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;ErrNoRows&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver"&gt;&lt;a href="#sa4005---field-assignment-that-will-never-be-observed-did-you-mean-to-use-a-pointer-receiver" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4005" target="_blank" rel="noopener"
-&gt;SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a&gt;
+ &gt;SA4005 - Field assignment that will never be observed. Did you mean to use a pointer receiver?&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;Another fail we saw was &lt;code&gt;SA4005&lt;/code&gt;:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server/mail/users.go:44:2: SA4005: ineffective assignment to field PasswordResetMailer.CurrentYear (staticcheck)
-r.CurrentYear = time.Now().Year()
-^
+ r.CurrentYear = time.Now().Year()
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The relevant Go code is:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CurrentYear&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;time&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Now&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;Year&lt;/span&gt;()
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;t&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;server&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;GetTemplate&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;server/mail/templates/password_reset.html&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;email_template&amp;#34;&lt;/span&gt;)
@@ -1637,21 +1661,21 @@ minutes testing the template to ensure that the &lt;code&gt;CurrentYear&lt;/code
 failure, we add a comment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CurrentYear&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;time&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Now&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;Year&lt;/span&gt;() &lt;span style="color:#75715e"&gt;// nolint:staticcheck // SA4005 false positive for Go templates&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code"&gt;&lt;a href="#sa4006---a-value-assigned-to-a-variable-is-never-read-before-being-overwritten-forgotten-error-check-or-dead-code" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4006" target="_blank" rel="noopener"
-&gt;SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a&gt;
+ &gt;SA4006 - A value assigned to a variable is never read before being overwritten. Forgotten error check or dead code?&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;We saw a lot of &lt;code&gt;SA4006&lt;/code&gt; fails in our codebase. It was the most common &lt;code&gt;staticcheck&lt;/code&gt; fail we encountered. Here is an
 example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;ee/fleetctl/updates_test.go:455:2: SA4006: this value of `repo` is never used (staticcheck)
-repo, err = openRepo(tmpDir)
-^
+ repo, err = openRepo(tmpDir)
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is a bug or a potential bug. The developer assigned a value to &lt;code&gt;repo&lt;/code&gt; but never used it. We fix it by removing the
 assignment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;_&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;openRepo&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tmpDir&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="sa4009---a-function-argument-is-overwritten-before-its-first-use"&gt;&lt;a href="#sa4009---a-function-argument-is-overwritten-before-its-first-use" class="header-anchor"&gt;&lt;/a&gt;&lt;a class="link" href="https://staticcheck.dev/docs/checks/#SA4009" target="_blank" rel="noopener"
-&gt;SA4009 - A function argument is overwritten before its first use&lt;/a&gt;
+ &gt;SA4009 - A function argument is overwritten before its first use&lt;/a&gt;
 &lt;/h3&gt;&lt;p&gt;Another fail we saw was &lt;code&gt;SA4009&lt;/code&gt;. Here is an example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;orbit/pkg/installer/installer.go:288:37: SA4009: argument ctx is overwritten before first use (staticcheck)
 func (r *Runner) runInstallerScript(ctx context.Context, scriptContents string, installerPath string, fileName string) (string, int, error) {
-^
+ ^
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This is another bug or potential bug. A function argument is passed in but then immediately overwritten and never used.
 This issue could be challenging to fix because it requires specific code knowledge.&lt;/p&gt;
 &lt;h3 id="other-fails"&gt;&lt;a href="#other-fails" class="header-anchor"&gt;&lt;/a&gt;Other fails
@@ -1671,16 +1695,17 @@ the video below for more details.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/b4a5a1fb49666dd3b10cfd11ccf26190ad9d2902" target="_blank" rel="noopener"
-&gt;Fleet repo we used when enabling staticcheck (as of this writing)&lt;/a&gt;&lt;/p&gt;
+ &gt;Fleet repo we used when enabling staticcheck (as of this writing)&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-us-enable-staticcheck-in-our-go-project"&gt;&lt;a href="#watch-us-enable-staticcheck-in-our-go-project" class="header-anchor"&gt;&lt;/a&gt;Watch us enable staticcheck in our Go project
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/oqmVtN-Soig"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/oqmVtN-Soig" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Is OpenTelemetry useful for the average software developer?</title><link>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/opentelemetry-with-jaeger-headline.png" alt="Featured image of post Is OpenTelemetry useful for the average software developer?" /&gt;&lt;p&gt;This article discusses our first impressions of using OpenTelemetry with Jaeger.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#use-cases-for-opentelemetry-and-jaeger" &gt;Use cases for OpenTelemetry and Jaeger&lt;/a&gt;&lt;/li&gt;
@@ -1688,7 +1713,7 @@ title="YouTube Video"
 &lt;/ul&gt;
 &lt;h2 id="what-is-opentelemetry"&gt;&lt;a href="#what-is-opentelemetry" class="header-anchor"&gt;&lt;/a&gt;What is OpenTelemetry?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
-&gt;OpenTelemetry&lt;/a&gt; is a set of APIs, libraries, agents, and instrumentation for collecting
+ &gt;OpenTelemetry&lt;/a&gt; is a set of APIs, libraries, agents, and instrumentation for collecting
 distributed traces and metrics from your applications. It provides a standardized way to instrument your code and
 collect telemetry data. OpenTelemetry supports programming languages like Java, Python, Go, JavaScript, etc.&lt;/p&gt;
 &lt;p&gt;Tracing is a method of monitoring and profiling your application to understand how requests flow through your system.
@@ -1696,7 +1721,7 @@ For example, you can view the associated database calls and requests to other se
 allows you to identify bottlenecks, latency issues, and other performance problems.&lt;/p&gt;
 &lt;h2 id="what-is-jaeger"&gt;&lt;a href="#what-is-jaeger" class="header-anchor"&gt;&lt;/a&gt;What is Jaeger?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.jaegertracing.io/" target="_blank" rel="noopener"
-&gt;Jaeger&lt;/a&gt; is an open-source, end-to-end distributed tracing system. Jaeger is popular for
+ &gt;Jaeger&lt;/a&gt; is an open-source, end-to-end distributed tracing system. Jaeger is popular for
 tracing applications because of its scalability, ease of use, and integration with other tools. Jaeger provides a
 web-based UI for viewing traces and analyzing performance data.&lt;/p&gt;
 &lt;h2 id="add-opentelemetry-instrumentation-to-your-application"&gt;&lt;a href="#add-opentelemetry-instrumentation-to-your-application" class="header-anchor"&gt;&lt;/a&gt;Add OpenTelemetry instrumentation to your application
@@ -1770,7 +1795,7 @@ go get github.com/XSAM/otelsql@v0.35.0
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="launch-jaeger"&gt;&lt;a href="#launch-jaeger" class="header-anchor"&gt;&lt;/a&gt;Launch Jaeger
 &lt;/h2&gt;&lt;p&gt;To view traces, you need to launch Jaeger. You can run Jaeger locally using Docker. Based on the
 &lt;a class="link" href="https://www.jaegertracing.io/docs/1.62/getting-started/" target="_blank" rel="noopener"
-&gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
+ &gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --rm --name jaeger &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 16686:16686 &lt;span style="color:#ae81ff"&gt;\
@@ -1788,13 +1813,14 @@ command:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can start your application.&lt;/p&gt;
 &lt;h2 id="view-traces-in-jaeger"&gt;&lt;a href="#view-traces-in-jaeger" class="header-anchor"&gt;&lt;/a&gt;View traces in Jaeger
 &lt;/h2&gt;&lt;p&gt;Open your browser and navigate to &lt;a class="link" href="http://localhost:16686" target="_blank" rel="noopener"
-&gt;http://localhost:16686&lt;/a&gt; to view traces in the Jaeger UI.
+ &gt;http://localhost:16686&lt;/a&gt; to view traces in the Jaeger UI.
 Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Find Traces&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
-alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+ alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
 &lt;/h2&gt;&lt;p&gt;In a local software development environment, OpenTelemetry and Jaeger can be used to:&lt;/p&gt;
 &lt;ul&gt;
@@ -1823,7 +1849,7 @@ efforts.&lt;/p&gt;
 &lt;p&gt;The Jaeger UI itself is basic and lacks some features. For example, regex search is missing out of the box, unless
 Elasticsearch/OpenSearch storage is added.&lt;/p&gt;
 &lt;p&gt;Our chosen SQL instrumentation library, &lt;a class="link" href="https://github.com/XSAM/otelsql" target="_blank" rel="noopener"
-&gt;github.com/XSAM/otelsql&lt;/a&gt;, could be better. It
+ &gt;github.com/XSAM/otelsql&lt;/a&gt;, could be better. It
 does not provide a way to trace the transaction lifecycle, and it creates many spans at the root level, clogging the
 Jaeger UI.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
@@ -1843,16 +1869,17 @@ Learn effective techniques for measuring and optimizing Go code performance.&lt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
-&gt;Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a&gt;&lt;/p&gt;
+ &gt;Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-opentelemetry-with-jaeger-video"&gt;&lt;a href="#watch-opentelemetry-with-jaeger-video" class="header-anchor"&gt;&lt;/a&gt;Watch OpenTelemetry with Jaeger video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/eQhdvU2gsmQ"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/eQhdvU2gsmQ" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Use Go to unmarshal JSON null, set, and missing fields</title><link>https://victoronsoftware.com/posts/go-json-unmarshal/</link><pubDate>Wed, 09 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-json-unmarshal/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-json-unmarshal/go-json-unmarshal-headline.png" alt="Featured image of post Use Go to unmarshal JSON null, set, and missing fields" /&gt;&lt;h2 id="json-unmarshalling-use-cases"&gt;&lt;a href="#json-unmarshalling-use-cases" class="header-anchor"&gt;&lt;/a&gt;JSON unmarshalling use cases
 &lt;/h2&gt;&lt;p&gt;When passing a JSON payload to a Go application, you may encounter situations where you must tell the difference between
 set, missing, or null fields.&lt;/p&gt;
@@ -1899,7 +1926,7 @@ For example, when &lt;code&gt;name&lt;/code&gt; is not specified in the JSON pay
 &lt;code&gt;Person&lt;/code&gt; struct. But we may want to clear the name when &lt;code&gt;name&lt;/code&gt; is defined as &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="detecting-null-set-and-missing-json-fields-with-go"&gt;&lt;a href="#detecting-null-set-and-missing-json-fields-with-go" class="header-anchor"&gt;&lt;/a&gt;Detecting null, set, and missing JSON fields with Go
 &lt;/h2&gt;&lt;p&gt;We can use custom unmarshalling logic by implementing the &lt;a class="link" href="https://pkg.go.dev/encoding/json#Unmarshaler" target="_blank" rel="noopener"
-&gt;Unmarshaler&lt;/a&gt;
+ &gt;Unmarshaler&lt;/a&gt;
 interface to detect the difference between null and missing fields. The &lt;code&gt;UnmarshalJSON&lt;/code&gt; method allows us to inspect the
 JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that &lt;code&gt;UnmarshalJSON&lt;/code&gt; is only
 called when the field is present in the JSON payload. So, we can mark a &lt;code&gt;Set&lt;/code&gt; flag as &lt;code&gt;true&lt;/code&gt; when the field is present
@@ -2015,40 +2042,46 @@ missing, or set to &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
 Input: {}
 {Form:{Set:false Valid:false Value:{Name: Age:0}} Member:{Set:false Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+
 Test: Set all fields
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}
 {Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:false}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:false}
+
 Test: Set only member field, and leave form fields unchanged
 Input: {&amp;#34;member&amp;#34;: true}
 {Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:true}
+
 Test: Set only the form field, and leave the member field unchanged
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}
 {Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+
 Test: Leave all fields unchanged
 Input: {}
 {Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+
 Test: Clear all fields
 Input: {&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}
 {Form:{Set:true Valid:false Value:{Name: Age:0}} Member:{Set:true Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+
 Test: Set only form field
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}
 {Form:{Set:true Valid:true Value:{Name:Chris Age:35}} Member:{Set:true Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,&amp;#34;age&amp;#34;:35},&amp;#34;member&amp;#34;:null}
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="complete-code-on-go-playground"&gt;&lt;a href="#complete-code-on-go-playground" class="header-anchor"&gt;&lt;/a&gt;Complete code on Go Playground
 &lt;/h2&gt;&lt;p&gt;The complete &lt;a class="link" href="https://go.dev/play/p/AXxgO20M0kI" target="_blank" rel="noopener"
-&gt;Go code for unmarshalling JSON null, set, and missing fields&lt;/a&gt; is
+ &gt;Go code for unmarshalling JSON null, set, and missing fields&lt;/a&gt; is
 available on the Go Playground.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we published an article on
 &lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;how to optimize the performance of a Go application&lt;/a&gt;. We benchmarked JSON
 decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
-&gt;gob&lt;/a&gt; decoding in that article.&lt;/li&gt;
+ &gt;gob&lt;/a&gt; decoding in that article.&lt;/li&gt;
 &lt;li&gt;In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" &gt;how to read program arguments from STDIN with Go&lt;/a&gt;, which is
 more secure than using environment variables or command-line arguments.&lt;/li&gt;
 &lt;li&gt;Also, we explained &lt;a class="link" href="../go-modules-and-packages/" &gt;the difference between Go modules and packages&lt;/a&gt;, which is essential
@@ -2057,13 +2090,14 @@ for organizing and managing Go code.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately"&gt;&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yHhk5wGNxk4"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yHhk5wGNxk4" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#accurately-measuring-test-execution-time" &gt;Accurately measuring test execution time&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2073,7 +2107,7 @@ title="YouTube Video"
 &lt;h2 id="problems-with-current-measurement-tools"&gt;&lt;a href="#problems-with-current-measurement-tools" class="header-anchor"&gt;&lt;/a&gt;Problems with current measurement tools
 &lt;/h2&gt;&lt;p&gt;We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p&gt;
 &lt;p&gt;For example, running the &lt;code&gt;gotestsum tool slowest&lt;/code&gt; command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
-&gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
+ &gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestPolicies 3m31s
@@ -2098,8 +2132,9 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
-alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+ alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
 &lt;p&gt;Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your test functions. This behavior is controlled by the &lt;code&gt;-parallel&lt;/code&gt; flag, which also defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p&gt;
 &lt;p&gt;Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your subtest functions.&lt;/p&gt;
@@ -2172,10 +2207,10 @@ alt="Sequence diagram of a go test run with two packages, two tests, and two sub
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p&gt;
 &lt;p&gt;When tests run in parallel, we typically see the &lt;code&gt;pause&lt;/code&gt; and &lt;code&gt;cont&lt;/code&gt; actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p&gt;
 &lt;p&gt;We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
 &lt;h2 id="accurate-test-execution-time-measurement-in-practice"&gt;&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor"&gt;&lt;/a&gt;Accurate test execution time measurement in practice
 &lt;/h2&gt;&lt;p&gt;By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
@@ -2207,7 +2242,7 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="goteststats-on-github"&gt;&lt;a href="#goteststats-on-github" class="header-anchor"&gt;&lt;/a&gt;&lt;code&gt;goteststats&lt;/code&gt; on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" &gt;optimizing the performance of Go applications&lt;/a&gt; and &lt;a class="link" href="../analyze-go-build/" &gt;analyzing Go build times&lt;/a&gt;.&lt;/li&gt;
@@ -2219,13 +2254,14 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately"&gt;&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to measure the execution time of Go tests accurately
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/caTDvS5vCjA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/caTDvS5vCjA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#creating-go-benchmark" &gt;Creating a Go benchmark&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#running-go-benchmarks" &gt;Running Go benchmarks&lt;/a&gt;&lt;/li&gt;
@@ -2242,13 +2278,14 @@ which is more reliable than a one-off report.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
 was taking a long time for some of our users. First, we used
 &lt;a class="link" href="https://github.com/google/pprof/blob/main/doc/README.md" target="_blank" rel="noopener"
-&gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
+ &gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
 identify the bottlenecks in our code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
-alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
 libraries to find the fastest one for our use case.&lt;/p&gt;
 &lt;h2 id="creating-go-benchmark"&gt;&lt;a href="#creating-go-benchmark" class="header-anchor"&gt;&lt;/a&gt;Creating a Go benchmark
@@ -2309,7 +2346,7 @@ ok serializer 1.868s
 the loop 357 times.&lt;/p&gt;
 &lt;h2 id="benchmarking-encodinggob"&gt;&lt;a href="#benchmarking-encodinggob" class="header-anchor"&gt;&lt;/a&gt;Benchmarking encoding/gob
 &lt;/h2&gt;&lt;p&gt;Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
-&gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
+ &gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkGobImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -2347,7 +2384,7 @@ BenchmarkJSONImportFile-12 306 3746758 ns/op
 BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="go-benchmark-code-on-github"&gt;&lt;a href="#go-benchmark-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Go benchmark code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -2377,13 +2414,14 @@ Strengthen your code with automated fuzz testing techniques.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-benchmark-go-serializers"&gt;&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor"&gt;&lt;/a&gt;Watch how to benchmark Go serializers
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/c0drQ2JUYmo"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/c0drQ2JUYmo" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" /&gt;&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments"&gt;&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor"&gt;&lt;/a&gt;STDIN is more secure than environment variables or command-line arguments
 &lt;/h2&gt;&lt;p&gt;When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code&gt;ps&lt;/code&gt; command. Allowing others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p&gt;
 &lt;p&gt;Environment variables are also visible to anyone who can run the &lt;code&gt;ps&lt;/code&gt; command. They are also globally visible to the program, so any arbitrary code in your application can extract the environment variables.&lt;/p&gt;
@@ -2394,24 +2432,25 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;STDIN is more secure because it is not visible to the &lt;code&gt;ps&lt;/code&gt; command and is not globally visible to the program. Thus, only the parts of the program that explicitly read from STDIN can access this data.&lt;/p&gt;
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go"&gt;&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor"&gt;&lt;/a&gt;How to read program arguments from STDIN with Go
 &lt;/h2&gt;&lt;p&gt;In the code example below, we check if any data is being piped in from STDIN with &lt;code&gt;os.ModeNamedPipe&lt;/code&gt;. Then, we wait to read all the data from STDIN with &lt;code&gt;ioutil.ReadAll&lt;/code&gt;. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
-&gt;github.com/kballard/go-shellquote&lt;/a&gt; library and append it to any existing command-line arguments.&lt;/p&gt;
+ &gt;github.com/kballard/go-shellquote&lt;/a&gt; library and append it to any existing command-line arguments.&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js"&gt;&lt;/script&gt;
 &lt;h2 id="how-to-integrate-with-a-secret-manager"&gt;&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor"&gt;&lt;/a&gt;How to integrate with a secret manager
 &lt;/h2&gt;&lt;p&gt;One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
-&gt;1Password&lt;/a&gt;. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p&gt;
+ &gt;1Password&lt;/a&gt;. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;echo --secret $(op read op://employee/example_server/secret) | go run read-args-from-stdin.go
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we discussed how to &lt;a class="link" href="../go-json-unmarshal/" &gt;unmarshal JSON payloads with null, set, and missing keys using Go&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Previously, we wrote &lt;a class="link" href="../catch-missed-authorization-checks-during-software-development" &gt;how we catch missed authorization checks in our Go application&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-read-program-arguments-from-stdin"&gt;&lt;a href="#watch-how-to-read-program-arguments-from-stdin" class="header-anchor"&gt;&lt;/a&gt;Watch how to read program arguments from STDIN
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Jg7xItfa6t8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Jg7xItfa6t8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -2429,10 +2468,10 @@ title="YouTube Video"
 &lt;p&gt;However, before the application uses the &lt;code&gt;Public&lt;/code&gt; and &lt;code&gt;Sign&lt;/code&gt; methods of the &lt;code&gt;CustomSigner,&lt;/code&gt; we must retrieve the client certificate using Windows APIs.&lt;/p&gt;
 &lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go"&gt;&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go" class="header-anchor"&gt;&lt;/a&gt;Retrieving mTLS client certificate from Windows certificate store using Go
 &lt;/h3&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
-&gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
-&gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
-&gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
-&gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
+ &gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
+ &gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
+ &gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
+ &gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
 &lt;p&gt;First, we open the &lt;code&gt;MY&lt;/code&gt; store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Open the certificate store&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;storePtr&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UTF16PtrFromString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;windowsStoreName&lt;/span&gt;)
@@ -2533,7 +2572,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="signing-the-mtls-digest"&gt;&lt;a href="#signing-the-mtls-digest" class="header-anchor"&gt;&lt;/a&gt;Signing the mTLS digest
 &lt;/h4&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
-&gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
+ &gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustLoadDLL&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ncrypt.dll&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCryptSignHash&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustFindProc&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;NCryptSignHash&amp;#34;&lt;/span&gt;)
@@ -2663,16 +2702,17 @@ crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash
 mTLS Hello World!
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-windows-certificate-store-video"&gt;&lt;a href="#mtls-go-client-using-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/L4uk43i3kyY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/L4uk43i3kyY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -2695,7 +2735,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;*/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;C&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To find the identities from the keychain, we use &lt;a class="link" href="https://developer.apple.com/documentation/security/1398306-secitemcopymatching" target="_blank" rel="noopener"
-&gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
+ &gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;identitySearch&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDictionaryCreateMutable&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFAllocatorDefault&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;maxCertificatesNum&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryKeyCallBacks&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryValueCallBacks&lt;/span&gt;,
@@ -2746,7 +2786,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;identityRefToCert&lt;/code&gt; function converts the &lt;code&gt;SecIdentityRef&lt;/code&gt; to a Go &lt;code&gt;x509.Certificate&lt;/code&gt; object. It exports the certificate to PEM format using &lt;a class="link" href="https://developer.apple.com/documentation/security/1394828-secitemexport" target="_blank" rel="noopener"
-&gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
+ &gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;identityRefToCert&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;identityRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecIdentityRef&lt;/span&gt;) (&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;x509&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Certificate&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Convert the identity to a certificate&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;certificateRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecCertificateRef&lt;/span&gt;
@@ -2839,7 +2879,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.int(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDataGetLength&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;signCFData&lt;/span&gt;))), &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
-&gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
+ &gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
 &lt;h2 id="putting-it-all-together"&gt;&lt;a href="#putting-it-all-together" class="header-anchor"&gt;&lt;/a&gt;Putting it all together
 &lt;/h2&gt;&lt;p&gt;With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
@@ -2915,16 +2955,17 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;The following article will explore &lt;a class="link" href="../mtls-with-windows" &gt;using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-macos-keychain-video"&gt;&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/iYWPrL4sR5U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/iYWPrL4sR5U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client with custom certificate signer</title><link>https://victoronsoftware.com/posts/mtls-go-custom-signer/</link><pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-custom-signer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-custom-signer/signer.png" alt="Featured image of post Mutual TLS (mTLS) Go client with custom certificate signer" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -2935,13 +2976,16 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-go-client" &gt;mTLS Go client&lt;/a&gt; article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p&gt;
 &lt;p&gt;The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code&gt;CertificateVerify&lt;/code&gt; message. The &lt;code&gt;CertificateVerify&lt;/code&gt; message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
-&gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="setting-up-the-environment"&gt;&lt;a href="#setting-up-the-environment" class="header-anchor"&gt;&lt;/a&gt;Setting up the environment
 &lt;/h2&gt;&lt;p&gt;We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt; article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p&gt;
 &lt;p&gt;In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p&gt;
@@ -3065,16 +3109,17 @@ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-using-apple-keychain" &gt;use the macOS keychain to load the client certificate and generate the &lt;code&gt;CertificateVerify&lt;/code&gt; message without extracting the private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-with-custom-certificate-signer-video"&gt;&lt;a href="#mtls-go-client-with-custom-certificate-signer-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client with custom certificate signer video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/FsKMAEfn21w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/FsKMAEfn21w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -3147,7 +3192,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go libraries are not integrated with the system keystore for using the mTLS client certificate and key.&lt;/p&gt;
 &lt;h2 id="modifying-the-go-client-for-mtls"&gt;&lt;a href="#modifying-the-go-client-for-mtls" class="header-anchor"&gt;&lt;/a&gt;Modifying the Go client for mTLS
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
-&gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
+ &gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
@@ -3210,16 +3255,17 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;The following article will cover &lt;a class="link" href="../mtls-go-custom-signer" &gt;creating a custom Go signer for the mTLS client certificate&lt;/a&gt;. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-video"&gt;&lt;a href="#mtls-go-client-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8lNZUTBkfsU"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8lNZUTBkfsU" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" /&gt;&lt;h2 id="simple-cgo-examples"&gt;&lt;a href="#simple-cgo-examples" class="header-anchor"&gt;&lt;/a&gt;Simple CGO examples
 &lt;/h2&gt;&lt;p&gt;CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code&gt;-cgo&lt;/code&gt; build flag.&lt;/p&gt;
 &lt;p&gt;Below is a simple example of calling a C function from Go.&lt;/p&gt;
@@ -3362,7 +3408,7 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;p&gt;The CGO code uses a lot of casting and data conversion. Let&amp;rsquo;s break down the following segment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;unsafe&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Pointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;)))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;C.CString&lt;/code&gt; converts a Go string to a C string. It is one of the CGO special functions to convert between Go and C types. See &lt;a class="link" href="https://pkg.go.dev/cmd/cgo" target="_blank" rel="noopener"
-&gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
+ &gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;unsafe.Pointer&lt;/code&gt; converts a C pointer to a generic Go pointer. And &lt;code&gt;(*C.UInt8)&lt;/code&gt; casts the Go pointer back to a C pointer.&lt;/p&gt;
 &lt;p&gt;Unfortunately, CGO cannot cast a C string to a &lt;code&gt;(*C.UInt8)&lt;/code&gt; directly. The following will fail to compile:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;))
@@ -3376,17 +3422,18 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/ul&gt;
 &lt;h2 id="cgo-hello-world-fail-video"&gt;&lt;a href="#cgo-hello-world-fail-video" class="header-anchor"&gt;&lt;/a&gt;CGO Hello World fail video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/C9h8YO1NwPM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Fuzz testing in Go</title><link>https://victoronsoftware.com/posts/fuzz-testing-with-go/</link><pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fuzz-testing-with-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fuzz-testing-with-go/fuzz.png" alt="Featured image of post Fuzz testing in Go" /&gt;&lt;p&gt;Fuzz testing is a software automated testing technique where random inputs are provided to the software under test. My
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/C9h8YO1NwPM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Fuzz testing in Go</title><link>https://victoronsoftware.com/posts/fuzz-testing-with-go/</link><pubDate>Thu, 04 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fuzz-testing-with-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fuzz-testing-with-go/fuzz.png" alt="Featured image of post Fuzz testing in Go" /&gt;&lt;p&gt;Fuzz testing is a software automated testing technique where random inputs are provided to the software under test. My
 background is in hardware verification, which uses sophisticated methodologies for pseudorandom testing, so I wanted to
 see what the Go library had to offer out of the box.&lt;/p&gt;
 &lt;p&gt;A &lt;a class="link" href="https://go.dev/doc/security/fuzz" target="_blank" rel="noopener"
-&gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
+ &gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;a normal unit test&lt;/li&gt;
 &lt;li&gt;a test with fuzzing&lt;/li&gt;
@@ -3437,9 +3484,11 @@ corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
 &lt;h2 id="initial-impressions"&gt;&lt;a href="#initial-impressions" class="header-anchor"&gt;&lt;/a&gt;Initial impressions
 &lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
 documentation mentions the following about the function under test:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
 &lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
 &lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in
@@ -3477,18 +3526,19 @@ such as database accesses. I will report my findings in a future post.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="go-fuzz-testing-video"&gt;&lt;a href="#go-fuzz-testing-video" class="header-anchor"&gt;&lt;/a&gt;Go fuzz testing video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/4emTXow54F4"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/4emTXow54F4" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Nil slice versus empty slice in Go</title><link>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</link><pubDate>Thu, 28 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/</guid><description>&lt;img src="https://victoronsoftware.com/posts/nil-slice-versus-empty-slice-in-go/cover.png" alt="Featured image of post Nil slice versus empty slice in Go" /&gt;&lt;p&gt;When starting to code in Go, we encountered the following situation. We needed to create an empty slice, so we did:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;{}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, my IDE flagged it as a warning, and pointed me to
 &lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
-&gt;this Go style guide passage&lt;/a&gt;, which recommended using a
+ &gt;this Go style guide passage&lt;/a&gt;, which recommended using a
 nil slice instead:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
@@ -3498,9 +3548,9 @@ be nil.&lt;/p&gt;
 &lt;p&gt;The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
 true. That’s pretty much it.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is nil.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When printing a nil slice, it will print like an empty slice:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is: %v\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;)
@@ -3509,7 +3559,7 @@ true. That’s pretty much it.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;bozo&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can loop over a nil slice, and the code will not enter the for loop:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;range&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;We are in a for loop.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;We are in a for loop.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The length of a nil slice is 0:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;len: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;))
@@ -3535,22 +3585,23 @@ pointer like you can a nil slice. This code causes a crash:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-nil-slice-vs-empty-slice-video"&gt;&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor"&gt;&lt;/a&gt;Watch nil slice vs empty slice video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/q0B4q_0u4XI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;p&gt;Authorization is giving permission to a user to do an action on the server. As developers, we must ensure that users are
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/q0B4q_0u4XI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;p&gt;Authorization is giving permission to a user to do an action on the server. As developers, we must ensure that users are
 only allowed to do what they are authorized.&lt;/p&gt;
 &lt;p&gt;One way to ensure that authorization has happened is to loudly flag when it hasn&amp;rsquo;t. This is how we do it at
 &lt;a class="link" href="https://www.fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet Device Management&lt;/a&gt;.&lt;/p&gt;
+ &gt;Fleet Device Management&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In our code base, we use the &lt;a class="link" href="https://github.com/go-kit/kit" target="_blank" rel="noopener"
-&gt;go-kit library&lt;/a&gt;. Most of the general endpoints are created
+ &gt;go-kit library&lt;/a&gt;. Most of the general endpoints are created
 in the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
-&gt;handler.go&lt;/a&gt;
+ &gt;handler.go&lt;/a&gt;
 file. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// user-authenticated endpoints&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ue&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;newUserAuthenticatedEndpointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;svc&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;apiVersions&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
@@ -3558,16 +3609,17 @@ file. For example:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ue&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;POST&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/_version_/fleet/trigger&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;triggerEndpoint&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;triggerRequest&lt;/span&gt;{})
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Every endpoint calls &lt;strong&gt;kithttp.NewServer&lt;/strong&gt; and wraps the endpoint with our &lt;strong&gt;AuthzCheck&lt;/strong&gt;. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
-&gt;handler.go&lt;/a&gt;:&lt;/p&gt;
+ &gt;handler.go&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;authzcheck&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewMiddleware&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;AuthzCheck&lt;/span&gt;()(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;kithttp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewServer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;decodeFn&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;encodeResponse&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg"
-alt="Catch missed authorization check block diagram"&gt;
+ alt="Catch missed authorization check block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;This means that after the business logic is processed, the AuthzCheck is called. This check ensures that authorization
 was checked. Otherwise, an error is returned. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/middleware/authzcheck/authzcheck.go#L51" target="_blank" rel="noopener"
-&gt;authzcheck.go&lt;/a&gt;:&lt;/p&gt;
+ &gt;authzcheck.go&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// If authorization was not checked, return a response that will&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// marshal to a generic error and log that the check was missed.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; !&lt;span style="color:#a6e22e"&gt;authzctx&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Checked&lt;/span&gt;() {
@@ -3580,14 +3632,15 @@ our business logic.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Recently, we improved our app&amp;rsquo;s security by &lt;a class="link" href="../get-args-from-stdin" &gt;reading program arguments from STDIN&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-we-catch-missed-authorization-checks"&gt;&lt;a href="#watch-how-we-catch-missed-authorization-checks" class="header-anchor"&gt;&lt;/a&gt;Watch how we catch missed authorization checks
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/jbkPLQpzPtc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/jbkPLQpzPtc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;This article originally appeared in
 &lt;a class="link" href="https://fleetdm.com/guides/catch-missed-authorization-checks-during-software-development" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>
+ &gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

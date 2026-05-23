@@ -6,7 +6,7 @@
 &lt;/ol&gt;
 &lt;h2 id="what-is-active-directory"&gt;&lt;a href="#what-is-active-directory" class="header-anchor"&gt;&lt;/a&gt;What is Active Directory?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank" rel="noopener"
-&gt;Active Directory&lt;/a&gt;
+ &gt;Active Directory&lt;/a&gt;
 is a directory service developed by Microsoft for Windows domain networks. It provides authentication and authorization
 services and a framework for organizing and managing resources in a networked environment. Active Directory stores
 information about users, computers, and other network objects, making managing and securing your network easier.&lt;/p&gt;
@@ -37,26 +37,29 @@ information:&lt;/p&gt;
 &lt;li&gt;Any additional settings or requirements, such as a private key or certificate&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For our example, we are using &lt;a class="link" href="https://www.wireguard.com/" target="_blank" rel="noopener"
-&gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
+ &gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
 and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
-alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+ alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
 the IP addresses of the remote Active Directory server. Also, ensure the IP addresses do not conflict with your local
 network.&lt;/p&gt;
 &lt;p&gt;Install the VPN client on your computer and activate the VPN connection using the provided details.&lt;/p&gt;
 &lt;p&gt;Test the VPN connection by pinging the remote Active Directory server.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\Users\victor&amp;gt; ping 10.98.1.1
+
 Pinging 10.98.1.1 with 32 bytes of data:
 Reply from 10.98.1.1: bytes=32 time=155ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
+
 Ping statistics for 10.98.1.1:
-Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+ Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
-Minimum = 155ms, Maximum = 156ms, Average = 155ms
+ Minimum = 155ms, Maximum = 156ms, Average = 155ms
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="2-point-your-computer-to-the-remote-active-directory-dns-server"&gt;&lt;a href="#2-point-your-computer-to-the-remote-active-directory-dns-server" class="header-anchor"&gt;&lt;/a&gt;2. Point your computer to the remote Active Directory DNS server
 &lt;/h3&gt;&lt;p&gt;To use Active Directory, your computer must know where to find the domain controller. This information is stored in the
 DNS (Domain Name System) settings.&lt;/p&gt;
@@ -67,20 +70,23 @@ connection.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
 Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
-alt="Windows 11 popups for setting DNS server."&gt;
+ alt="Windows 11 popups for setting DNS server."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
 &lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
-alt="Windows 11 dialog to join a domain."&gt;
+ alt="Windows 11 dialog to join a domain."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
 computer to the domain.&lt;/p&gt;
 &lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
-alt="Windows 11 dialog indicating successful domain join."&gt;
+ alt="Windows 11 dialog indicating successful domain join."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;
 &lt;h3 id="4-log-in-with-your-active-directory-credentials"&gt;&lt;a href="#4-log-in-with-your-active-directory-credentials" class="header-anchor"&gt;&lt;/a&gt;4. Log in with your Active Directory credentials
 &lt;/h3&gt;&lt;p&gt;Your VPN connection must be active to log in with your Active Directory credentials after joining the domain. Some VPN
@@ -101,11 +107,12 @@ resolved this issue by allowing SSH access in Active Directory settings.&lt;/p&g
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-connect-to-remote-active-directory-server"&gt;&lt;a href="#watch-how-to-connect-to-remote-active-directory-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to connect to remote Active Directory server
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/wFlntCobLsA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/wFlntCobLsA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

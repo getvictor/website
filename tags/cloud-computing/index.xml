@@ -15,8 +15,9 @@ use them as an extension of your application to perform tasks such as:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
-alt="GitHub Action block diagram"&gt;
+ alt="GitHub Action block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a
 database and then send a notification to a user. Or you can use it to generate a report and upload it to a file server.&lt;/p&gt;
 &lt;p&gt;Although GitHub Actions in open-source repositories are public, they can still use secrets that are not accessible to
@@ -32,13 +33,14 @@ Then, it publishes the generated files as a new release. As a final step, it del
 careful with process-intensive actions.&lt;/p&gt;
 &lt;h2 id="use-github-actions-for-general-purpose-tasks-video"&gt;&lt;a href="#use-github-actions-for-general-purpose-tasks-video" class="header-anchor"&gt;&lt;/a&gt;Use GitHub Actions for general-purpose tasks video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/y4Jct7eWLmY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/y4Jct7eWLmY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;How to reuse workflows and steps in GitHub Actions&lt;/a&gt;&lt;/li&gt;

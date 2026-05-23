@@ -7,19 +7,22 @@
 &lt;/ul&gt;
 &lt;p&gt;If you&amp;rsquo;ve ever tried to improve security in a real organization, you know how it feels. You come up with what seems like
 a good idea, but the moment you share it, someone says:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s frustrating. You’re not trying to slow anyone down, you&amp;rsquo;re trying to make things safer.&lt;/p&gt;
 &lt;p&gt;That was me a few months ago. Our client/server API used a token stored in a file on a client, and we wanted to make it
 more secure. I proposed a custom security solution to the team, and was met with questions and doubts. But that
 rejection actually led me to something better. I really dug into the security solutions in the industry, and I found the
 standard called &lt;strong&gt;HTTP Message Signatures&lt;/strong&gt;, &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9421/" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;. It turns out the
+ &gt;RFC 9421&lt;/a&gt;. It turns out the
 solution already existed. I just didn&amp;rsquo;t know where to look.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/rfc-9421.png"
-alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
+ alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="what-are-http-message-signatures"&gt;&lt;a href="#what-are-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;What are HTTP message signatures?
 &lt;/h2&gt;&lt;p&gt;You sign receipts, contracts, and maybe your kid&amp;rsquo;s permission slip. A signature means: this came from me. But on the
 web, most messages are unsigned. Anyone could forge them. HTTP Message Signatures change that. They make digital
@@ -32,28 +35,32 @@ intercepted the message and modified the contents.&lt;/p&gt;
 signatures, the server must have the public key of the client. The client signs the message with its private key, and
 the server verifies the signature with the public key.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-box rgb(227, 242, 253) Client side
-participant C as 🖥️ Client
-participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
-end
-box rgb(232, 245, 233) Server side
-participant S as ☁️ Server
-participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
-end
-Note over C,SM: 1. Prepare and sign message
-C-&amp;gt;&amp;gt;+SM: Message contents
-SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
-SM--&amp;gt;&amp;gt;-C: Signature
-Note over C,S: 2. Send authenticated request
-C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
-Note over S,VM: 3. Verify authenticity
-S-&amp;gt;&amp;gt;+VM: Verify signature
-VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
-VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
+ autonumber
+ box rgb(227, 242, 253) Client side
+ participant C as 🖥️ Client
+ participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
+ end
+ box rgb(232, 245, 233) Server side
+ participant S as ☁️ Server
+ participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
+ end
+
+ Note over C,SM: 1. Prepare and sign message
+ C-&amp;gt;&amp;gt;+SM: Message contents
+ SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
+ SM--&amp;gt;&amp;gt;-C: Signature
+
+ Note over C,S: 2. Send authenticated request
+ C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
+
+ Note over S,VM: 3. Verify authenticity
+ S-&amp;gt;&amp;gt;+VM: Verify signature
+ VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
+ VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
 &lt;/pre&gt;
+
 &lt;p&gt;With HTTP message signatures, the client signs specific parts of the HTTP request, such as method, target URI, headers,
 and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;ul&gt;
@@ -64,18 +71,20 @@ and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;p&gt;HTTP message signatures are added in the HTTP request headers. This means that the signature can be added by a proxy.
 The client could be a legacy system, and we can simply add a proxy to make it more secure.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-participant LC as 🖥️ Legacy client
-participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
-participant S as ☁️ Server
-LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
-P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
-P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
-S-&amp;gt;&amp;gt;S: Verify signature
-S--&amp;gt;&amp;gt;P: Response
-P--&amp;gt;&amp;gt;LC: Response
+ participant LC as 🖥️ Legacy client
+ participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
+ participant S as ☁️ Server
+
+ LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
+ P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
+ P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
+ S-&amp;gt;&amp;gt;S: Verify signature
+ S--&amp;gt;&amp;gt;P: Response
+ P--&amp;gt;&amp;gt;LC: Response
 &lt;/pre&gt;
+
 &lt;h2 id="how-http-message-signatures-compare-to-alternatives"&gt;&lt;a href="#how-http-message-signatures-compare-to-alternatives" class="header-anchor"&gt;&lt;/a&gt;How HTTP message signatures compare to alternatives
 &lt;/h2&gt;&lt;h3 id="api-keys-simple-but-limited"&gt;&lt;a href="#api-keys-simple-but-limited" class="header-anchor"&gt;&lt;/a&gt;API keys: simple but limited
 &lt;/h3&gt;&lt;p&gt;API keys are like shared passwords. You include them in a header or query parameter, and the server knows someone with
@@ -91,16 +100,18 @@ modified along the way.&lt;/p&gt;
 the Authorization header. That pattern is now universal for most API tokens, even if you don&amp;rsquo;t use OAuth explicitly. The
 industry standard across Google, AWS, Okta, GitHub, and others is &lt;code&gt;Authorization: Bearer &amp;lt;JWT&amp;gt;&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Authorization: Bearer &amp;lt;JWT-header&amp;gt;.&amp;lt;JWT-payload&amp;gt;.&amp;lt;JWT-signature&amp;gt;
+
 Header:
 {
-&amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
-&amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
+ &amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
+ &amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
 }
+
 Payload:
 {
-&amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
-&amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
-&amp;#34;iat&amp;#34;: 1730630400
+ &amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
+ &amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
+ &amp;#34;iat&amp;#34;: 1730630400
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The problem is that a JWT only signs its own contents (the claims inside the token itself). It doesn&amp;rsquo;t sign the HTTP
 request. If someone intercepts a valid JWT, they can use it in a completely different request. They could change the
@@ -122,13 +133,13 @@ tradeoffs in detail in &lt;a class="link" href="../mtls-vs-http-signature/" &gt;
 &lt;/h2&gt;&lt;p&gt;HTTP message signatures are gaining real traction across the industry. Here&amp;rsquo;s who&amp;rsquo;s already using them and why.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OpenAI&lt;/strong&gt;
 &lt;a class="link" href="https://help.openai.com/en/articles/11845367-chatgpt-agent-allowlisting" target="_blank" rel="noopener"
-&gt;signs requests from their ChatGPT agent&lt;/a&gt; to
+ &gt;signs requests from their ChatGPT agent&lt;/a&gt; to
 solve the bot verification problem. You&amp;rsquo;ve probably heard complaints about small sites being overwhelmed by AI bots.
 Without signatures, it was nearly impossible to tell which AI company was responsible for the traffic. Now, CDNs and
 firewalls can verify that traffic actually came from OpenAI, not some impersonator trying to abuse their reputation.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Cloudflare&lt;/strong&gt;
 &lt;a class="link" href="https://blog.cloudflare.com/verified-bots-with-cryptography" target="_blank" rel="noopener"
-&gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
+ &gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
 Site owners can now whitelist legitimate bots while blocking the fakes. No more relying on IP ranges that constantly
 shift or user-agent headers that anyone can spoof. The cryptographic signature proves the bot&amp;rsquo;s identity.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Mastodon&lt;/strong&gt; uses HTTP message signatures to protect the federated network. Say you create a Mastodon account on
@@ -140,18 +151,18 @@ weren&amp;rsquo;t legitimate.&lt;/p&gt;
 activities from another, it requires cryptographic proof that the sending actor actually authored the request. Without
 signatures, any server could impersonate another and inject fake posts or manipulate feeds.
 &lt;a class="link" href="https://docs.joinmastodon.org/spec/security" target="_blank" rel="noopener"
-&gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
+ &gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
 between federated instances.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Amazon&lt;/strong&gt; requires HTTP message signatures for third-party payment providers accessing their Selling Partner API in the
 EU. This isn&amp;rsquo;t optional. It&amp;rsquo;s
 &lt;a class="link" href="https://developer-docs.amazon.com/sp-api/docs/tpp-registration-signature-guidance" target="_blank" rel="noopener"
-&gt;PSD2 compliance&lt;/a&gt;, which is the
+ &gt;PSD2 compliance&lt;/a&gt;, which is the
 Payment Services Directive 2 (PSD2) framework of the European Union. Payment providers must sign requests using their
 NCA (National Competent Authority) certificate to prove they&amp;rsquo;re authorized to access sensitive financial data. The
 certificate&amp;rsquo;s organization identifier must match the registered developer identity, or the request gets rejected.&lt;/p&gt;
 &lt;p&gt;Other standards are already building on top of HTTP message signatures.
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9635/" target="_blank" rel="noopener"
-&gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
+ &gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
 Authorization Protocol. Think of it as a more flexible alternative to OAuth 2.0. Say you want to give a third-party app
 permission to access your cloud storage. The app needs to request that access from the storage provider, and the
 provider needs to verify that the requests are actually coming from the legitimate app, not an imposter. GNAP uses HTTP
@@ -159,7 +170,7 @@ message signatures as one way for the app to prove its identity during the autho
 mTLS and other methods).&lt;/p&gt;
 &lt;p&gt;There&amp;rsquo;s also a draft for an
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;.
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;.
 The problem? RFC 9421 assumes verifiers already have the signer&amp;rsquo;s public key through some out-of-band mechanism. That
 creates deployment friction. The directory draft solves this by defining a standard
 &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt; endpoint where clients can publish their signing keys in JWKS format.
@@ -170,7 +181,7 @@ solution years ago, and migrating to a standard may not be high on the priority 
 broken.&lt;/p&gt;
 &lt;p&gt;Apple&amp;rsquo;s MDM (Mobile Device Management) protocol uses a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc5652/" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
+ &gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
 HMAC-SHA256 and a shared secret. These custom approaches accomplish the same goal (verifying message integrity and
 origin) but they&amp;rsquo;re not interoperable. Every vendor implements their own scheme, and clients have to learn each one.&lt;/p&gt;
 &lt;p&gt;The good news? RFC 9421 supports both asymmetric keys (like RSA and ECDSA) and symmetric keys (like HMAC-SHA256).
@@ -206,9 +217,10 @@ Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Content-Length: 18
 Signature-Input: sig1=(&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 Signature: sig1=:Base64SignatureGoesHere=:
+
 {&amp;#34;hello&amp;#34;: &amp;#34;world&amp;#34;}
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;Signature-Input&lt;/code&gt; header says: &amp;ldquo;I&amp;rsquo;m signing the HTTP method, the authority (host and port), the path, content-type,
 and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header contains the actual signature of those components.&lt;/p&gt;
@@ -229,7 +241,7 @@ and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header con
 someone from changing a GET to a DELETE.&lt;/p&gt;
 &lt;p&gt;To protect the request body, you don&amp;rsquo;t sign it directly. Instead, you calculate a cryptographic hash of the body and
 include it in a &lt;code&gt;Content-Digest&lt;/code&gt; header (defined in &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9530/" target="_blank" rel="noopener"
-&gt;RFC 9530&lt;/a&gt;). Then you
+ &gt;RFC 9530&lt;/a&gt;). Then you
 sign that header. For example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;code&gt;content-digest&lt;/code&gt; header becomes one of the signed components. If anyone tampers with the body, the hash won&amp;rsquo;t match
@@ -255,8 +267,8 @@ they can&amp;rsquo;t be tampered with.&lt;/p&gt;
 &amp;#34;content-type&amp;#34;: application/json
 &amp;#34;content-length&amp;#34;: 18
 &amp;#34;@signature-params&amp;#34;: (&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each component gets its own line with the component name in quotes, a colon, and the value. The last line contains the
 signature parameters. This text is what gets signed with the private key.&lt;/p&gt;
 &lt;h3 id="supported-algorithms"&gt;&lt;a href="#supported-algorithms" class="header-anchor"&gt;&lt;/a&gt;Supported algorithms
@@ -276,7 +288,7 @@ signature parameters. This text is what gets signed with the private key.&lt;/p&
 &lt;p&gt;But the list is extensible. The RFC allows implementations to support additional algorithms, including JSON Web
 Signature (JWS) algorithm identifiers. IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;official registry&lt;/a&gt; where new
+ &gt;official registry&lt;/a&gt; where new
 algorithms can be registered. This means the standard can evolve to support new cryptographic methods as they become
 available.&lt;/p&gt;
 &lt;h3 id="key-distribution-and-rotation"&gt;&lt;a href="#key-distribution-and-rotation" class="header-anchor"&gt;&lt;/a&gt;Key distribution and rotation
@@ -290,7 +302,7 @@ file, database).&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Well-known directory&lt;/strong&gt;: Use the
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;
 draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -301,19 +313,20 @@ draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directo
 multiple signatures in a single request (one with the old key, one with the new key) during rotation periods.&lt;/p&gt;
 &lt;p&gt;IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;registry of signature algorithms and parameters&lt;/a&gt;
+ &gt;registry of signature algorithms and parameters&lt;/a&gt;
 so implementations stay compatible.&lt;/p&gt;
 &lt;h2 id="example-implementation"&gt;&lt;a href="#example-implementation" class="header-anchor"&gt;&lt;/a&gt;Example implementation
 &lt;/h2&gt;&lt;p&gt;We implemented a simple demo app that demonstrates how to sign and verify HTTP requests with RFC 9421 in Node.js. The
 app is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;There are many JavaScript libraries that implement HTTP message signatures. Many companies also don&amp;rsquo;t use libraries and
 do their own implementation of the standard.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/node-http-message-signature-libraries.png"
-alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
+ alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For our demo we chose &lt;a class="link" href="https://github.com/dhensby/node-http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
+ &gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Cleaner, more intuitive API&lt;/li&gt;
 &lt;/ol&gt;
@@ -539,27 +552,31 @@ need the complete request with its signature headers intact.&lt;/p&gt;
 and hasn&amp;rsquo;t been modified. But if an attacker captures that request, they can send it again. And again. The signature is
 still valid because the request hasn&amp;rsquo;t changed.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-participant Client as 🖥️ Client
-participant Attacker as 🎭 Attacker
-participant Server as ☁️ Server
-Note over Client,Server: Legitimate request
-Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓
-Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
-Note over Client,Server: Attacker intercepts and replays
-Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
-Attacker-&amp;gt;&amp;gt;Server: Replay same request
-alt Without replay protection
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
-Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
-else With created timestamp
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
-Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
-end
+ autonumber
+ participant Client as 🖥️ Client
+ participant Attacker as 🎭 Attacker
+ participant Server as ☁️ Server
+
+ Note over Client,Server: Legitimate request
+ Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓
+ Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
+
+ Note over Client,Server: Attacker intercepts and replays
+ Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
+ Attacker-&amp;gt;&amp;gt;Server: Replay same request
+
+ alt Without replay protection
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
+ Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
+ else With created timestamp
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
+ Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
+ end
 &lt;/pre&gt;
+
 &lt;h3 id="defending-against-replay-attacks"&gt;&lt;a href="#defending-against-replay-attacks" class="header-anchor"&gt;&lt;/a&gt;Defending against replay attacks
 &lt;/h3&gt;&lt;p&gt;You need to make each signature single-use or time-limited. The standard way to do this is with the &lt;code&gt;created&lt;/code&gt; timestamp
 and &lt;code&gt;nonce&lt;/code&gt; parameters we discussed earlier:&lt;/p&gt;
@@ -656,13 +673,14 @@ use cryptographic keys with TPM 2.0 modules.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-conference-talk-based-on-this-article"&gt;&lt;a href="#watch-the-conference-talk-based-on-this-article" class="header-anchor"&gt;&lt;/a&gt;Watch the conference talk based on this article
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/6QxkfPy0k4U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/6QxkfPy0k4U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#what-is-mtls" &gt;What is mTLS?&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#mtls-pros-and-cons" &gt;mTLS: pros and cons&lt;/a&gt;&lt;/li&gt;
@@ -683,8 +701,9 @@ is a no-nonsense breakdown covering what they are, where they shine, and where t
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
 server so that the server can verify the client&amp;rsquo;s identity.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
 it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
 mutual authentication is required.&lt;/p&gt;
@@ -713,35 +732,38 @@ adoption difficult in heterogeneous environments&lt;/li&gt;
 body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
 from someone it trusts.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: HTTP message signature
 ---
 sequenceDiagram
-autonumber
-participant Client
-participant Server
-Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
-Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
-Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
-Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
-Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
-Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
-Server-&amp;gt;&amp;gt;Server: Verify signature with public key
-alt Signature valid
-Server-&amp;gt;&amp;gt;Server: Process request
-else Signature invalid
-Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
-end
+ autonumber
+ participant Client
+ participant Server
+
+ Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
+ Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
+ Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
+ Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
+
+ Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
+ Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
+ Server-&amp;gt;&amp;gt;Server: Verify signature with public key
+ alt Signature valid
+ Server-&amp;gt;&amp;gt;Server: Process request
+ else Signature invalid
+ Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
+ end
 &lt;/pre&gt;
+
 &lt;p&gt;HTTP signing works at the application layer. It does not replace TLS, but rides on top of it. That means you don&amp;rsquo;t have
 to worry about where TLS is terminated, and the HTTP signature can be verified at the ultimate destination server.&lt;/p&gt;
 &lt;p&gt;Many legacy systems have used their own approaches to HTTP signing. Apple&amp;rsquo;s MDM protocol relies on a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc5652" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
+ &gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
 payload signing with a shared secret for webhooks. These mechanisms take different paths to the same goal: verifying the
 integrity and origin of HTTP messages.&lt;/p&gt;
 &lt;p&gt;Today, more modern systems are beginning to align with &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc9421" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;, a
+ &gt;RFC 9421&lt;/a&gt;, a
 proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
 signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
 auditability and control.&lt;/p&gt;
@@ -794,65 +816,65 @@ expiration in ValKey or Redis)&lt;/li&gt;
 &lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool"&gt;&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor"&gt;&lt;/a&gt;mTLS vs HTTP message signatures: choosing the right tool
 &lt;/h2&gt;&lt;p&gt;Here&amp;rsquo;s how they compare:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Feature&lt;/th&gt;
-&lt;th&gt;mTLS&lt;/th&gt;
-&lt;th&gt;HTTP Message Signature&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Identity verification&lt;/td&gt;
-&lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
-&lt;td&gt;🟡 App-level with public key&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integrity&lt;/td&gt;
-&lt;td&gt;🟢 Built into TLS&lt;/td&gt;
-&lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Granular control&lt;/td&gt;
-&lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
-&lt;td&gt;🟢 Easy&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Deployment complexity&lt;/td&gt;
-&lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Public API suitability&lt;/td&gt;
-&lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
-&lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Certificate handling&lt;/td&gt;
-&lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
-&lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integration support&lt;/td&gt;
-&lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
-&lt;td&gt;🟡 App libraries available&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Replay protection&lt;/td&gt;
-&lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
-&lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Performance&lt;/td&gt;
-&lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Debuggability&lt;/td&gt;
-&lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
-&lt;td&gt;🟢 Signature is visible&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Feature&lt;/th&gt;
+ &lt;th&gt;mTLS&lt;/th&gt;
+ &lt;th&gt;HTTP Message Signature&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Identity verification&lt;/td&gt;
+ &lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
+ &lt;td&gt;🟡 App-level with public key&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integrity&lt;/td&gt;
+ &lt;td&gt;🟢 Built into TLS&lt;/td&gt;
+ &lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Granular control&lt;/td&gt;
+ &lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
+ &lt;td&gt;🟢 Easy&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Deployment complexity&lt;/td&gt;
+ &lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Public API suitability&lt;/td&gt;
+ &lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
+ &lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Certificate handling&lt;/td&gt;
+ &lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
+ &lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integration support&lt;/td&gt;
+ &lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
+ &lt;td&gt;🟡 App libraries available&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Replay protection&lt;/td&gt;
+ &lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
+ &lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Performance&lt;/td&gt;
+ &lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Debuggability&lt;/td&gt;
+ &lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
+ &lt;td&gt;🟢 Signature is visible&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;So, which one should you use?&lt;/p&gt;
 &lt;ul&gt;
@@ -882,13 +904,14 @@ for hardware-backed cryptographic operations.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-compare-mtls-and-http-message-signatures"&gt;&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;Watch us compare mTLS and HTTP message signatures
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/aDMdLCzXn1U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/aDMdLCzXn1U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" /&gt;&lt;p&gt;We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to
 use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to
 use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the
@@ -921,8 +944,9 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist"&gt;&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor"&gt;&lt;/a&gt;Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3&gt;
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"&gt;
-&lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
+ &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt;&lt;/li&gt;
@@ -939,10 +963,10 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;p&gt;However, before the application uses the &lt;code&gt;Public&lt;/code&gt; and &lt;code&gt;Sign&lt;/code&gt; methods of the &lt;code&gt;CustomSigner,&lt;/code&gt; we must retrieve the client certificate using Windows APIs.&lt;/p&gt;
 &lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go"&gt;&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go" class="header-anchor"&gt;&lt;/a&gt;Retrieving mTLS client certificate from Windows certificate store using Go
 &lt;/h3&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
-&gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
-&gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
-&gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
-&gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
+ &gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
+ &gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
+ &gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
+ &gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
 &lt;p&gt;First, we open the &lt;code&gt;MY&lt;/code&gt; store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Open the certificate store&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;storePtr&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UTF16PtrFromString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;windowsStoreName&lt;/span&gt;)
@@ -1043,7 +1067,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="signing-the-mtls-digest"&gt;&lt;a href="#signing-the-mtls-digest" class="header-anchor"&gt;&lt;/a&gt;Signing the mTLS digest
 &lt;/h4&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
-&gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
+ &gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustLoadDLL&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ncrypt.dll&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCryptSignHash&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustFindProc&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;NCryptSignHash&amp;#34;&lt;/span&gt;)
@@ -1173,16 +1197,17 @@ crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash
 mTLS Hello World!
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-windows-certificate-store-video"&gt;&lt;a href="#mtls-go-client-using-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/L4uk43i3kyY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/L4uk43i3kyY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -1202,7 +1227,7 @@ title="YouTube Video"
 &lt;p&gt;We will store our client mTLS certificate in the user certificate store and the other certificates in the local machine certificate store.&lt;/p&gt;
 &lt;h2 id="generating-mtls-certificates-and-keys"&gt;&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generating mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
+ &gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force certs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Private keys for CAs&lt;/span&gt;
@@ -1342,29 +1367,31 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
-alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Edge mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Edge mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;OK&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Here is a helpful link that may resolve issues trying to use mTLS client certificates on Windows 10: &lt;a class="link" href="https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10" target="_blank" rel="noopener"
-&gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
+ &gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on Github
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="creating-our-own-windows-mtls-client"&gt;&lt;a href="#creating-our-own-windows-mtls-client" class="header-anchor"&gt;&lt;/a&gt;Creating our own Windows mTLS client
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" &gt;create a custom Windows mTLS client using the Windows certificate store&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we wrote an article on &lt;a class="link" href="../test-ndes-scep-server" &gt;testing a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="mtls-with-windows-certificate-store-video"&gt;&lt;a href="#mtls-with-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/GuubP7vir1g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/GuubP7vir1g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -1387,7 +1414,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;*/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;C&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To find the identities from the keychain, we use &lt;a class="link" href="https://developer.apple.com/documentation/security/1398306-secitemcopymatching" target="_blank" rel="noopener"
-&gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
+ &gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;identitySearch&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDictionaryCreateMutable&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFAllocatorDefault&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;maxCertificatesNum&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryKeyCallBacks&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryValueCallBacks&lt;/span&gt;,
@@ -1438,7 +1465,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;identityRefToCert&lt;/code&gt; function converts the &lt;code&gt;SecIdentityRef&lt;/code&gt; to a Go &lt;code&gt;x509.Certificate&lt;/code&gt; object. It exports the certificate to PEM format using &lt;a class="link" href="https://developer.apple.com/documentation/security/1394828-secitemexport" target="_blank" rel="noopener"
-&gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
+ &gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;identityRefToCert&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;identityRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecIdentityRef&lt;/span&gt;) (&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;x509&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Certificate&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Convert the identity to a certificate&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;certificateRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecCertificateRef&lt;/span&gt;
@@ -1531,7 +1558,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.int(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDataGetLength&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;signCFData&lt;/span&gt;))), &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
-&gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
+ &gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
 &lt;h2 id="putting-it-all-together"&gt;&lt;a href="#putting-it-all-together" class="header-anchor"&gt;&lt;/a&gt;Putting it all together
 &lt;/h2&gt;&lt;p&gt;With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
@@ -1607,16 +1634,17 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;The following article will explore &lt;a class="link" href="../mtls-with-windows" &gt;using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-macos-keychain-video"&gt;&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/iYWPrL4sR5U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/iYWPrL4sR5U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client with custom certificate signer</title><link>https://victoronsoftware.com/posts/mtls-go-custom-signer/</link><pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-custom-signer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-custom-signer/signer.png" alt="Featured image of post Mutual TLS (mTLS) Go client with custom certificate signer" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -1627,13 +1655,16 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-go-client" &gt;mTLS Go client&lt;/a&gt; article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p&gt;
 &lt;p&gt;The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code&gt;CertificateVerify&lt;/code&gt; message. The &lt;code&gt;CertificateVerify&lt;/code&gt; message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
-&gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="setting-up-the-environment"&gt;&lt;a href="#setting-up-the-environment" class="header-anchor"&gt;&lt;/a&gt;Setting up the environment
 &lt;/h2&gt;&lt;p&gt;We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt; article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p&gt;
 &lt;p&gt;In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p&gt;
@@ -1757,16 +1788,17 @@ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-using-apple-keychain" &gt;use the macOS keychain to load the client certificate and generate the &lt;code&gt;CertificateVerify&lt;/code&gt; message without extracting the private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-with-custom-certificate-signer-video"&gt;&lt;a href="#mtls-go-client-with-custom-certificate-signer-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client with custom certificate signer video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/FsKMAEfn21w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/FsKMAEfn21w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -1839,7 +1871,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go libraries are not integrated with the system keystore for using the mTLS client certificate and key.&lt;/p&gt;
 &lt;h2 id="modifying-the-go-client-for-mtls"&gt;&lt;a href="#modifying-the-go-client-for-mtls" class="header-anchor"&gt;&lt;/a&gt;Modifying the Go client for mTLS
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
-&gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
+ &gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
@@ -1902,16 +1934,17 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;The following article will cover &lt;a class="link" href="../mtls-go-custom-signer" &gt;creating a custom Go signer for the mTLS client certificate&lt;/a&gt;. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-video"&gt;&lt;a href="#mtls-go-client-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8lNZUTBkfsU"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8lNZUTBkfsU" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p&gt;
@@ -1961,7 +1994,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The maximum validity period for a TLS certificate is 398 days. Apple will reject certificates with a more extended validity period.&lt;/p&gt;
 &lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain"&gt;&lt;a href="#importing-client-mtls-certificates-and-keys-into-the-macos-keychain" class="header-anchor"&gt;&lt;/a&gt;Importing client mTLS certificates and keys into the macOS keychain
 &lt;/h2&gt;&lt;p&gt;We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
-&gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
+ &gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script imports mTLS certificates and keys into the Apple Keychain.&lt;/span&gt;
@@ -1986,12 +2019,13 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security find-identity -p ssl-client /Library/Keychains/System.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The list of identities should include:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Policy: SSL (client)
-Matching identities
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 identities found
-Valid identities only
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 valid identities found
+ Matching identities
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 identities found
+
+ Valid identities only
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 valid identities found
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;macOS can validate the identity because we also imported the client CA into the system keychain.&lt;/p&gt;
 &lt;h2 id="running-the-mtls-server"&gt;&lt;a href="#running-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Running the mTLS server
 &lt;/h2&gt;&lt;p&gt;As in the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we will use &lt;code&gt;docker compose up&lt;/code&gt; to start two nginx servers:&lt;/p&gt;
@@ -2059,10 +2093,11 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;pre tabindex="0"&gt;&lt;code&gt;https://localhost:8889/hello-world.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
-alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Safari mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Safari mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;Continue&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;Google Chrome&amp;rsquo;s behavior is similar.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p&gt;
@@ -2076,16 +2111,17 @@ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-with-macos-keychain-video"&gt;&lt;a href="#mtls-with-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Y0y6-cCzz8w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Y0y6-cCzz8w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" /&gt;&lt;h2 id="what-is-mtls-mutual-tls"&gt;&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor"&gt;&lt;/a&gt;What is mTLS (mutual TLS)?
 &lt;/h2&gt;&lt;p&gt;TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between
 two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p&gt;
@@ -2105,7 +2141,7 @@ authenticates itself to the server.&lt;/p&gt;
 &lt;li&gt;Mobile apps&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="how-does-fleet-device-management-use-mtls"&gt;&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor"&gt;&lt;/a&gt;How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet Device Management&lt;/a&gt; use mTLS?
+ &gt;Fleet Device Management&lt;/a&gt; use mTLS?
 &lt;/h2&gt;&lt;p&gt;Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet
 agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects
 information about the host and sends it to the Fleet server.&lt;/p&gt;
@@ -2115,8 +2151,9 @@ mTLS works.&lt;/p&gt;
 &lt;p&gt;TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between
 the client and the server.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its
 certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p&gt;
 &lt;p&gt;The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate
@@ -2129,7 +2166,7 @@ signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p&gt;
 can exchange encrypted messages using a symmetric session key.&lt;/p&gt;
 &lt;h2 id="generate-certificates-and-keys"&gt;&lt;a href="#generate-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generate certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificates and keys for the client and the server. It also creates two certificate
 authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the
@@ -2165,11 +2202,12 @@ certificates, but we will use separate CAs for this example.&lt;/p&gt;
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
+
 [alt_names]
 DNS.1 = localhost
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="run-the-mtls-server"&gt;&lt;a href="#run-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Run the mTLS server
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.nginx.com/" target="_blank" rel="noopener"
-&gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
+ &gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
 &lt;p&gt;Using &lt;code&gt;docker compose&lt;/code&gt;, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We
 will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
@@ -2196,28 +2234,33 @@ will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&g
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8889:8889&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;nginx-tls&lt;/code&gt; service uses the &lt;code&gt;nginx-tls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8888 ssl;
-server_name tls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-location / {
-root /www/data;
-}
+ listen 8888 ssl;
+ server_name tls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;nginx-mtls&lt;/code&gt; service uses the &lt;code&gt;nginx-mtls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8889 ssl;
-server_name mtls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-# Enable mTLS
-ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
-ssl_verify_client on;
-location / {
-root /www/data;
-}
+ listen 8889 ssl;
+ server_name mtls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ # Enable mTLS
+ ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
+ ssl_verify_client on;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;hello-world.txt&lt;/code&gt; files contain a simple text message.&lt;/p&gt;
 &lt;h2 id="connect-to-the-mtls-server-with-curl-client"&gt;&lt;a href="#connect-to-the-mtls-server-with-curl-client" class="header-anchor"&gt;&lt;/a&gt;Connect to the mTLS server with curl client
@@ -2233,7 +2276,7 @@ select the client certificate and key.&lt;/p&gt;
 does not provide a valid certificate.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the next article, we will
 &lt;a class="link" href="../mtls-with-apple-keychain" &gt;secure the mTLS certificates and keys with the macOS keychain&lt;/a&gt;.&lt;/p&gt;
@@ -2247,11 +2290,12 @@ keys, including parent/child key hierarchies and secure signing.&lt;/em&gt;&lt;/
 &lt;/ul&gt;
 &lt;h2 id="mtls-hello-world-video"&gt;&lt;a href="#mtls-hello-world-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Hello World video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/WA_RL_QtIgY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/WA_RL_QtIgY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

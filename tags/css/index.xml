@@ -23,9 +23,9 @@ a CSS framework.&lt;/p&gt;
 static CSS file. We will include the CSS file as part of our JavaScript bundle. Although the CSS files can be kept
 separate, we will include them in the JavaScript bundle since this is currently the best practice in web development.&lt;/p&gt;
 &lt;p&gt;We will use &lt;a class="link" href="https://www.npmjs.com/package/style-loader" target="_blank" rel="noopener"
-&gt;&lt;code&gt;style-loader&lt;/code&gt;&lt;/a&gt; to inject CSS into our JavaScript and
+ &gt;&lt;code&gt;style-loader&lt;/code&gt;&lt;/a&gt; to inject CSS into our JavaScript and
 &lt;a class="link" href="https://www.npmjs.com/package/css-loader" target="_blank" rel="noopener"
-&gt;&lt;code&gt;css-loader&lt;/code&gt;&lt;/a&gt; to convert our CSS file to a string. First, install the
+ &gt;&lt;code&gt;css-loader&lt;/code&gt;&lt;/a&gt; to convert our CSS file to a string. First, install the
 packages:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev style-loader css-loader
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, update the &lt;code&gt;webpack.common.ts&lt;/code&gt; to include the rule for CSS files:&lt;/p&gt;
@@ -50,7 +50,7 @@ First, install these packages and generate the TypeScript config file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev tailwindcss postcss-loader
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npx tailwindcss init --ts
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;a class="link" href="https://www.npmjs.com/package/postcss-loader" target="_blank" rel="noopener"
-&gt;&lt;code&gt;postcss-loader&lt;/code&gt;&lt;/a&gt; is a webpack loader that processes CSS with PostCSS.
+ &gt;&lt;code&gt;postcss-loader&lt;/code&gt;&lt;/a&gt; is a webpack loader that processes CSS with PostCSS.
 PostCSS is a plugin-based CSS transformer recommended for integrating Tailwind CSS with the webpack build flow.&lt;/p&gt;
 &lt;p&gt;Update the &lt;code&gt;webpack.common.ts&lt;/code&gt; CSS rule to include the loader for PostCSS with the &lt;code&gt;tailwindcss&lt;/code&gt; plugin:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
@@ -69,7 +69,7 @@ PostCSS is a plugin-based CSS transformer recommended for integrating Tailwind C
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ],
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;},
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;a class="link" href="https://www.npmjs.com/package/postcss-import" target="_blank" rel="noopener"
-&gt;&lt;code&gt;postcss-import&lt;/code&gt;&lt;/a&gt; plugin processes &lt;code&gt;@import&lt;/code&gt; statements in CSS files,
+ &gt;&lt;code&gt;postcss-import&lt;/code&gt;&lt;/a&gt; plugin processes &lt;code&gt;@import&lt;/code&gt; statements in CSS files,
 which we will use in the next step.&lt;/p&gt;
 &lt;p&gt;Update the generated &lt;code&gt;tailwind.config.ts&lt;/code&gt; file to point to our HTML files:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-typescript" data-lang="typescript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;import&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;type&lt;/span&gt; { &lt;span style="color:#a6e22e"&gt;Config&lt;/span&gt; } &lt;span style="color:#66d9ef"&gt;from&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;tailwindcss&amp;#39;&lt;/span&gt;
@@ -86,7 +86,7 @@ which we will use in the next step.&lt;/p&gt;
 different approach to writing CSS. Instead of writing custom CSS classes, we use pre-built utility classes to style our
 elements. It is a small step above writing raw CSS, but it is more maintainable and easier to read. Utility classes are
 documented in the &lt;a class="link" href="https://tailwindcss.com/docs/width" target="_blank" rel="noopener"
-&gt;Tailwind CSS documentation&lt;/a&gt;.&lt;/p&gt;
+ &gt;Tailwind CSS documentation&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;First, we create a new CSS file, &lt;code&gt;src/common.css&lt;/code&gt; to contain styles shared by both pages:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-css" data-lang="css"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;@&lt;span style="color:#66d9ef"&gt;tailwind&lt;/span&gt; &lt;span style="color:#f92672"&gt;base&lt;/span&gt;;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;@&lt;span style="color:#66d9ef"&gt;tailwind&lt;/span&gt; &lt;span style="color:#f92672"&gt;components&lt;/span&gt;;
@@ -152,16 +152,18 @@ together.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;/&lt;span style="color:#f92672"&gt;html&lt;/span&gt;&amp;gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Testing the extension, we should see a nicer-looking popup page:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/popup.png"
-alt="Popup with Tailwind CSS classes"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Popup with Tailwind CSS classes&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Popup with Tailwind CSS classes"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Popup with Tailwind CSS classes&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;And a nicer-looking options page:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/advanced-options.png"
-alt="Options with Tailwind CSS classes"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Options with Tailwind CSS classes&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Options with Tailwind CSS classes"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Options with Tailwind CSS classes&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
 &lt;/h2&gt;&lt;p&gt;In the next part of this series, we will
 &lt;a class="link" href="../add-unit-tests-to-chrome-extension" &gt;add unit tests to our Chrome extension&lt;/a&gt;. Unit tests help us catch bugs early,
@@ -169,14 +171,15 @@ ensure our extension continues to work as expected in different scenarios and ma
 &lt;h2 id="css-framework-code-on-github"&gt;&lt;a href="#css-framework-code-on-github" class="header-anchor"&gt;&lt;/a&gt;CSS framework code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at:
 &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/6-css-framework&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="css-framework-video"&gt;&lt;a href="#css-framework-video" class="header-anchor"&gt;&lt;/a&gt;CSS framework video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/V4MolRPhmqY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/V4MolRPhmqY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

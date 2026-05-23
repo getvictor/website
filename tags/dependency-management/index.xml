@@ -29,19 +29,19 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The leading &lt;code&gt;!&lt;/code&gt; inverts the command&amp;rsquo;s exit status. If the package is dependent on the specified package, the command will return &lt;code&gt;1&lt;/code&gt;; if it is not, the command will return &lt;code&gt;0&lt;/code&gt;. You can use this command in your CI/CD pipelines to ensure that your package is not dependent on a specific package.&lt;/p&gt;
 &lt;h2 id="find-package-dependencies-using-go-code"&gt;&lt;a href="#find-package-dependencies-using-go-code" class="header-anchor"&gt;&lt;/a&gt;Find package dependencies using Go code
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://pkg.go.dev/golang.org/x/tools/go/packages" target="_blank" rel="noopener"
-&gt;packages&lt;/a&gt; is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code&gt;Load&lt;/code&gt; function to get a list of &lt;code&gt;Package&lt;/code&gt; values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
-&gt;Context.Import method from build package&lt;/a&gt; to recursively find dependencies.&lt;/p&gt;
+ &gt;packages&lt;/a&gt; is a Go package that allows one to load, parse, type-check, and import Go packages. We will use the &lt;code&gt;Load&lt;/code&gt; function to get a list of &lt;code&gt;Package&lt;/code&gt; values. In addition, we will use &lt;a class="link" href="https://pkg.go.dev/go/build#Context.Import" target="_blank" rel="noopener"
+ &gt;Context.Import method from build package&lt;/a&gt; to recursively find dependencies.&lt;/p&gt;
 &lt;p&gt;Below is an example architecture test you can add to your test suite.&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/17f495021211dcca087b16cd2d4b24d1.js"&gt;&lt;/script&gt;
 &lt;p&gt;The above example is based on &lt;a class="link" href="https://github.com/matthewmcnew/archtest" target="_blank" rel="noopener"
-&gt;https://github.com/matthewmcnew/archtest&lt;/a&gt;. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
-&gt;jump to the code example section&lt;/a&gt; of the video below for a full explanation.&lt;/p&gt;
+ &gt;https://github.com/matthewmcnew/archtest&lt;/a&gt;. You can &lt;a class="link" href="https://youtu.be/yIZcbTQvpCE?t=440&amp;amp;si=T2AqNGc9_YMjbCTx" target="_blank" rel="noopener"
+ &gt;jump to the code example section&lt;/a&gt; of the video below for a full explanation.&lt;/p&gt;
 &lt;p&gt;A failing run of our architecture test will look like this:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;=== RUN TestPackageDependencies
-arch_test.go:41: Error: package dependency not allowed. Dependency chain:
-github.com/fleetdm/fleet/v4/server/android/service
-github.com/fleetdm/fleet/v4/server/fleet
-github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
+ arch_test.go:41: Error: package dependency not allowed. Dependency chain:
+ github.com/fleetdm/fleet/v4/server/android/service
+ 	github.com/fleetdm/fleet/v4/server/fleet
+ 		github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 --- FAIL: TestPackageDependencies (14.66s)
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="find-how-a-dependency-is-included-in-the-build"&gt;&lt;a href="#find-how-a-dependency-is-included-in-the-build" class="header-anchor"&gt;&lt;/a&gt;Find how a dependency is included in the build
 &lt;/h2&gt;&lt;p&gt;In our article on &lt;a class="link" href="../analyze-go-build" &gt;analyzing Go build times&lt;/a&gt;, we show how to use the &lt;code&gt;-debug-actiongraph&lt;/code&gt; flag to find &lt;a class="link" href="../analyze-go-build#find-why-dependencies" &gt;why a dependency is included in the build&lt;/a&gt;.&lt;/p&gt;
@@ -53,13 +53,14 @@ github.com/fleetdm/fleet/v4/server/mdm/nanomdm/mdm
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-find-package-dependencies-of-a-go-package"&gt;&lt;a href="#watch-how-to-find-package-dependencies-of-a-go-package" class="header-anchor"&gt;&lt;/a&gt;Watch how to find package dependencies of a Go package
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yIZcbTQvpCE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yIZcbTQvpCE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Go modules and packages — which one to use and when</title><link>https://victoronsoftware.com/posts/go-modules-and-packages/</link><pubDate>Wed, 04 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-modules-and-packages/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.png" alt="Featured image of post Go modules and packages — which one to use and when" /&gt;&lt;h2 id="what-is-a-go-package"&gt;&lt;a href="#what-is-a-go-package" class="header-anchor"&gt;&lt;/a&gt;What is a Go package?
 &lt;/h2&gt;&lt;p&gt;A Go package is a collection of Go source files in the same directory that are compiled together. It can contain
 functions, types, and variables. Go packages organize code and provide a way to share code between different program
@@ -74,25 +75,26 @@ for all packages in a Go project — each package is compiled separately and can
 &lt;p&gt;The directory structure does not have to match the package dependencies. For example, given the following directory
 structure:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;service/
-service.go
-api/
-api.go
-db/
-db.go
+ service.go
+ api/
+ api.go
+ db/
+ db.go
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The packages &lt;code&gt;service&lt;/code&gt;, &lt;code&gt;api&lt;/code&gt;, and &lt;code&gt;db&lt;/code&gt; can be completely independent. The &lt;code&gt;service&lt;/code&gt; package does not include the
 &lt;code&gt;api.go&lt;/code&gt; and &lt;code&gt;db.go&lt;/code&gt; files because they are in a different directory. Go&amp;rsquo;s package dependency graph has no relation to
 the directory structure.&lt;/p&gt;
 &lt;h2 id="what-is-a-go-module"&gt;&lt;a href="#what-is-a-go-module" class="header-anchor"&gt;&lt;/a&gt;What is a Go module?
 &lt;/h2&gt;&lt;p&gt;A &lt;a class="link" href="https://go.dev/ref/mod" target="_blank" rel="noopener"
-&gt;Go module&lt;/a&gt;, introduced in Go 1.11, is a collection of Go packages that are versioned
+ &gt;Go module&lt;/a&gt;, introduced in Go 1.11, is a collection of Go packages that are versioned
 together. A Go module is defined by a &lt;code&gt;go.mod&lt;/code&gt; file located at the module&amp;rsquo;s root. The &lt;code&gt;go.mod&lt;/code&gt; file contains the module
 name and the versions of the dependencies the module uses.&lt;/p&gt;
 &lt;p&gt;A Go module can contain multiple packages, and the packages do not need to be related to each other.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.svg"
-alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
-&lt;h4&gt;Sample project with two modules&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Sample project with two modules&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;A Go module can exist at any level of the directory structure, even nested within another module. The Go toolchain
 treats all Go modules as independent entities, regardless of their location in the directory structure.&lt;/p&gt;
 &lt;h2 id="how-to-use-multiple-modules-in-one-go-workarea"&gt;&lt;a href="#how-to-use-multiple-modules-in-one-go-workarea" class="header-anchor"&gt;&lt;/a&gt;How to use multiple modules in one Go workarea
@@ -124,7 +126,7 @@ treats all Go modules as independent entities, regardless of their location in t
 this is impractical for local development and doesn&amp;rsquo;t make sense when we explicitly want to use multiple modules in one
 repository.&lt;/p&gt;
 &lt;p&gt;The proper way is to use a &lt;a class="link" href="https://go.dev/ref/mod#workspaces" target="_blank" rel="noopener"
-&gt;workspace, declared in the go.work file&lt;/a&gt;, introduced in
+ &gt;workspace, declared in the go.work file&lt;/a&gt;, introduced in
 Go 1.18.&lt;/p&gt;
 &lt;p&gt;In the top level of the workarea, create a &lt;code&gt;go.work&lt;/code&gt; file with all the modules in the subdirectories:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go work use -r .
@@ -167,16 +169,17 @@ makes sense, like:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="multiple-modules-in-one-go-project-on-github"&gt;&lt;a href="#multiple-modules-in-one-go-project-on-github" class="header-anchor"&gt;&lt;/a&gt;Multiple modules in one Go project on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/go-modules" target="_blank" rel="noopener"
-&gt;Example Go project with multiple modules&lt;/a&gt;&lt;/p&gt;
+ &gt;Example Go project with multiple modules&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository"&gt;&lt;a href="#watch-an-explanation-of-go-modules-and-packages-along-with-an-example-of-using-multiple-modules-in-one-repository" class="header-anchor"&gt;&lt;/a&gt;Watch an explanation of Go modules and packages, along with an example of using multiple modules in one repository
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/EdV1rx5613g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/EdV1rx5613g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Fix security vulnerabilities in Yarn</title><link>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</link><pubDate>Wed, 10 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/cover.png" alt="Featured image of post Fix security vulnerabilities in Yarn" /&gt;&lt;h2 id="why-fix-security-vulnerabilities"&gt;&lt;a href="#why-fix-security-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Why fix security vulnerabilities?
 &lt;/h2&gt;&lt;p&gt;Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized
 access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect
@@ -185,9 +188,9 @@ your data and users.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can
 help you identify security vulnerabilities in your code and dependencies. One such tool is
 &lt;a class="link" href="https://securityscorecards.dev/" target="_blank" rel="noopener"
-&gt;OpenSSF Scorecard&lt;/a&gt;, which combines multiple other tools into a single GitHub action.
+ &gt;OpenSSF Scorecard&lt;/a&gt;, which combines multiple other tools into a single GitHub action.
 It uses the &lt;a class="link" href="https://osv.dev/" target="_blank" rel="noopener"
-&gt;OSV service&lt;/a&gt; to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open
+ &gt;OSV service&lt;/a&gt; to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open
 Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects'
 vulnerabilities.&lt;/p&gt;
 &lt;p&gt;In this article, we will focus on fixing a few recent real-world security vulnerabilities in our &lt;code&gt;yarn.lock&lt;/code&gt;
@@ -202,7 +205,7 @@ Warn: Project is vulnerable to: GHSA-4wf5-vphf-c2xc
 Click Remediation section below to solve this issue
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="using-local-tools-to-find-vulnerabilities"&gt;&lt;a href="#using-local-tools-to-find-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Using local tools to find vulnerabilities
 &lt;/h3&gt;&lt;p&gt;In a local environment, we can use &lt;a class="link" href="https://google.github.io/osv-scanner/" target="_blank" rel="noopener"
-&gt;OSV-Scanner&lt;/a&gt; to find vulnerabilities in our
+ &gt;OSV-Scanner&lt;/a&gt; to find vulnerabilities in our
 dependencies. Running:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;osv-scanner scan --lockfile yarn.lock
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will output the same vulnerabilities mentioned above but with additional details.&lt;/p&gt;
@@ -219,7 +222,7 @@ dependencies. Running:&lt;/p&gt;
 │ https://osv.dev/GHSA-4wf5-vphf-c2xc │ 7.5 │ npm │ terser │ 5.12.1 │ yarn.lock │
 ╰─────────────────────────────────────┴──────┴───────────┴────────────────┴─────────┴───────────╯
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Another way to find these vulnerabilities is by using the built-in &lt;a class="link" href="https://yarnpkg.com/cli/audit" target="_blank" rel="noopener"
-&gt;yarn audit&lt;/a&gt; command.&lt;/p&gt;
+ &gt;yarn audit&lt;/a&gt; command.&lt;/p&gt;
 &lt;h2 id="waiving-vulnerabilities"&gt;&lt;a href="#waiving-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Waiving vulnerabilities
 &lt;/h2&gt;&lt;p&gt;In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability
 documentation and acknowledge it but decide not to fix it.&lt;/p&gt;
@@ -235,20 +238,20 @@ update this package to &lt;code&gt;0.8.4&lt;/code&gt; or later.&lt;/p&gt;
 &lt;p&gt;Running &lt;code&gt;yarn why @xmldom/xmldom&lt;/code&gt; will show that it is an inner dependency of another package:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;=&amp;gt; Found &amp;#34;@xmldom/xmldom@0.8.3&amp;#34;
 info Reasons this module exists
-- &amp;#34;msw#@mswjs#interceptors&amp;#34; depends on it
-- Hoisted from &amp;#34;msw#@mswjs#interceptors#@xmldom#xmldom&amp;#34;
+ - &amp;#34;msw#@mswjs#interceptors&amp;#34; depends on it
+ - Hoisted from &amp;#34;msw#@mswjs#interceptors#@xmldom#xmldom&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Looking at &lt;code&gt;yarn.lock&lt;/code&gt; shows:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
-version &amp;#34;0.8.3&amp;#34;
-resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.3.tgz#beaf980612532aa9a3004aff7e428943aeaa0711&amp;#34;
-integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
+ version &amp;#34;0.8.3&amp;#34;
+ resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.3.tgz#beaf980612532aa9a3004aff7e428943aeaa0711&amp;#34;
+ integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see that &lt;code&gt;0.8.4&lt;/code&gt; will satisfy the dependency requirement of &lt;code&gt;^0.8.3&lt;/code&gt;. We can update the package by deleting the above
 section from &lt;code&gt;yarn.lock&lt;/code&gt; and running &lt;code&gt;yarn install&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;We will then see the update:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
-version &amp;#34;0.8.10&amp;#34;
-resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
-integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
+ version &amp;#34;0.8.10&amp;#34;
+ resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
+ integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="upgrading-an-inner-dependency-by-overriding-the-version"&gt;&lt;a href="#upgrading-an-inner-dependency-by-overriding-the-version" class="header-anchor"&gt;&lt;/a&gt;Upgrading an inner dependency by overriding the version
 &lt;/h2&gt;&lt;p&gt;Our following vulnerability is in the &lt;code&gt;axios&lt;/code&gt; package. We need to update it to &lt;code&gt;0.28.0&lt;/code&gt; or later. By running
 &lt;code&gt;yarn why axios&lt;/code&gt; we see that this package is part of a deep dependency chain:&lt;/p&gt;
@@ -262,12 +265,12 @@ following to the &lt;code&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="upgrading-the-parent-dependency"&gt;&lt;a href="#upgrading-the-parent-dependency" class="header-anchor"&gt;&lt;/a&gt;Upgrading the parent dependency
 &lt;/h2&gt;&lt;p&gt;The following vulnerability is in the &lt;code&gt;lodash.set&lt;/code&gt; package. The vulnerability URL shows that there is no fix for this
 vulnerability. We also see at &lt;a class="link" href="https://www.npmjs.com/package/lodash.set" target="_blank" rel="noopener"
-&gt;npmjs.com&lt;/a&gt; that this package was last updated
+ &gt;npmjs.com&lt;/a&gt; that this package was last updated
 eight years ago.&lt;/p&gt;
 &lt;p&gt;We need to update the parent package that uses &lt;code&gt;lodash.set&lt;/code&gt;. Running &lt;code&gt;yarn why lodash.set&lt;/code&gt; shows:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;info Reasons this module exists
-- &amp;#34;nock&amp;#34; depends on it
-- Hoisted from &amp;#34;nock#lodash.set&amp;#34;
+ - &amp;#34;nock&amp;#34; depends on it
+ - Hoisted from &amp;#34;nock#lodash.set&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We update the parent by running &lt;code&gt;yarn upgrade nock@latest&lt;/code&gt;. Luckily, the latest version of &lt;code&gt;nock&lt;/code&gt; does not depend on
 &lt;code&gt;lodash.set&lt;/code&gt;, and &lt;code&gt;lodash.set&lt;/code&gt; is removed from &lt;code&gt;yarn.lock&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="removing-a-dependency"&gt;&lt;a href="#removing-a-dependency" class="header-anchor"&gt;&lt;/a&gt;Removing a dependency
@@ -287,11 +290,12 @@ the removed functionality yourself.&lt;/p&gt;
 application.&lt;/p&gt;
 &lt;h2 id="fix-security-vulnerabilities-in-yarn-video"&gt;&lt;a href="#fix-security-vulnerabilities-in-yarn-video" class="header-anchor"&gt;&lt;/a&gt;Fix security vulnerabilities in Yarn video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/59EpVz9mH_w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/59EpVz9mH_w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

@@ -5,7 +5,7 @@
 &lt;/ul&gt;
 &lt;h1 id="what-is-a-windows-ndes-scep-server"&gt;&lt;a href="#what-is-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;What is a Windows NDES SCEP server?
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc8894" target="_blank" rel="noopener"
-&gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
+ &gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
 issue certificates with a Certificate Authority (CA) in a Public Key Infrastructure (PKI). It allows devices to request
 and receive certificates over a secure channel without user interaction. IT admins use SCEP for network devices, mobile
 devices, and other endpoints that need to authenticate themselves. The issued certificates can be used for various
@@ -32,15 +32,17 @@ corporate network, test it using the public URL or IP address.&lt;/p&gt;
 &lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
 like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
 considered when parsing this page with a script.&lt;/p&gt;
 &lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
 returns the following.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
 &lt;/h1&gt;&lt;p&gt;For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p&gt;
 &lt;p&gt;Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
@@ -51,7 +53,7 @@ password.&lt;/p&gt;
 &lt;/h1&gt;&lt;p&gt;For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
 available, but many have been abandoned and do not work with NDES.&lt;/p&gt;
 &lt;p&gt;We will use &lt;a class="link" href="https://github.com/micromdm/scep" target="_blank" rel="noopener"
-&gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
+ &gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
 use the latest code from the &lt;code&gt;main&lt;/code&gt; branch, with the following commit hash: &lt;code&gt;781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Follow the instructions from the above URL to install the &lt;code&gt;scep&lt;/code&gt; client. We built it for macOS M1 using the following
 command:&lt;/p&gt;
@@ -74,7 +76,7 @@ VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding t
 &lt;strong&gt;Profiles&lt;/strong&gt; should also work.&lt;/p&gt;
 &lt;p&gt;First, create a new
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/scep?language=objc" target="_blank" rel="noopener"
-&gt;Device Management SCEP payload&lt;/a&gt; with the
+ &gt;Device Management SCEP payload&lt;/a&gt; with the
 NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
@@ -148,11 +150,12 @@ with a signed certificate, which the device saves to the keychain.&lt;/p&gt;
 &lt;p&gt;In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" &gt;code signing a Windows application&lt;/a&gt;.&lt;/p&gt;
 &lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server"&gt;&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to test a Windows NDES SCEP server
 &lt;/h1&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JMHs6spfdvQ"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/JMHs6spfdvQ" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

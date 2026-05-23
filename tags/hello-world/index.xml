@@ -28,7 +28,7 @@ editors or browsers.&lt;/li&gt;
 proverbial &amp;ldquo;back of the napkin&amp;rdquo; drawing.&lt;/p&gt;
 &lt;p&gt;The above features make Mermaid an invaluable tool for creating maintainable technical diagrams. We recommend creating
 your first diagram on &lt;a class="link" href="https://www.mermaidchart.com/play" target="_blank" rel="noopener"
-&gt;Mermaid Playground&lt;/a&gt; to get started.&lt;/p&gt;
+ &gt;Mermaid Playground&lt;/a&gt; to get started.&lt;/p&gt;
 &lt;h2 id="sequence-diagrams"&gt;&lt;a href="#sequence-diagrams" class="header-anchor"&gt;&lt;/a&gt;Sequence diagrams
 &lt;/h2&gt;&lt;p&gt;Sequence diagrams depict how users and entities interact with each other over time. They are handy for modeling the flow
 of messages, events, or data and are great for visualizing customer use cases, API interactions, or the behavior of
@@ -37,20 +37,21 @@ distributed systems.&lt;/p&gt;
 greatly speeds up understanding.&lt;/p&gt;
 &lt;p&gt;Below is a basic sequence diagram, which starts with the keyword &lt;code&gt;sequenceDiagram&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;sequenceDiagram
-UI-&amp;gt;&amp;gt;MDM Server: Upload profile
-MDM Server-&amp;gt;&amp;gt;Apple: Request push notification
-Apple-&amp;gt;&amp;gt;macOS: Push notification
-macOS-&amp;gt;&amp;gt;MDM Server: Request command
-MDM Server-&amp;gt;&amp;gt;macOS: InstallProfile command
+ UI-&amp;gt;&amp;gt;MDM Server: Upload profile
+ MDM Server-&amp;gt;&amp;gt;Apple: Request push notification
+ Apple-&amp;gt;&amp;gt;macOS: Push notification
+ macOS-&amp;gt;&amp;gt;MDM Server: Request command
+ MDM Server-&amp;gt;&amp;gt;macOS: InstallProfile command
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The above Mermaid diagram is rendered as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-sequenceDiagram
-UI-&amp;gt;&amp;gt;MDM server: Upload profile
-MDM server-&amp;gt;&amp;gt;Apple: Request push notification
-Apple-&amp;gt;&amp;gt;macOS: Push notification
-macOS-&amp;gt;&amp;gt;MDM server: Request command
-MDM server-&amp;gt;&amp;gt;macOS: InstallProfile command
+ sequenceDiagram
+ UI-&amp;gt;&amp;gt;MDM server: Upload profile
+ MDM server-&amp;gt;&amp;gt;Apple: Request push notification
+ Apple-&amp;gt;&amp;gt;macOS: Push notification
+ macOS-&amp;gt;&amp;gt;MDM server: Request command
+ MDM server-&amp;gt;&amp;gt;macOS: InstallProfile command
 &lt;/pre&gt;
+
 &lt;p&gt;The above syntax consists of &lt;code&gt;&amp;lt;entity&amp;gt;-&amp;gt;&amp;gt;&amp;lt;entity&amp;gt;: &amp;lt;description&amp;gt;&lt;/code&gt;. In many cases, that&amp;rsquo;s all that&amp;rsquo;s necessary. We can
 quickly create a simple sequence diagram to explain a flow during a meeting.&lt;/p&gt;
 &lt;p&gt;To add a title to your diagram, add the following at the top:&lt;/p&gt;
@@ -59,7 +60,7 @@ title: My diagram
 ---
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;To go beyond the basics, we recommend learning some additional syntax from
 &lt;a class="link" href="https://mermaid.js.org/syntax/sequenceDiagram.html" target="_blank" rel="noopener"
-&gt;sequence diagram docs&lt;/a&gt;:&lt;/p&gt;
+ &gt;sequence diagram docs&lt;/a&gt;:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;actor&lt;/code&gt;: Actors (aka people)&lt;/li&gt;
 &lt;li&gt;Aliases&lt;/li&gt;
@@ -75,111 +76,114 @@ title: My diagram
 title: Upload macOS configuration profile flow
 ---
 sequenceDiagram
-autonumber
-actor Admin
-participant mdm as MDM server
-Admin-&amp;gt;&amp;gt;mdm: Upload profile
-activate mdm
-mdm--&amp;gt;&amp;gt;Admin: OK
-deactivate mdm
-Note right of mdm: After 30 seconds max
-mdm-&amp;gt;&amp;gt;Apple: Request push notification
-activate mdm
-activate Apple
-Apple--&amp;gt;&amp;gt;mdm: OK
-deactivate mdm
-Apple--)macOS: Push notification
-deactivate Apple
-activate macOS
-macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
-activate mdm
-mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
-deactivate mdm
-macOS-&amp;gt;&amp;gt;macOS: Install profile
-macOS-&amp;gt;&amp;gt;mdm: Acknowledge
-activate mdm
-mdm--&amp;gt;&amp;gt;macOS: No more commands
-deactivate mdm
-deactivate macOS
+ autonumber
+ actor Admin
+ participant mdm as MDM server
+ Admin-&amp;gt;&amp;gt;mdm: Upload profile
+ activate mdm
+ mdm--&amp;gt;&amp;gt;Admin: OK
+ deactivate mdm
+ Note right of mdm: After 30 seconds max
+ mdm-&amp;gt;&amp;gt;Apple: Request push notification
+ activate mdm
+ activate Apple
+ Apple--&amp;gt;&amp;gt;mdm: OK
+ deactivate mdm
+ Apple--)macOS: Push notification
+ deactivate Apple
+ activate macOS
+ macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
+ activate mdm
+ mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
+ deactivate mdm
+ macOS-&amp;gt;&amp;gt;macOS: Install profile
+ macOS-&amp;gt;&amp;gt;mdm: Acknowledge
+ activate mdm
+ mdm--&amp;gt;&amp;gt;macOS: No more commands
+ deactivate mdm
+ deactivate macOS
 &lt;/code&gt;&lt;/pre&gt;&lt;pre class="mermaid"&gt;
----
+ ---
 title: Upload macOS configuration profile flow
 ---
 sequenceDiagram
-autonumber
-actor Admin
-participant mdm as MDM server
-Admin-&amp;gt;&amp;gt;mdm: Upload profile
-activate mdm
-mdm--&amp;gt;&amp;gt;Admin: OK
-deactivate mdm
-Note right of mdm: After 30 seconds max
-mdm-&amp;gt;&amp;gt;Apple: Request push notification
-activate mdm
-activate Apple
-Apple--&amp;gt;&amp;gt;mdm: OK
-deactivate mdm
-Apple--)macOS: Push notification
-deactivate Apple
-activate macOS
-macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
-activate mdm
-mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
-deactivate mdm
-macOS-&amp;gt;&amp;gt;macOS: Install profile
-macOS-&amp;gt;&amp;gt;mdm: Acknowledge
-activate mdm
-mdm--&amp;gt;&amp;gt;macOS: No more commands
-deactivate mdm
-deactivate macOS
+ autonumber
+ actor Admin
+ participant mdm as MDM server
+ Admin-&amp;gt;&amp;gt;mdm: Upload profile
+ activate mdm
+ mdm--&amp;gt;&amp;gt;Admin: OK
+ deactivate mdm
+ Note right of mdm: After 30 seconds max
+ mdm-&amp;gt;&amp;gt;Apple: Request push notification
+ activate mdm
+ activate Apple
+ Apple--&amp;gt;&amp;gt;mdm: OK
+ deactivate mdm
+ Apple--)macOS: Push notification
+ deactivate Apple
+ activate macOS
+ macOS-&amp;gt;&amp;gt;mdm: Request command (Idle)
+ activate mdm
+ mdm--&amp;gt;&amp;gt;macOS: InstallProfile command
+ deactivate mdm
+ macOS-&amp;gt;&amp;gt;macOS: Install profile
+ macOS-&amp;gt;&amp;gt;mdm: Acknowledge
+ activate mdm
+ mdm--&amp;gt;&amp;gt;macOS: No more commands
+ deactivate mdm
+ deactivate macOS
 &lt;/pre&gt;
+
 &lt;h2 id="flowcharts"&gt;&lt;a href="#flowcharts" class="header-anchor"&gt;&lt;/a&gt;Flowcharts
 &lt;/h2&gt;&lt;p&gt;Flowcharts are graphical representations of processes, workflows, or decision logic. They use standardized symbols, such
 as rectangles, diamonds, and arrows, to illustrate the flow of steps or tasks visually. Flowcharts are generic diagrams
 that can be adapted to any purpose. They are often used to explain concepts to non-technical stakeholders.&lt;/p&gt;
 &lt;p&gt;Below is a basic flowchart diagram:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;flowchart
-Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
-agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
-Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
-Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
-Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
+ Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
+ agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
+ Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
+ Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
+ Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which renders as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart
-Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
-agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
-Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
-Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
-Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
+ flowchart
+ Admin-- &amp;#34;Uses&amp;#34; ---&amp;gt;Server
+ agent-- &amp;#34;Checks in&amp;#34; ---&amp;gt;Server
+ Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;MySQL
+ Server-- &amp;#34;Accesses&amp;#34; ---&amp;gt;Redis
+ Server-- &amp;#34;Upload analytics&amp;#34; ---&amp;gt;fleetdm.com
 &lt;/pre&gt;
+
 &lt;p&gt;The above example is a simple block diagram that can quickly demonstrate the basic parts of your
 system/container/component. Explore additional syntax at &lt;a class="link" href="https://mermaid.js.org/syntax/flowchart.html" target="_blank" rel="noopener"
-&gt;flowchart docs&lt;/a&gt;.&lt;/p&gt;
+ &gt;flowchart docs&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is another flowchart example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;flowchart LR
-S([Start])
-PD[Process
-data]
-E([End])
-S --&amp;gt; PD
-PD --&amp;gt; V{Valid data?}
-V -- &amp;#34;No&amp;#34; ---&amp;gt; E
-V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
-W --&amp;gt; E
+ S([Start])
+ PD[Process
+ data]
+ E([End])
+ S --&amp;gt; PD
+ PD --&amp;gt; V{Valid data?}
+ V -- &amp;#34;No&amp;#34; ---&amp;gt; E
+ V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
+ W --&amp;gt; E
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Which renders as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart LR
-S([Start])
-PD[Process
-data]
-E([End])
-S --&amp;gt; PD
-PD --&amp;gt; V{Valid data?}
-V -- &amp;#34;No&amp;#34; ---&amp;gt; E
-V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
-W --&amp;gt; E
+ flowchart LR
+ S([Start])
+ PD[Process
+ data]
+ E([End])
+ S --&amp;gt; PD
+ PD --&amp;gt; V{Valid data?}
+ V -- &amp;#34;No&amp;#34; ---&amp;gt; E
+ V -- &amp;#34;Yes&amp;#34; ---&amp;gt; W[Send webhook]
+ W --&amp;gt; E
 &lt;/pre&gt;
+
 &lt;p&gt;We defined some of the elements up front. The &lt;code&gt;Process data&lt;/code&gt; rectangle contains multi-line text.&lt;/p&gt;
 &lt;p&gt;Note the direction of the flowchart is left-to-right, as specified by &lt;code&gt;LR&lt;/code&gt; after &lt;code&gt;flowchart&lt;/code&gt;. The direction options are:&lt;/p&gt;
 &lt;ul&gt;
@@ -244,33 +248,34 @@ standard relationships.&lt;/p&gt;
 &lt;p&gt;Below is an example diagram modeling some domain concepts:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;---
 config:
-class:
-hideEmptyMembersBox: true
+ class:
+ hideEmptyMembersBox: true
 ---
 classDiagram
-Fleet o-- Host: &amp;#34;manages&amp;#34;
-Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
-Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
-Host &amp;lt;|-- MacOS
-Host &amp;lt;|-- Windows
-Host &amp;lt;|-- Linux
-Fleet --&amp;gt; Apple: communicates with
+ Fleet o-- Host: &amp;#34;manages&amp;#34;
+ Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
+ Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
+ Host &amp;lt;|-- MacOS
+ Host &amp;lt;|-- Windows
+ Host &amp;lt;|-- Linux
+ Fleet --&amp;gt; Apple: communicates with
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It renders as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 config:
-class:
-hideEmptyMembersBox: true
+ class:
+ hideEmptyMembersBox: true
 ---
 classDiagram
-Fleet o-- Host: &amp;#34;manages&amp;#34;
-Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
-Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
-Host &amp;lt;|-- MacOS
-Host &amp;lt;|-- Windows
-Host &amp;lt;|-- Linux
-Fleet --&amp;gt; Apple: communicates with
+ Fleet o-- Host: &amp;#34;manages&amp;#34;
+ Fleet o-- Policy: &amp;#34;checks (may enforce)&amp;#34;
+ Host o-- IdPUser: &amp;#34;assigned to&amp;#34;
+ Host &amp;lt;|-- MacOS
+ Host &amp;lt;|-- Windows
+ Host &amp;lt;|-- Linux
+ Fleet --&amp;gt; Apple: communicates with
 &lt;/pre&gt;
+
 &lt;p&gt;The syntax is straightforward, as in the basic examples of previous diagrams, and we can quickly throw together this
 type of diagram during a meeting.&lt;/p&gt;
 &lt;p&gt;Six standard types of relationships can be modeled in a class diagram:&lt;/p&gt;
@@ -314,44 +319,51 @@ type of diagram during a meeting.&lt;/p&gt;
 diagram. We recommend only adding this detail when presenting a snapshot or a one-time proposal.&lt;/p&gt;
 &lt;p&gt;Here is an example of a class diagram which includes data members and methods:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;classDiagram
-class Person {
-- name: String
-- age: Integer
-+ getName(): String
-+ setName(name: String): void
-}
-class Student {
-- studentId: Integer
-+ enroll(course: Course): void
-}
-class Course {
-- courseName: String
-- courseCode: String
-+ getDetails(): String
-}
-Person &amp;lt;|-- Student
-Student *-- Course
+ class Person {
+ - name: String
+ - age: Integer
+ + getName(): String
+ + setName(name: String): void
+ }
+
+ class Student {
+ - studentId: Integer
+ + enroll(course: Course): void
+ }
+
+ class Course {
+ - courseName: String
+ - courseCode: String
+ + getDetails(): String
+ }
+
+ Person &amp;lt;|-- Student
+ Student *-- Course
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The diagram is rendered as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-classDiagram
-class Person {
-- name: String
-- age: Integer
-+ getName(): String
-+ setName(name: String): void
-}
-class Student {
-- studentId: Integer
-+ enroll(course: Course): void
-}
-class Course {
-- courseName: String
-- courseCode: String
-+ getDetails(): String
-}
-Person &amp;lt;|-- Student
-Student *-- Course
+ classDiagram
+ class Person {
+ - name: String
+ - age: Integer
+ + getName(): String
+ + setName(name: String): void
+ }
+
+ class Student {
+ - studentId: Integer
+ + enroll(course: Course): void
+ }
+
+ class Course {
+ - courseName: String
+ - courseCode: String
+ + getDetails(): String
+ }
+
+ Person &amp;lt;|-- Student
+ Student *-- Course
 &lt;/pre&gt;
+
 &lt;h2 id="entity-relationship-diagrams-erds"&gt;&lt;a href="#entity-relationship-diagrams-erds" class="header-anchor"&gt;&lt;/a&gt;Entity relationship diagrams (ERDs)
 &lt;/h2&gt;&lt;p&gt;An &lt;strong&gt;Entity-Relationship Diagram (ERD)&lt;/strong&gt; is a type of diagram used for visualizing the structure of a database. There
 are tools for automatically creating Mermaid ERD diagrams from database schemas. In our experience, ER diagrams are
@@ -359,70 +371,71 @@ helpful in proposing changes or examining a snapshot in time. You should not act
 current database schema.&lt;/p&gt;
 &lt;p&gt;Below is an example schema change proposal:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;erDiagram
-HOST_SCIM {
-host_id uint PK
-scim_user_id uint FK
-}
-SCIM_USERS {
-id string PK
-user_name string
-first_name string
-middle_name string
-family_name string
-active bool
-}
-SCIM_USER_EMAILS {
-scim_user_id string PK
-email string PK
-primary bool
-type string
-}
-SCIM_USER_GROUPS {
-scim_user_id string PK &amp;#34;FK&amp;#34;
-group_id uint PK &amp;#34;FK&amp;#34;
-}
-SCIM_GROUPS {
-id uint PK
-name string &amp;#34;Unique&amp;#34;
-}
-HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
-SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
-SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
-SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
+ HOST_SCIM {
+ host_id uint PK
+ scim_user_id uint FK
+ }
+ SCIM_USERS {
+ id string PK
+ user_name string
+ first_name string
+ middle_name string
+ family_name string
+ active bool
+ }
+ SCIM_USER_EMAILS {
+ scim_user_id string PK
+ email string PK
+ primary bool
+ type string
+ }
+ SCIM_USER_GROUPS {
+ scim_user_id string PK &amp;#34;FK&amp;#34;
+ group_id uint PK &amp;#34;FK&amp;#34;
+ }
+ SCIM_GROUPS {
+ id uint PK
+ name string &amp;#34;Unique&amp;#34;
+ }
+ HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
+ SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
+ SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
+ SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It renders as follows:&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-erDiagram
-HOST_SCIM {
-host_id uint PK
-scim_user_id uint FK
-}
-SCIM_USERS {
-id string PK
-user_name string
-first_name string
-middle_name string
-family_name string
-active bool
-}
-SCIM_USER_EMAILS {
-scim_user_id string PK
-email string PK
-primary bool
-type string
-}
-SCIM_USER_GROUPS {
-scim_user_id string PK &amp;#34;FK&amp;#34;
-group_id uint PK &amp;#34;FK&amp;#34;
-}
-SCIM_GROUPS {
-id uint PK
-name string &amp;#34;Unique&amp;#34;
-}
-HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
-SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
-SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
-SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
+ erDiagram
+ HOST_SCIM {
+ host_id uint PK
+ scim_user_id uint FK
+ }
+ SCIM_USERS {
+ id string PK
+ user_name string
+ first_name string
+ middle_name string
+ family_name string
+ active bool
+ }
+ SCIM_USER_EMAILS {
+ scim_user_id string PK
+ email string PK
+ primary bool
+ type string
+ }
+ SCIM_USER_GROUPS {
+ scim_user_id string PK &amp;#34;FK&amp;#34;
+ group_id uint PK &amp;#34;FK&amp;#34;
+ }
+ SCIM_GROUPS {
+ id uint PK
+ name string &amp;#34;Unique&amp;#34;
+ }
+ HOST_SCIM }|--|| SCIM_USERS : &amp;#34;multiple hosts can have the same SCIM user&amp;#34;
+ SCIM_USERS ||--o{ SCIM_USER_GROUPS: &amp;#34;zero-to-many&amp;#34;
+ SCIM_USER_GROUPS }|--|| SCIM_GROUPS: &amp;#34;one-to-many&amp;#34;
+ SCIM_USERS ||--o{ SCIM_USER_EMAILS: &amp;#34;zero-to-many&amp;#34;
 &lt;/pre&gt;
+
 &lt;p&gt;In Mermaid diagrams, cardinality defines the numerical relationship between entities. It specifies how many instances of
 one entity can be related to instances of another. Commonly used cardinality syntax in ER diagrams is:&lt;/p&gt;
 &lt;ul&gt;
@@ -440,16 +453,17 @@ one entity can be related to instances of another. Commonly used cardinality syn
 &lt;/ul&gt;
 &lt;h2 id="watch-the-intro-to-the-key-mermaid-diagrams"&gt;&lt;a href="#watch-the-intro-to-the-key-mermaid-diagrams" class="header-anchor"&gt;&lt;/a&gt;Watch the intro to the key Mermaid diagrams
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/aMMDMQvSzmc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/aMMDMQvSzmc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>6 lessons from literate programming</title><link>https://victoronsoftware.com/posts/literate-programming-lessons/</link><pubDate>Wed, 12 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/literate-programming-lessons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/literate-programming-lessons/literate-programming-headline.png" alt="Featured image of post 6 lessons from literate programming" /&gt;&lt;p&gt;This article examines the literate programming paradigm introduced in 1984 by
 &lt;a class="link" href="https://en.wikipedia.org/wiki/Donald_Knuth" target="_blank" rel="noopener"
-&gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
+ &gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
 lessons relevant to making today&amp;rsquo;s software more readable and maintainable.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#literate-programming-hello-world-example" &gt;Literate programming example&lt;/a&gt;&lt;/li&gt;
@@ -461,20 +475,21 @@ programming language source code is embedded into the program&amp;rsquo;s descri
 human can easily read without jumping back and forth between different sections of the code file. The writer completely
 controls the flow of the document, which can be reorganized in any fashion.&lt;/p&gt;
 &lt;p&gt;Knuth called his implementation of literate programming &lt;a class="link" href="https://en.wikipedia.org/wiki/Web_%28programming_system%29" target="_blank" rel="noopener"
-&gt;WEB&lt;/a&gt;
+ &gt;WEB&lt;/a&gt;
 to emphasize that a computer program is built from many different pieces. He picked the name before the World Wide Web
 was prominent. To produce source code, the user runs the &lt;strong&gt;tangle&lt;/strong&gt; command. To create documentation, the user runs the
 &lt;strong&gt;weave&lt;/strong&gt; command.&lt;/p&gt;
 &lt;h2 id="literate-programming-hello-world-example"&gt;&lt;a href="#literate-programming-hello-world-example" class="header-anchor"&gt;&lt;/a&gt;Literate programming &amp;ldquo;Hello World&amp;rdquo; example
 &lt;/h2&gt;&lt;h3 id="writing-a-literate-program"&gt;&lt;a href="#writing-a-literate-program" class="header-anchor"&gt;&lt;/a&gt;Writing a literate program
 &lt;/h3&gt;&lt;p&gt;To demonstrate literate programming, we will use the &lt;a class="link" href="https://github.com/nrnrnr/noweb" target="_blank" rel="noopener"
-&gt;noweb&lt;/a&gt; literate programming tool
+ &gt;noweb&lt;/a&gt; literate programming tool
 to write a simple program in Go.&lt;/p&gt;
 &lt;p&gt;We create a &lt;code&gt;hello.nw&lt;/code&gt; file and start it with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;This program teaches us how to print to the screen using:
 &amp;lt;&amp;lt;print&amp;gt;&amp;gt;=
 fmt.Println(message)
 @
+
 To print &amp;#34;Hello World&amp;#34;, pass a literal string to the function:
 &amp;lt;&amp;lt;message&amp;gt;&amp;gt;=
 &amp;#34;Hello World&amp;#34;
@@ -484,15 +499,16 @@ are macros that we can reuse in other sections of the document, such as:&lt;/p&g
 &lt;pre tabindex="0"&gt;&lt;code&gt;Now, we can create a function that prints a message:
 &amp;lt;&amp;lt;mypackage_print&amp;gt;&amp;gt;=
 func Print(message string) {
-&amp;lt;&amp;lt;print&amp;gt;&amp;gt;
+ &amp;lt;&amp;lt;print&amp;gt;&amp;gt;
 }
 @
+
 Finally, we can call this function from the main function:
 &amp;lt;&amp;lt;main_call&amp;gt;&amp;gt;=
 mypackage.Print(&amp;lt;&amp;lt;message&amp;gt;&amp;gt;)
 @
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;See &lt;a class="link" href="https://github.com/getvictor/noweb_example/blob/main/hello.nw" target="_blank" rel="noopener"
-&gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
+ &gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
 &lt;h3 id="generating-code-and-documentation-from-the-literate-program"&gt;&lt;a href="#generating-code-and-documentation-from-the-literate-program" class="header-anchor"&gt;&lt;/a&gt;Generating code and documentation from the literate program
 &lt;/h3&gt;&lt;p&gt;To install the noweb tool with &lt;code&gt;brew&lt;/code&gt; on macOS, run the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install noweb
@@ -528,7 +544,7 @@ none can mix arbitrary pieces of code with their documentation.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// This is a class.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Today, the closest mainstream approaches to literate programming are computational notebooks such as
 &lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
-&gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
+ &gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
 with others but not sufficient for larger software projects.&lt;/p&gt;
 &lt;p&gt;Some IDEs support rendering comments in a different style than the rest of the code, including rendering diagrams.
 However, no standard works across IDEs and version control hosting systems like GitHub.&lt;/p&gt;
@@ -561,7 +577,7 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;h2 id="see-literate-programming-example-code-on-github"&gt;&lt;a href="#see-literate-programming-example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;See literate programming example code on GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/getvictor/noweb_example" target="_blank" rel="noopener"
-&gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
+ &gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
@@ -570,13 +586,14 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;/ul&gt;
 &lt;h2 id="watch-the-literate-programming-example-and-takeaways"&gt;&lt;a href="#watch-the-literate-programming-example-and-takeaways" class="header-anchor"&gt;&lt;/a&gt;Watch the literate programming example and takeaways
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8cwxxioVbfA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8cwxxioVbfA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Create a Chrome extension from scratch step-by-step (2024)</title><link>https://victoronsoftware.com/posts/create-chrome-extension/</link><pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-headline.png" alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" /&gt;&lt;p&gt;In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then
 add more features.&lt;/p&gt;
 &lt;h2 id="what-is-a-chrome-extension"&gt;&lt;a href="#what-is-a-chrome-extension" class="header-anchor"&gt;&lt;/a&gt;What is a Chrome extension?
@@ -598,10 +615,11 @@ browser.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are
 optional.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-parts.svg"
-alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#create-background-script" &gt;background script&lt;/a&gt;: Also known as a &lt;strong&gt;service worker&lt;/strong&gt;, this is a long-running script
 that runs in the background. It can listen for events and perform tasks.&lt;/li&gt;
@@ -758,10 +776,11 @@ to test the extension.&lt;/li&gt;
 &lt;li&gt;The popup page will appear when you click the &lt;code&gt;M&lt;/code&gt; extension icon.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-popup.png"
-alt="Chrome extension popup"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Chrome extension popup&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Chrome extension popup"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Chrome extension popup&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can now do some basic testing:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Test the switch and the input field. The state of the switch and the value of the input field should be saved in the
@@ -916,16 +935,17 @@ the extension should blur elements that contain the text.&lt;/p&gt;
 &lt;h2 id="basic-extension-code-on-github"&gt;&lt;a href="#basic-extension-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Basic extension code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at:
 &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="create-a-chrome-extension-from-scratch-step-by-step-video"&gt;&lt;a href="#create-a-chrome-extension-from-scratch-step-by-step-video" class="header-anchor"&gt;&lt;/a&gt;Create a Chrome extension from scratch step-by-step video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/2dQJYDAAU4I"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/2dQJYDAAU4I" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Create an IPv6-only Linux server in 3 easy steps</title><link>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</link><pubDate>Wed, 08 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-ipv6-only-linux-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/ipv6-only.png" alt="Featured image of post Create an IPv6-only Linux server in 3 easy steps" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;IPv6 is the latest version of the Internet Protocol. It provides a larger address space than IPv4, which is running out
 of addresses. IPv6 is essential for the future of the Internet, and many cloud providers support it.&lt;/p&gt;
@@ -941,9 +961,9 @@ IPv6, with IPv4 disabled.&lt;/p&gt;
 &lt;/ol&gt;
 &lt;h2 id="prerequisites"&gt;&lt;a href="#prerequisites" class="header-anchor"&gt;&lt;/a&gt;Prerequisites
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
-&gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
+ &gt;Digital Ocean&lt;/a&gt; as our cloud provider. Their IPv6 documentation is available
 at &lt;a class="link" href="https://docs.digitalocean.com/products/networking/ipv6/" target="_blank" rel="noopener"
-&gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
+ &gt;https://docs.digitalocean.com/products/networking/ipv6/&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Droplets are Digital Ocean&amp;rsquo;s virtual private servers. They run on virtualized hardware and are available in various
 sizes. We will create a new droplet with IPv6.&lt;/p&gt;
 &lt;h2 id="create-linux-server-with-ipv6-enabled"&gt;&lt;a href="#create-linux-server-with-ipv6-enabled" class="header-anchor"&gt;&lt;/a&gt;Step 1: Create droplets with IPv6 enabled
@@ -953,18 +973,21 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
-alt="Enable IPv6 checkbox"&gt;
+ alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
-alt="Choose Droplet authentication method"&gt;
+ alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
-alt="Droplet details"&gt;
+ alt="Droplet details"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;ssh root@143.198.235.211
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From there, we can SSH into the first droplet using its IPv6 address.&lt;/p&gt;
@@ -998,28 +1021,30 @@ all the IPv4 addresses and routes, and adding the IPv6 nameservers, as shown bel
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo netplan apply --debug
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can view the network configuration using the &lt;code&gt;ifconfig&lt;/code&gt; command. It should look like:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;eth0: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
-ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
-RX packets 5179 bytes 3832240 (3.8 MB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 5099 bytes 696019 (696.0 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::d8a1:7ff:fe89:d9a1 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ inet6 2604:a880:4:1d0::4d3:3000 prefixlen 64 scopeid 0x0&amp;lt;global&amp;gt;
+ ether da:a1:07:89:d9:a1 txqueuelen 1000 (Ethernet)
+ RX packets 5179 bytes 3832240 (3.8 MB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 5099 bytes 696019 (696.0 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 eth1: flags=4163&amp;lt;UP,BROADCAST,RUNNING,MULTICAST&amp;gt; mtu 1500
-inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
-ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
-RX packets 12 bytes 916 (916.0 B)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 43 bytes 2266 (2.2 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet6 fe80::e826:4cff:feb7:6659 prefixlen 64 scopeid 0x20&amp;lt;link&amp;gt;
+ ether ea:26:4c:b7:66:59 txqueuelen 1000 (Ethernet)
+ RX packets 12 bytes 916 (916.0 B)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 43 bytes 2266 (2.2 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+
 lo: flags=73&amp;lt;UP,LOOPBACK,RUNNING&amp;gt; mtu 65536
-inet 127.0.0.1 netmask 255.0.0.0
-inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
-loop txqueuelen 1000 (Local Loopback)
-RX packets 233 bytes 22136 (22.1 KB)
-RX errors 0 dropped 0 overruns 0 frame 0
-TX packets 233 bytes 22136 (22.1 KB)
-TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
+ inet 127.0.0.1 netmask 255.0.0.0
+ inet6 ::1 prefixlen 128 scopeid 0x10&amp;lt;host&amp;gt;
+ loop txqueuelen 1000 (Local Loopback)
+ RX packets 233 bytes 22136 (22.1 KB)
+ RX errors 0 dropped 0 overruns 0 frame 0
+ TX packets 233 bytes 22136 (22.1 KB)
+ TX errors 0 dropped 0 overruns 0 carrier 0 collisions 0
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;You can see that the &lt;code&gt;eth0&lt;/code&gt; interface has an IPv6 address but no IPv4 address. The &lt;code&gt;eth1&lt;/code&gt; interface also has an IPv6
 address. The &lt;code&gt;lo&lt;/code&gt; interface is the loopback interface and still uses the IPv4 &lt;code&gt;127.0.0.1&lt;/code&gt; address. We will not disable
 IPv4 on the loopback interface at this point since many tools may break.&lt;/p&gt;
@@ -1037,13 +1062,14 @@ own IPv6-only servers and experiment with them.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Recently, we discussed &lt;a class="link" href="../why-you-need-vlan/" &gt;why you need VLANs in your home network&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="create-an-ipv6-only-linux-server-video"&gt;&lt;a href="#create-an-ipv6-only-linux-server-video" class="header-anchor"&gt;&lt;/a&gt;Create an IPv6-only Linux server video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/BjdHmyzfe80"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/BjdHmyzfe80" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Build a React app from scratch: getting started (2024)</title><link>https://victoronsoftware.com/posts/react-hello-world/</link><pubDate>Wed, 24 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/react-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/react-hello-world/react-hello-world.png" alt="Featured image of post Build a React app from scratch: getting started (2024)" /&gt;&lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;In this article, we will create a simple React app from scratch. We will not use any templates or helper scripts. We aim
 to reduce tool usage and fully understand each step of the process.&lt;/p&gt;
@@ -1053,7 +1079,7 @@ by Meta and a community of developers. React is used to build single-page applic
 applications.&lt;/p&gt;
 &lt;h2 id="prerequisites--nodejs-and-npm"&gt;&lt;a href="#prerequisites--nodejs-and-npm" class="header-anchor"&gt;&lt;/a&gt;Prerequisites &amp;ndash; Node.js and npm
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.npmjs.com/downloading-and-installing-node-js-and-npm" target="_blank" rel="noopener"
-&gt;Node.js and npm&lt;/a&gt; are the most popular tools for
+ &gt;Node.js and npm&lt;/a&gt; are the most popular tools for
 working with React. Node.js is a JavaScript runtime. npm is a package manager for Node.js. These two tools are essential
 for modern web development.&lt;/p&gt;
 &lt;h2 id="packagejson"&gt;&lt;a href="#packagejson" class="header-anchor"&gt;&lt;/a&gt;package.json
@@ -1069,7 +1095,7 @@ can use the &lt;code&gt;npm init&lt;/code&gt; command to create the &lt;code&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="typescript"&gt;&lt;a href="#typescript" class="header-anchor"&gt;&lt;/a&gt;TypeScript
 &lt;/h2&gt;&lt;p&gt;Next, we will add &lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
-&gt;TypeScript&lt;/a&gt; to our project. TypeScript is a superset of JavaScript
+ &gt;TypeScript&lt;/a&gt; to our project. TypeScript is a superset of JavaScript
 that adds static types to the language. It helps catch errors early in the development process and improves code
 quality.&lt;/p&gt;
 &lt;p&gt;Although TypeScript is not required to build a React app, it is strongly recommended. TypeScript is widely used in the
@@ -1096,7 +1122,7 @@ required for the production build of the app.&lt;/p&gt;
 &lt;h3 id="tsconfigjson"&gt;&lt;a href="#tsconfigjson" class="header-anchor"&gt;&lt;/a&gt;tsconfig.json
 &lt;/h3&gt;&lt;p&gt;We need to create a &lt;code&gt;tsconfig.json&lt;/code&gt; file to
 &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/tsconfig-json.html" target="_blank" rel="noopener"
-&gt;configure TypeScript&lt;/a&gt;. This file specifies the root
+ &gt;configure TypeScript&lt;/a&gt;. This file specifies the root
 files and compiler options for the TypeScript compiler. We will extend the recommended base configuration.&lt;/p&gt;
 &lt;p&gt;Install the recommended configuration with the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev @tsconfig/recommended
@@ -1111,23 +1137,23 @@ files and compiler options for the TypeScript compiler. We will extend the recom
 &lt;/h2&gt;&lt;p&gt;In our &lt;code&gt;tsconfig.json&lt;/code&gt; file, we set the &lt;code&gt;jsx&lt;/code&gt; option to &lt;code&gt;react-jsx&lt;/code&gt;. This option tells TypeScript to treat JSX as React
 JSX.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/JSX_%28JavaScript%29" target="_blank" rel="noopener"
-&gt;JSX&lt;/a&gt; is a syntax extension for JavaScript. It allows you to write
+ &gt;JSX&lt;/a&gt; is a syntax extension for JavaScript. It allows you to write
 HTML-like code in JavaScript. JSX is used in React. It is syntactic sugar that is generally transpiled into JavaScript
 by the build tool.&lt;/p&gt;
 &lt;h2 id="react-and-reactdom"&gt;&lt;a href="#react-and-reactdom" class="header-anchor"&gt;&lt;/a&gt;React and ReactDOM
 &lt;/h2&gt;&lt;p&gt;Next, we will add &lt;a class="link" href="https://react.dev/" target="_blank" rel="noopener"
-&gt;React&lt;/a&gt; and &lt;a class="link" href="https://react.dev/reference/react-dom" target="_blank" rel="noopener"
-&gt;ReactDOM&lt;/a&gt; to our project.
+ &gt;React&lt;/a&gt; and &lt;a class="link" href="https://react.dev/reference/react-dom" target="_blank" rel="noopener"
+ &gt;ReactDOM&lt;/a&gt; to our project.
 React is the base library. ReactDOM is the package that provides DOM-specific methods for React.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install react react-dom
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Since we are using TypeScript, we must also install
 &lt;a class="link" href="https://www.typescriptlang.org/docs/handbook/2/type-declarations.html" target="_blank" rel="noopener"
-&gt;type definitions&lt;/a&gt; for React and ReactDOM. The
+ &gt;type definitions&lt;/a&gt; for React and ReactDOM. The
 TypeScript compiler uses these definitions for type checking.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev @types/react @types/react-dom
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="what-is-webpack"&gt;&lt;a href="#what-is-webpack" class="header-anchor"&gt;&lt;/a&gt;What is Webpack?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
-&gt;Webpack&lt;/a&gt; is a module bundler for JavaScript. It takes modules with dependencies and generates
+ &gt;Webpack&lt;/a&gt; is a module bundler for JavaScript. It takes modules with dependencies and generates
 static assets representing those modules. We will use Webpack as the build tool for our React app.&lt;/p&gt;
 &lt;p&gt;We will install the Webpack packages:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin ts-loader
@@ -1220,10 +1246,11 @@ page when the code changes.&lt;/p&gt;
 open the app in the default browser.&lt;/p&gt;
 &lt;p&gt;The browser should show the following:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
-alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
-&lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="packagejson-scripts"&gt;&lt;a href="#packagejson-scripts" class="header-anchor"&gt;&lt;/a&gt;package.json scripts
 &lt;/h3&gt;&lt;p&gt;Instead of remembering the above &lt;code&gt;webpack&lt;/code&gt; command, we can add a script to the &lt;code&gt;package.json&lt;/code&gt; file to run the Webpack
 development server.&lt;/p&gt;
@@ -1255,16 +1282,17 @@ providers such as AWS, Cloudflare Pages, Netlify, Render, or Vercel.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/react/tree/main/1-hello-world" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/react/tree/main/1-hello-world&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/react/tree/main/1-hello-world&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="react-hello-world-video"&gt;&lt;a href="#react-hello-world-video" class="header-anchor"&gt;&lt;/a&gt;React Hello World video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/BSjmsUpdSYE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/BSjmsUpdSYE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" /&gt;&lt;h2 id="what-is-mtls-mutual-tls"&gt;&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor"&gt;&lt;/a&gt;What is mTLS (mutual TLS)?
 &lt;/h2&gt;&lt;p&gt;TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between
 two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p&gt;
@@ -1284,7 +1312,7 @@ authenticates itself to the server.&lt;/p&gt;
 &lt;li&gt;Mobile apps&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="how-does-fleet-device-management-use-mtls"&gt;&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor"&gt;&lt;/a&gt;How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet Device Management&lt;/a&gt; use mTLS?
+ &gt;Fleet Device Management&lt;/a&gt; use mTLS?
 &lt;/h2&gt;&lt;p&gt;Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet
 agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects
 information about the host and sends it to the Fleet server.&lt;/p&gt;
@@ -1294,8 +1322,9 @@ mTLS works.&lt;/p&gt;
 &lt;p&gt;TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between
 the client and the server.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its
 certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p&gt;
 &lt;p&gt;The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate
@@ -1308,7 +1337,7 @@ signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p&gt;
 can exchange encrypted messages using a symmetric session key.&lt;/p&gt;
 &lt;h2 id="generate-certificates-and-keys"&gt;&lt;a href="#generate-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generate certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificates and keys for the client and the server. It also creates two certificate
 authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the
@@ -1344,11 +1373,12 @@ certificates, but we will use separate CAs for this example.&lt;/p&gt;
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
+
 [alt_names]
 DNS.1 = localhost
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="run-the-mtls-server"&gt;&lt;a href="#run-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Run the mTLS server
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.nginx.com/" target="_blank" rel="noopener"
-&gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
+ &gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
 &lt;p&gt;Using &lt;code&gt;docker compose&lt;/code&gt;, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We
 will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
@@ -1375,28 +1405,33 @@ will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&g
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8889:8889&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;nginx-tls&lt;/code&gt; service uses the &lt;code&gt;nginx-tls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8888 ssl;
-server_name tls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-location / {
-root /www/data;
-}
+ listen 8888 ssl;
+ server_name tls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;nginx-mtls&lt;/code&gt; service uses the &lt;code&gt;nginx-mtls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8889 ssl;
-server_name mtls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-# Enable mTLS
-ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
-ssl_verify_client on;
-location / {
-root /www/data;
-}
+ listen 8889 ssl;
+ server_name mtls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ # Enable mTLS
+ ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
+ ssl_verify_client on;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;hello-world.txt&lt;/code&gt; files contain a simple text message.&lt;/p&gt;
 &lt;h2 id="connect-to-the-mtls-server-with-curl-client"&gt;&lt;a href="#connect-to-the-mtls-server-with-curl-client" class="header-anchor"&gt;&lt;/a&gt;Connect to the mTLS server with curl client
@@ -1412,7 +1447,7 @@ select the client certificate and key.&lt;/p&gt;
 does not provide a valid certificate.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the next article, we will
 &lt;a class="link" href="../mtls-with-apple-keychain" &gt;secure the mTLS certificates and keys with the macOS keychain&lt;/a&gt;.&lt;/p&gt;
@@ -1426,13 +1461,14 @@ keys, including parent/child key hierarchies and secure signing.&lt;/em&gt;&lt;/
 &lt;/ul&gt;
 &lt;h2 id="mtls-hello-world-video"&gt;&lt;a href="#mtls-hello-world-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Hello World video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/WA_RL_QtIgY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/WA_RL_QtIgY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Using C and Go with CGO is tricky</title><link>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</link><pubDate>Thu, 18 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/</guid><description>&lt;img src="https://victoronsoftware.com/posts/using-c-and-go-with-cgo-is-tricky/cgo-hello-world-fail.png" alt="Featured image of post Using C and Go with CGO is tricky" /&gt;&lt;h2 id="simple-cgo-examples"&gt;&lt;a href="#simple-cgo-examples" class="header-anchor"&gt;&lt;/a&gt;Simple CGO examples
 &lt;/h2&gt;&lt;p&gt;CGO is a way to call C code from Go. It helps call existing C libraries or for performance reasons. CGO is enabled by default but can be disabled with the &lt;code&gt;-cgo&lt;/code&gt; build flag.&lt;/p&gt;
 &lt;p&gt;Below is a simple example of calling a C function from Go.&lt;/p&gt;
@@ -1575,7 +1611,7 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;p&gt;The CGO code uses a lot of casting and data conversion. Let&amp;rsquo;s break down the following segment:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;unsafe&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Pointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;)))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;C.CString&lt;/code&gt; converts a Go string to a C string. It is one of the CGO special functions to convert between Go and C types. See &lt;a class="link" href="https://pkg.go.dev/cmd/cgo" target="_blank" rel="noopener"
-&gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
+ &gt;cgo documentation&lt;/a&gt; for more information.&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;unsafe.Pointer&lt;/code&gt; converts a C pointer to a generic Go pointer. And &lt;code&gt;(*C.UInt8)&lt;/code&gt; casts the Go pointer back to a C pointer.&lt;/p&gt;
 &lt;p&gt;Unfortunately, CGO cannot cast a C string to a &lt;code&gt;(*C.UInt8)&lt;/code&gt; directly. The following will fail to compile:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UInt8&lt;/span&gt;)(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;secret&lt;/span&gt;))
@@ -1589,10 +1625,11 @@ The Go compiler compiles the C code and links the resulting object file with the
 &lt;/ul&gt;
 &lt;h2 id="cgo-hello-world-fail-video"&gt;&lt;a href="#cgo-hello-world-fail-video" class="header-anchor"&gt;&lt;/a&gt;CGO Hello World fail video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/C9h8YO1NwPM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item></channel></rss>
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/C9h8YO1NwPM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item></channel></rss>

@@ -9,35 +9,47 @@ transparency and accountability.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
 same question, trying to keep my tone professional:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;And every week, Alex would say:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
 &lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
 &lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
 &lt;p&gt;I kept thinking:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
 matters?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
 again with another non-update.&lt;/p&gt;
 &lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
 &lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
 wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
@@ -60,45 +72,49 @@ frustrating, demoralizing fog. Everyone thought they were doing the right thing,
 direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p&gt;
 &lt;p&gt;As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: The hidden work iceberg
 ---
 graph TD
-subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
-direction TB
-Spacer1[&amp;#34; &amp;#34;]
-A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
-A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
-A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
-Spacer1 -.-&amp;gt; A1
-Spacer1 -.-&amp;gt; A2
-Spacer1 -.-&amp;gt; A3
-end
-subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
-direction TB
-subgraph Row1[&amp;#34; &amp;#34;]
-B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
-B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
-B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
-end
-subgraph Row2[&amp;#34; &amp;#34;]
-B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
-B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
-B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
-end
-subgraph Row3[&amp;#34; &amp;#34;]
-B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
-B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
-end
-end
-Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
-style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-style Row1 fill:none,stroke:none
-style Row2 fill:none,stroke:none
-style Row3 fill:none,stroke:none
-style Spacer1 fill:none,stroke:none
+ subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
+ direction TB
+ Spacer1[&amp;#34; &amp;#34;]
+ A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
+ A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
+ A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
+ Spacer1 -.-&amp;gt; A1
+ Spacer1 -.-&amp;gt; A2
+ Spacer1 -.-&amp;gt; A3
+ end
+
+ subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
+ direction TB
+ subgraph Row1[&amp;#34; &amp;#34;]
+ B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
+ B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
+ B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
+ end
+ subgraph Row2[&amp;#34; &amp;#34;]
+ B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
+ B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
+ B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
+ end
+ subgraph Row3[&amp;#34; &amp;#34;]
+ B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
+ B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
+ end
+ end
+
+ Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
+
+ style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+ style Row1 fill:none,stroke:none
+ style Row2 fill:none,stroke:none
+ style Row3 fill:none,stroke:none
+ style Spacer1 fill:none,stroke:none
 &lt;/pre&gt;
+
 &lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility"&gt;&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor"&gt;&lt;/a&gt;Taking action: What you can do when you have no visibility
 &lt;/h2&gt;&lt;p&gt;At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
 knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p&gt;
@@ -114,8 +130,9 @@ not meeting regularly with your manager&amp;rsquo;s manager, ask for a skip-leve
 recurring skip-level meeting.&lt;/p&gt;
 &lt;h3 id="how-to-ask-for-more-visibility"&gt;&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor"&gt;&lt;/a&gt;How to ask for more visibility
 &lt;/h3&gt;&lt;p&gt;Here&amp;rsquo;s a sample script you can adapt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
 I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p&gt;
 &lt;p&gt;Specifically, I&amp;rsquo;m interested in:&lt;/p&gt;
 &lt;ul&gt;
@@ -130,7 +147,8 @@ I&amp;rsquo;d love to have more visibility into the broader priorities and conte
 &lt;/ol&gt;
 &lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
 contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
 &lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
@@ -162,11 +180,12 @@ Learn how code clarity impacts team velocity and why transparency starts at the 
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-engineering-transparency"&gt;&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss engineering transparency
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/3oSdwkC7iiI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/3oSdwkC7iiI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

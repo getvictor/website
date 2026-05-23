@@ -44,7 +44,7 @@ For example, when &lt;code&gt;name&lt;/code&gt; is not specified in the JSON pay
 &lt;code&gt;Person&lt;/code&gt; struct. But we may want to clear the name when &lt;code&gt;name&lt;/code&gt; is defined as &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="detecting-null-set-and-missing-json-fields-with-go"&gt;&lt;a href="#detecting-null-set-and-missing-json-fields-with-go" class="header-anchor"&gt;&lt;/a&gt;Detecting null, set, and missing JSON fields with Go
 &lt;/h2&gt;&lt;p&gt;We can use custom unmarshalling logic by implementing the &lt;a class="link" href="https://pkg.go.dev/encoding/json#Unmarshaler" target="_blank" rel="noopener"
-&gt;Unmarshaler&lt;/a&gt;
+ &gt;Unmarshaler&lt;/a&gt;
 interface to detect the difference between null and missing fields. The &lt;code&gt;UnmarshalJSON&lt;/code&gt; method allows us to inspect the
 JSON token stream and decide how to unmarshal the JSON payload. The critical insight is that &lt;code&gt;UnmarshalJSON&lt;/code&gt; is only
 called when the field is present in the JSON payload. So, we can mark a &lt;code&gt;Set&lt;/code&gt; flag as &lt;code&gt;true&lt;/code&gt; when the field is present
@@ -160,40 +160,46 @@ missing, or set to &lt;code&gt;null&lt;/code&gt;.&lt;/p&gt;
 Input: {}
 {Form:{Set:false Valid:false Value:{Name: Age:0}} Member:{Set:false Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+
 Test: Set all fields
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;John&amp;#34;, &amp;#34;age&amp;#34;: 30}, &amp;#34;member&amp;#34;: false}
 {Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:false}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:false}
+
 Test: Set only member field, and leave form fields unchanged
 Input: {&amp;#34;member&amp;#34;: true}
 {Form:{Set:true Valid:true Value:{Name:John Age:30}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;John&amp;#34;,&amp;#34;age&amp;#34;:30},&amp;#34;member&amp;#34;:true}
+
 Test: Set only the form field, and leave the member field unchanged
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Jane&amp;#34;, &amp;#34;age&amp;#34;: 25}}
 {Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+
 Test: Leave all fields unchanged
 Input: {}
 {Form:{Set:true Valid:true Value:{Name:Jane Age:25}} Member:{Set:true Valid:true Value:true}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Jane&amp;#34;,&amp;#34;age&amp;#34;:25},&amp;#34;member&amp;#34;:true}
+
 Test: Clear all fields
 Input: {&amp;#34;form&amp;#34;: null, &amp;#34;member&amp;#34;: null}
 {Form:{Set:true Valid:false Value:{Name: Age:0}} Member:{Set:true Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:null,&amp;#34;member&amp;#34;:null}
+
 Test: Set only form field
 Input: {&amp;#34;form&amp;#34;: {&amp;#34;name&amp;#34;: &amp;#34;Chris&amp;#34;, &amp;#34;age&amp;#34;: 35}}
 {Form:{Set:true Valid:true Value:{Name:Chris Age:35}} Member:{Set:true Valid:false Value:false}}
 Output: {&amp;#34;form&amp;#34;:{&amp;#34;name&amp;#34;:&amp;#34;Chris&amp;#34;,&amp;#34;age&amp;#34;:35},&amp;#34;member&amp;#34;:null}
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="complete-code-on-go-playground"&gt;&lt;a href="#complete-code-on-go-playground" class="header-anchor"&gt;&lt;/a&gt;Complete code on Go Playground
 &lt;/h2&gt;&lt;p&gt;The complete &lt;a class="link" href="https://go.dev/play/p/AXxgO20M0kI" target="_blank" rel="noopener"
-&gt;Go code for unmarshalling JSON null, set, and missing fields&lt;/a&gt; is
+ &gt;Go code for unmarshalling JSON null, set, and missing fields&lt;/a&gt; is
 available on the Go Playground.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we published an article on
 &lt;a class="link" href="../optimizing-performance-of-go-app/" &gt;how to optimize the performance of a Go application&lt;/a&gt;. We benchmarked JSON
 decoding vs &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
-&gt;gob&lt;/a&gt; decoding in that article.&lt;/li&gt;
+ &gt;gob&lt;/a&gt; decoding in that article.&lt;/li&gt;
 &lt;li&gt;In addition, we wrote about &lt;a class="link" href="..//get-args-from-stdin/" &gt;how to read program arguments from STDIN with Go&lt;/a&gt;, which is
 more secure than using environment variables or command-line arguments.&lt;/li&gt;
 &lt;li&gt;Also, we explained &lt;a class="link" href="../go-modules-and-packages/" &gt;the difference between Go modules and packages&lt;/a&gt;, which is essential
@@ -202,13 +208,14 @@ for organizing and managing Go code.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately"&gt;&lt;a href="#watch-how-to-use-go-to-unmarshal-json-null-set-and-missing-fields-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to use Go to unmarshal JSON null, set, and missing fields accurately
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yHhk5wGNxk4"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yHhk5wGNxk4" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to benchmark performance of Go serializers</title><link>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/optimizing-performance-of-go-app/</guid><description>&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/race-cars-headline.png" alt="Featured image of post How to benchmark performance of Go serializers" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#creating-go-benchmark" &gt;Creating a Go benchmark&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#running-go-benchmarks" &gt;Running Go benchmarks&lt;/a&gt;&lt;/li&gt;
@@ -225,13 +232,14 @@ which is more reliable than a one-off report.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;In our application, we deserialize and process large amounts of JSON data once every hour. We noticed that this process
 was taking a long time for some of our users. First, we used
 &lt;a class="link" href="https://github.com/google/pprof/blob/main/doc/README.md" target="_blank" rel="noopener"
-&gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
+ &gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
 identify the bottlenecks in our code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
-alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
 libraries to find the fastest one for our use case.&lt;/p&gt;
 &lt;h2 id="creating-go-benchmark"&gt;&lt;a href="#creating-go-benchmark" class="header-anchor"&gt;&lt;/a&gt;Creating a Go benchmark
@@ -292,7 +300,7 @@ ok serializer 1.868s
 the loop 357 times.&lt;/p&gt;
 &lt;h2 id="benchmarking-encodinggob"&gt;&lt;a href="#benchmarking-encodinggob" class="header-anchor"&gt;&lt;/a&gt;Benchmarking encoding/gob
 &lt;/h2&gt;&lt;p&gt;Next, we will benchmark the built-in &lt;a class="link" href="https://pkg.go.dev/encoding/gob" target="_blank" rel="noopener"
-&gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
+ &gt;encoding/gob&lt;/a&gt; library.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;BenchmarkGobImport&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;b&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;testing&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;B&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &amp;lt; &lt;span style="color:#a6e22e"&gt;b&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;N&lt;/span&gt;; &lt;span style="color:#a6e22e"&gt;i&lt;/span&gt;&lt;span style="color:#f92672"&gt;++&lt;/span&gt; {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
@@ -330,7 +338,7 @@ BenchmarkJSONImportFile-12 306 3746758 ns/op
 BenchmarkGobImportFile-12 2176 554254 ns/op
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="go-benchmark-code-on-github"&gt;&lt;a href="#go-benchmark-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Go benchmark code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/go-benchmark-serializers" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/go-benchmark-serializers&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -360,11 +368,12 @@ Strengthen your code with automated fuzz testing techniques.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-benchmark-go-serializers"&gt;&lt;a href="#watch-how-to-benchmark-go-serializers" class="header-anchor"&gt;&lt;/a&gt;Watch how to benchmark Go serializers
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/c0drQ2JUYmo"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/c0drQ2JUYmo" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

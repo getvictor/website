@@ -8,8 +8,9 @@ the first process the kernel starts and is responsible for starting all other pr
 &lt;p&gt;If you go to &lt;code&gt;Activity Monitor&lt;/code&gt; on your Mac and &lt;code&gt;View&lt;/code&gt; &amp;gt; &lt;code&gt;All Processes, Hierarchically&lt;/code&gt;, you will see that all
 processes are children of &lt;code&gt;launchd&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/activity-monitor.png"
-alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
+ alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="what-are-launchd-agents-and-daemons"&gt;&lt;a href="#what-are-launchd-agents-and-daemons" class="header-anchor"&gt;&lt;/a&gt;What are launchd agents and daemons?
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;launchd&lt;/code&gt; can start and manage agents and daemons.&lt;/p&gt;
 &lt;h3 id="daemons"&gt;&lt;a href="#daemons" class="header-anchor"&gt;&lt;/a&gt;Daemons
@@ -17,7 +18,7 @@ alt="The top process name is kernel_task, its child is launchd, and everything e
 continuously in the background. One example of a daemon is Apple&amp;rsquo;s &lt;code&gt;timed&lt;/code&gt; time synchronization daemon, which maintains
 system clock accuracy by synchronizing the clock with reference clocks over the network. Another example is a device
 management daemon, such as &lt;a class="link" href="https://fleetdm.com/docs/get-started/anatomy#orbit" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s &lt;code&gt;orbit&lt;/code&gt;&lt;/a&gt;, which manages the
+ &gt;Fleet&amp;rsquo;s &lt;code&gt;orbit&lt;/code&gt;&lt;/a&gt;, which manages the
 device&amp;rsquo;s configuration and security settings.&lt;/p&gt;
 &lt;h3 id="agents"&gt;&lt;a href="#agents" class="header-anchor"&gt;&lt;/a&gt;Agents
 &lt;/h3&gt;&lt;p&gt;Agents are similar to daemons but run in the context of a user session. They are started when a user logs in and can
@@ -75,34 +76,34 @@ program to run, the arguments to pass, the environment variables to set, and oth
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The typical locations for agent and daemon &lt;code&gt;.plist&lt;/code&gt; files are:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Type&lt;/th&gt;
-&lt;th&gt;Location&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;User Agents&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Global Agents&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;System Agents&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Global Daemons&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;System Daemons&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Type&lt;/th&gt;
+ &lt;th&gt;Location&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;User Agents&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Global Agents&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;System Agents&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Global Daemons&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;System Daemons&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; In rare cases, the &lt;code&gt;.plist&lt;/code&gt; files may be located in other directories or missing entirely.&lt;/p&gt;
 &lt;h3 id="how-to-view-the-contents-of-a-plist-file"&gt;&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor"&gt;&lt;/a&gt;How to view the contents of a &lt;code&gt;.plist&lt;/code&gt; file
@@ -161,13 +162,14 @@ key to &lt;code&gt;com.fleetdm.orbit2&lt;/code&gt;, run:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-video-on-launchd-agents-and-daemons-and-how-to-find-the-plist-file-for-a-running-process"&gt;&lt;a href="#watch-the-video-on-launchd-agents-and-daemons-and-how-to-find-the-plist-file-for-a-running-process" class="header-anchor"&gt;&lt;/a&gt;Watch the video on launchd agents and daemons, and how to find the plist file for a running process
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/idFJmajURpE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/idFJmajURpE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>2 ways to turn a script into a macOS install package</title><link>https://victoronsoftware.com/posts/script-only-macos-install-package/</link><pubDate>Wed, 13 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/script-only-macos-install-package/</guid><description>&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/script-package-headline.png" alt="Featured image of post 2 ways to turn a script into a macOS install package" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#create-a-script-only-install-package-using-the-pkgbuild-command" &gt;Create a script-only install package using the &lt;code&gt;pkgbuild&lt;/code&gt; command&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#create-a-script-only-install-package-using-the-packages-app" &gt;Create a script-only install package using the Packages app&lt;/a&gt;&lt;/li&gt;
@@ -224,26 +226,29 @@ contain additional files needed by the script.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-a-script-only-install-package-using-the-packages-app"&gt;&lt;a href="#create-a-script-only-install-package-using-the-packages-app" class="header-anchor"&gt;&lt;/a&gt;Create a script-only install package using the Packages app
 &lt;/h2&gt;&lt;p&gt;One popular GUI tool for creating macOS installer packages is the
 &lt;a class="link" href="http://s.sudre.free.fr/Software/Packages/about.html" target="_blank" rel="noopener"
-&gt;Packages app&lt;/a&gt;.&lt;/p&gt;
+ &gt;Packages app&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Download and install the Packages app.&lt;/p&gt;
 &lt;p&gt;Create a new project in the Packages app using the Raw Package template.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-new-project.png"
-alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
+ alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Choose the name and location of your project.&lt;/p&gt;
 &lt;p&gt;In the Scripts tab, choose a Post-installation script. Add additional script resource files if needed for the script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-add-script.png"
-alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
+ alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Save your project with &lt;strong&gt;File &amp;gt; Save&lt;/strong&gt; and build the package with &lt;strong&gt;Build &amp;gt; Build&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;The tool will save the new PKG file to your project directory.&lt;/p&gt;
 &lt;h2 id="analyze-the-install-package"&gt;&lt;a href="#analyze-the-install-package" class="header-anchor"&gt;&lt;/a&gt;Analyze the install package
 &lt;/h2&gt;&lt;p&gt;To analyze the install package, you can use a tool like
 &lt;a class="link" href="https://www.mothersruin.com/software/SuspiciousPackage/get.html" target="_blank" rel="noopener"
-&gt;Suspicious Package&lt;/a&gt;&lt;/p&gt;
+ &gt;Suspicious Package&lt;/a&gt;&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/suspicious-package.png"
-alt="Suspicious Package app showing the contents of the postinstall script."&gt;
+ alt="Suspicious Package app showing the contents of the postinstall script."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="sign-and-notarize-the-install-package"&gt;&lt;a href="#sign-and-notarize-the-install-package" class="header-anchor"&gt;&lt;/a&gt;Sign and notarize the install package
 &lt;/h2&gt;&lt;p&gt;Before distributing the package to users, you may need to sign and notarize it.&lt;/p&gt;
 &lt;p&gt;To sign the package, you need a Developer ID Installer certificate. The Apple Developer Program currently costs 99 USD
@@ -252,12 +257,12 @@ per membership year. To sign your package, place the certificate and correspondi
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;productsign --sign &lt;span style="color:#e6db74"&gt;&amp;#34;Developer ID Installer: ********&amp;#34;&lt;/span&gt; ~/PkgbuildDemo.pkg ~/PkgbuildDemo-signed.pkg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can notarize your package with Apple using the &lt;code&gt;notarytool&lt;/code&gt; command-line utility. For more information, see
 &lt;a class="link" href="https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution?language=objc" target="_blank" rel="noopener"
-&gt;Notarizing macOS software before distribution&lt;/a&gt;.&lt;/p&gt;
+ &gt;Notarizing macOS software before distribution&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="distribute-the-install-package"&gt;&lt;a href="#distribute-the-install-package" class="header-anchor"&gt;&lt;/a&gt;Distribute the install package
 &lt;/h2&gt;&lt;p&gt;You can distribute the package by posting a download link on your website, through a package manager, or using your MDM
 tool.&lt;/p&gt;
 &lt;p&gt;If you&amp;rsquo;re using a macOS MDM platform such as &lt;a class="link" href="https://fleetdm.com/device-management" target="_blank" rel="noopener"
-&gt;Fleet&lt;/a&gt;, you can upload the package
+ &gt;Fleet&lt;/a&gt;, you can upload the package
 to the MDM and deploy it to your managed devices.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
@@ -268,13 +273,14 @@ to the MDM and deploy it to your managed devices.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-create-a-script-only-macos-install-package"&gt;&lt;a href="#watch-how-to-create-a-script-only-macos-install-package" class="header-anchor"&gt;&lt;/a&gt;Watch how to create a script-only macOS install package
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/_NWQS0Eu74k"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/_NWQS0Eu74k" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -297,7 +303,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;*/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;C&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To find the identities from the keychain, we use &lt;a class="link" href="https://developer.apple.com/documentation/security/1398306-secitemcopymatching" target="_blank" rel="noopener"
-&gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
+ &gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;identitySearch&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDictionaryCreateMutable&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFAllocatorDefault&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;maxCertificatesNum&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryKeyCallBacks&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryValueCallBacks&lt;/span&gt;,
@@ -348,7 +354,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;identityRefToCert&lt;/code&gt; function converts the &lt;code&gt;SecIdentityRef&lt;/code&gt; to a Go &lt;code&gt;x509.Certificate&lt;/code&gt; object. It exports the certificate to PEM format using &lt;a class="link" href="https://developer.apple.com/documentation/security/1394828-secitemexport" target="_blank" rel="noopener"
-&gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
+ &gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;identityRefToCert&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;identityRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecIdentityRef&lt;/span&gt;) (&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;x509&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Certificate&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Convert the identity to a certificate&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;certificateRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecCertificateRef&lt;/span&gt;
@@ -441,7 +447,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.int(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDataGetLength&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;signCFData&lt;/span&gt;))), &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
-&gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
+ &gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
 &lt;h2 id="putting-it-all-together"&gt;&lt;a href="#putting-it-all-together" class="header-anchor"&gt;&lt;/a&gt;Putting it all together
 &lt;/h2&gt;&lt;p&gt;With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
@@ -517,16 +523,17 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;The following article will explore &lt;a class="link" href="../mtls-with-windows" &gt;using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-macos-keychain-video"&gt;&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/iYWPrL4sR5U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/iYWPrL4sR5U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p&gt;
@@ -576,7 +583,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The maximum validity period for a TLS certificate is 398 days. Apple will reject certificates with a more extended validity period.&lt;/p&gt;
 &lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain"&gt;&lt;a href="#importing-client-mtls-certificates-and-keys-into-the-macos-keychain" class="header-anchor"&gt;&lt;/a&gt;Importing client mTLS certificates and keys into the macOS keychain
 &lt;/h2&gt;&lt;p&gt;We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
-&gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
+ &gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script imports mTLS certificates and keys into the Apple Keychain.&lt;/span&gt;
@@ -601,12 +608,13 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security find-identity -p ssl-client /Library/Keychains/System.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The list of identities should include:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Policy: SSL (client)
-Matching identities
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 identities found
-Valid identities only
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 valid identities found
+ Matching identities
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 identities found
+
+ Valid identities only
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 valid identities found
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;macOS can validate the identity because we also imported the client CA into the system keychain.&lt;/p&gt;
 &lt;h2 id="running-the-mtls-server"&gt;&lt;a href="#running-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Running the mTLS server
 &lt;/h2&gt;&lt;p&gt;As in the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we will use &lt;code&gt;docker compose up&lt;/code&gt; to start two nginx servers:&lt;/p&gt;
@@ -674,10 +682,11 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;pre tabindex="0"&gt;&lt;code&gt;https://localhost:8889/hello-world.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
-alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Safari mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Safari mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;Continue&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;Google Chrome&amp;rsquo;s behavior is similar.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p&gt;
@@ -691,16 +700,17 @@ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-with-macos-keychain-video"&gt;&lt;a href="#mtls-with-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Y0y6-cCzz8w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Y0y6-cCzz8w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;p&gt;Keychains are the macOS’s method to track and protect secure information such as passwords, private keys, and
 certificates. Traditionally, the keychain information was stored in files, such as:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;/Library/Keychains/System.keychain
@@ -712,10 +722,10 @@ file-based keychains above are on the road to deprecation in favor of data prote
 still heavily rely on them. It is unclear when, if ever, these keychains will be replaced by data protection keychains.&lt;/p&gt;
 &lt;p&gt;Inspecting file-based keychains has gotten more difficult as Apple deprecated many of the APIs associated with them,
 such as &lt;a class="link" href="https://developer.apple.com/documentation/security/1396431-seckeychainopen" target="_blank" rel="noopener"
-&gt;SecKeychainOpen&lt;/a&gt;. In addition,
+ &gt;SecKeychainOpen&lt;/a&gt;. In addition,
 excessive use of these deprecated APIs may result in corruption of the Login Keychain, as mentioned in this
 &lt;a class="link" href="https://github.com/osquery/osquery/issues/7780" target="_blank" rel="noopener"
-&gt;osquery issue&lt;/a&gt;. By NOT using the deprecated APIs, the user only has
+ &gt;osquery issue&lt;/a&gt;. By NOT using the deprecated APIs, the user only has
 access to the following keychains from the above list:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;/Library/Keychains/System.keychain
 /Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db
@@ -725,33 +735,34 @@ management, among other things.&lt;/p&gt;
 &lt;p&gt;One way is to continue using deprecated APIs until they stop working. We recommend making a secure copy of the keychain
 files before accessing them with the APIs.&lt;/p&gt;
 &lt;p&gt;Another option is to use the macOS &lt;a class="link" href="https://ss64.com/osx/security.html" target="_blank" rel="noopener"
-&gt;security&lt;/a&gt; command line tool. For example, to
+ &gt;security&lt;/a&gt; command line tool. For example, to
 list root certificates, do the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A third, and hardest, option is to parse the
 &lt;a class="link" href="https://github.com/libyal/dtformats/blob/main/documentation/MacOS%20keychain%20database%20file%20format.asciidoc" target="_blank" rel="noopener"
-&gt;keychain files&lt;/a&gt;
+ &gt;keychain files&lt;/a&gt;
 yourself. Some details on the keychain format are available. Please leave a comment if you or someone else has created a
 tool to parse Apple keychains.&lt;/p&gt;
 &lt;p&gt;The fourth option is to use an existing tool, such as &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
-&gt;osquery&lt;/a&gt;. Osquery is an open-source tool
+ &gt;osquery&lt;/a&gt;. Osquery is an open-source tool
 built for security and IT professionals. Osquery developers are working on fixing any issues to continue providing
 access to macOS keychain files via the following tables:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/certificates" target="_blank" rel="noopener"
-&gt;certificates&lt;/a&gt;&lt;/li&gt;
+ &gt;certificates&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/keychain_acls" target="_blank" rel="noopener"
-&gt;keychain_acls&lt;/a&gt;&lt;/li&gt;
+ &gt;keychain_acls&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/keychain_items" target="_blank" rel="noopener"
-&gt;keychain_items&lt;/a&gt;&lt;/li&gt;
+ &gt;keychain_items&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-inspect-macos-keychain-files"&gt;&lt;a href="#watch-how-to-inspect-macos-keychain-files" class="header-anchor"&gt;&lt;/a&gt;Watch how to inspect macOS keychain files
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/QBn_C2nl2ZE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/QBn_C2nl2ZE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

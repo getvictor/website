@@ -26,8 +26,9 @@ early, ensure our extension continues to work as expected, and make improve our 
 &lt;h3 id="build-a-production-ready-chrome-extension-video-playlist"&gt;&lt;a href="#build-a-production-ready-chrome-extension-video-playlist" class="header-anchor"&gt;&lt;/a&gt;Build a production-ready Chrome extension video playlist
 &lt;/h3&gt;
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"&gt;
-&lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklS2CS7jEA_W6U5e96dN2kWa" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Create a Chrome extension from scratch step-by-step (2024)</title><link>https://victoronsoftware.com/posts/create-chrome-extension/</link><pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-headline.png" alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" /&gt;&lt;p&gt;In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then
+ &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklS2CS7jEA_W6U5e96dN2kWa" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Create a Chrome extension from scratch step-by-step (2024)</title><link>https://victoronsoftware.com/posts/create-chrome-extension/</link><pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/create-chrome-extension/</guid><description>&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-headline.png" alt="Featured image of post Create a Chrome extension from scratch step-by-step (2024)" /&gt;&lt;p&gt;In this series, we will be building a production-ready Chrome extension. We will start with a basic extension and then
 add more features.&lt;/p&gt;
 &lt;h2 id="what-is-a-chrome-extension"&gt;&lt;a href="#what-is-a-chrome-extension" class="header-anchor"&gt;&lt;/a&gt;What is a Chrome extension?
 &lt;/h2&gt;&lt;p&gt;A Chrome extension is a small software program that customizes the browsing experience. It can modify and enhance the
@@ -48,10 +49,11 @@ browser.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are
 optional.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-parts.svg"
-alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;ol&gt;
 &lt;li&gt;&lt;a class="link" href="#create-background-script" &gt;background script&lt;/a&gt;: Also known as a &lt;strong&gt;service worker&lt;/strong&gt;, this is a long-running script
 that runs in the background. It can listen for events and perform tasks.&lt;/li&gt;
@@ -208,10 +210,11 @@ to test the extension.&lt;/li&gt;
 &lt;li&gt;The popup page will appear when you click the &lt;code&gt;M&lt;/code&gt; extension icon.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-popup.png"
-alt="Chrome extension popup"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Chrome extension popup&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Chrome extension popup"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Chrome extension popup&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can now do some basic testing:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Test the switch and the input field. The state of the switch and the value of the input field should be saved in the
@@ -366,14 +369,15 @@ the extension should blur elements that contain the text.&lt;/p&gt;
 &lt;h2 id="basic-extension-code-on-github"&gt;&lt;a href="#basic-extension-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Basic extension code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at:
 &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/1-basic-extension&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="create-a-chrome-extension-from-scratch-step-by-step-video"&gt;&lt;a href="#create-a-chrome-extension-from-scratch-step-by-step-video" class="header-anchor"&gt;&lt;/a&gt;Create a Chrome extension from scratch step-by-step video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/2dQJYDAAU4I"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/2dQJYDAAU4I" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

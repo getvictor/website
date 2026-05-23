@@ -15,7 +15,7 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;TPM 1.2 was standardized in 2009 as ISO/IEC 11889:2009. TPM 2.0, the most common today, came out in 2015 with the
 &lt;a class="link" href="https://www.iso.org/standard/66510.html" target="_blank" rel="noopener"
-&gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
+ &gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
 4).&lt;/p&gt;
 &lt;p&gt;Although many people think of TPM as a hardware chip, it has many possible implementations. They are:&lt;/p&gt;
 &lt;ul&gt;
@@ -28,37 +28,42 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;p&gt;In this article, we will focus on the use case of storing a private key in TPM 2.0.&lt;/p&gt;
 &lt;h2 id="tpm-architecture"&gt;&lt;a href="#tpm-architecture" class="header-anchor"&gt;&lt;/a&gt;TPM architecture
 &lt;/h2&gt;&lt;pre class="mermaid"&gt;
-graph TD
-subgraph TPM
-subgraph Memory
-VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
-NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
-end
-subgraph Crypto engine
-CC[Cryptographic Coprocessor]
-RNG[Random Number Generator]
-KGEN[Key Generation Logic]
-CC --&amp;gt;|Uses| RNG
-KGEN --&amp;gt;|Uses| RNG
-CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
-CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
-end
-subgraph Control logic
-PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
-MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
-end
-end
-style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
-style CC fill:#1f4e79,stroke:#fff,color:#fff
-style KGEN fill:#1f4e79,stroke:#fff,color:#fff
-style RNG fill:#2e7d32,stroke:#fff,color:#fff
-style NV fill:#5d4037,stroke:#fff,color:#fff
-style VM fill:#5d4037,stroke:#fff,color:#fff
-style PCR fill:#7b1fa2,stroke:#fff,color:#fff
-style MM fill:#37474f,stroke:#fff,color:#fff
-style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
-style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ graph TD
+ subgraph TPM
+ subgraph Memory
+ VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
+ NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
+ end
+
+ subgraph Crypto engine
+ CC[Cryptographic Coprocessor]
+ RNG[Random Number Generator]
+ KGEN[Key Generation Logic]
+ CC --&amp;gt;|Uses| RNG
+ KGEN --&amp;gt;|Uses| RNG
+ CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
+ CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
+ end
+
+ subgraph Control logic
+ PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
+ MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
+ end
+
+ end
+
+ style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
+ style CC fill:#1f4e79,stroke:#fff,color:#fff
+ style KGEN fill:#1f4e79,stroke:#fff,color:#fff
+ style RNG fill:#2e7d32,stroke:#fff,color:#fff
+ style NV fill:#5d4037,stroke:#fff,color:#fff
+ style VM fill:#5d4037,stroke:#fff,color:#fff
+ style PCR fill:#7b1fa2,stroke:#fff,color:#fff
+ style MM fill:#37474f,stroke:#fff,color:#fff
+ style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
 &lt;/pre&gt;
+
 &lt;p&gt;This TPM architecture diagram illustrates the internal components of a Trusted Platform Module, highlighting its secure
 cryptographic engine, non-volatile and volatile memory, and control subsystems. Key elements include the cryptographic
 coprocessor, random number generator, and key generation logic, all operating within a hardware-isolated boundary. The
@@ -68,35 +73,35 @@ unique, factory-installed identity key, and the Storage Root Key (SRK), which an
 &lt;h2 id="tpm-key-storage"&gt;&lt;a href="#tpm-key-storage" class="header-anchor"&gt;&lt;/a&gt;TPM key storage
 &lt;/h2&gt;&lt;p&gt;TPM defines four main authorization hierarchies, each rooted in a different seed and intended for various use cases:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Hierarchy&lt;/th&gt;
-&lt;th&gt;Seed Used&lt;/th&gt;
-&lt;th&gt;Purpose&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Hierarchy&lt;/th&gt;
+ &lt;th&gt;Seed Used&lt;/th&gt;
+ &lt;th&gt;Purpose&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Each hierarchy has:&lt;/p&gt;
 &lt;ul&gt;
@@ -131,7 +136,7 @@ you provide:&lt;/p&gt;
 store the parent key explicitly. It can be recreated when needed.&lt;/p&gt;
 &lt;h4 id="create-a-parent-key-example"&gt;&lt;a href="#create-a-parent-key-example" class="header-anchor"&gt;&lt;/a&gt;Create a parent key example
 &lt;/h4&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/tpm2-software/tpm2-tools" target="_blank" rel="noopener"
-&gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
+ &gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
 the TPM2 Software Stack (tss). Install it on Ubuntu/Debian like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install tpm2-tools
@@ -143,7 +148,7 @@ has access to &lt;code&gt;/dev/tpmrm0&lt;/code&gt;. To add the user to the &lt;c
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then &lt;strong&gt;log out and log back in&lt;/strong&gt; for the group change to take effect.&lt;/p&gt;
 &lt;p&gt;Our examples use &lt;code&gt;tpm2-tools&lt;/code&gt; version 5.6. See
 &lt;a class="link" href="https://tpm2-tools.readthedocs.io/en/latest/" target="_blank" rel="noopener"
-&gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
+ &gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
 key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimary&lt;/code&gt; command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_createprimary &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hierarchy&lt;span style="color:#f92672"&gt;=&lt;/span&gt;owner &lt;span style="color:#ae81ff"&gt;\
@@ -153,7 +158,7 @@ key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimar
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;parent.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;parent.ctx&lt;/code&gt; context file, which can be used in later commands.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the parent key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create a parent key template with the required attributes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;parentTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgRSA&lt;/span&gt;,
@@ -213,7 +218,7 @@ using the correct parent key.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;child.ctx&lt;/code&gt; context file which can be used later.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the child key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library,
+ &gt;go-tpm&lt;/a&gt; library,
 loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create an ECC key template for the child key&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;eccTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
@@ -274,7 +279,7 @@ loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p
 &lt;/ul&gt;
 &lt;p&gt;There is also a de facto standard for
 &lt;a class="link" href="https://www.hansenpartnership.com/draft-bottomley-tpm2-keys.html" target="_blank" rel="noopener"
-&gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
+ &gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
 OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;h2 id="tpm-signing"&gt;&lt;a href="#tpm-signing" class="header-anchor"&gt;&lt;/a&gt;TPM signing
 &lt;/h2&gt;&lt;p&gt;TPM can sign data using the child key. The output signature is in raw binary.&lt;/p&gt;
@@ -304,7 +309,7 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -signature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;signature.plain &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data.in.raw
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Below is an example of signing using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sign&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sign&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;KeyHandle&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;childKeyHandle&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Digest&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPM2BDigest&lt;/span&gt;{
@@ -359,13 +364,14 @@ switch, and access points.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm"&gt;&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor"&gt;&lt;/a&gt;Watch the explanation of securing private keys with TPM
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/zwnznp5KeQs"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/zwnznp5KeQs" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>What is a VLAN and why you need it in your home network</title><link>https://victoronsoftware.com/posts/why-you-need-vlan/</link><pubDate>Wed, 27 Nov 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/why-you-need-vlan/</guid><description>&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-house.png" alt="Featured image of post What is a VLAN and why you need it in your home network" /&gt;&lt;h2 id="what-is-a-vlan"&gt;&lt;a href="#what-is-a-vlan" class="header-anchor"&gt;&lt;/a&gt;What is a VLAN?
 &lt;/h2&gt;&lt;p&gt;VLAN (Virtual Local Area Network) technology allows you to create multiple isolated networks on a single physical
 network. For example, a single ethernet wire or a WLAN (wireless LAN) can support multiple VLANs. VLANs improve network
@@ -376,8 +382,9 @@ from communicating with devices in another VLAN. For example, you can create a s
 Things) devices, such as smart light bulbs and thermostats, to prevent them from accessing your primary network. You can
 also create a separate VLAN for guest devices to prevent them from accessing your main network and other VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-basic.png"
-alt="Router with three VLANS -- office, IoT, and guest."&gt;
+ alt="Router with three VLANS -- office, IoT, and guest."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For example, if a hacker gains access to a device in the IoT VLAN, they won&amp;rsquo;t be able to access devices in the office
 VLAN or the guest VLAN. This isolation limits the damage that a hacker can do to your network.&lt;/p&gt;
 &lt;h2 id="how-does-vlan-work"&gt;&lt;a href="#how-does-vlan-work" class="header-anchor"&gt;&lt;/a&gt;How does VLAN work?
@@ -389,8 +396,9 @@ can route packets between different VLANs based on their VLAN tags.&lt;/p&gt;
 network need to be configured, and some older or cheaper hardware, such as no-configuration network switches, may not
 support VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-full.png"
-alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
+ alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="selecting-vlan-tags-and-ip-ranges"&gt;&lt;a href="#selecting-vlan-tags-and-ip-ranges" class="header-anchor"&gt;&lt;/a&gt;Selecting VLAN tags and IP ranges
 &lt;/h3&gt;&lt;p&gt;Before configuring VLANs, decide how many VLAN tags you need and what each tag will represent. Also, determine what IP
 ranges will map to each VLAN. Some people map the VLAN ID to the third octet of the IP address. For example, VLAN 333
@@ -418,8 +426,9 @@ all VLANs but must configure it to assign IP addresses from different ranges for
 example, you may not allow devices on the Guest VLAN to access devices on the other VLANs.&lt;/p&gt;
 &lt;p&gt;Below is an example of our firewall rules for the GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-firewall.png"
-alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+ alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The rules allow access to our local DNS server to block inappropriate content. The rules block all private networking
 IPs (as defined by RFC 1918) except the VLAN&amp;rsquo;s subnet.&lt;/p&gt;
 &lt;ul&gt;
@@ -433,22 +442,24 @@ part of the Office VLAN and port 2 to be part of the IoT VLAN. A single port can
 required for a wireless access point.&lt;/p&gt;
 &lt;p&gt;Below is an example of the network switch configuration for our GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-network-switch.png"
-alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+ alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The tagged ports include three wireless access points and the router port.&lt;/p&gt;
 &lt;h3 id="wireless-access-point-wap"&gt;&lt;a href="#wireless-access-point-wap" class="header-anchor"&gt;&lt;/a&gt;Wireless Access Point (WAP)
 &lt;/h3&gt;&lt;p&gt;You need to configure the SSIDs (Service Set Identifiers) for each VLAN on your wireless access point. In our case, we
 created a WLAN for each VLAN—Office, IoT, and Guest. Each WLAN is associated with a VLAN tag, which we set in the
 advanced options of the WLAN configuration, as shown below.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-wlan-config.png"
-alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
+ alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="guest-network"&gt;&lt;a href="#guest-network" class="header-anchor"&gt;&lt;/a&gt;Guest network
 &lt;/h2&gt;&lt;p&gt;Before adding a VLAN for our guest network, we used the &amp;ldquo;Guest Mode&amp;rdquo; feature on our WAP (Wireless Access Point). This
 feature was secure because it isolated guest devices from our primary network. However, the user experience for our
 guests was terrible.&lt;/p&gt;
 &lt;p&gt;The guest network directed users to a &lt;a class="link" href="https://en.wikipedia.org/wiki/Captive_portal" target="_blank" rel="noopener"
-&gt;captive portal&lt;/a&gt; before granting
+ &gt;captive portal&lt;/a&gt; before granting
 them Internet access. Some child guests could not access the captive portal due to parental device restrictions. Guests'
 devices also had trouble reconnecting to the guest network on a subsequent visit &amp;ndash; they were not automatically
 reconnected.&lt;/p&gt;
@@ -459,8 +470,9 @@ testing or security reasons.&lt;/p&gt;
 &lt;p&gt;On a wired connection, you can specify the VLAN ID in your device&amp;rsquo;s network settings. For example, you can add a virtual
 interface with a specific VLAN tag on macOS.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-macos-config.png"
-alt="macOS network settings with VLAN ID specified."&gt;
+ alt="macOS network settings with VLAN ID specified."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="debugging-notes"&gt;&lt;a href="#debugging-notes" class="header-anchor"&gt;&lt;/a&gt;Debugging notes
 &lt;/h2&gt;&lt;p&gt;While setting up our VLANs, we encountered the issue of our computer not getting an IP address from the DHCP. After
 reviewing the settings on our router and switch, we found that our settings did not save for some reason. Make sure to
@@ -480,13 +492,14 @@ reload your settings after making changes to ensure they stick.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network"&gt;&lt;a href="#watch-us-discuss-what-is-a-vlan-and-why-you-need-it-in-your-home-network" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss what is a VLAN and why you need it in your home network
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/R8vq50uRxik"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/R8vq50uRxik" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS): building a client using the system keystore</title><link>https://victoronsoftware.com/posts/mtls/</link><pubDate>Mon, 01 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls/mtls-handshake.png" alt="Featured image of post Mutual TLS (mTLS): building a client using the system keystore" /&gt;&lt;p&gt;We recently completed a series of articles on mutual TLS (mTLS). In this series, we covered the basics of mTLS, how to
 use macOS keychain and Windows certificate store, and how to build an mTLS Go client. Our goal was to show you how to
 use mTLS in your applications and securely store your mTLS certificates and keys without exposing them to the
@@ -519,8 +532,9 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;h3 id="mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist"&gt;&lt;a href="#mutual-tls-mtls-building-a-client-using-the-system-keystore-video-playlist" class="header-anchor"&gt;&lt;/a&gt;Mutual TLS (mTLS): building a client using the system keystore video playlist
 &lt;/h3&gt;
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;"&gt;
-&lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
+ &lt;iframe src="https://www.youtube.com/embed/videoseries?list=PLr-TrdMhEklRF4lQ_bIH0WJTUiY8ldc0W" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt;&lt;/li&gt;
@@ -539,7 +553,7 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;p&gt;We will store our client mTLS certificate in the user certificate store and the other certificates in the local machine certificate store.&lt;/p&gt;
 &lt;h2 id="generating-mtls-certificates-and-keys"&gt;&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generating mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
+ &gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force certs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Private keys for CAs&lt;/span&gt;
@@ -679,29 +693,31 @@ with the Windows certificate store to store the mTLS certificates and keys.&lt;/
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
-alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Edge mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Edge mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;OK&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Here is a helpful link that may resolve issues trying to use mTLS client certificates on Windows 10: &lt;a class="link" href="https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10" target="_blank" rel="noopener"
-&gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
+ &gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on Github
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="creating-our-own-windows-mtls-client"&gt;&lt;a href="#creating-our-own-windows-mtls-client" class="header-anchor"&gt;&lt;/a&gt;Creating our own Windows mTLS client
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" &gt;create a custom Windows mTLS client using the Windows certificate store&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we wrote an article on &lt;a class="link" href="../test-ndes-scep-server" &gt;testing a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="mtls-with-windows-certificate-store-video"&gt;&lt;a href="#mtls-with-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/GuubP7vir1g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/GuubP7vir1g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) with macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</link><pubDate>Wed, 31 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png" alt="Featured image of post Mutual TLS (mTLS) with macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous article: &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we generated mTLS certificates and keys for the client and the server. We also created two certificate authorities (CAs) and signed the client and server certificates with their respective CAs. We ended up with the following files:&lt;/p&gt;
@@ -751,7 +767,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The maximum validity period for a TLS certificate is 398 days. Apple will reject certificates with a more extended validity period.&lt;/p&gt;
 &lt;h2 id="importing-client-mtls-certificates-and-keys-into-the-macos-keychain"&gt;&lt;a href="#importing-client-mtls-certificates-and-keys-into-the-macos-keychain" class="header-anchor"&gt;&lt;/a&gt;Importing client mTLS certificates and keys into the macOS keychain
 &lt;/h2&gt;&lt;p&gt;We will import the client mTLS certificates and keys into the macOS keychain using the following script. The script uses the &lt;a class="link" href="https://ss64.com/mac/security.html" target="_blank" rel="noopener"
-&gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
+ &gt;security&lt;/a&gt; command line tool. Accessing the system keychain must be run as root (&lt;code&gt;sudo&lt;/code&gt;).&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;#!/bin/bash
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# This script imports mTLS certificates and keys into the Apple Keychain.&lt;/span&gt;
@@ -776,12 +792,13 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;security find-identity -p ssl-client /Library/Keychains/System.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The list of identities should include:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Policy: SSL (client)
-Matching identities
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 identities found
-Valid identities only
-1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
-1 valid identities found
+ Matching identities
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 identities found
+
+ Valid identities only
+ 1) B307B90CCD374080E74F1B15AF602B35A75D8401 &amp;#34;testClientTLS&amp;#34;
+ 1 valid identities found
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;macOS can validate the identity because we also imported the client CA into the system keychain.&lt;/p&gt;
 &lt;h2 id="running-the-mtls-server"&gt;&lt;a href="#running-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Running the mTLS server
 &lt;/h2&gt;&lt;p&gt;As in the &lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt; article, we will use &lt;code&gt;docker compose up&lt;/code&gt; to start two nginx servers:&lt;/p&gt;
@@ -849,10 +866,11 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;pre tabindex="0"&gt;&lt;code&gt;https://localhost:8889/hello-world.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
-alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Safari mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Safari mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;Continue&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;Google Chrome&amp;rsquo;s behavior is similar.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; If we did not add Safari as an application that can access the client key, Safari would ask for a username and password to connect to the system keychain.&lt;/p&gt;
@@ -866,16 +884,17 @@ alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-with-macos-keychain-video"&gt;&lt;a href="#mtls-with-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Y0y6-cCzz8w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Y0y6-cCzz8w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS intro and hands-on example</title><link>https://victoronsoftware.com/posts/mtls-hello-world/</link><pubDate>Wed, 24 Jan 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-hello-world/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png" alt="Featured image of post Mutual TLS intro and hands-on example" /&gt;&lt;h2 id="what-is-mtls-mutual-tls"&gt;&lt;a href="#what-is-mtls-mutual-tls" class="header-anchor"&gt;&lt;/a&gt;What is mTLS (mutual TLS)?
 &lt;/h2&gt;&lt;p&gt;TLS stands for Transport Layer Security. It is a cryptographic protocol that provides privacy and data integrity between
 two communicating applications. It is the successor to SSL (Secure Sockets Layer).&lt;/p&gt;
@@ -895,7 +914,7 @@ authenticates itself to the server.&lt;/p&gt;
 &lt;li&gt;Mobile apps&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="how-does-fleet-device-management-use-mtls"&gt;&lt;a href="#how-does-fleet-device-management-use-mtls" class="header-anchor"&gt;&lt;/a&gt;How does &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet Device Management&lt;/a&gt; use mTLS?
+ &gt;Fleet Device Management&lt;/a&gt; use mTLS?
 &lt;/h2&gt;&lt;p&gt;Many of Fleet&amp;rsquo;s customers use mTLS as an additional layer of security to authenticate the Fleet server to the Fleet
 agent. The Fleet agent is a small program that runs on each host device, such as a corporate laptop. It collects
 information about the host and sends it to the Fleet server.&lt;/p&gt;
@@ -905,8 +924,9 @@ mTLS works.&lt;/p&gt;
 &lt;p&gt;TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between
 the client and the server.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its
 certificate to the client. As an additional step for mTLS, the server requests a certificate from the client.&lt;/p&gt;
 &lt;p&gt;The client verifies the server&amp;rsquo;s certificate by checking the certificate&amp;rsquo;s signature and verifying that the certificate
@@ -919,7 +939,7 @@ signature by decrypting it with the client&amp;rsquo;s public key.&lt;/p&gt;
 can exchange encrypted messages using a symmetric session key.&lt;/p&gt;
 &lt;h2 id="generate-certificates-and-keys"&gt;&lt;a href="#generate-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generate certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificates and keys for the client and the server. It also creates two certificate
 authorities (CAs) and signs the client and server certificates with their respective CA. The same CA may sign the
@@ -955,11 +975,12 @@ certificates, but we will use separate CAs for this example.&lt;/p&gt;
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
+
 [alt_names]
 DNS.1 = localhost
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="run-the-mtls-server"&gt;&lt;a href="#run-the-mtls-server" class="header-anchor"&gt;&lt;/a&gt;Run the mTLS server
 &lt;/h2&gt;&lt;p&gt;We will use &lt;a class="link" href="https://www.nginx.com/" target="_blank" rel="noopener"
-&gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
+ &gt;nginx&lt;/a&gt; as our mTLS server. nginx is a popular open-source web server.&lt;/p&gt;
 &lt;p&gt;Using &lt;code&gt;docker compose&lt;/code&gt;, we can run two nginx servers. One server will use ordinary TLS, and one will use mutual TLS. We
 will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;---
@@ -986,28 +1007,33 @@ will use the following &lt;code&gt;docker-compose.yml&lt;/code&gt; file:&lt;/p&g
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; - &lt;span style="color:#e6db74"&gt;&amp;#34;8889:8889&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;nginx-tls&lt;/code&gt; service uses the &lt;code&gt;nginx-tls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8888 ssl;
-server_name tls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-location / {
-root /www/data;
-}
+ listen 8888 ssl;
+ server_name tls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;nginx-mtls&lt;/code&gt; service uses the &lt;code&gt;nginx-mtls/nginx.conf&lt;/code&gt; file, which contains the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;server {
-listen 8889 ssl;
-server_name mtls-hello-world;
-# Server TLS certificate (client must have the CA cert to connect)
-ssl_certificate /etc/nginx/certificates/server.crt;
-ssl_certificate_key /etc/nginx/certificates/server.key;
-# Enable mTLS
-ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
-ssl_verify_client on;
-location / {
-root /www/data;
-}
+ listen 8889 ssl;
+ server_name mtls-hello-world;
+
+ # Server TLS certificate (client must have the CA cert to connect)
+ ssl_certificate /etc/nginx/certificates/server.crt;
+ ssl_certificate_key /etc/nginx/certificates/server.key;
+
+ # Enable mTLS
+ ssl_client_certificate /etc/nginx/certificates/client-ca.crt;
+ ssl_verify_client on;
+
+ location / {
+ root /www/data;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;hello-world.txt&lt;/code&gt; files contain a simple text message.&lt;/p&gt;
 &lt;h2 id="connect-to-the-mtls-server-with-curl-client"&gt;&lt;a href="#connect-to-the-mtls-server-with-curl-client" class="header-anchor"&gt;&lt;/a&gt;Connect to the mTLS server with curl client
@@ -1023,7 +1049,7 @@ select the client certificate and key.&lt;/p&gt;
 does not provide a valid certificate.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/hello-world" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/hello-world&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="securing-mtls-certificates-and-keys"&gt;&lt;a href="#securing-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Securing mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;In the next article, we will
 &lt;a class="link" href="../mtls-with-apple-keychain" &gt;secure the mTLS certificates and keys with the macOS keychain&lt;/a&gt;.&lt;/p&gt;
@@ -1037,74 +1063,81 @@ keys, including parent/child key hierarchies and secure signing.&lt;/em&gt;&lt;/
 &lt;/ul&gt;
 &lt;h2 id="mtls-hello-world-video"&gt;&lt;a href="#mtls-hello-world-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Hello World video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/WA_RL_QtIgY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/WA_RL_QtIgY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Understanding the intricacies of Fleet policies</title><link>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</link><pubDate>Sat, 30 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/</guid><description>&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png" alt="Featured image of post Understanding the intricacies of Fleet policies" /&gt;&lt;p&gt;In the ever-evolving landscape of device management and cybersecurity, understanding the mechanics behind tools like Fleet is not just about technical curiosity; it&amp;rsquo;s about empowering IT professionals to safeguard digital assets more effectively. &lt;a class="link" href="https://fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet&lt;/a&gt; gathers telemetry from various devices, from laptops to virtual machines, using &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
-&gt;osquery&lt;/a&gt;. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
-&gt;Fleet policies&lt;/a&gt;.&lt;/p&gt;
+ &gt;Fleet&lt;/a&gt; gathers telemetry from various devices, from laptops to virtual machines, using &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+ &gt;osquery&lt;/a&gt;. At the heart of this system lies a crucial feature: &lt;a class="link" href="https://fleetdm.com/securing/what-are-fleet-policies" target="_blank" rel="noopener"
+ &gt;Fleet policies&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Policies in Fleet are more than just rules; they are the gatekeepers of your device&amp;rsquo;s security, ensuring stringent adherence to security standards. By dissecting how Fleet policies operate &amp;ldquo;under the hood,&amp;rdquo; IT administrators and security professionals can gain invaluable insights. These insights allow for setting up efficient security protocols and rapid response to potential vulnerabilities, a necessity in a landscape where cyber threats are constantly evolving. This article delves into the inner workings of Fleet policies, providing you with the knowledge to better configure, manage, and leverage these policies for optimal device security and efficiency.&lt;/p&gt;
 &lt;h2 id="policy-creation"&gt;&lt;a href="#policy-creation" class="header-anchor"&gt;&lt;/a&gt;Policy creation
 &lt;/h2&gt;&lt;p&gt;Policies can be created from the web UI, the command-line interface called &lt;code&gt;fleetctl&lt;/code&gt; with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p&gt;
 &lt;p&gt;When a policy is created, a record for it is stored in the &lt;strong&gt;policies&lt;/strong&gt; table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"
-alt="Fleet policies block diagram"&gt;
+ alt="Fleet policies block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="policy-execution"&gt;&lt;a href="#policy-execution" class="header-anchor"&gt;&lt;/a&gt;Policy execution
 &lt;/h2&gt;&lt;p&gt;Policies are executed on the devices, which are called &lt;strong&gt;hosts&lt;/strong&gt; in Fleet, according to the &lt;a class="link" href="https://fleetdm.com/docs/configuration/fleet-server-configuration#osquery-policy-update-interval" target="_blank" rel="noopener"
-&gt;FLEET_OSQUERY_POLICY_UPDATE_INTERVAL&lt;/a&gt;, which is set to 1 hour by default. This interval can be adjusted with the environment variable or set from the server’s command line.&lt;/p&gt;
+ &gt;FLEET_OSQUERY_POLICY_UPDATE_INTERVAL&lt;/a&gt;, which is set to 1 hour by default. This interval can be adjusted with the environment variable or set from the server’s command line.&lt;/p&gt;
 &lt;p&gt;Policies are simply SQL queries that return a true or false result, so the flow they use on the hosts is the same as other queries. Hosts check in with Fleet servers every 10 seconds (the default) and access the &lt;code&gt;/api/v1/osquery/distributed/read&lt;/code&gt; API endpoint. The server checks when the policy was last executed to determine whether it should be executed again. If so, the server adds the policy to its response. For example, this policy in the server response checks if the macOS firewall is enabled:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;{
-&amp;#34;queries&amp;#34;: {
-&amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1 FROM alf WHERE global_state &amp;gt;= 1;&amp;#34;
-},
-&amp;#34;discovery&amp;#34;: {
-&amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1&amp;#34;
-}
+ &amp;#34;queries&amp;#34;: {
+ &amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1 FROM alf WHERE global_state &amp;gt;= 1;&amp;#34;
+ },
+ &amp;#34;discovery&amp;#34;: {
+ &amp;#34;fleet_policy_query_9&amp;#34;: &amp;#34;SELECT 1&amp;#34;
+ }
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the host has executed the policy, it writes the result to the server. The server updates the result in the &lt;strong&gt;policy_membership&lt;/strong&gt; table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"
-alt="Fleet policies on host details page"&gt;
+ alt="Fleet policies on host details page"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="force-policy-execution-on-a-device"&gt;&lt;a href="#force-policy-execution-on-a-device" class="header-anchor"&gt;&lt;/a&gt;Force policy execution on a device
 &lt;/h2&gt;&lt;p&gt;The user can force the host to execute all of its policies by clicking the &lt;strong&gt;Refetch&lt;/strong&gt; link:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"
-alt="Fleet refetch host details"&gt;
+ alt="Fleet refetch host details"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="policy-results-aggregation"&gt;&lt;a href="#policy-results-aggregation" class="header-anchor"&gt;&lt;/a&gt;Policy results aggregation
 &lt;/h2&gt;&lt;p&gt;However, the main &lt;strong&gt;Policies&lt;/strong&gt; page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong&gt;policy_stats&lt;/strong&gt; table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
-alt="Fleet policies page"&gt;
+ alt="Fleet policies page"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="summary"&gt;&lt;a href="#summary" class="header-anchor"&gt;&lt;/a&gt;Summary
 &lt;/h2&gt;&lt;p&gt;Understanding the intricacies of Fleet policies is essential for IT professionals managing a fleet of devices. This deep dive into the mechanics of Fleet policies — from creation to execution — provides you with the necessary insights to optimize your cybersecurity strategy effectively. By leveraging these policies, you can ensure stringent security standards across your network, enhancing your organization&amp;rsquo;s digital defense. As the cyber landscape evolves, tools like Fleet remain crucial in maintaining robust and responsive security protocols. We encourage you to apply these insights in your Fleet usage, and as always, we welcome your feedback and experiences in the &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
-&gt;Fleet community Slack channels&lt;/a&gt;.&lt;/p&gt;
+ &gt;Fleet community Slack channels&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="understanding-the-intricacies-of-fleet-policies-video"&gt;&lt;a href="#understanding-the-intricacies-of-fleet-policies-video" class="header-anchor"&gt;&lt;/a&gt;Understanding the intricacies of Fleet policies video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/A-Qapp7vYJk"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/A-Qapp7vYJk" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/understanding-the-intricacies-of-fleet-policies" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" /&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Jh14hNjW0Uo"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Get current telemetry from your devices with live queries</title><link>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</link><pubDate>Fri, 29 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png" alt="Featured image of post Get current telemetry from your devices with live queries" /&gt;&lt;div class="video-wrapper"&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Jh14hNjW0Uo" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
-&gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
-&gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet server. One of Fleet’s features is the ability to query information from the devices in near real-time, called &lt;em&gt;live queries&lt;/em&gt;. This article discusses how live queries work “under the hood.”&lt;/p&gt;
+ &gt;Fleet&lt;/a&gt; is an open-source platform for managing and gathering telemetry from devices such as laptops, desktops, VMs, etc. &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
+ &gt;Osquery&lt;/a&gt; agents run on these devices and report to the Fleet server. One of Fleet’s features is the ability to query information from the devices in near real-time, called &lt;em&gt;live queries&lt;/em&gt;. This article discusses how live queries work “under the hood.”&lt;/p&gt;
 &lt;h2 id="why-a-live-query"&gt;&lt;a href="#why-a-live-query" class="header-anchor"&gt;&lt;/a&gt;Why a live query?
 &lt;/h2&gt;&lt;p&gt;Live queries enable administrators to ask near real-time questions of all online devices, such as checking the encryption status of SSH keys across endpoints, or obtaining the uptime of each server within their purview. This enables them to promptly identify and address any issues, thereby reducing downtime and maintaining operational efficiency. These tasks, which would be time-consuming and complex if done manually, are streamlined through live queries, offering real-time insights into the status and posture of the entire fleet of devices helping IT and security.&lt;/p&gt;
 &lt;h2 id="live-queries-under-the-hood"&gt;&lt;a href="#live-queries-under-the-hood" class="header-anchor"&gt;&lt;/a&gt;Live queries under the hood
@@ -1112,10 +1145,11 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fleetctl query --query &lt;span style="color:#e6db74"&gt;&amp;#34;select name, version from os_version;&amp;#34;&lt;/span&gt; --labels &lt;span style="color:#e6db74"&gt;&amp;#34;All Hosts&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When a client initiates a live query, the server first creates a &lt;strong&gt;Query Campaign&lt;/strong&gt; record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png"
-alt="Query campaign"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Query campaign&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Query campaign"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Query campaign&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;As devices called &lt;strong&gt;Hosts&lt;/strong&gt; in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;#34;queries&amp;#34;&lt;/span&gt;: {
@@ -1126,31 +1160,32 @@ alt="Query campaign"&gt;&lt;figcaption&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then, the osquery agents run the actual query on their host, and write the result back to a Fleet server. As a server receives the result, it publishes it to the common cache using &lt;a class="link" href="https://redis.io/docs/interact/pubsub/" target="_blank" rel="noopener"
-&gt;Redis Pub/Sub&lt;/a&gt;.&lt;/p&gt;
+ &gt;Redis Pub/Sub&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Only the one server communicating with the client subscribes to the results. It processes the data from the cache, keeps track of how many hosts reported back, and communicates results back to the client. The web UI and &lt;code&gt;fleetctl&lt;/code&gt; interfaces use a &lt;a class="link" href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" target="_blank" rel="noopener"
-&gt;WebSockets API&lt;/a&gt;, and results are reported as they come in. The REST API, on the other hand, only sends a response after all online hosts have reported their query results.&lt;/p&gt;
+ &gt;WebSockets API&lt;/a&gt;, and results are reported as they come in. The REST API, on the other hand, only sends a response after all online hosts have reported their query results.&lt;/p&gt;
 &lt;h2 id="discover-more"&gt;&lt;a href="#discover-more" class="header-anchor"&gt;&lt;/a&gt;Discover more
 &lt;/h2&gt;&lt;p&gt;Fleet’s live query feature represents a powerful tool in the arsenal of IT and security administrators. By harnessing the capabilities of live queries, tasks that once required extensive manual effort can now be executed swiftly and efficiently. This real-time querying ability enhances operational efficiency and significantly bolsters security and compliance measures across a range of devices.&lt;/p&gt;
 &lt;p&gt;The integration of Fleet with Osquery agents, the flexibility offered by interfaces like the web UI, &lt;code&gt;fleetctl&lt;/code&gt;, and the REST API, and the efficient data handling through mechanisms like Redis Pub/Sub and WebSockets API all come together to create a robust, real-time telemetry gathering system. This system is designed to keep you informed about the current state of your device fleet, helping you make informed decisions quickly.&lt;/p&gt;
 &lt;p&gt;As you reflect on the capabilities of live queries with Fleet, consider your network environment&amp;rsquo;s unique challenges and needs. &lt;strong&gt;What questions could live queries help you answer about your devices?&lt;/strong&gt; Whether it&amp;rsquo;s security audits, performance monitoring, or compliance checks, live queries offer a dynamic solution to address these concerns.&lt;/p&gt;
 &lt;p&gt;We encourage you to explore the possibilities and share your thoughts or questions. Perhaps you’re facing a specific query challenge or an innovative use case you’ve discovered. Whatever it may be, the world of live queries is vast and ripe for exploration. Join us in &lt;a class="link" href="https://fleetdm.com/support" target="_blank" rel="noopener"
-&gt;Fleet’s Slack forums&lt;/a&gt; to engage with a community of like-minded professionals and deepen your understanding of what live queries can achieve in your environment.&lt;/p&gt;
+ &gt;Fleet’s Slack forums&lt;/a&gt; to engage with a community of like-minded professionals and deepen your understanding of what live queries can achieve in your environment.&lt;/p&gt;
 &lt;p&gt;API Documentation:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/docs/rest-api/rest-api#run-live-query" target="_blank" rel="noopener"
-&gt;Run live query with REST API&lt;/a&gt;&lt;/li&gt;
+ &gt;Run live query with REST API&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/blob/6fd06d648601edd89c01e25426e2e35ff2a8a37b/docs/Contributing/API-for-contributors.md#run-live-query" target="_blank" rel="noopener"
-&gt;Run live query with WebSockets&lt;/a&gt;&lt;/li&gt;
+ &gt;Run live query with WebSockets&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;em&gt;This article originally appeared in &lt;a class="link" href="https://fleetdm.com/guides/get-current-telemetry-from-your-devices-with-live-queries" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Physical security meets cybersecurity with Matter</title><link>https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/</link><pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/</guid><description>&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/cover.png" alt="Featured image of post Physical security meets cybersecurity with Matter" /&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/mIVsLTrUork"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Physical security meets cybersecurity with Matter</title><link>https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/</link><pubDate>Wed, 20 Dec 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/</guid><description>&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/cover.png" alt="Featured image of post Physical security meets cybersecurity with Matter" /&gt;&lt;div class="video-wrapper"&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/mIVsLTrUork" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;Matter is a recent open-source standard for connecting devices such as light switches, door locks,
 motion sensors, and many others. The major goals of the standard are compatibility and
 interoperability. This means that you will no longer need to be an expert hacker when trying to
@@ -1159,11 +1194,12 @@ are some of the major members driving the standard. This is great news for the m
 who haven’t yet fully embraced home automation and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/matter.jpeg"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The Matter specification is published by
 the &lt;a class="link" href="https://csa-iot.org/" target="_blank" rel="noopener"
-&gt;Connectivity Standards Alliance&lt;/a&gt; (CSA) and includes a
+ &gt;Connectivity Standards Alliance&lt;/a&gt; (CSA) and includes a
 &lt;a class="link" href="https://github.com/project-chip/connectedhomeip" target="_blank" rel="noopener"
-&gt;software development kit&lt;/a&gt;. Version 1.0 of the
+ &gt;software development kit&lt;/a&gt;. Version 1.0 of the
 specification was released in October of 2022. In 2023,
 we saw a slew of new devices and software upgrades compatible with Matter. Version 1.2 of the
 specification was published in October of 2023. However, this latest specification is still missing
@@ -1188,15 +1224,16 @@ lock. It receives an alert that &lt;em&gt;User A&lt;/em&gt; has entered their co
 telemetry, it notices a successful login to &lt;em&gt;Computer B&lt;/em&gt;. The business SIEM (security information and
 event management) system should immediately flag this suspicious sequence of events.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/physical-security-meets-cybersecurity-with-matter/cover.png"
-alt="Physical security with Matter"&gt;
+ alt="Physical security with Matter"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Of course, the example above can be accomplished today by writing some custom code or using a third party integration. What Matter brings is scalability to such security approaches. The code and integration will no longer need to be redone for each new device and version that comes onto the market.&lt;/p&gt;</description></item><item><title>Setting up a virtual router (pfSense on Proxmox)</title><link>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</link><pubDate>Wed, 22 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/setting-up-a-virtual-router/</guid><description>&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/cover.jpeg" alt="Featured image of post Setting up a virtual router (pfSense on Proxmox)" /&gt;&lt;p&gt;Traditionally, network routers used dedicated bare metal machines. However, in the last several years, we’ve seen a rise
 in software-based routers that can be deployed either on bare metal, on a VM, or even on a container. This means these
 virtual routers can be used to replace existing router software on an older router. They can run in the cloud. Or they
 can be installed on do-it-yourself (DIY) hardware. A couple popular open source software-based routers are
 &lt;a class="link" href="https://www.pfsense.org/" target="_blank" rel="noopener"
-&gt;pfSense&lt;/a&gt; and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
-&gt;OPNsense&lt;/a&gt;.&lt;/p&gt;
+ &gt;pfSense&lt;/a&gt; and &lt;a class="link" href="https://opnsense.org/" target="_blank" rel="noopener"
+ &gt;OPNsense&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="why-use-a-virtual-router"&gt;&lt;a href="#why-use-a-virtual-router" class="header-anchor"&gt;&lt;/a&gt;Why use a virtual router?
 &lt;/h2&gt;&lt;p&gt;For one, these routers offer enterprise-level features such as build-in VPN support, traffic analysis, and extensive
 diagnostics, among others. Another reason is that having a virtual router gives you the ability to experiment &amp;ndash; you can
@@ -1205,29 +1242,31 @@ may be only one of many VMs that you run on your hardware. You can use the same 
 ad-blocking service, a media server, and other applications.&lt;/p&gt;
 &lt;h2 id="advanced-virtual-router-installation-and-set-up"&gt;&lt;a href="#advanced-virtual-router-installation-and-set-up" class="header-anchor"&gt;&lt;/a&gt;Advanced virtual router installation and set up
 &lt;/h2&gt;&lt;p&gt;When setting up our virtual router, we chose to use &lt;a class="link" href="https://pve.proxmox.com/wiki/PCI%28e%29_Passthrough" target="_blank" rel="noopener"
-&gt;PCI Passthrough&lt;/a&gt;
+ &gt;PCI Passthrough&lt;/a&gt;
 to allow the virtual router direct access to the NIC hardware. Direct access to hardware improves the latency of our
 internet traffic. In addition, we wanted our hypervisor to sit behind the router, and not be exposed to the public. This
 reduces the attack surface for potential bad agents. However, routing hypervisor traffic through the router made our
 setup a bit tricker. It is like the chicken or the egg dilemma &amp;ndash; how do you put your hypervisor behind the router when
 the hypervisor is responsible for managing the router? Below is the approach we used when installing pfSense on top of
 &lt;a class="link" href="https://www.proxmox.com/en/proxmox-virtual-environment/overview" target="_blank" rel="noopener"
-&gt;Proxmox Virtual Environment (PVE)&lt;/a&gt;.&lt;/p&gt;
+ &gt;Proxmox Virtual Environment (PVE)&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For the initial installation, we did not use PCI Passthrough and instead used a virtual network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We
 configured the router VM to start on boot.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-1.jpg"
-alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the router and enabled
 access to it through the serial interface, which we used in the next step. Then, we put the system into its final
 configuration.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-2.jpg"
-alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual
 router via the serial interface from the PVE command line:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;qm terminal &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;
@@ -1253,13 +1292,14 @@ accessing the router via the serial interface to update the WAN/LAN interfaces.&
 &lt;/h2&gt;&lt;p&gt;Recently, we have been &lt;a class="link" href="../why-you-need-vlan/" &gt;setting up VLANs on our home network&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="setting-up-a-virtual-router-video"&gt;&lt;a href="#setting-up-a-virtual-router-video" class="header-anchor"&gt;&lt;/a&gt;Setting up a virtual router video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/uj_lB__QDTc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;p&gt;Keychains are the macOS’s method to track and protect secure information such as passwords, private keys, and
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/uj_lB__QDTc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Inspecting keychain files on macOS</title><link>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</link><pubDate>Thu, 16 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/inspecting-keychain-files-on-macos/</guid><description>&lt;p&gt;Keychains are the macOS’s method to track and protect secure information such as passwords, private keys, and
 certificates. Traditionally, the keychain information was stored in files, such as:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;/Library/Keychains/System.keychain
 /Library/Keychains/apsd.keychain
@@ -1270,10 +1310,10 @@ file-based keychains above are on the road to deprecation in favor of data prote
 still heavily rely on them. It is unclear when, if ever, these keychains will be replaced by data protection keychains.&lt;/p&gt;
 &lt;p&gt;Inspecting file-based keychains has gotten more difficult as Apple deprecated many of the APIs associated with them,
 such as &lt;a class="link" href="https://developer.apple.com/documentation/security/1396431-seckeychainopen" target="_blank" rel="noopener"
-&gt;SecKeychainOpen&lt;/a&gt;. In addition,
+ &gt;SecKeychainOpen&lt;/a&gt;. In addition,
 excessive use of these deprecated APIs may result in corruption of the Login Keychain, as mentioned in this
 &lt;a class="link" href="https://github.com/osquery/osquery/issues/7780" target="_blank" rel="noopener"
-&gt;osquery issue&lt;/a&gt;. By NOT using the deprecated APIs, the user only has
+ &gt;osquery issue&lt;/a&gt;. By NOT using the deprecated APIs, the user only has
 access to the following keychains from the above list:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;/Library/Keychains/System.keychain
 /Users/&amp;lt;username&amp;gt;/Library/Keychains/login.keychain-db
@@ -1283,33 +1323,34 @@ management, among other things.&lt;/p&gt;
 &lt;p&gt;One way is to continue using deprecated APIs until they stop working. We recommend making a secure copy of the keychain
 files before accessing them with the APIs.&lt;/p&gt;
 &lt;p&gt;Another option is to use the macOS &lt;a class="link" href="https://ss64.com/osx/security.html" target="_blank" rel="noopener"
-&gt;security&lt;/a&gt; command line tool. For example, to
+ &gt;security&lt;/a&gt; command line tool. For example, to
 list root certificates, do the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo security find-certificate -a /System/Library/Keychains/SystemRootCertificates.keychain
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A third, and hardest, option is to parse the
 &lt;a class="link" href="https://github.com/libyal/dtformats/blob/main/documentation/MacOS%20keychain%20database%20file%20format.asciidoc" target="_blank" rel="noopener"
-&gt;keychain files&lt;/a&gt;
+ &gt;keychain files&lt;/a&gt;
 yourself. Some details on the keychain format are available. Please leave a comment if you or someone else has created a
 tool to parse Apple keychains.&lt;/p&gt;
 &lt;p&gt;The fourth option is to use an existing tool, such as &lt;a class="link" href="https://www.osquery.io/" target="_blank" rel="noopener"
-&gt;osquery&lt;/a&gt;. Osquery is an open-source tool
+ &gt;osquery&lt;/a&gt;. Osquery is an open-source tool
 built for security and IT professionals. Osquery developers are working on fixing any issues to continue providing
 access to macOS keychain files via the following tables:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/certificates" target="_blank" rel="noopener"
-&gt;certificates&lt;/a&gt;&lt;/li&gt;
+ &gt;certificates&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/keychain_acls" target="_blank" rel="noopener"
-&gt;keychain_acls&lt;/a&gt;&lt;/li&gt;
+ &gt;keychain_acls&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://fleetdm.com/tables/keychain_items" target="_blank" rel="noopener"
-&gt;keychain_items&lt;/a&gt;&lt;/li&gt;
+ &gt;keychain_items&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-inspect-macos-keychain-files"&gt;&lt;a href="#watch-how-to-inspect-macos-keychain-files" class="header-anchor"&gt;&lt;/a&gt;Watch how to inspect macOS keychain files
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/QBn_C2nl2ZE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/QBn_C2nl2ZE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

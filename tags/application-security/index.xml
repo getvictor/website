@@ -7,19 +7,22 @@
 &lt;/ul&gt;
 &lt;p&gt;If you&amp;rsquo;ve ever tried to improve security in a real organization, you know how it feels. You come up with what seems like
 a good idea, but the moment you share it, someone says:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;That&amp;rsquo;s too custom. That&amp;rsquo;s too complicated. That&amp;rsquo;ll break our infrastructure. We don&amp;rsquo;t have time for that.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s frustrating. You’re not trying to slow anyone down, you&amp;rsquo;re trying to make things safer.&lt;/p&gt;
 &lt;p&gt;That was me a few months ago. Our client/server API used a token stored in a file on a client, and we wanted to make it
 more secure. I proposed a custom security solution to the team, and was met with questions and doubts. But that
 rejection actually led me to something better. I really dug into the security solutions in the industry, and I found the
 standard called &lt;strong&gt;HTTP Message Signatures&lt;/strong&gt;, &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9421/" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;. It turns out the
+ &gt;RFC 9421&lt;/a&gt;. It turns out the
 solution already existed. I just didn&amp;rsquo;t know where to look.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/rfc-9421.png"
-alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
+ alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="what-are-http-message-signatures"&gt;&lt;a href="#what-are-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;What are HTTP message signatures?
 &lt;/h2&gt;&lt;p&gt;You sign receipts, contracts, and maybe your kid&amp;rsquo;s permission slip. A signature means: this came from me. But on the
 web, most messages are unsigned. Anyone could forge them. HTTP Message Signatures change that. They make digital
@@ -32,28 +35,32 @@ intercepted the message and modified the contents.&lt;/p&gt;
 signatures, the server must have the public key of the client. The client signs the message with its private key, and
 the server verifies the signature with the public key.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-box rgb(227, 242, 253) Client side
-participant C as 🖥️ Client
-participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
-end
-box rgb(232, 245, 233) Server side
-participant S as ☁️ Server
-participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
-end
-Note over C,SM: 1. Prepare and sign message
-C-&amp;gt;&amp;gt;+SM: Message contents
-SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
-SM--&amp;gt;&amp;gt;-C: Signature
-Note over C,S: 2. Send authenticated request
-C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
-Note over S,VM: 3. Verify authenticity
-S-&amp;gt;&amp;gt;+VM: Verify signature
-VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
-VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
+ autonumber
+ box rgb(227, 242, 253) Client side
+ participant C as 🖥️ Client
+ participant SM as 🔐 Signature creation&amp;lt;br/&amp;gt;(private key)
+ end
+ box rgb(232, 245, 233) Server side
+ participant S as ☁️ Server
+ participant VM as ✅ Signature verification&amp;lt;br/&amp;gt;(public key)
+ end
+
+ Note over C,SM: 1. Prepare and sign message
+ C-&amp;gt;&amp;gt;+SM: Message contents
+ SM-&amp;gt;&amp;gt;SM: Generate signature&amp;lt;br/&amp;gt;using private key
+ SM--&amp;gt;&amp;gt;-C: Signature
+
+ Note over C,S: 2. Send authenticated request
+ C-&amp;gt;&amp;gt;+S: HTTP request&amp;lt;br/&amp;gt;(contents + signature)
+
+ Note over S,VM: 3. Verify authenticity
+ S-&amp;gt;&amp;gt;+VM: Verify signature
+ VM-&amp;gt;&amp;gt;VM: Validate signature&amp;lt;br/&amp;gt;using public key
+ VM--&amp;gt;&amp;gt;-S: ✓ valid / ✗ invalid
 &lt;/pre&gt;
+
 &lt;p&gt;With HTTP message signatures, the client signs specific parts of the HTTP request, such as method, target URI, headers,
 and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;ul&gt;
@@ -64,18 +71,20 @@ and a hash of the request body. The signature tells the server:&lt;/p&gt;
 &lt;p&gt;HTTP message signatures are added in the HTTP request headers. This means that the signature can be added by a proxy.
 The client could be a legacy system, and we can simply add a proxy to make it more secure.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-participant LC as 🖥️ Legacy client
-participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
-participant S as ☁️ Server
-LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
-P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
-P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
-S-&amp;gt;&amp;gt;S: Verify signature
-S--&amp;gt;&amp;gt;P: Response
-P--&amp;gt;&amp;gt;LC: Response
+ participant LC as 🖥️ Legacy client
+ participant P as 🔄 Modern proxy&amp;lt;br/&amp;gt;(signature creation)
+ participant S as ☁️ Server
+
+ LC-&amp;gt;&amp;gt;P: HTTP request&amp;lt;br/&amp;gt;(no signature)
+ P-&amp;gt;&amp;gt;P: Sign message with&amp;lt;br/&amp;gt;private key
+ P-&amp;gt;&amp;gt;S: HTTP request&amp;lt;br/&amp;gt;(+ signature headers)
+ S-&amp;gt;&amp;gt;S: Verify signature
+ S--&amp;gt;&amp;gt;P: Response
+ P--&amp;gt;&amp;gt;LC: Response
 &lt;/pre&gt;
+
 &lt;h2 id="how-http-message-signatures-compare-to-alternatives"&gt;&lt;a href="#how-http-message-signatures-compare-to-alternatives" class="header-anchor"&gt;&lt;/a&gt;How HTTP message signatures compare to alternatives
 &lt;/h2&gt;&lt;h3 id="api-keys-simple-but-limited"&gt;&lt;a href="#api-keys-simple-but-limited" class="header-anchor"&gt;&lt;/a&gt;API keys: simple but limited
 &lt;/h3&gt;&lt;p&gt;API keys are like shared passwords. You include them in a header or query parameter, and the server knows someone with
@@ -91,16 +100,18 @@ modified along the way.&lt;/p&gt;
 the Authorization header. That pattern is now universal for most API tokens, even if you don&amp;rsquo;t use OAuth explicitly. The
 industry standard across Google, AWS, Okta, GitHub, and others is &lt;code&gt;Authorization: Bearer &amp;lt;JWT&amp;gt;&lt;/code&gt;.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Authorization: Bearer &amp;lt;JWT-header&amp;gt;.&amp;lt;JWT-payload&amp;gt;.&amp;lt;JWT-signature&amp;gt;
+
 Header:
 {
-&amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
-&amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
+ &amp;#34;alg&amp;#34;: &amp;#34;HS256&amp;#34;,
+ &amp;#34;typ&amp;#34;: &amp;#34;JWT&amp;#34;
 }
+
 Payload:
 {
-&amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
-&amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
-&amp;#34;iat&amp;#34;: 1730630400
+ &amp;#34;sub&amp;#34;: &amp;#34;1234567890&amp;#34;,
+ &amp;#34;name&amp;#34;: &amp;#34;John Doe&amp;#34;,
+ &amp;#34;iat&amp;#34;: 1730630400
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The problem is that a JWT only signs its own contents (the claims inside the token itself). It doesn&amp;rsquo;t sign the HTTP
 request. If someone intercepts a valid JWT, they can use it in a completely different request. They could change the
@@ -122,13 +133,13 @@ tradeoffs in detail in &lt;a class="link" href="../mtls-vs-http-signature/" &gt;
 &lt;/h2&gt;&lt;p&gt;HTTP message signatures are gaining real traction across the industry. Here&amp;rsquo;s who&amp;rsquo;s already using them and why.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;OpenAI&lt;/strong&gt;
 &lt;a class="link" href="https://help.openai.com/en/articles/11845367-chatgpt-agent-allowlisting" target="_blank" rel="noopener"
-&gt;signs requests from their ChatGPT agent&lt;/a&gt; to
+ &gt;signs requests from their ChatGPT agent&lt;/a&gt; to
 solve the bot verification problem. You&amp;rsquo;ve probably heard complaints about small sites being overwhelmed by AI bots.
 Without signatures, it was nearly impossible to tell which AI company was responsible for the traffic. Now, CDNs and
 firewalls can verify that traffic actually came from OpenAI, not some impersonator trying to abuse their reputation.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Cloudflare&lt;/strong&gt;
 &lt;a class="link" href="https://blog.cloudflare.com/verified-bots-with-cryptography" target="_blank" rel="noopener"
-&gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
+ &gt;built HTTP message signatures into their Verified Bots program&lt;/a&gt;.
 Site owners can now whitelist legitimate bots while blocking the fakes. No more relying on IP ranges that constantly
 shift or user-agent headers that anyone can spoof. The cryptographic signature proves the bot&amp;rsquo;s identity.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Mastodon&lt;/strong&gt; uses HTTP message signatures to protect the federated network. Say you create a Mastodon account on
@@ -140,18 +151,18 @@ weren&amp;rsquo;t legitimate.&lt;/p&gt;
 activities from another, it requires cryptographic proof that the sending actor actually authored the request. Without
 signatures, any server could impersonate another and inject fake posts or manipulate feeds.
 &lt;a class="link" href="https://docs.joinmastodon.org/spec/security" target="_blank" rel="noopener"
-&gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
+ &gt;Mastodon&amp;rsquo;s secure mode&lt;/a&gt; even requires signatures on read-only GET requests
 between federated instances.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Amazon&lt;/strong&gt; requires HTTP message signatures for third-party payment providers accessing their Selling Partner API in the
 EU. This isn&amp;rsquo;t optional. It&amp;rsquo;s
 &lt;a class="link" href="https://developer-docs.amazon.com/sp-api/docs/tpp-registration-signature-guidance" target="_blank" rel="noopener"
-&gt;PSD2 compliance&lt;/a&gt;, which is the
+ &gt;PSD2 compliance&lt;/a&gt;, which is the
 Payment Services Directive 2 (PSD2) framework of the European Union. Payment providers must sign requests using their
 NCA (National Competent Authority) certificate to prove they&amp;rsquo;re authorized to access sensitive financial data. The
 certificate&amp;rsquo;s organization identifier must match the registered developer identity, or the request gets rejected.&lt;/p&gt;
 &lt;p&gt;Other standards are already building on top of HTTP message signatures.
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9635/" target="_blank" rel="noopener"
-&gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
+ &gt;RFC 9635 (GNAP)&lt;/a&gt;, finalized in October 2024, is the Grant Negotiation and
 Authorization Protocol. Think of it as a more flexible alternative to OAuth 2.0. Say you want to give a third-party app
 permission to access your cloud storage. The app needs to request that access from the storage provider, and the
 provider needs to verify that the requests are actually coming from the legitimate app, not an imposter. GNAP uses HTTP
@@ -159,7 +170,7 @@ message signatures as one way for the app to prove its identity during the autho
 mTLS and other methods).&lt;/p&gt;
 &lt;p&gt;There&amp;rsquo;s also a draft for an
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;.
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;.
 The problem? RFC 9421 assumes verifiers already have the signer&amp;rsquo;s public key through some out-of-band mechanism. That
 creates deployment friction. The directory draft solves this by defining a standard
 &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt; endpoint where clients can publish their signing keys in JWKS format.
@@ -170,7 +181,7 @@ solution years ago, and migrating to a standard may not be high on the priority 
 broken.&lt;/p&gt;
 &lt;p&gt;Apple&amp;rsquo;s MDM (Mobile Device Management) protocol uses a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc5652/" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
+ &gt;CMS signature&lt;/a&gt; with a custom header. GitHub signs webhook payloads with
 HMAC-SHA256 and a shared secret. These custom approaches accomplish the same goal (verifying message integrity and
 origin) but they&amp;rsquo;re not interoperable. Every vendor implements their own scheme, and clients have to learn each one.&lt;/p&gt;
 &lt;p&gt;The good news? RFC 9421 supports both asymmetric keys (like RSA and ECDSA) and symmetric keys (like HMAC-SHA256).
@@ -206,9 +217,10 @@ Date: Tue, 20 Apr 2021 02:07:55 GMT
 Content-Type: application/json
 Content-Length: 18
 Signature-Input: sig1=(&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 Signature: sig1=:Base64SignatureGoesHere=:
+
 {&amp;#34;hello&amp;#34;: &amp;#34;world&amp;#34;}
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The &lt;code&gt;Signature-Input&lt;/code&gt; header says: &amp;ldquo;I&amp;rsquo;m signing the HTTP method, the authority (host and port), the path, content-type,
 and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header contains the actual signature of those components.&lt;/p&gt;
@@ -229,7 +241,7 @@ and content-length.&amp;rdquo; The &lt;code&gt;Signature&lt;/code&gt; header con
 someone from changing a GET to a DELETE.&lt;/p&gt;
 &lt;p&gt;To protect the request body, you don&amp;rsquo;t sign it directly. Instead, you calculate a cryptographic hash of the body and
 include it in a &lt;code&gt;Content-Digest&lt;/code&gt; header (defined in &lt;a class="link" href="https://datatracker.ietf.org/doc/rfc9530/" target="_blank" rel="noopener"
-&gt;RFC 9530&lt;/a&gt;). Then you
+ &gt;RFC 9530&lt;/a&gt;). Then you
 sign that header. For example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;Content-Digest: sha-256=:X48E9qOokqqrvdts8nOJRJN3OWDUoyWxBf7kbu9DBPE=:
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;This &lt;code&gt;content-digest&lt;/code&gt; header becomes one of the signed components. If anyone tampers with the body, the hash won&amp;rsquo;t match
@@ -255,8 +267,8 @@ they can&amp;rsquo;t be tampered with.&lt;/p&gt;
 &amp;#34;content-type&amp;#34;: application/json
 &amp;#34;content-length&amp;#34;: 18
 &amp;#34;@signature-params&amp;#34;: (&amp;#34;@method&amp;#34; &amp;#34;@authority&amp;#34; &amp;#34;@path&amp;#34;
-&amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
-keyid=&amp;#34;test-key&amp;#34;
+ &amp;#34;content-type&amp;#34; &amp;#34;content-length&amp;#34;);created=1618884475;
+ keyid=&amp;#34;test-key&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Each component gets its own line with the component name in quotes, a colon, and the value. The last line contains the
 signature parameters. This text is what gets signed with the private key.&lt;/p&gt;
 &lt;h3 id="supported-algorithms"&gt;&lt;a href="#supported-algorithms" class="header-anchor"&gt;&lt;/a&gt;Supported algorithms
@@ -276,7 +288,7 @@ signature parameters. This text is what gets signed with the private key.&lt;/p&
 &lt;p&gt;But the list is extensible. The RFC allows implementations to support additional algorithms, including JSON Web
 Signature (JWS) algorithm identifiers. IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;official registry&lt;/a&gt; where new
+ &gt;official registry&lt;/a&gt; where new
 algorithms can be registered. This means the standard can evolve to support new cryptographic methods as they become
 available.&lt;/p&gt;
 &lt;h3 id="key-distribution-and-rotation"&gt;&lt;a href="#key-distribution-and-rotation" class="header-anchor"&gt;&lt;/a&gt;Key distribution and rotation
@@ -290,7 +302,7 @@ file, database).&lt;/p&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Well-known directory&lt;/strong&gt;: Use the
 &lt;a class="link" href="https://datatracker.ietf.org/doc/draft-meunier-http-message-signatures-directory" target="_blank" rel="noopener"
-&gt;HTTP Message Signatures Directory&lt;/a&gt;
+ &gt;HTTP Message Signatures Directory&lt;/a&gt;
 draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directory&lt;/code&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
@@ -301,19 +313,20 @@ draft to publish keys at &lt;code&gt;.well-known/http-message-signatures-directo
 multiple signatures in a single request (one with the old key, one with the new key) during rotation periods.&lt;/p&gt;
 &lt;p&gt;IANA maintains the
 &lt;a class="link" href="https://www.iana.org/assignments/http-message-signature/http-message-signature.xhtml" target="_blank" rel="noopener"
-&gt;registry of signature algorithms and parameters&lt;/a&gt;
+ &gt;registry of signature algorithms and parameters&lt;/a&gt;
 so implementations stay compatible.&lt;/p&gt;
 &lt;h2 id="example-implementation"&gt;&lt;a href="#example-implementation" class="header-anchor"&gt;&lt;/a&gt;Example implementation
 &lt;/h2&gt;&lt;p&gt;We implemented a simple demo app that demonstrates how to sign and verify HTTP requests with RFC 9421 in Node.js. The
 app is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/http-message-signatures&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;There are many JavaScript libraries that implement HTTP message signatures. Many companies also don&amp;rsquo;t use libraries and
 do their own implementation of the standard.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/node-http-message-signature-libraries.png"
-alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
+ alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For our demo we chose &lt;a class="link" href="https://github.com/dhensby/node-http-message-signatures" target="_blank" rel="noopener"
-&gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
+ &gt;https://github.com/dhensby/node-http-message-signatures&lt;/a&gt; for the following reasons:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Cleaner, more intuitive API&lt;/li&gt;
 &lt;/ol&gt;
@@ -539,27 +552,31 @@ need the complete request with its signature headers intact.&lt;/p&gt;
 and hasn&amp;rsquo;t been modified. But if an attacker captures that request, they can send it again. And again. The signature is
 still valid because the request hasn&amp;rsquo;t changed.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-%%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
+ %%{init: {&amp;#39;theme&amp;#39;:&amp;#39;base&amp;#39;, &amp;#39;themeVariables&amp;#39;: { &amp;#39;primaryColor&amp;#39;:&amp;#39;#E3F2FD&amp;#39;,&amp;#39;primaryTextColor&amp;#39;:&amp;#39;#1565C0&amp;#39;,&amp;#39;primaryBorderColor&amp;#39;:&amp;#39;#1976D2&amp;#39;,&amp;#39;lineColor&amp;#39;:&amp;#39;#424242&amp;#39;,&amp;#39;secondaryColor&amp;#39;:&amp;#39;#FFF3E0&amp;#39;,&amp;#39;tertiaryColor&amp;#39;:&amp;#39;#E8F5E9&amp;#39;}}}%%
 sequenceDiagram
-autonumber
-participant Client as 🖥️ Client
-participant Attacker as 🎭 Attacker
-participant Server as ☁️ Server
-Note over Client,Server: Legitimate request
-Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓
-Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
-Note over Client,Server: Attacker intercepts and replays
-Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
-Attacker-&amp;gt;&amp;gt;Server: Replay same request
-alt Without replay protection
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
-Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
-else With created timestamp
-Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
-Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
-end
+ autonumber
+ participant Client as 🖥️ Client
+ participant Attacker as 🎭 Attacker
+ participant Server as ☁️ Server
+
+ Note over Client,Server: Legitimate request
+ Client-&amp;gt;&amp;gt;Server: Signed request&amp;lt;br/&amp;gt;(Transfer $100)
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓
+ Server--&amp;gt;&amp;gt;Client: 200 OK (transferred)
+
+ Note over Client,Server: Attacker intercepts and replays
+ Attacker-&amp;gt;&amp;gt;Attacker: Capture request&amp;lt;br/&amp;gt;(with valid signature)
+ Attacker-&amp;gt;&amp;gt;Server: Replay same request
+
+ alt Without replay protection
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;(signature is still valid!)
+ Server--&amp;gt;&amp;gt;Attacker: 200 OK (transferred again!)
+ else With created timestamp
+ Server-&amp;gt;&amp;gt;Server: Verify signature ✓&amp;lt;br/&amp;gt;Check timestamp ✗ (too old)
+ Server--&amp;gt;&amp;gt;Attacker: 401 Unauthorized
+ end
 &lt;/pre&gt;
+
 &lt;h3 id="defending-against-replay-attacks"&gt;&lt;a href="#defending-against-replay-attacks" class="header-anchor"&gt;&lt;/a&gt;Defending against replay attacks
 &lt;/h3&gt;&lt;p&gt;You need to make each signature single-use or time-limited. The standard way to do this is with the &lt;code&gt;created&lt;/code&gt; timestamp
 and &lt;code&gt;nonce&lt;/code&gt; parameters we discussed earlier:&lt;/p&gt;
@@ -656,13 +673,14 @@ use cryptographic keys with TPM 2.0 modules.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-conference-talk-based-on-this-article"&gt;&lt;a href="#watch-the-conference-talk-based-on-this-article" class="header-anchor"&gt;&lt;/a&gt;Watch the conference talk based on this article
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/6QxkfPy0k4U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/6QxkfPy0k4U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>mTLS vs HTTP signature faceoff: securing your APIs</title><link>https://victoronsoftware.com/posts/mtls-vs-http-signature/</link><pubDate>Sun, 06 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-vs-http-signature/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-vs-http-signature/mtls-vs-http-signature.png" alt="Featured image of post mTLS vs HTTP signature faceoff: securing your APIs" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#what-is-mtls" &gt;What is mTLS?&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#mtls-pros-and-cons" &gt;mTLS: pros and cons&lt;/a&gt;&lt;/li&gt;
@@ -683,8 +701,9 @@ is a no-nonsense breakdown covering what they are, where they shine, and where t
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
 server so that the server can verify the client&amp;rsquo;s identity.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
 it. It&amp;rsquo;s also commonly used in internal service meshes, Kubernetes clusters, secure databases, and private APIs where
 mutual authentication is required.&lt;/p&gt;
@@ -713,35 +732,38 @@ adoption difficult in heterogeneous environments&lt;/li&gt;
 body), and sign them with a private key. The server uses the corresponding public key to verify that the request came
 from someone it trusts.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: HTTP message signature
 ---
 sequenceDiagram
-autonumber
-participant Client
-participant Server
-Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
-Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
-Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
-Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
-Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
-Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
-Server-&amp;gt;&amp;gt;Server: Verify signature with public key
-alt Signature valid
-Server-&amp;gt;&amp;gt;Server: Process request
-else Signature invalid
-Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
-end
+ autonumber
+ participant Client
+ participant Server
+
+ Client-&amp;gt;&amp;gt;Client: Generate or retrieve private key
+ Client-&amp;gt;&amp;gt;Client: Create HTTP request with required headers
+ Client-&amp;gt;&amp;gt;Client: Sign headers/body using private key
+ Client-&amp;gt;&amp;gt;Server: Send HTTP request with signature in header
+
+ Server-&amp;gt;&amp;gt;Server: Retrieve client&amp;#39;s public key
+ Server-&amp;gt;&amp;gt;Server: Extract signature and signed headers
+ Server-&amp;gt;&amp;gt;Server: Verify signature with public key
+ alt Signature valid
+ Server-&amp;gt;&amp;gt;Server: Process request
+ else Signature invalid
+ Server-&amp;gt;&amp;gt;Client: Reject request (401 Unauthorized)
+ end
 &lt;/pre&gt;
+
 &lt;p&gt;HTTP signing works at the application layer. It does not replace TLS, but rides on top of it. That means you don&amp;rsquo;t have
 to worry about where TLS is terminated, and the HTTP signature can be verified at the ultimate destination server.&lt;/p&gt;
 &lt;p&gt;Many legacy systems have used their own approaches to HTTP signing. Apple&amp;rsquo;s MDM protocol relies on a detached
 &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc5652" target="_blank" rel="noopener"
-&gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
+ &gt;CMS signature&lt;/a&gt; with a custom header, while GitHub uses HMAC-based
 payload signing with a shared secret for webhooks. These mechanisms take different paths to the same goal: verifying the
 integrity and origin of HTTP messages.&lt;/p&gt;
 &lt;p&gt;Today, more modern systems are beginning to align with &lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc9421" target="_blank" rel="noopener"
-&gt;RFC 9421&lt;/a&gt;, a
+ &gt;RFC 9421&lt;/a&gt;, a
 proposed IETF standard for HTTP message signatures. The ecosystem is gradually converging on a shared standard for
 signed HTTP requests. A common standard is beneficial when you don&amp;rsquo;t control the client or want signature-level
 auditability and control.&lt;/p&gt;
@@ -794,65 +816,65 @@ expiration in ValKey or Redis)&lt;/li&gt;
 &lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool"&gt;&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor"&gt;&lt;/a&gt;mTLS vs HTTP message signatures: choosing the right tool
 &lt;/h2&gt;&lt;p&gt;Here&amp;rsquo;s how they compare:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Feature&lt;/th&gt;
-&lt;th&gt;mTLS&lt;/th&gt;
-&lt;th&gt;HTTP Message Signature&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Identity verification&lt;/td&gt;
-&lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
-&lt;td&gt;🟡 App-level with public key&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integrity&lt;/td&gt;
-&lt;td&gt;🟢 Built into TLS&lt;/td&gt;
-&lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Granular control&lt;/td&gt;
-&lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
-&lt;td&gt;🟢 Easy&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Deployment complexity&lt;/td&gt;
-&lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Public API suitability&lt;/td&gt;
-&lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
-&lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Certificate handling&lt;/td&gt;
-&lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
-&lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Integration support&lt;/td&gt;
-&lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
-&lt;td&gt;🟡 App libraries available&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Replay protection&lt;/td&gt;
-&lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
-&lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Performance&lt;/td&gt;
-&lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
-&lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Debuggability&lt;/td&gt;
-&lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
-&lt;td&gt;🟢 Signature is visible&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Feature&lt;/th&gt;
+ &lt;th&gt;mTLS&lt;/th&gt;
+ &lt;th&gt;HTTP Message Signature&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Identity verification&lt;/td&gt;
+ &lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
+ &lt;td&gt;🟡 App-level with public key&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integrity&lt;/td&gt;
+ &lt;td&gt;🟢 Built into TLS&lt;/td&gt;
+ &lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Granular control&lt;/td&gt;
+ &lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
+ &lt;td&gt;🟢 Easy&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Deployment complexity&lt;/td&gt;
+ &lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Public API suitability&lt;/td&gt;
+ &lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
+ &lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Certificate handling&lt;/td&gt;
+ &lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
+ &lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Integration support&lt;/td&gt;
+ &lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
+ &lt;td&gt;🟡 App libraries available&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Replay protection&lt;/td&gt;
+ &lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
+ &lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Performance&lt;/td&gt;
+ &lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
+ &lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Debuggability&lt;/td&gt;
+ &lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
+ &lt;td&gt;🟢 Signature is visible&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;So, which one should you use?&lt;/p&gt;
 &lt;ul&gt;
@@ -882,13 +904,14 @@ for hardware-backed cryptographic operations.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-compare-mtls-and-http-message-signatures"&gt;&lt;a href="#watch-us-compare-mtls-and-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;Watch us compare mTLS and HTTP message signatures
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/aDMdLCzXn1U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/aDMdLCzXn1U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to use TPM 2.0 to secure private keys</title><link>https://victoronsoftware.com/posts/how-to-use-tpm/</link><pubDate>Wed, 02 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/how-to-use-tpm/</guid><description>&lt;img src="https://victoronsoftware.com/posts/how-to-use-tpm/tpm-key-hierarchy-headline.png" alt="Featured image of post How to use TPM 2.0 to secure private keys" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#tpm-architecture" &gt;TPM architecture&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#tpm-key-storage" &gt;TPM key storage&lt;/a&gt;&lt;/li&gt;
@@ -906,7 +929,7 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;TPM 1.2 was standardized in 2009 as ISO/IEC 11889:2009. TPM 2.0, the most common today, came out in 2015 with the
 &lt;a class="link" href="https://www.iso.org/standard/66510.html" target="_blank" rel="noopener"
-&gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
+ &gt;ISO/IEC 11889:2015 standard&lt;/a&gt;. The link is for part 1 of the standard (out of
 4).&lt;/p&gt;
 &lt;p&gt;Although many people think of TPM as a hardware chip, it has many possible implementations. They are:&lt;/p&gt;
 &lt;ul&gt;
@@ -919,37 +942,42 @@ identity, data protection, and platform integrity. Some uses include:&lt;/p&gt;
 &lt;p&gt;In this article, we will focus on the use case of storing a private key in TPM 2.0.&lt;/p&gt;
 &lt;h2 id="tpm-architecture"&gt;&lt;a href="#tpm-architecture" class="header-anchor"&gt;&lt;/a&gt;TPM architecture
 &lt;/h2&gt;&lt;pre class="mermaid"&gt;
-graph TD
-subgraph TPM
-subgraph Memory
-VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
-NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
-end
-subgraph Crypto engine
-CC[Cryptographic Coprocessor]
-RNG[Random Number Generator]
-KGEN[Key Generation Logic]
-CC --&amp;gt;|Uses| RNG
-KGEN --&amp;gt;|Uses| RNG
-CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
-CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
-end
-subgraph Control logic
-PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
-MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
-end
-end
-style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
-style CC fill:#1f4e79,stroke:#fff,color:#fff
-style KGEN fill:#1f4e79,stroke:#fff,color:#fff
-style RNG fill:#2e7d32,stroke:#fff,color:#fff
-style NV fill:#5d4037,stroke:#fff,color:#fff
-style VM fill:#5d4037,stroke:#fff,color:#fff
-style PCR fill:#7b1fa2,stroke:#fff,color:#fff
-style MM fill:#37474f,stroke:#fff,color:#fff
-style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
-style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ graph TD
+ subgraph TPM
+ subgraph Memory
+ VM[&amp;lt;b&amp;gt;Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;Temporary keys, Sessions,&amp;lt;br/&amp;gt;Buffers]
+ NV[&amp;lt;b&amp;gt;Non-Volatile Memory&amp;lt;/b&amp;gt;&amp;lt;br/&amp;gt;EK, SRK, Policies,&amp;lt;br/&amp;gt;NV indexes]
+ end
+
+ subgraph Crypto engine
+ CC[Cryptographic Coprocessor]
+ RNG[Random Number Generator]
+ KGEN[Key Generation Logic]
+ CC --&amp;gt;|Uses| RNG
+ KGEN --&amp;gt;|Uses| RNG
+ CC --&amp;gt;|Performs| ENC[Encryption/Decryption]
+ CC --&amp;gt;|Performs| SIG[Digital Signature / Hashing]
+ end
+
+ subgraph Control logic
+ PCR[&amp;#34;Platform Configuration&amp;lt;br/&amp;gt;Registers&amp;lt;br/&amp;gt;(PCRs)&amp;#34;]
+ MM[Command Processing&amp;lt;br/&amp;gt;Engine /&amp;lt;br/&amp;gt;State Machine]
+ end
+
+ end
+
+ style TPM fill:#5c2d91,stroke:#fff,stroke-width:2px,color:#fff
+ style CC fill:#1f4e79,stroke:#fff,color:#fff
+ style KGEN fill:#1f4e79,stroke:#fff,color:#fff
+ style RNG fill:#2e7d32,stroke:#fff,color:#fff
+ style NV fill:#5d4037,stroke:#fff,color:#fff
+ style VM fill:#5d4037,stroke:#fff,color:#fff
+ style PCR fill:#7b1fa2,stroke:#fff,color:#fff
+ style MM fill:#37474f,stroke:#fff,color:#fff
+ style ENC fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
+ style SIG fill:#455a64,stroke:#fff,stroke-dasharray: 5 5,color:#fff
 &lt;/pre&gt;
+
 &lt;p&gt;This TPM architecture diagram illustrates the internal components of a Trusted Platform Module, highlighting its secure
 cryptographic engine, non-volatile and volatile memory, and control subsystems. Key elements include the cryptographic
 coprocessor, random number generator, and key generation logic, all operating within a hardware-isolated boundary. The
@@ -959,35 +987,35 @@ unique, factory-installed identity key, and the Storage Root Key (SRK), which an
 &lt;h2 id="tpm-key-storage"&gt;&lt;a href="#tpm-key-storage" class="header-anchor"&gt;&lt;/a&gt;TPM key storage
 &lt;/h2&gt;&lt;p&gt;TPM defines four main authorization hierarchies, each rooted in a different seed and intended for various use cases:&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Hierarchy&lt;/th&gt;
-&lt;th&gt;Seed Used&lt;/th&gt;
-&lt;th&gt;Purpose&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
-&lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Hierarchy&lt;/th&gt;
+ &lt;th&gt;Seed Used&lt;/th&gt;
+ &lt;th&gt;Purpose&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
+ &lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Each hierarchy has:&lt;/p&gt;
 &lt;ul&gt;
@@ -1022,7 +1050,7 @@ you provide:&lt;/p&gt;
 store the parent key explicitly. It can be recreated when needed.&lt;/p&gt;
 &lt;h4 id="create-a-parent-key-example"&gt;&lt;a href="#create-a-parent-key-example" class="header-anchor"&gt;&lt;/a&gt;Create a parent key example
 &lt;/h4&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/tpm2-software/tpm2-tools" target="_blank" rel="noopener"
-&gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
+ &gt;tpm2-tools&lt;/a&gt; is the official CLI toolset for interacting with TPM 2.0 via
 the TPM2 Software Stack (tss). Install it on Ubuntu/Debian like:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt update
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;sudo apt install tpm2-tools
@@ -1034,7 +1062,7 @@ has access to &lt;code&gt;/dev/tpmrm0&lt;/code&gt;. To add the user to the &lt;c
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then &lt;strong&gt;log out and log back in&lt;/strong&gt; for the group change to take effect.&lt;/p&gt;
 &lt;p&gt;Our examples use &lt;code&gt;tpm2-tools&lt;/code&gt; version 5.6. See
 &lt;a class="link" href="https://tpm2-tools.readthedocs.io/en/latest/" target="_blank" rel="noopener"
-&gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
+ &gt;the tpm2-tools documentation&lt;/a&gt; for details. To create a transient parent
 key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimary&lt;/code&gt; command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;tpm2_createprimary &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --hierarchy&lt;span style="color:#f92672"&gt;=&lt;/span&gt;owner &lt;span style="color:#ae81ff"&gt;\
@@ -1044,7 +1072,7 @@ key in TPM 2.0 using TSS (tpm2-tools) CLI, use the &lt;code&gt;tpm2_createprimar
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;parent.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;parent.ctx&lt;/code&gt; context file, which can be used in later commands.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the parent key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create a parent key template with the required attributes&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;parentTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Type&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMAlgRSA&lt;/span&gt;,
@@ -1104,7 +1132,7 @@ using the correct parent key.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; --key-context&lt;span style="color:#f92672"&gt;=&lt;/span&gt;child.ctx
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command creates the &lt;code&gt;child.ctx&lt;/code&gt; context file which can be used later.&lt;/p&gt;
 &lt;p&gt;Below is an equivalent example of creating the child key using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library,
+ &gt;go-tpm&lt;/a&gt; library,
 loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Create an ECC key template for the child key&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;eccTemplate&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;New2B&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPMTPublic&lt;/span&gt;{
@@ -1165,7 +1193,7 @@ loading the key into the TPM, and saving the context for subsequent reuse:&lt;/p
 &lt;/ul&gt;
 &lt;p&gt;There is also a de facto standard for
 &lt;a class="link" href="https://www.hansenpartnership.com/draft-bottomley-tpm2-keys.html" target="_blank" rel="noopener"
-&gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
+ &gt;storing TPM 2.0 key files using ASN.1 structure&lt;/a&gt;.
 OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;h2 id="tpm-signing"&gt;&lt;a href="#tpm-signing" class="header-anchor"&gt;&lt;/a&gt;TPM signing
 &lt;/h2&gt;&lt;p&gt;TPM can sign data using the child key. The output signature is in raw binary.&lt;/p&gt;
@@ -1195,7 +1223,7 @@ OpenConnect VPN and several other tools use this standard.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -signature&lt;span style="color:#f92672"&gt;=&lt;/span&gt;signature.plain &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; data.in.raw
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Below is an example of signing using the &lt;a class="link" href="https://github.com/google/go-tpm" target="_blank" rel="noopener"
-&gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
+ &gt;go-tpm&lt;/a&gt; library:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;sign&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Sign&lt;/span&gt;{
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;KeyHandle&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;childKeyHandle&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;Digest&lt;/span&gt;: &lt;span style="color:#a6e22e"&gt;tpm2&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;TPM2BDigest&lt;/span&gt;{
@@ -1250,13 +1278,14 @@ switch, and access points.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-the-explanation-of-securing-private-keys-with-tpm"&gt;&lt;a href="#watch-the-explanation-of-securing-private-keys-with-tpm" class="header-anchor"&gt;&lt;/a&gt;Watch the explanation of securing private keys with TPM
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/zwnznp5KeQs"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/zwnznp5KeQs" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Why you should use STDIN to read your program arguments</title><link>https://victoronsoftware.com/posts/get-args-from-stdin/</link><pubDate>Mon, 12 Aug 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/get-args-from-stdin/</guid><description>&lt;img src="https://victoronsoftware.com/posts/get-args-from-stdin/stdin-headline.png" alt="Featured image of post Why you should use STDIN to read your program arguments" /&gt;&lt;h2 id="stdin-is-more-secure-than-environment-variables-or-command-line-arguments"&gt;&lt;a href="#stdin-is-more-secure-than-environment-variables-or-command-line-arguments" class="header-anchor"&gt;&lt;/a&gt;STDIN is more secure than environment variables or command-line arguments
 &lt;/h2&gt;&lt;p&gt;When you pass command-line arguments to a program, they are visible to anyone who can run the &lt;code&gt;ps&lt;/code&gt; command. Allowing others to read arguments is a security risk if the arguments contain sensitive information like passwords or API keys.&lt;/p&gt;
 &lt;p&gt;Environment variables are also visible to anyone who can run the &lt;code&gt;ps&lt;/code&gt; command. They are also globally visible to the program, so any arbitrary code in your application can extract the environment variables.&lt;/p&gt;
@@ -1267,24 +1296,25 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;STDIN is more secure because it is not visible to the &lt;code&gt;ps&lt;/code&gt; command and is not globally visible to the program. Thus, only the parts of the program that explicitly read from STDIN can access this data.&lt;/p&gt;
 &lt;h2 id="how-to-read-program-arguments-from-stdin-with-go"&gt;&lt;a href="#how-to-read-program-arguments-from-stdin-with-go" class="header-anchor"&gt;&lt;/a&gt;How to read program arguments from STDIN with Go
 &lt;/h2&gt;&lt;p&gt;In the code example below, we check if any data is being piped in from STDIN with &lt;code&gt;os.ModeNamedPipe&lt;/code&gt;. Then, we wait to read all the data from STDIN with &lt;code&gt;ioutil.ReadAll&lt;/code&gt;. Finally, we parse the STDIN data just like a shell would using the &lt;a class="link" href="https://github.com/kballard/go-shellquote" target="_blank" rel="noopener"
-&gt;github.com/kballard/go-shellquote&lt;/a&gt; library and append it to any existing command-line arguments.&lt;/p&gt;
+ &gt;github.com/kballard/go-shellquote&lt;/a&gt; library and append it to any existing command-line arguments.&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/c345f324ebf6dfa64df9a8c0919d6672.js"&gt;&lt;/script&gt;
 &lt;h2 id="how-to-integrate-with-a-secret-manager"&gt;&lt;a href="#how-to-integrate-with-a-secret-manager" class="header-anchor"&gt;&lt;/a&gt;How to integrate with a secret manager
 &lt;/h2&gt;&lt;p&gt;One way to securely pass sensitive information to a program is to store it in a secret manager like &lt;a class="link" href="https://developer.1password.com/docs/cli/secret-references" target="_blank" rel="noopener"
-&gt;1Password&lt;/a&gt;. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p&gt;
+ &gt;1Password&lt;/a&gt;. Then, you can read the secret from the secret manager and pass it to the program via STDIN. For example:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;echo --secret $(op read op://employee/example_server/secret) | go run read-args-from-stdin.go
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we discussed how to &lt;a class="link" href="../go-json-unmarshal/" &gt;unmarshal JSON payloads with null, set, and missing keys using Go&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Previously, we wrote &lt;a class="link" href="../catch-missed-authorization-checks-during-software-development" &gt;how we catch missed authorization checks in our Go application&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-read-program-arguments-from-stdin"&gt;&lt;a href="#watch-how-to-read-program-arguments-from-stdin" class="header-anchor"&gt;&lt;/a&gt;Watch how to read program arguments from STDIN
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Jg7xItfa6t8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Jg7xItfa6t8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Fix security vulnerabilities in Yarn</title><link>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</link><pubDate>Wed, 10 Apr 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/</guid><description>&lt;img src="https://victoronsoftware.com/posts/fix-security-vulnerabilities-yarn/cover.png" alt="Featured image of post Fix security vulnerabilities in Yarn" /&gt;&lt;h2 id="why-fix-security-vulnerabilities"&gt;&lt;a href="#why-fix-security-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Why fix security vulnerabilities?
 &lt;/h2&gt;&lt;p&gt;Security vulnerabilities are a common issue in software development. They can lead to data breaches, unauthorized
 access, and other security incidents. It is important to fix security vulnerabilities as soon as possible to protect
@@ -1293,9 +1323,9 @@ your data and users.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Nowadays, it is possible to integrate various vulnerability scanning tools into your CI/CD pipeline. These tools can
 help you identify security vulnerabilities in your code and dependencies. One such tool is
 &lt;a class="link" href="https://securityscorecards.dev/" target="_blank" rel="noopener"
-&gt;OpenSSF Scorecard&lt;/a&gt;, which combines multiple other tools into a single GitHub action.
+ &gt;OpenSSF Scorecard&lt;/a&gt;, which combines multiple other tools into a single GitHub action.
 It uses the &lt;a class="link" href="https://osv.dev/" target="_blank" rel="noopener"
-&gt;OSV service&lt;/a&gt; to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open
+ &gt;OSV service&lt;/a&gt; to find vulnerabilities affecting your project&amp;rsquo;s dependencies. OSV (Open
 Source Vulnerabilities) is a Google-based vulnerability database providing information about open-source projects'
 vulnerabilities.&lt;/p&gt;
 &lt;p&gt;In this article, we will focus on fixing a few recent real-world security vulnerabilities in our &lt;code&gt;yarn.lock&lt;/code&gt;
@@ -1310,7 +1340,7 @@ Warn: Project is vulnerable to: GHSA-4wf5-vphf-c2xc
 Click Remediation section below to solve this issue
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="using-local-tools-to-find-vulnerabilities"&gt;&lt;a href="#using-local-tools-to-find-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Using local tools to find vulnerabilities
 &lt;/h3&gt;&lt;p&gt;In a local environment, we can use &lt;a class="link" href="https://google.github.io/osv-scanner/" target="_blank" rel="noopener"
-&gt;OSV-Scanner&lt;/a&gt; to find vulnerabilities in our
+ &gt;OSV-Scanner&lt;/a&gt; to find vulnerabilities in our
 dependencies. Running:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;osv-scanner scan --lockfile yarn.lock
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It will output the same vulnerabilities mentioned above but with additional details.&lt;/p&gt;
@@ -1327,7 +1357,7 @@ dependencies. Running:&lt;/p&gt;
 │ https://osv.dev/GHSA-4wf5-vphf-c2xc │ 7.5 │ npm │ terser │ 5.12.1 │ yarn.lock │
 ╰─────────────────────────────────────┴──────┴───────────┴────────────────┴─────────┴───────────╯
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Another way to find these vulnerabilities is by using the built-in &lt;a class="link" href="https://yarnpkg.com/cli/audit" target="_blank" rel="noopener"
-&gt;yarn audit&lt;/a&gt; command.&lt;/p&gt;
+ &gt;yarn audit&lt;/a&gt; command.&lt;/p&gt;
 &lt;h2 id="waiving-vulnerabilities"&gt;&lt;a href="#waiving-vulnerabilities" class="header-anchor"&gt;&lt;/a&gt;Waiving vulnerabilities
 &lt;/h2&gt;&lt;p&gt;In some cases, you may decide to waive a vulnerability. This approach means that you examine the vulnerability
 documentation and acknowledge it but decide not to fix it.&lt;/p&gt;
@@ -1343,20 +1373,20 @@ update this package to &lt;code&gt;0.8.4&lt;/code&gt; or later.&lt;/p&gt;
 &lt;p&gt;Running &lt;code&gt;yarn why @xmldom/xmldom&lt;/code&gt; will show that it is an inner dependency of another package:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;=&amp;gt; Found &amp;#34;@xmldom/xmldom@0.8.3&amp;#34;
 info Reasons this module exists
-- &amp;#34;msw#@mswjs#interceptors&amp;#34; depends on it
-- Hoisted from &amp;#34;msw#@mswjs#interceptors#@xmldom#xmldom&amp;#34;
+ - &amp;#34;msw#@mswjs#interceptors&amp;#34; depends on it
+ - Hoisted from &amp;#34;msw#@mswjs#interceptors#@xmldom#xmldom&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Looking at &lt;code&gt;yarn.lock&lt;/code&gt; shows:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
-version &amp;#34;0.8.3&amp;#34;
-resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.3.tgz#beaf980612532aa9a3004aff7e428943aeaa0711&amp;#34;
-integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
+ version &amp;#34;0.8.3&amp;#34;
+ resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.3.tgz#beaf980612532aa9a3004aff7e428943aeaa0711&amp;#34;
+ integrity sha512-Lv2vySXypg4nfa51LY1nU8yDAGo/5YwF+EY/rUZgIbfvwVARcd67ttCM8SMsTeJy51YhHYavEq+FS6R0hW9PFQ==
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see that &lt;code&gt;0.8.4&lt;/code&gt; will satisfy the dependency requirement of &lt;code&gt;^0.8.3&lt;/code&gt;. We can update the package by deleting the above
 section from &lt;code&gt;yarn.lock&lt;/code&gt; and running &lt;code&gt;yarn install&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;We will then see the update:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;&amp;#34;@xmldom/xmldom@^0.8.3&amp;#34;:
-version &amp;#34;0.8.10&amp;#34;
-resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
-integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
+ version &amp;#34;0.8.10&amp;#34;
+ resolved &amp;#34;https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99&amp;#34;
+ integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="upgrading-an-inner-dependency-by-overriding-the-version"&gt;&lt;a href="#upgrading-an-inner-dependency-by-overriding-the-version" class="header-anchor"&gt;&lt;/a&gt;Upgrading an inner dependency by overriding the version
 &lt;/h2&gt;&lt;p&gt;Our following vulnerability is in the &lt;code&gt;axios&lt;/code&gt; package. We need to update it to &lt;code&gt;0.28.0&lt;/code&gt; or later. By running
 &lt;code&gt;yarn why axios&lt;/code&gt; we see that this package is part of a deep dependency chain:&lt;/p&gt;
@@ -1370,12 +1400,12 @@ following to the &lt;code&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="upgrading-the-parent-dependency"&gt;&lt;a href="#upgrading-the-parent-dependency" class="header-anchor"&gt;&lt;/a&gt;Upgrading the parent dependency
 &lt;/h2&gt;&lt;p&gt;The following vulnerability is in the &lt;code&gt;lodash.set&lt;/code&gt; package. The vulnerability URL shows that there is no fix for this
 vulnerability. We also see at &lt;a class="link" href="https://www.npmjs.com/package/lodash.set" target="_blank" rel="noopener"
-&gt;npmjs.com&lt;/a&gt; that this package was last updated
+ &gt;npmjs.com&lt;/a&gt; that this package was last updated
 eight years ago.&lt;/p&gt;
 &lt;p&gt;We need to update the parent package that uses &lt;code&gt;lodash.set&lt;/code&gt;. Running &lt;code&gt;yarn why lodash.set&lt;/code&gt; shows:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;info Reasons this module exists
-- &amp;#34;nock&amp;#34; depends on it
-- Hoisted from &amp;#34;nock#lodash.set&amp;#34;
+ - &amp;#34;nock&amp;#34; depends on it
+ - Hoisted from &amp;#34;nock#lodash.set&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We update the parent by running &lt;code&gt;yarn upgrade nock@latest&lt;/code&gt;. Luckily, the latest version of &lt;code&gt;nock&lt;/code&gt; does not depend on
 &lt;code&gt;lodash.set&lt;/code&gt;, and &lt;code&gt;lodash.set&lt;/code&gt; is removed from &lt;code&gt;yarn.lock&lt;/code&gt;.&lt;/p&gt;
 &lt;h2 id="removing-a-dependency"&gt;&lt;a href="#removing-a-dependency" class="header-anchor"&gt;&lt;/a&gt;Removing a dependency
@@ -1395,13 +1425,14 @@ the removed functionality yourself.&lt;/p&gt;
 application.&lt;/p&gt;
 &lt;h2 id="fix-security-vulnerabilities-in-yarn-video"&gt;&lt;a href="#fix-security-vulnerabilities-in-yarn-video" class="header-anchor"&gt;&lt;/a&gt;Fix security vulnerabilities in Yarn video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/59EpVz9mH_w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/59EpVz9mH_w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" /&gt;&lt;h2 id="what-is-code-signing"&gt;&lt;a href="#what-is-code-signing" class="header-anchor"&gt;&lt;/a&gt;What is code signing?
 &lt;/h2&gt;&lt;p&gt;Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee
 that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate
@@ -1430,7 +1461,7 @@ certificate expires.&lt;/li&gt;
 &lt;/h2&gt;&lt;p&gt;In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For
 public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p&gt;
 &lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificate and key needed for code signing. It also generates a certificate
 authority (CA) and signs the code signing certificate with the CA.&lt;/p&gt;
@@ -1465,7 +1496,7 @@ the application with:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go build process generates the &lt;code&gt;hello-world.exe&lt;/code&gt; Windows executable.&lt;/p&gt;
 &lt;h2 id="signing-and-timestamping-the-code"&gt;&lt;a href="#signing-and-timestamping-the-code" class="header-anchor"&gt;&lt;/a&gt;Signing and timestamping the code
 &lt;/h2&gt;&lt;p&gt;To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
-&gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
+ &gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
 that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code&gt;signtool,&lt;/code&gt; &lt;code&gt;osslsigncode&lt;/code&gt; is cross-platform and can
 be used on Linux and macOS.&lt;/p&gt;
 &lt;p&gt;To sign the code, we use the following script:&lt;/p&gt;
@@ -1519,20 +1550,22 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
-alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
-alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
 &lt;/h2&gt;&lt;p&gt;To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards
 require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent
@@ -1541,20 +1574,21 @@ HSM vendor or a private pipeline runner with an HSM.&lt;/p&gt;
 &lt;p&gt;In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we explained &lt;a class="link" href="../exe-installer" &gt;how to create an EXE installer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We also discussed &lt;a class="link" href="../connect-to-remote-active-directory/" &gt;connecting your local machine to remote Active Directory&lt;/a&gt; and
 covered &lt;a class="link" href="../test-ndes-scep-server" &gt;how to test a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="code-signing-a-windows-application-video"&gt;&lt;a href="#code-signing-a-windows-application-video" class="header-anchor"&gt;&lt;/a&gt;Code signing a Windows application video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NQYUgHznXew"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NQYUgHznXew" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt;&lt;/li&gt;
@@ -1571,10 +1605,10 @@ title="YouTube Video"
 &lt;p&gt;However, before the application uses the &lt;code&gt;Public&lt;/code&gt; and &lt;code&gt;Sign&lt;/code&gt; methods of the &lt;code&gt;CustomSigner,&lt;/code&gt; we must retrieve the client certificate using Windows APIs.&lt;/p&gt;
 &lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go"&gt;&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go" class="header-anchor"&gt;&lt;/a&gt;Retrieving mTLS client certificate from Windows certificate store using Go
 &lt;/h3&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
-&gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
-&gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
-&gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
-&gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
+ &gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
+ &gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
+ &gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
+ &gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
 &lt;p&gt;First, we open the &lt;code&gt;MY&lt;/code&gt; store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Open the certificate store&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;storePtr&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UTF16PtrFromString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;windowsStoreName&lt;/span&gt;)
@@ -1675,7 +1709,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="signing-the-mtls-digest"&gt;&lt;a href="#signing-the-mtls-digest" class="header-anchor"&gt;&lt;/a&gt;Signing the mTLS digest
 &lt;/h4&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
-&gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
+ &gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustLoadDLL&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ncrypt.dll&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCryptSignHash&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustFindProc&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;NCryptSignHash&amp;#34;&lt;/span&gt;)
@@ -1805,16 +1839,17 @@ crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash
 mTLS Hello World!
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-windows-certificate-store-video"&gt;&lt;a href="#mtls-go-client-using-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/L4uk43i3kyY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/L4uk43i3kyY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using macOS keychain</title><link>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</link><pubDate>Thu, 22 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-using-apple-keychain/mtls-go-apple-keychain.png" alt="Featured image of post Mutual TLS (mTLS) Go client using macOS keychain" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -1837,7 +1872,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;*/&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;C&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To find the identities from the keychain, we use &lt;a class="link" href="https://developer.apple.com/documentation/security/1398306-secitemcopymatching" target="_blank" rel="noopener"
-&gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
+ &gt;SecItemCopyMatching&lt;/a&gt;. An identity is a certificate and its associated private key.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;identitySearch&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDictionaryCreateMutable&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFAllocatorDefault&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;maxCertificatesNum&lt;/span&gt;, &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryKeyCallBacks&lt;/span&gt;,
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;kCFTypeDictionaryValueCallBacks&lt;/span&gt;,
@@ -1888,7 +1923,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; }
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The &lt;code&gt;identityRefToCert&lt;/code&gt; function converts the &lt;code&gt;SecIdentityRef&lt;/code&gt; to a Go &lt;code&gt;x509.Certificate&lt;/code&gt; object. It exports the certificate to PEM format using &lt;a class="link" href="https://developer.apple.com/documentation/security/1394828-secitemexport" target="_blank" rel="noopener"
-&gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
+ &gt;SecItemExport&lt;/a&gt; and then parses the PEM to get the &lt;code&gt;x509.Certificate&lt;/code&gt; object.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;identityRefToCert&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;identityRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecIdentityRef&lt;/span&gt;) (&lt;span style="color:#f92672"&gt;*&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;x509&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Certificate&lt;/span&gt;, &lt;span style="color:#66d9ef"&gt;error&lt;/span&gt;) {
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Convert the identity to a certificate&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;certificateRef&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SecCertificateRef&lt;/span&gt;
@@ -1981,7 +2016,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.int(&lt;span style="color:#a6e22e"&gt;C&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;CFDataGetLength&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;signCFData&lt;/span&gt;))), &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We use the &lt;a class="link" href="https://developer.apple.com/documentation/security/1643916-seckeycreatesignature" target="_blank" rel="noopener"
-&gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
+ &gt;SecKeyCreateSignature&lt;/a&gt; function to sign the digest. The function takes the private key reference, the algorithm, the digest, and a pointer to a &lt;code&gt;CFErrorRef.&lt;/code&gt; The function returns a CFDataRef, which we convert to a Go byte slice. Additional algorithms can be supported by passing the proper parameter to the &lt;code&gt;SecKeyCreateSignature&lt;/code&gt; function.&lt;/p&gt;
 &lt;h2 id="putting-it-all-together"&gt;&lt;a href="#putting-it-all-together" class="header-anchor"&gt;&lt;/a&gt;Putting it all together
 &lt;/h2&gt;&lt;p&gt;With the above code, we can create our new Go mTLS client that uses the macOS keychain.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;func&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;() {
@@ -2057,16 +2092,17 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;The following article will explore &lt;a class="link" href="../mtls-with-windows" &gt;using the Windows certificate store to hold the mTLS client certificate and private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-apple-keychain&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-macos-keychain-video"&gt;&lt;a href="#mtls-go-client-using-macos-keychain-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using macOS keychain video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/iYWPrL4sR5U"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/iYWPrL4sR5U" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client with custom certificate signer</title><link>https://victoronsoftware.com/posts/mtls-go-custom-signer/</link><pubDate>Wed, 14 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-custom-signer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-custom-signer/signer.png" alt="Featured image of post Mutual TLS (mTLS) Go client with custom certificate signer" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -2077,13 +2113,16 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-go-client" &gt;mTLS Go client&lt;/a&gt; article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p&gt;
 &lt;p&gt;The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code&gt;CertificateVerify&lt;/code&gt; message. The &lt;code&gt;CertificateVerify&lt;/code&gt; message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
-alt="Mutual TLS (mTLS) handshake diagram"&gt;
+ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
-&gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;Wikipedia entry on TLS&lt;/a&gt;:&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;The client sends a &lt;strong&gt;CertificateVerify&lt;/strong&gt; message, which is a signature over the previous handshake messages using the client&amp;rsquo;s certificate&amp;rsquo;s private key. This signature can be verified by using the client&amp;rsquo;s certificate&amp;rsquo;s public key. This lets the server know that the client has access to the private key of the certificate and thus owns the certificate.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="setting-up-the-environment"&gt;&lt;a href="#setting-up-the-environment" class="header-anchor"&gt;&lt;/a&gt;Setting up the environment
 &lt;/h2&gt;&lt;p&gt;We will use the same certificates and keys script from the &lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt; article. If you still need to generate the certificates and keys, please follow the instructions in that article.&lt;/p&gt;
 &lt;p&gt;In addition, we will import the generated certificates and keys into the macOS keychain. (In a future article, we will use the Windows Certificate Store instead.)&lt;/p&gt;
@@ -2207,16 +2246,17 @@ alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-using-apple-keychain" &gt;use the macOS keychain to load the client certificate and generate the &lt;code&gt;CertificateVerify&lt;/code&gt; message without extracting the private key&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-custom-signer&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-with-custom-certificate-signer-video"&gt;&lt;a href="#mtls-go-client-with-custom-certificate-signer-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client with custom certificate signer video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/FsKMAEfn21w"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/FsKMAEfn21w" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) Go client</title><link>https://victoronsoftware.com/posts/mtls-go-client/</link><pubDate>Wed, 07 Feb 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client/go-client.png" alt="Featured image of post Mutual TLS (mTLS) Go client" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -2289,7 +2329,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go libraries are not integrated with the system keystore for using the mTLS client certificate and key.&lt;/p&gt;
 &lt;h2 id="modifying-the-go-client-for-mtls"&gt;&lt;a href="#modifying-the-go-client-for-mtls" class="header-anchor"&gt;&lt;/a&gt;Modifying the Go client for mTLS
 &lt;/h2&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/crypto/tls" target="_blank" rel="noopener"
-&gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
+ &gt;crypto/tls&lt;/a&gt; package to build the mTLS client.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;package&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;main&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
@@ -2352,26 +2392,27 @@ title="YouTube Video"
 &lt;/h2&gt;&lt;p&gt;The following article will cover &lt;a class="link" href="../mtls-go-custom-signer" &gt;creating a custom Go signer for the mTLS client certificate&lt;/a&gt;. This work will pave the way for us to use the system keystore to manage the client certificate and key.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-go" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-go&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-video"&gt;&lt;a href="#mtls-go-client-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8lNZUTBkfsU"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8lNZUTBkfsU" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Catch missed authorization checks during software development</title><link>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</link><pubDate>Fri, 10 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/</guid><description>&lt;p&gt;Authorization is giving permission to a user to do an action on the server. As developers, we must ensure that users are
 only allowed to do what they are authorized.&lt;/p&gt;
 &lt;p&gt;One way to ensure that authorization has happened is to loudly flag when it hasn&amp;rsquo;t. This is how we do it at
 &lt;a class="link" href="https://www.fleetdm.com" target="_blank" rel="noopener"
-&gt;Fleet Device Management&lt;/a&gt;.&lt;/p&gt;
+ &gt;Fleet Device Management&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In our code base, we use the &lt;a class="link" href="https://github.com/go-kit/kit" target="_blank" rel="noopener"
-&gt;go-kit library&lt;/a&gt;. Most of the general endpoints are created
+ &gt;go-kit library&lt;/a&gt;. Most of the general endpoints are created
 in the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
-&gt;handler.go&lt;/a&gt;
+ &gt;handler.go&lt;/a&gt;
 file. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// user-authenticated endpoints&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ue&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;newUserAuthenticatedEndpointer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;svc&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;r&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;apiVersions&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
@@ -2379,16 +2420,17 @@ file. For example:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;ue&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;POST&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;/api/_version_/fleet/trigger&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;triggerEndpoint&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;triggerRequest&lt;/span&gt;{})
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Every endpoint calls &lt;strong&gt;kithttp.NewServer&lt;/strong&gt; and wraps the endpoint with our &lt;strong&gt;AuthzCheck&lt;/strong&gt;. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/handler.go#L729" target="_blank" rel="noopener"
-&gt;handler.go&lt;/a&gt;:&lt;/p&gt;
+ &gt;handler.go&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;authzcheck&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewMiddleware&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;AuthzCheck&lt;/span&gt;()(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;kithttp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewServer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;decodeFn&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;encodeResponse&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg"
-alt="Catch missed authorization check block diagram"&gt;
+ alt="Catch missed authorization check block diagram"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;This means that after the business logic is processed, the AuthzCheck is called. This check ensures that authorization
 was checked. Otherwise, an error is returned. From
 &lt;a class="link" href="https://github.com/fleetdm/fleet/blob/36421bd5055d37a4c39a04e0f9bd96ad47951131/server/service/middleware/authzcheck/authzcheck.go#L51" target="_blank" rel="noopener"
-&gt;authzcheck.go&lt;/a&gt;:&lt;/p&gt;
+ &gt;authzcheck.go&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// If authorization was not checked, return a response that will&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// marshal to a generic error and log that the check was missed.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; !&lt;span style="color:#a6e22e"&gt;authzctx&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Checked&lt;/span&gt;() {
@@ -2401,14 +2443,15 @@ our business logic.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Recently, we improved our app&amp;rsquo;s security by &lt;a class="link" href="../get-args-from-stdin" &gt;reading program arguments from STDIN&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-we-catch-missed-authorization-checks"&gt;&lt;a href="#watch-how-we-catch-missed-authorization-checks" class="header-anchor"&gt;&lt;/a&gt;Watch how we catch missed authorization checks
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/jbkPLQpzPtc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/jbkPLQpzPtc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;This article originally appeared in
 &lt;a class="link" href="https://fleetdm.com/guides/catch-missed-authorization-checks-during-software-development" target="_blank" rel="noopener"
-&gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>
+ &gt;Fleet&amp;rsquo;s blog&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

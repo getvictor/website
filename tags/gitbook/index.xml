@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>GitBook on Victor on Software</title><link>https://victoronsoftware.com/tags/gitbook/</link><description>Recent content in GitBook on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Thu, 30 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/gitbook/index.xml" rel="self" type="application/rss+xml"/><item><title>You need a personal dev docs DB (GitBook)</title><link>https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/</link><pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/</guid><description>&lt;img src="https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/cover.png" alt="Featured image of post You need a personal dev docs DB (GitBook)" /&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/o-Tml_PAAeM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/o-Tml_PAAeM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;At &lt;a class="link" href="https://fleetdm.com/" target="_blank" rel="noopener"
-&gt;Fleet&lt;/a&gt;, our developer documentation is spread out throughout the codebase,
+ &gt;Fleet&lt;/a&gt;, our developer documentation is spread out throughout the codebase,
 contained in a multitude of README and Markdown files. Much of the documentation is hosted
 on &lt;a class="link" href="https://fleetdm.com/docs/get-started/why-fleet" target="_blank" rel="noopener"
-&gt;our webpage&lt;/a&gt;, but not all of it.&lt;/p&gt;
+ &gt;our webpage&lt;/a&gt;, but not all of it.&lt;/p&gt;
 &lt;p&gt;As developers, we need to be able to quickly search project documentation to find answers to
 specific questions, such as:&lt;/p&gt;
 &lt;ul&gt;
@@ -32,22 +33,23 @@ efforts. It is an issue because of the following side effects:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;One solution is to use a documentation service, such as a team
 wiki, &lt;a class="link" href="https://www.atlassian.com/software/confluence" target="_blank" rel="noopener"
-&gt;Confluence&lt;/a&gt;,
+ &gt;Confluence&lt;/a&gt;,
 or &lt;a class="link" href="https://www.gitbook.com/" target="_blank" rel="noopener"
-&gt;GitBook&lt;/a&gt;. GitBook
+ &gt;GitBook&lt;/a&gt;. GitBook
 integrates with git repositories, and can push documentation changes. GitBook is free for personal
 use, which makes it easy to use for open source projects such
 as &lt;a class="link" href="https://github.com/fleetdm/fleet" target="_blank" rel="noopener"
-&gt;fleet&lt;/a&gt; and &lt;a class="link" href="https://github.com/osquery/osquery" target="_blank" rel="noopener"
-&gt;osquery&lt;/a&gt;. That
+ &gt;fleet&lt;/a&gt; and &lt;a class="link" href="https://github.com/osquery/osquery" target="_blank" rel="noopener"
+ &gt;osquery&lt;/a&gt;. That
 said,
 GitBook is a newcomer to the space, and is still reaching maturity.&lt;/p&gt;
 &lt;p&gt;To set up a personal GitBook, make a fork of the open source projects that contain documentation
 you’d like to search, and integrate them into GitBook spaces. After indexing is complete, you’ll be
 able to effectively search the documentation.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/GitBook-1.png"
-alt="Search for database migrations in Fleet&amp;#39;s GitBook"&gt;
+ alt="Search for database migrations in Fleet&amp;#39;s GitBook"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;To keep the forks in sync with the parent repositories, we use Github Actions. Github Actions are
 free for open source projects. Searching GitHub for &lt;strong&gt;sync-fork&lt;/strong&gt; returned several examples. We
 ended up using the following:&lt;/p&gt;
@@ -86,6 +88,6 @@ workflows in this repository. This token is not needed for repositories without 
 that’s being held in a private repository. There are several git-based notebook applications on the
 market. In addition, Markdown notes from the popular note-taking
 app &lt;a class="link" href="https://obsidian.md/" target="_blank" rel="noopener"
-&gt;Obsidian&lt;/a&gt; can be kept in GitHub. This turns GitBook into a true
+ &gt;Obsidian&lt;/a&gt; can be kept in GitHub. This turns GitBook into a true
 personalized developer documentation database &amp;ndash; one place to search through developer docs as well
 as your own private notes.&lt;/p&gt;</description></item></channel></rss>

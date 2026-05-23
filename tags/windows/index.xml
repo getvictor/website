@@ -6,7 +6,7 @@
 &lt;/ol&gt;
 &lt;h2 id="what-is-active-directory"&gt;&lt;a href="#what-is-active-directory" class="header-anchor"&gt;&lt;/a&gt;What is Active Directory?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview" target="_blank" rel="noopener"
-&gt;Active Directory&lt;/a&gt;
+ &gt;Active Directory&lt;/a&gt;
 is a directory service developed by Microsoft for Windows domain networks. It provides authentication and authorization
 services and a framework for organizing and managing resources in a networked environment. Active Directory stores
 information about users, computers, and other network objects, making managing and securing your network easier.&lt;/p&gt;
@@ -37,26 +37,29 @@ information:&lt;/p&gt;
 &lt;li&gt;Any additional settings or requirements, such as a private key or certificate&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;For our example, we are using &lt;a class="link" href="https://www.wireguard.com/" target="_blank" rel="noopener"
-&gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
+ &gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
 and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
-alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+ alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
 the IP addresses of the remote Active Directory server. Also, ensure the IP addresses do not conflict with your local
 network.&lt;/p&gt;
 &lt;p&gt;Install the VPN client on your computer and activate the VPN connection using the provided details.&lt;/p&gt;
 &lt;p&gt;Test the VPN connection by pinging the remote Active Directory server.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;PS C:\Users\victor&amp;gt; ping 10.98.1.1
+
 Pinging 10.98.1.1 with 32 bytes of data:
 Reply from 10.98.1.1: bytes=32 time=155ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
 Reply from 10.98.1.1: bytes=32 time=156ms TTL=127
+
 Ping statistics for 10.98.1.1:
-Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
+ Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),
 Approximate round trip times in milli-seconds:
-Minimum = 155ms, Maximum = 156ms, Average = 155ms
+ Minimum = 155ms, Maximum = 156ms, Average = 155ms
 &lt;/code&gt;&lt;/pre&gt;&lt;h3 id="2-point-your-computer-to-the-remote-active-directory-dns-server"&gt;&lt;a href="#2-point-your-computer-to-the-remote-active-directory-dns-server" class="header-anchor"&gt;&lt;/a&gt;2. Point your computer to the remote Active Directory DNS server
 &lt;/h3&gt;&lt;p&gt;To use Active Directory, your computer must know where to find the domain controller. This information is stored in the
 DNS (Domain Name System) settings.&lt;/p&gt;
@@ -67,20 +70,23 @@ connection.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
 Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
-alt="Windows 11 popups for setting DNS server."&gt;
+ alt="Windows 11 popups for setting DNS server."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
 &lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
-alt="Windows 11 dialog to join a domain."&gt;
+ alt="Windows 11 dialog to join a domain."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
 computer to the domain.&lt;/p&gt;
 &lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
-alt="Windows 11 dialog indicating successful domain join."&gt;
+ alt="Windows 11 dialog indicating successful domain join."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;
 &lt;h3 id="4-log-in-with-your-active-directory-credentials"&gt;&lt;a href="#4-log-in-with-your-active-directory-credentials" class="header-anchor"&gt;&lt;/a&gt;4. Log in with your Active Directory credentials
 &lt;/h3&gt;&lt;p&gt;Your VPN connection must be active to log in with your Active Directory credentials after joining the domain. Some VPN
@@ -101,13 +107,14 @@ resolved this issue by allowing SSH access in Active Directory settings.&lt;/p&g
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-connect-to-remote-active-directory-server"&gt;&lt;a href="#watch-how-to-connect-to-remote-active-directory-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to connect to remote Active Directory server
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/wFlntCobLsA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/wFlntCobLsA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to test a Windows NDES SCEP server</title><link>https://victoronsoftware.com/posts/test-ndes-scep-server/</link><pubDate>Wed, 02 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/test-ndes-scep-server/</guid><description>&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/windows-security-headline.png" alt="Featured image of post How to test a Windows NDES SCEP server" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#test-ndes-using-powershell" &gt;Test NDES using PowerShell&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#test-ndes-using-a-scep-client" &gt;Test NDES using a SCEP client&lt;/a&gt;&lt;/li&gt;
@@ -115,7 +122,7 @@ title="YouTube Video"
 &lt;/ul&gt;
 &lt;h1 id="what-is-a-windows-ndes-scep-server"&gt;&lt;a href="#what-is-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;What is a Windows NDES SCEP server?
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://datatracker.ietf.org/doc/html/rfc8894" target="_blank" rel="noopener"
-&gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
+ &gt;SCEP&lt;/a&gt; (Simple Certificate Enrollment Protocol) is a protocol used to
 issue certificates with a Certificate Authority (CA) in a Public Key Infrastructure (PKI). It allows devices to request
 and receive certificates over a secure channel without user interaction. IT admins use SCEP for network devices, mobile
 devices, and other endpoints that need to authenticate themselves. The issued certificates can be used for various
@@ -142,15 +149,17 @@ corporate network, test it using the public URL or IP address.&lt;/p&gt;
 &lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
 like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
 considered when parsing this page with a script.&lt;/p&gt;
 &lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
 returns the following.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
-alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+ alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
+
 &lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
 &lt;/h1&gt;&lt;p&gt;For our first test, we will use PowerShell to request a certificate from another Windows machine in the same AD domain.&lt;/p&gt;
 &lt;p&gt;Below is a sample PowerShell script that requests a certificate from the NDES server. Update the URL and the challenge
@@ -161,7 +170,7 @@ password.&lt;/p&gt;
 &lt;/h1&gt;&lt;p&gt;For our next test, we will use an SCEP client to request a certificate from the NDES server. Several SCEP clients are
 available, but many have been abandoned and do not work with NDES.&lt;/p&gt;
 &lt;p&gt;We will use &lt;a class="link" href="https://github.com/micromdm/scep" target="_blank" rel="noopener"
-&gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
+ &gt;micromdm/scep&lt;/a&gt;, a Go-based open-source SCEP server and client. We will
 use the latest code from the &lt;code&gt;main&lt;/code&gt; branch, with the following commit hash: &lt;code&gt;781f8042a79cabcf61a5e6c01affdbadcb785932&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Follow the instructions from the above URL to install the &lt;code&gt;scep&lt;/code&gt; client. We built it for macOS M1 using the following
 command:&lt;/p&gt;
@@ -184,7 +193,7 @@ VM enrolled in Fleet Device Management&amp;rsquo;s MDM server. However, adding t
 &lt;strong&gt;Profiles&lt;/strong&gt; should also work.&lt;/p&gt;
 &lt;p&gt;First, create a new
 &lt;a class="link" href="https://developer.apple.com/documentation/devicemanagement/scep?language=objc" target="_blank" rel="noopener"
-&gt;Device Management SCEP payload&lt;/a&gt; with the
+ &gt;Device Management SCEP payload&lt;/a&gt; with the
 NDES server&amp;rsquo;s URL and the challenge password. Then, assign the SCEP payload to your device. Here&amp;rsquo;s an example payload:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-xml" data-lang="xml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34; encoding=&amp;#34;UTF-8&amp;#34;?&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;#34;-//Apple//DTD PLIST 1.0//EN&amp;#34; &amp;#34;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;#34;&amp;gt;&lt;/span&gt;
@@ -258,13 +267,14 @@ with a signed certificate, which the device saves to the keychain.&lt;/p&gt;
 &lt;p&gt;In addition, we presented an example of &lt;a class="link" href="../code-signing-windows/" &gt;code signing a Windows application&lt;/a&gt;.&lt;/p&gt;
 &lt;h1 id="watch-how-to-test-a-windows-ndes-scep-server"&gt;&lt;a href="#watch-how-to-test-a-windows-ndes-scep-server" class="header-anchor"&gt;&lt;/a&gt;Watch how to test a Windows NDES SCEP server
 &lt;/h1&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/JMHs6spfdvQ"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/JMHs6spfdvQ" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to create an EXE installer for your program</title><link>https://victoronsoftware.com/posts/exe-installer/</link><pubDate>Wed, 11 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/exe-installer/</guid><description>&lt;img src="https://victoronsoftware.com/posts/exe-installer/exe-installer-headline.png" alt="Featured image of post How to create an EXE installer for your program" /&gt;&lt;h2 id="msi-versus-exe-installers"&gt;&lt;a href="#msi-versus-exe-installers" class="header-anchor"&gt;&lt;/a&gt;MSI versus EXE installers
 &lt;/h2&gt;&lt;p&gt;When distributing software for Windows, you have two main options for installers: MSI and EXE. An MSI installer is a
 Windows Installer package that contains installation information and files. It uses the Windows Installer service. On
@@ -288,32 +298,36 @@ technology.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="download-and-install-inno-setup"&gt;&lt;a href="#download-and-install-inno-setup" class="header-anchor"&gt;&lt;/a&gt;Download and install Inno Setup
 &lt;/h2&gt;&lt;p&gt;We will need to use a Windows machine to create an EXE installer.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://www.jrsoftware.org/isinfo.php" target="_blank" rel="noopener"
-&gt;Inno Setup&lt;/a&gt; is a free installer for Windows programs. You can download it from
+ &gt;Inno Setup&lt;/a&gt; is a free installer for Windows programs. You can download it from
 the &lt;a class="link" href="https://www.jrsoftware.org/isdl.php" target="_blank" rel="noopener"
-&gt;official website&lt;/a&gt;. Once you have downloaded the installer, run it and follow
+ &gt;official website&lt;/a&gt;. Once you have downloaded the installer, run it and follow
 the installation instructions.&lt;/p&gt;
 &lt;h2 id="create-an-exe-installer"&gt;&lt;a href="#create-an-exe-installer" class="header-anchor"&gt;&lt;/a&gt;Create an EXE installer
 &lt;/h2&gt;&lt;p&gt;Launch the &lt;code&gt;Inno Setup Compiler&lt;/code&gt; application. The main window will appear, with a toolbar and a script editor.&lt;/p&gt;
 &lt;p&gt;On the Welcome modal, choose &lt;code&gt;Create a new script file using the Script Wizard&lt;/code&gt; and click &lt;code&gt;OK&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-welcome.png"
-alt="Untitled Inno Setup Compile with Welcome modal open."&gt;
+ alt="Untitled Inno Setup Compile with Welcome modal open."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Follow the instructions on several subsequent screens.&lt;/p&gt;
 &lt;p&gt;On the &lt;code&gt;Application Files&lt;/code&gt; screen, add your program executable file and any other files, such as a README.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-application-files.png"
-alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified."&gt;
+ alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Continue following the instructions.&lt;/p&gt;
 &lt;p&gt;On the &lt;code&gt;Compiler Settings&lt;/code&gt; screen, select the file name for your installer.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-compiler-settings.png"
-alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name."&gt;
+ alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Finally, click&amp;rsquo; Finish&amp;rsquo; after a couple more screens to generate the script.&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;Yes&lt;/code&gt; to compile the script.&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;No&lt;/code&gt; to save the script before compiling. If needed, it can be saved later.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-save-script.png"
-alt="Inno Setup modal asking: Would you like to save the script before compiling?"&gt;
+ alt="Inno Setup modal asking: Would you like to save the script before compiling?"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The Inno Setup Compiler will create an EXE installer for your program and put it in the &lt;code&gt;Documents/Output&lt;/code&gt; folder.&lt;/p&gt;
 &lt;p&gt;You can try running the installer to make sure it works as expected.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
@@ -328,13 +342,14 @@ alt="Inno Setup modal asking: Would you like to save the script before compiling
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-create-an-exe-installer"&gt;&lt;a href="#watch-how-to-create-an-exe-installer" class="header-anchor"&gt;&lt;/a&gt;Watch how to create an EXE installer
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/1YeRYIhWqtA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/1YeRYIhWqtA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Code signing a Windows application</title><link>https://victoronsoftware.com/posts/code-signing-windows/</link><pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-signing-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/digital-signature-ok.png" alt="Featured image of post Code signing a Windows application" /&gt;&lt;h2 id="what-is-code-signing"&gt;&lt;a href="#what-is-code-signing" class="header-anchor"&gt;&lt;/a&gt;What is code signing?
 &lt;/h2&gt;&lt;p&gt;Code signing is the process of digitally signing executables and scripts to confirm the software author and guarantee
 that the code has not been altered or corrupted since it was signed. The method employs a cryptographic hash to validate
@@ -363,7 +378,7 @@ certificate expires.&lt;/li&gt;
 &lt;/h2&gt;&lt;p&gt;In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For
 public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p&gt;
 &lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificate and key needed for code signing. It also generates a certificate
 authority (CA) and signs the code signing certificate with the CA.&lt;/p&gt;
@@ -398,7 +413,7 @@ the application with:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go build process generates the &lt;code&gt;hello-world.exe&lt;/code&gt; Windows executable.&lt;/p&gt;
 &lt;h2 id="signing-and-timestamping-the-code"&gt;&lt;a href="#signing-and-timestamping-the-code" class="header-anchor"&gt;&lt;/a&gt;Signing and timestamping the code
 &lt;/h2&gt;&lt;p&gt;To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
-&gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
+ &gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
 that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code&gt;signtool,&lt;/code&gt; &lt;code&gt;osslsigncode&lt;/code&gt; is cross-platform and can
 be used on Linux and macOS.&lt;/p&gt;
 &lt;p&gt;To sign the code, we use the following script:&lt;/p&gt;
@@ -452,20 +467,22 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
-alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
-alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
 &lt;/h2&gt;&lt;p&gt;To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards
 require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent
@@ -474,20 +491,21 @@ HSM vendor or a private pipeline runner with an HSM.&lt;/p&gt;
 &lt;p&gt;In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we explained &lt;a class="link" href="../exe-installer" &gt;how to create an EXE installer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We also discussed &lt;a class="link" href="../connect-to-remote-active-directory/" &gt;connecting your local machine to remote Active Directory&lt;/a&gt; and
 covered &lt;a class="link" href="../test-ndes-scep-server" &gt;how to test a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="code-signing-a-windows-application-video"&gt;&lt;a href="#code-signing-a-windows-application-video" class="header-anchor"&gt;&lt;/a&gt;Code signing a Windows application video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NQYUgHznXew"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NQYUgHznXew" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item><item><title>Mutual TLS (mTLS) Go client using Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</link><pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-go-client-windows-certificate-store/mtls-go-windows.png" alt="Featured image of post Mutual TLS (mTLS) Go client using Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-with-apple-keychain" &gt;mTLS with macOS keychain&lt;/a&gt;&lt;/li&gt;
@@ -504,10 +522,10 @@ title="YouTube Video"
 &lt;p&gt;However, before the application uses the &lt;code&gt;Public&lt;/code&gt; and &lt;code&gt;Sign&lt;/code&gt; methods of the &lt;code&gt;CustomSigner,&lt;/code&gt; we must retrieve the client certificate using Windows APIs.&lt;/p&gt;
 &lt;h3 id="retrieving-mtls-client-certificate-from-windows-certificate-store-using-go"&gt;&lt;a href="#retrieving-mtls-client-certificate-from-windows-certificate-store-using-go" class="header-anchor"&gt;&lt;/a&gt;Retrieving mTLS client certificate from Windows certificate store using Go
 &lt;/h3&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://pkg.go.dev/golang.org/x/sys/windows" target="_blank" rel="noopener"
-&gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
-&gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
-&gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
-&gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
+ &gt;golang.org/x/sys/windows&lt;/a&gt; package to access the Windows APIs. We use the &lt;code&gt;windows&lt;/code&gt; package to call the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certopenstore" target="_blank" rel="noopener"
+ &gt;CertOpenStore&lt;/a&gt;, &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certfindcertificateinstore" target="_blank" rel="noopener"
+ &gt;CertFindCertificateInStore&lt;/a&gt;, and &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecertificateprivatekey" target="_blank" rel="noopener"
+ &gt;CryptAcquireCertificatePrivateKey&lt;/a&gt; functions from the &lt;code&gt;crypt32&lt;/code&gt; DLL (dynamic link library).&lt;/p&gt;
 &lt;p&gt;First, we open the &lt;code&gt;MY&lt;/code&gt; store, which is the personal store for the current user. This store contains our client mTLS certificate.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Open the certificate store&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;storePtr&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;err&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;UTF16PtrFromString&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;windowsStoreName&lt;/span&gt;)
@@ -608,7 +626,7 @@ title="YouTube Video"
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id="signing-the-mtls-digest"&gt;&lt;a href="#signing-the-mtls-digest" class="header-anchor"&gt;&lt;/a&gt;Signing the mTLS digest
 &lt;/h4&gt;&lt;p&gt;We will use the &lt;a class="link" href="https://learn.microsoft.com/en-us/windows/win32/api/ncrypt/nf-ncrypt-ncryptsignhash" target="_blank" rel="noopener"
-&gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
+ &gt;NCryptSignHash&lt;/a&gt; function from &lt;code&gt;ncrypt.dll&lt;/code&gt; to sign the digest.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;windows&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustLoadDLL&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;ncrypt.dll&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;nCryptSignHash&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;nCrypt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;MustFindProc&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;NCryptSignHash&amp;#34;&lt;/span&gt;)
@@ -738,16 +756,17 @@ crypto.Signer.Sign with key type *rsa.PublicKey, opts type *rsa.PSSOptions, hash
 mTLS Hello World!
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-go-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-go-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="mtls-go-client-using-windows-certificate-store-video"&gt;&lt;a href="#mtls-go-client-using-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS Go client using Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/L4uk43i3kyY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/L4uk43i3kyY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Mutual TLS (mTLS) with Windows certificate store</title><link>https://victoronsoftware.com/posts/mtls-with-windows/</link><pubDate>Wed, 06 Mar 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/mtls-with-windows/</guid><description>&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png" alt="Featured image of post Mutual TLS (mTLS) with Windows certificate store" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;a class="link" href="../mtls" &gt;mTLS&lt;/a&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mtls-hello-world" &gt;mTLS Hello World&lt;/a&gt;&lt;/li&gt;
@@ -767,7 +786,7 @@ title="YouTube Video"
 &lt;p&gt;We will store our client mTLS certificate in the user certificate store and the other certificates in the local machine certificate store.&lt;/p&gt;
 &lt;h2 id="generating-mtls-certificates-and-keys"&gt;&lt;a href="#generating-mtls-certificates-and-keys" class="header-anchor"&gt;&lt;/a&gt;Generating mTLS certificates and keys
 &lt;/h2&gt;&lt;p&gt;We will use the following Powershell script to generate the mTLS certificates and keys. &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
+ &gt;OpenSSL&lt;/a&gt; must be installed on your computer.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;New-Item -ItemType Directory -Force certs
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;# Private keys for CAs&lt;/span&gt;
@@ -907,27 +926,29 @@ title="YouTube Video"
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
-alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
-&lt;p&gt;Edge mTLS popup&lt;/p&gt;
-&lt;/figcaption&gt;
+ alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
+ &lt;p&gt;Edge mTLS popup&lt;/p&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can click &lt;strong&gt;OK&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Here is a helpful link that may resolve issues trying to use mTLS client certificates on Windows 10: &lt;a class="link" href="https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10" target="_blank" rel="noopener"
-&gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
+ &gt;https://superuser.com/questions/1181163/unable-to-use-client-certificates-in-chrome-or-ie-on-windows-10&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on Github
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/mtls/tree/master/mtls-with-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/mtls/tree/master/mtls-with-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="creating-our-own-windows-mtls-client"&gt;&lt;a href="#creating-our-own-windows-mtls-client" class="header-anchor"&gt;&lt;/a&gt;Creating our own Windows mTLS client
 &lt;/h2&gt;&lt;p&gt;In the following article, we will &lt;a class="link" href="../mtls-go-client-windows-certificate-store" &gt;create a custom Windows mTLS client using the Windows certificate store&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we wrote an article on &lt;a class="link" href="../test-ndes-scep-server" &gt;testing a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="mtls-with-windows-certificate-store-video"&gt;&lt;a href="#mtls-with-windows-certificate-store-video" class="header-anchor"&gt;&lt;/a&gt;mTLS with Windows certificate store video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/GuubP7vir1g"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/GuubP7vir1g" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

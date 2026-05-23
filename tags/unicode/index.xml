@@ -82,13 +82,14 @@
 &lt;/h2&gt;&lt;p&gt;Unicode and emoji support is essential for any app aiming to reach an international audience. Unicode equivalence, emoji equivalence, and case-insensitive sorting are common issues with Unicode and emoji support. Normalization can solve the Unicode equivalence issue while allowing the user to keep the case-insensitive sorting. Using the &lt;code&gt;utf8mb4_bin&lt;/code&gt; collation for the &lt;code&gt;=&lt;/code&gt; comparison can solve the emoji equivalence issue.&lt;/p&gt;
 &lt;h2 id="fully-supporting-unicode-and-emojis-in-your-app-video"&gt;&lt;a href="#fully-supporting-unicode-and-emojis-in-your-app-video" class="header-anchor"&gt;&lt;/a&gt;Fully supporting Unicode and emojis in your app video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/u9jFFHifa0Q"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/u9jFFHifa0Q" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;h2 id="other-articles-related-to-mysql"&gt;&lt;a href="#other-articles-related-to-mysql" class="header-anchor"&gt;&lt;/a&gt;Other articles related to MySQL
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../mysql-query-performance-insert-subqueries/" &gt;Optimize MySQL query performance: INSERT with subqueries&lt;/a&gt;&lt;/li&gt;

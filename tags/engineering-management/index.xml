@@ -59,75 +59,75 @@ any lint issues or failing tests, and address review feedback early.&lt;/p&gt;
 &lt;h2 id="work-modes-single-tasking-vs-multitasking"&gt;&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor"&gt;&lt;/a&gt;Work modes: single-tasking vs multitasking
 &lt;/h2&gt;&lt;p&gt;Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Aspect&lt;/th&gt;
-&lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
-&lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🧠 Deep focus required&lt;/td&gt;
-&lt;td&gt;😌 Light mental load&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🏗️ Complex features&lt;/td&gt;
-&lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
-&lt;td&gt;📝 Code review comments&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
-&lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;⚡ Performance optimization&lt;/td&gt;
-&lt;td&gt;📊 Adding logging&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
-&lt;td&gt;✅ Switch freely&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
-&lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
-&lt;td&gt;📱 Check periodically&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
-&lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
-&lt;td&gt;🏃 Quick to start&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;💎 Quality critical&lt;/td&gt;
-&lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
-&lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Aspect&lt;/th&gt;
+ &lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
+ &lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🧠 Deep focus required&lt;/td&gt;
+ &lt;td&gt;😌 Light mental load&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🏗️ Complex features&lt;/td&gt;
+ &lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
+ &lt;td&gt;📝 Code review comments&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
+ &lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;⚡ Performance optimization&lt;/td&gt;
+ &lt;td&gt;📊 Adding logging&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
+ &lt;td&gt;✅ Switch freely&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
+ &lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
+ &lt;td&gt;📱 Check periodically&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
+ &lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
+ &lt;td&gt;🏃 Quick to start&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;💎 Quality critical&lt;/td&gt;
+ &lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
+ &lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;Single-task mode&lt;/strong&gt; is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
 planning ahead or preparing test environments. Keep your context intact.&lt;/p&gt;
@@ -147,13 +147,14 @@ Understand the evolving role of developers in an AI-driven world and why human j
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-multitasking-with-ai-agents"&gt;&lt;a href="#watch-us-discuss-multitasking-with-ai-agents" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss multitasking with AI agents
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HSDrhYvE3g0"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HSDrhYvE3g0" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Why transparency beats everything else in engineering</title><link>https://victoronsoftware.com/posts/engineering-transparency/</link><pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-transparency/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-transparency/engineering-transparency-headline.png" alt="Featured image of post Why transparency beats everything else in engineering" /&gt;&lt;p&gt;Have you ever felt like you&amp;rsquo;re working in a fog? Where everyone&amp;rsquo;s busy, everyone&amp;rsquo;s trying, but somehow nothing important
 gets done? I&amp;rsquo;ve been there. The problem isn&amp;rsquo;t the people. It&amp;rsquo;s the system. And specifically, it&amp;rsquo;s the lack of
 transparency and accountability.&lt;/p&gt;
@@ -165,35 +166,47 @@ transparency and accountability.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
 same question, trying to keep my tone professional:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;And every week, Alex would say:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
 &lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
 &lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
 &lt;p&gt;I kept thinking:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
 matters?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
 again with another non-update.&lt;/p&gt;
 &lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
 &lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
 wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
@@ -216,45 +229,49 @@ frustrating, demoralizing fog. Everyone thought they were doing the right thing,
 direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p&gt;
 &lt;p&gt;As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: The hidden work iceberg
 ---
 graph TD
-subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
-direction TB
-Spacer1[&amp;#34; &amp;#34;]
-A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
-A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
-A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
-Spacer1 -.-&amp;gt; A1
-Spacer1 -.-&amp;gt; A2
-Spacer1 -.-&amp;gt; A3
-end
-subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
-direction TB
-subgraph Row1[&amp;#34; &amp;#34;]
-B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
-B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
-B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
-end
-subgraph Row2[&amp;#34; &amp;#34;]
-B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
-B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
-B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
-end
-subgraph Row3[&amp;#34; &amp;#34;]
-B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
-B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
-end
-end
-Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
-style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-style Row1 fill:none,stroke:none
-style Row2 fill:none,stroke:none
-style Row3 fill:none,stroke:none
-style Spacer1 fill:none,stroke:none
+ subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
+ direction TB
+ Spacer1[&amp;#34; &amp;#34;]
+ A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
+ A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
+ A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
+ Spacer1 -.-&amp;gt; A1
+ Spacer1 -.-&amp;gt; A2
+ Spacer1 -.-&amp;gt; A3
+ end
+
+ subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
+ direction TB
+ subgraph Row1[&amp;#34; &amp;#34;]
+ B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
+ B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
+ B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
+ end
+ subgraph Row2[&amp;#34; &amp;#34;]
+ B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
+ B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
+ B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
+ end
+ subgraph Row3[&amp;#34; &amp;#34;]
+ B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
+ B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
+ end
+ end
+
+ Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
+
+ style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+ style Row1 fill:none,stroke:none
+ style Row2 fill:none,stroke:none
+ style Row3 fill:none,stroke:none
+ style Spacer1 fill:none,stroke:none
 &lt;/pre&gt;
+
 &lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility"&gt;&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor"&gt;&lt;/a&gt;Taking action: What you can do when you have no visibility
 &lt;/h2&gt;&lt;p&gt;At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
 knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p&gt;
@@ -270,8 +287,9 @@ not meeting regularly with your manager&amp;rsquo;s manager, ask for a skip-leve
 recurring skip-level meeting.&lt;/p&gt;
 &lt;h3 id="how-to-ask-for-more-visibility"&gt;&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor"&gt;&lt;/a&gt;How to ask for more visibility
 &lt;/h3&gt;&lt;p&gt;Here&amp;rsquo;s a sample script you can adapt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
 I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p&gt;
 &lt;p&gt;Specifically, I&amp;rsquo;m interested in:&lt;/p&gt;
 &lt;ul&gt;
@@ -286,7 +304,8 @@ I&amp;rsquo;d love to have more visibility into the broader priorities and conte
 &lt;/ol&gt;
 &lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
 contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
 &lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
@@ -318,13 +337,14 @@ Learn how code clarity impacts team velocity and why transparency starts at the 
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-engineering-transparency"&gt;&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss engineering transparency
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/3oSdwkC7iiI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/3oSdwkC7iiI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" /&gt;&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
 testing. Productivity gains are real but capped, and engineers must still actively guide and supervise these tools.
 Complete developer replacement is unlikely anytime soon.&lt;/p&gt;
@@ -351,47 +371,56 @@ within about one year, we can reasonably assume that AI agents will likewise be 
 of 2026. With that in mind, what will a typical engineer&amp;rsquo;s day look like in 2026?&lt;/p&gt;
 &lt;h3 id="ai-tools-adoption-timeline-in-software-development"&gt;&lt;a href="#ai-tools-adoption-timeline-in-software-development" class="header-anchor"&gt;&lt;/a&gt;AI tools adoption timeline in software development
 &lt;/h3&gt;&lt;pre class="mermaid"&gt;
-timeline
-2022-2023 : GitHub Copilot Launch
-: Early AI code completion
-: Developer experimentation
-2024 : Code completion mainstream
-: ChatGPT for development
-: Basic code generation
-2025 : Advanced code generation
-: AI debugging tools
-: Early AI agents (experimental)
-2026 : AI agents widely adopted
-: Automated testing with AI
-: AI code review assistants
-2027+ : AI-native development workflows
-: Advanced agent orchestration
-: Full SDLC integration
+ timeline
+ 2022-2023 : GitHub Copilot Launch
+ : Early AI code completion
+ : Developer experimentation
+
+ 2024 : Code completion mainstream
+ : ChatGPT for development
+ : Basic code generation
+
+ 2025 : Advanced code generation
+ : AI debugging tools
+ : Early AI agents (experimental)
+
+ 2026 : AI agents widely adopted
+ : Automated testing with AI
+ : AI code review assistants
+
+ 2027+ : AI-native development workflows
+ : Advanced agent orchestration
+ : Full SDLC integration
 &lt;/pre&gt;
+
 &lt;p&gt;Let&amp;rsquo;s walk through the software development lifecycle (SDLC) and understand where these new AI coding agents can be
 used. We will focus specifically on the new capabilities that AI coding agents bring, and not on the existing and
 largely mainstream capabilities of AI code completion and chatbots.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: SDLC
 ---
 graph LR
-Requirements[Requirements gathering] --&amp;gt; Design[Design]
-Design --&amp;gt; Implementation[Implementation]
-Implementation --&amp;gt; Testing[Testing]
-Testing --&amp;gt; Deployment[Deployment]
-Deployment --&amp;gt; Maintenance[Maintenance]
-%% Color coding based on AI agent impact level
-%% Low impact - light blue
-%% Medium impact - yellow/orange
-%% High impact - green
-classDef lowImpact fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-classDef mediumImpact fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-classDef highImpact fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
-class Requirements,Deployment lowImpact
-class Design,Maintenance mediumImpact
-class Implementation,Testing highImpact
+ Requirements[Requirements gathering] --&amp;gt; Design[Design]
+ Design --&amp;gt; Implementation[Implementation]
+ Implementation --&amp;gt; Testing[Testing]
+ Testing --&amp;gt; Deployment[Deployment]
+ Deployment --&amp;gt; Maintenance[Maintenance]
+
+ %% Color coding based on AI agent impact level
+ %% Low impact - light blue
+ %% Medium impact - yellow/orange
+ %% High impact - green
+
+ classDef lowImpact fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ classDef mediumImpact fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+ classDef highImpact fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+
+ class Requirements,Deployment lowImpact
+ class Design,Maintenance mediumImpact
+ class Implementation,Testing highImpact
 &lt;/pre&gt;
+
 &lt;h2 id="requirements-gathering"&gt;&lt;a href="#requirements-gathering" class="header-anchor"&gt;&lt;/a&gt;Requirements gathering
 &lt;/h2&gt;&lt;p&gt;In requirements gathering, we need to figure out why we are adding a feature and what the feature is, at a high level.
 We have two major sources of product features. The first one is a strategic feature that will open up new sources of
@@ -469,27 +498,30 @@ include things like:&lt;/p&gt;
 and all the work must be redone. For example, an AI agent could decide to implement a third-party library itself because
 it couldn&amp;rsquo;t figure out how to use the existing one.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: AI agent development workflow
 ---
 flowchart TD
-A[Developer writes prompt] --&amp;gt; B[AI agent codes&amp;lt;br/&amp;gt;3-5 minutes]
-B --&amp;gt; C[Human reviews code]
-C --&amp;gt; D{Code acceptable?}
-D --&amp;gt;|No| E[Developer provides&amp;lt;br/&amp;gt;corrections]
-E --&amp;gt; B
-D --&amp;gt;|Yes| F[Final code review]
-F --&amp;gt; G[Ask AI agent to review code]
-G --&amp;gt; H[Human peer review]
-H --&amp;gt; I[Ready for QA]
-%% Styling
-classDef humanTask fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-classDef aiTask fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-classDef reviewTask fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
-class A,C,E,F,H humanTask
-class B,G aiTask
-class D,I reviewTask
+ A[Developer writes prompt] --&amp;gt; B[AI agent codes&amp;lt;br/&amp;gt;3-5 minutes]
+ B --&amp;gt; C[Human reviews code]
+ C --&amp;gt; D{Code acceptable?}
+ D --&amp;gt;|No| E[Developer provides&amp;lt;br/&amp;gt;corrections]
+ E --&amp;gt; B
+ D --&amp;gt;|Yes| F[Final code review]
+ F --&amp;gt; G[Ask AI agent to review code]
+ G --&amp;gt; H[Human peer review]
+ H --&amp;gt; I[Ready for QA]
+
+ %% Styling
+ classDef humanTask fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ classDef aiTask fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+ classDef reviewTask fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+
+ class A,C,E,F,H humanTask
+ class B,G aiTask
+ class D,I reviewTask
 &lt;/pre&gt;
+
 &lt;p&gt;Once we reach a good stopping point, we need to review all the code changes that we and our AI agent have made. Since
 much of the code was autogenerated, we must take extra care to do a thorough review. The goal is to fully understand the
 implementation so that we can speak about it as if we coded all of it ourselves.&lt;/p&gt;
@@ -584,50 +616,50 @@ tend to be small in nature, with most of the software engineer&amp;rsquo;s time 
 to fix it.&lt;/p&gt;
 &lt;h2 id="ai-coding-agent-impact-across-the-sdlc"&gt;&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor"&gt;&lt;/a&gt;AI coding agent impact across the SDLC
 &lt;/h2&gt;&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;SDLC Phase&lt;/th&gt;
-&lt;th&gt;AI Agent Impact&lt;/th&gt;
-&lt;th&gt;🔍 Notes&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;📝 Requirements&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧠 Design&lt;/td&gt;
-&lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
-&lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;💻 Implementation&lt;/td&gt;
-&lt;td&gt;✅ High&lt;/td&gt;
-&lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧪 Automated Testing&lt;/td&gt;
-&lt;td&gt;✅ High&lt;/td&gt;
-&lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧍 Manual Testing&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🚀 Deployment&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🔧 Maintenance&lt;/td&gt;
-&lt;td&gt;⚠️ Medium&lt;/td&gt;
-&lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;SDLC Phase&lt;/th&gt;
+ &lt;th&gt;AI Agent Impact&lt;/th&gt;
+ &lt;th&gt;🔍 Notes&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;📝 Requirements&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧠 Design&lt;/td&gt;
+ &lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
+ &lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;💻 Implementation&lt;/td&gt;
+ &lt;td&gt;✅ High&lt;/td&gt;
+ &lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧪 Automated Testing&lt;/td&gt;
+ &lt;td&gt;✅ High&lt;/td&gt;
+ &lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧍 Manual Testing&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🚀 Deployment&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🔧 Maintenance&lt;/td&gt;
+ &lt;td&gt;⚠️ Medium&lt;/td&gt;
+ &lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id="risk-and-tradeoffs"&gt;&lt;a href="#risk-and-tradeoffs" class="header-anchor"&gt;&lt;/a&gt;Risk and tradeoffs
 &lt;/h2&gt;&lt;p&gt;While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
@@ -648,13 +680,13 @@ treat agent-generated code with &lt;strong&gt;greater&lt;/strong&gt; rigor than 
 &lt;/h2&gt;&lt;p&gt;Recent studies suggest that current AI tools improve productivity by 10% to 20%.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://arxiv.org/abs/2410.12944" target="_blank" rel="noopener"
-&gt;AI speeds up Google engineers by 21%&lt;/a&gt;&lt;/li&gt;
+ &gt;AI speeds up Google engineers by 21%&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://nypost.com/2025/03/14/business/jpmorgan-credits-coding-assistant-tool-for-boosting-engineers-efficiency/" target="_blank" rel="noopener"
-&gt;JPMorgan claims AI boosts efficiency by up to 20%&lt;/a&gt;&lt;/li&gt;
+ &gt;JPMorgan claims AI boosts efficiency by up to 20%&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.itpro.com/software/development/atlassian-says-ai-has-created-an-unexpected-paradox-for-software-developers-theyre-saving-over-10-hours-a-week-but-theyre-still-overworked-and-losing-an-equal-amount-of-time-due-to-organizational-inefficiencies" target="_blank" rel="noopener"
-&gt;Atlassian says AI is saving over 10 hours per week&lt;/a&gt;&lt;/li&gt;
+ &gt;Atlassian says AI is saving over 10 hours per week&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.reuters.com/business/ai-slows-down-some-experienced-software-developers-study-finds-2025-07-10" target="_blank" rel="noopener"
-&gt;AI slows down some developers&lt;/a&gt;&lt;/li&gt;
+ &gt;AI slows down some developers&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;So, will the productivity improvements jump with AI coding agents becoming mainstream? Will one engineer be able to do
 the work of a whole team?&lt;/p&gt;
@@ -677,6 +709,7 @@ SDLC, as well as on other tasks such as:&lt;/p&gt;
 now do the work of 10 people. This is far from the popular claims that AI will replace all software engineers.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/productivity-gain.svg"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In summary, AI in general and AI coding agents in particular should continue to have a noticeable impact on software
 developer productivity. However, developers&amp;rsquo; work is complex and varied, and AI can only provide efficiency improvements
 and not wholesale replacement. AI coding agents won&amp;rsquo;t replace developers, but developers who know how to use them will
@@ -698,13 +731,14 @@ replace those who don&amp;rsquo;t.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers"&gt;&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss whether AI agents can replace software developers
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/fdBxpWXajSE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/fdBxpWXajSE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Full-featured engineering metrics—for free</title><link>https://victoronsoftware.com/posts/engineering-metrics-no-cost/</link><pubDate>Fri, 16 May 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-metrics-no-cost/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/engineering-metrics-headline.png" alt="Featured image of post Full-featured engineering metrics—for free" /&gt;&lt;p&gt;Tracking engineering metrics doesn&amp;rsquo;t have to mean signing up for another expensive SaaS tool. This guide will show you
 how to build a flexible, powerful, and completely free metrics dashboard using open-source tools like Grafana and a fast
 analytical database. Whether you&amp;rsquo;re monitoring cycle time, bug fix velocity, or pull request activity, this setup gives
@@ -712,24 +746,25 @@ you deep visibility that your team will actually want to look at.&lt;/p&gt;
 &lt;p&gt;In our previous &lt;a class="link" href="../track-engineering-metrics/" &gt;engineering metrics guide&lt;/a&gt;, we showed a basic way to track metrics using
 GitHub Actions and the Google Sheets API. The data in Google Sheets can be visualized using a tool like
 &lt;a class="link" href="https://lookerstudio.google.com/" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
+ &gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
 be dynamically sliced, diced, and drilled down into. Also, we wanted the tools to be free so we wouldn&amp;rsquo;t need to justify
 the costs to our management.&lt;/p&gt;
 &lt;h2 id="the-free-engineering-benchmarks-stack"&gt;&lt;a href="#the-free-engineering-benchmarks-stack" class="header-anchor"&gt;&lt;/a&gt;The free engineering benchmarks stack
 &lt;/h2&gt;&lt;p&gt;As in our previous example, we used &lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; to schedule our metrics
+ &gt;GitHub Actions&lt;/a&gt; to schedule our metrics
 collection and compute the data we wanted to track.&lt;/p&gt;
 &lt;p&gt;For visualizations, we decided on &lt;a class="link" href="https://grafana.com/oss/grafana/" target="_blank" rel="noopener"
-&gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
+ &gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
 is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
 up any infrastructure ourselves.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
-alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
+ alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
 compare our engineering metrics year over year. Due to its generous free tier, we decided to use
 &lt;a class="link" href="https://cloud.google.com/bigquery?hl=en" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Storage: The first 10 GiB per month is free.&lt;/li&gt;
 &lt;li&gt;Queries: The first 1 TiB of query data processed per month is free.&lt;/li&gt;
@@ -737,8 +772,9 @@ compare our engineering metrics year over year. Due to its generous free tier, w
 &lt;p&gt;We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
 roles, and created a JWT key for the service account to use with our app.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
-alt="Roles for the BigQuery service account."&gt;
+ alt="Roles for the BigQuery service account."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
 recommend enabling billing on the account and monitoring your usage to ensure you stay within the free limits.&lt;/p&gt;
 &lt;h2 id="picking-the-metric-to-track-pickup-time"&gt;&lt;a href="#picking-the-metric-to-track-pickup-time" class="header-anchor"&gt;&lt;/a&gt;Picking the metric to track: pickup time
@@ -755,7 +791,7 @@ from when the developer finishes their work until they get feedback on their wor
 &lt;a class="link" href="../github-reusable-workflows-and-steps/#reusable-steps-composite-action" &gt;reusable GitHub action&lt;/a&gt;. We decided to use
 JavaScript (not TypeScript) to simplify the action.&lt;/p&gt;
 &lt;p&gt;We used the &lt;a class="link" href="https://github.com/octokit/octokit.js" target="_blank" rel="noopener"
-&gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
+ &gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
 repo, extract the timeline events and review events from the PRs, and calculate the pickup time.&lt;/p&gt;
 &lt;p&gt;In our initial review of the data, we noticed occasional spikes in pickup time on Mondays. That&amp;rsquo;s because pull requests
 created on Friday were sitting around over the weekend until being reviewed on Monday. Since we don&amp;rsquo;t expect our
@@ -764,7 +800,7 @@ time-consuming implementation details. We created a unit test to make sure we go
 &lt;p&gt;We added a &lt;code&gt;--print-only&lt;/code&gt; option to our program to manually examine the data before we uploaded it to the analytical
 database.&lt;/p&gt;
 &lt;p&gt;To interface with BigQuery, we used &lt;a class="link" href="https://github.com/googleapis/nodejs-bigquery" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
+ &gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
 Our table schema was:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fields&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;review_date&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;DATE&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;mode&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;REQUIRED&amp;#39;&lt;/span&gt; },
@@ -791,8 +827,9 @@ pickup time chart. We had to decide how to visualize the data. We decided on:&lt
 &lt;/ul&gt;
 &lt;p&gt;We created Grafana variables to filter by username/group.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
-alt="List of Grafana dashboard variables, including user and user_group."&gt;
+ alt="List of Grafana dashboard variables, including user and user_group."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
 Below is the query we came up with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; daily &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; (
@@ -926,12 +963,14 @@ time from &lt;code&gt;first_review_time&lt;/code&gt; but displaying the data in 
 attempts to fix the problem by changing the time to noon: &lt;code&gt;TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The final chart looked like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
-alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
+ alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can inspect the data to drill down into the PR numbers for each data point:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
-alt="Raw data from the database query, including PR numbers."&gt;
+ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;With the PR numbers, we can explore our data using the following query:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Sample query to dig into the details. Replace the PR numbers list.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;engineering&lt;span style="color:#f92672"&gt;-&lt;/span&gt;metrics&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;123456&lt;/span&gt;.github_metrics.pr_pickup_time&lt;span style="color:#f92672"&gt;`&lt;/span&gt;
@@ -985,7 +1024,7 @@ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;SERVICE_ACCOUNT_KEY_PATH&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;./service-account-key.json&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;Our code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/pickup-time" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -1003,13 +1042,14 @@ Why code readability matters—and how to measure and improve it for long-term p
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-set-up-free-engineering-metrics"&gt;&lt;a href="#watch-how-to-set-up-free-engineering-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch how to set up free engineering metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/okYOm8IPeKM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/okYOm8IPeKM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Ways to improve your code for readability&lt;/a&gt;&lt;/li&gt;
@@ -1029,7 +1069,7 @@ a module. Complex code is difficult to modify because engineers must spend consi
 Frequently, engineers will not understand the code well enough, so they&amp;rsquo;ll make a change to fix a bug, and the change
 will introduce a new bug somewhere else. Lack of understanding also leads to
 &lt;a class="link" href="https://victoronsoftware.com/posts/common-refactorings/#why-are-engineers-afraid-of-refactoring" target="_blank" rel="noopener"
-&gt;a fear of refactoring&lt;/a&gt;,
+ &gt;a fear of refactoring&lt;/a&gt;,
 because engineers don&amp;rsquo;t want to break the codebase.&lt;/p&gt;
 &lt;h2 id="code-complexity-metrics"&gt;&lt;a href="#code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Code complexity metrics
 &lt;/h2&gt;&lt;p&gt;Many code complexity measures overlap since they all try to measure the same thing.&lt;/p&gt;
@@ -1056,13 +1096,13 @@ manageable pieces. James Lewis from ThoughtWorks said that &amp;ldquo;a microser
 that one person should be able to understand the entire codebase. The smaller the piece of code, the easier it is to
 understand.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
-&gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
+ &gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
 in 1977, and one of his metrics was the Halstead volume, which is directly related to code size. We can approximate the
 Halstead volume by ignoring all comments and whitespace, then multiplying the average code line length by the number of
 lines of code. This approximation is a good enough metric for our purposes.&lt;/p&gt;
 &lt;h3 id="cyclomatic-complexity"&gt;&lt;a href="#cyclomatic-complexity" class="header-anchor"&gt;&lt;/a&gt;Cyclomatic complexity
 &lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
-&gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
+ &gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
 paths through a program&amp;rsquo;s source code. It is often used as the master metric for code complexity, uncovering
 maintainability and hard-to-test parts of the codebase.&lt;/p&gt;
 &lt;p&gt;A typical calculation of cyclomatic complexity is as follows:&lt;/p&gt;
@@ -1075,7 +1115,7 @@ metric encourages us to write smaller functions.&lt;/p&gt;
 &lt;h3 id="cognitive-complexity"&gt;&lt;a href="#cognitive-complexity" class="header-anchor"&gt;&lt;/a&gt;Cognitive complexity
 &lt;/h3&gt;&lt;p&gt;An alternative to cyclomatic complexity is
 &lt;a class="link" href="https://www.sonarsource.com/docs/CognitiveComplexity.pdf" target="_blank" rel="noopener"
-&gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
+ &gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
 cyclomatic complexity metric to focus on the human reader&amp;rsquo;s mental load &amp;ndash; on the maintainability, and not on the
 testability, of the code.&lt;/p&gt;
 &lt;p&gt;The key differences in the calculation are:&lt;/p&gt;
@@ -1106,9 +1146,9 @@ cognitive complexity metrics penalize it.&lt;/p&gt;
 considered complex code based on their experience, language, and code style.&lt;/p&gt;
 &lt;h3 id="go-complexity-metrics"&gt;&lt;a href="#go-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Go complexity metrics
 &lt;/h3&gt;&lt;p&gt;For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
-&gt;gocyclo&lt;/a&gt;. For measuring cognitive
+ &gt;gocyclo&lt;/a&gt;. For measuring cognitive
 complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocognit" target="_blank" rel="noopener"
-&gt;gocognit&lt;/a&gt;.&lt;/p&gt;
+ &gt;gocognit&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="what-is-modularity-and-why-is-it-important"&gt;&lt;a href="#what-is-modularity-and-why-is-it-important" class="header-anchor"&gt;&lt;/a&gt;What is modularity and why is it important
 &lt;/h3&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
 &lt;a class="link" href="../software-modularity/" &gt;explain what is modularity and why it is important for modern scalable software systems&lt;/a&gt;.&lt;/p&gt;
@@ -1131,13 +1171,14 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics"&gt;&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss and show examples of code complexity metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HzZQqrhX3cg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HzZQqrhX3cg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#metrics-for-unreadable-code" &gt;Metrics for unreadable code&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#how-to-make-your-codebase-more-readable" &gt;How to make your codebase more readable&lt;/a&gt;
@@ -1184,7 +1225,7 @@ using linters or static analysis tools. Some examples of code style violations r
 &lt;/ul&gt;
 &lt;p&gt;Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
 linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
-&gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="how-to-make-your-codebase-more-readable"&gt;&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor"&gt;&lt;/a&gt;How to make your codebase more readable
 &lt;/h2&gt;&lt;p&gt;Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
 incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p&gt;
@@ -1195,9 +1236,10 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
 to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
 feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
@@ -1210,9 +1252,10 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding
 &lt;/h3&gt;&lt;p&gt;When entering a function, you should quickly understand what it does. The function code should be readable. If an
 engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p&gt;
@@ -1226,9 +1269,9 @@ with descriptive names.&lt;/p&gt;
 comments.&lt;/p&gt;
 &lt;p&gt;As an example of a function before and after refactoring, see this
 &lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
-&gt;refactoring example gist&lt;/a&gt;. For a full explanation,
+ &gt;refactoring example gist&lt;/a&gt;. For a full explanation,
 you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
-&gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
+ &gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
 &lt;p&gt;For more examples of common refactorings, see our article on
 &lt;a class="link" href="../common-refactorings/" &gt;top refactorings every software developer should know&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="use-unit-and-integration-tests"&gt;&lt;a href="#use-unit-and-integration-tests" class="header-anchor"&gt;&lt;/a&gt;Use unit and integration tests
@@ -1358,13 +1401,14 @@ Explore how AI tools can enhance productivity without replacing the need for rea
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-why-readable-code-is-important"&gt;&lt;a href="#watch-us-discuss-why-readable-code-is-important" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss why readable code is important
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HCGyWuE9zbY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HCGyWuE9zbY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to easily track engineering metrics</title><link>https://victoronsoftware.com/posts/track-engineering-metrics/</link><pubDate>Thu, 26 Dec 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/track-engineering-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/engineering-metrics.png" alt="Featured image of post How to easily track engineering metrics" /&gt;&lt;p&gt;Engineering metrics are essential for tracking your team&amp;rsquo;s progress and productivity and identifying areas for
 improvement. However, manually collecting and updating these metrics can be time-consuming and error-prone. In this
 article, we will show you how to automate the tracking of engineering metrics and visualize them in the Google Office
@@ -1390,10 +1434,10 @@ Google Sheet, automate the process with GitHub Actions, and display the data in 
 services. We will use the Go programming language in our example.&lt;/p&gt;
 &lt;h2 id="gathering-the-number-of-open-bugs"&gt;&lt;a href="#gathering-the-number-of-open-bugs" class="header-anchor"&gt;&lt;/a&gt;Gathering the number of open bugs
 &lt;/h2&gt;&lt;p&gt;The &lt;a class="link" href="https://docs.github.com/en/rest" target="_blank" rel="noopener"
-&gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
+ &gt;GitHub API&lt;/a&gt; is a well-documented way to query issues in a repository.&lt;/p&gt;
 &lt;p&gt;There are also many quality client libraries for the API. We will use the
 &lt;a class="link" href="https://github.com/google/go-github" target="_blank" rel="noopener"
-&gt;go-github&lt;/a&gt; client.&lt;/p&gt;
+ &gt;go-github&lt;/a&gt; client.&lt;/p&gt;
 &lt;p&gt;Create a git repository and set up a new Go module. Here is our code snippet to get the number of open bugs:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;import&lt;/span&gt; (
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;github.com/google/go-github/v67/github&amp;#34;&lt;/span&gt;
@@ -1429,15 +1473,15 @@ automatically. The token is optional for public repositories but required for pr
 and &lt;code&gt;bug&lt;/code&gt;. Fleet&amp;rsquo;s MDM product team currently uses these labels for bugs in progress or ready to be worked on.&lt;/p&gt;
 &lt;h2 id="updating-the-google-sheets-spreadsheet"&gt;&lt;a href="#updating-the-google-sheets-spreadsheet" class="header-anchor"&gt;&lt;/a&gt;Updating the Google Sheets spreadsheet
 &lt;/h2&gt;&lt;p&gt;To update the Google Sheets spreadsheet, we will use the &lt;a class="link" href="https://developers.google.com/sheets/api" target="_blank" rel="noopener"
-&gt;Google Sheets API&lt;/a&gt;
+ &gt;Google Sheets API&lt;/a&gt;
 with the &lt;a class="link" href="https://pkg.go.dev/google.golang.org/api@v0.214.0/sheets/v4" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s Go client library&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;For instructions on getting a Google Sheets API key, sharing the spreadsheet with a service account, and editing the
 spreadsheet using the API, see our previous article:
 &lt;a class="link" href="../google-sheets-api/" &gt;How to quickly edit Google Sheets spreadsheet using the API&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;See our integrated
 &lt;a class="link" href="https://github.com/getvictor/github-metrics/blob/34abb1071a300659ab1ae534759bc4d47728e343/main.go#L55" target="_blank" rel="noopener"
-&gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
+ &gt;function to update the Google Sheets spreadsheet with the number of open bugs&lt;/a&gt;
 on GitHub.&lt;/p&gt;
 &lt;p&gt;In our example, we get the spreadsheet ID and the service account key from environment variables. When running locally,
 you must set the &lt;code&gt;SPREADSHEET_ID&lt;/code&gt; and &lt;code&gt;GOOGLE_SERVICE_ACCOUNT_KEY&lt;/code&gt; environment variables.&lt;/p&gt;
@@ -1498,12 +1542,13 @@ manually run the workflow to test it.&lt;/p&gt;
 &lt;h2 id="display-the-metrics-in-google-docs"&gt;&lt;a href="#display-the-metrics-in-google-docs" class="header-anchor"&gt;&lt;/a&gt;Display the metrics in Google Docs
 &lt;/h2&gt;&lt;p&gt;To see the metrics in Google Docs or Google Slides, you can
 &lt;a class="link" href="https://support.google.com/docs/answer/7009814" target="_blank" rel="noopener"
-&gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
+ &gt;copy and paste the relevant cells&lt;/a&gt; from the Google Sheets spreadsheet.
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
 &lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
-alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+ alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -1526,14 +1571,15 @@ Discover how to monitor and visualize your dev team&amp;rsquo;s performance with
 &lt;/ul&gt;
 &lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;For the complete code, see the GitHub repository: &lt;a class="link" href="https://github.com/getvictor/github-metrics" target="_blank" rel="noopener"
-&gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
+ &gt;github-metrics&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch"&gt;&lt;a href="#watch" class="header-anchor"&gt;&lt;/a&gt;Watch
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/yzT-1nuKvNI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/yzT-1nuKvNI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

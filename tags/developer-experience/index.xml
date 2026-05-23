@@ -9,7 +9,7 @@
 &lt;/ul&gt;
 &lt;p&gt;A year ago, I embarked on a journey to improve the architecture of our large 500K+ line open source
 &lt;a class="link" href="https://github.com/fleetdm/fleet" target="_blank" rel="noopener"
-&gt;device management codebase&lt;/a&gt;, and things haven&amp;rsquo;t been quite as smooth as I&amp;rsquo;d hoped.&lt;/p&gt;
+ &gt;device management codebase&lt;/a&gt;, and things haven&amp;rsquo;t been quite as smooth as I&amp;rsquo;d hoped.&lt;/p&gt;
 &lt;p&gt;Although I&amp;rsquo;ve been in tech for over 25 years, I haven&amp;rsquo;t worked on large web apps before. I&amp;rsquo;ve spent most of my time in
 the semiconductor industry, working on several small software projects. However, I was aware of this going in, and I
 wanted to learn more about software architecture so that I could enhance the developer experience.&lt;/p&gt;
@@ -27,10 +27,11 @@ transition to a more modular architecture, known as a modular monolith.&lt;/p&gt
 &lt;h2 id="our-web-app-architecture"&gt;&lt;a href="#our-web-app-architecture" class="header-anchor"&gt;&lt;/a&gt;Our web app architecture
 &lt;/h2&gt;&lt;p&gt;Our web app is a 10-year-old monolith. It&amp;rsquo;s a Go REST API built on top of a MySQL database.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-B --&amp;gt; C[(MySQL Database)]
+ flowchart TD
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ B --&amp;gt; C[(MySQL Database)]
 &lt;/pre&gt;
+
 &lt;p&gt;The above diagram is a simplified core of our application. We have a single Go package for the API layer, which includes
 controllers (Go handlers) and service (business logic). The service layer calls the persistence layer, which constructs
 the SQL queries and executes them against our MySQL database. The API layer is one huge Go package, and the persistence
@@ -42,18 +43,19 @@ ideas of the presentation was that when working on a new feature, we could creat
 would mirror the structure of the legacy code. The approach would be similar to microservices, but still within a single
 compiled binary.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph Legacy code
-direction TB
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-B --&amp;gt; C[(MySQL database)]
-end
-subgraph New feature
-direction TB
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-E --&amp;gt; F[(MySQL database)]
-end
+ flowchart TD
+ subgraph Legacy code
+ direction TB
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ B --&amp;gt; C[(MySQL database)]
+ end
+ subgraph New feature
+ direction TB
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ E --&amp;gt; F[(MySQL database)]
+ end
 &lt;/pre&gt;
+
 &lt;p&gt;The presentation seemed to go well, with general agreement. One comment was along the lines of &amp;ldquo;won&amp;rsquo;t we have to redo
 the architecture every time we reorganize our team structure?&amp;rdquo; The answer is maybe. The vertical slices must make sense
 from a product perspective. Also, the vertical slices can be small enough that a single team can own multiple slices. If
@@ -73,26 +75,27 @@ proposed. Some engineers felt surprised by the changes and didn&amp;rsquo;t feel
 It would have made our deployments more complicated, even if the schemas were both in the same database. With the lack
 of traction on my PR, I decided to take a step back and unsplit the MySQL layer.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph New feature
-direction TB
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-end
-subgraph Legacy code
-direction TB
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-end
-E --&amp;gt; C[(MySQL database)]
-B --&amp;gt; C
+ flowchart TD
+ subgraph New feature
+ direction TB
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; E[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ end
+ subgraph Legacy code
+ direction TB
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;] --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ end
+ E --&amp;gt; C[(MySQL database)]
+ B --&amp;gt; C
 &lt;/pre&gt;
+
 &lt;p&gt;After several lengthy conversations with the PR reviewer and a few minor adjustments, we merged the PR.&lt;/p&gt;
 &lt;h2 id="second-compromise"&gt;&lt;a href="#second-compromise" class="header-anchor"&gt;&lt;/a&gt;Second compromise
 &lt;/h2&gt;&lt;p&gt;Around the same time, we instituted an ADR (Architecture Decision Record) process. I retroactively wrote two ADRs, one
 to split the API layer and one to split the persistence layer for the Android feature. The
 &lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29850" target="_blank" rel="noopener"
-&gt;ADR to split the API layer was approved&lt;/a&gt;, but the
+ &gt;ADR to split the API layer was approved&lt;/a&gt;, but the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/pull/29853" target="_blank" rel="noopener"
-&gt;ADR to split the persistence layer was rejected&lt;/a&gt;.&lt;/p&gt;
+ &gt;ADR to split the persistence layer was rejected&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Engineers voiced their concerns, which included:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;We&amp;rsquo;ve had this structure for a while, and people know how it works. Why do we need this change?&lt;/li&gt;
@@ -101,32 +104,34 @@ to split the API layer and one to split the persistence layer for the Android fe
 &lt;/ul&gt;
 &lt;p&gt;So, I reverted the persistence layer changes.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph New feature
-D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-subgraph Legacy code
-A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-D --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-A --&amp;gt; B
-B --&amp;gt; C[(MySQL database)]
+ flowchart TD
+ subgraph New feature
+ D[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ subgraph Legacy code
+ A[&amp;#34;API layer&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ D --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ A --&amp;gt; B
+ B --&amp;gt; C[(MySQL database)]
 &lt;/pre&gt;
+
 &lt;h2 id="architectural-drift"&gt;&lt;a href="#architectural-drift" class="header-anchor"&gt;&lt;/a&gt;Architectural drift
 &lt;/h2&gt;&lt;p&gt;I moved to another product team, where I worked on other parts of the codebase, and other engineers continued to work on
 the Android part of the codebase. Without architectural oversight and strong commitment from the engineering team, the
 Android feature seeped into the legacy code.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
-flowchart TD
-subgraph &amp;#34;API layer&amp;#34;
-D[&amp;#34;Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-E[&amp;#34;Legacy + some Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
-end
-E --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
-D --&amp;gt; B
-B --&amp;gt; C[(MySQL database)]
-E --&amp;gt; D
+ flowchart TD
+ subgraph &amp;#34;API layer&amp;#34;
+ D[&amp;#34;Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ E[&amp;#34;Legacy + some Android&amp;lt;br&amp;gt;(controllers + service)&amp;#34;]
+ end
+ E --&amp;gt; B[&amp;#34;Persistence layer&amp;lt;br&amp;gt;(datastore)&amp;#34;]
+ D --&amp;gt; B
+ B --&amp;gt; C[(MySQL database)]
+ E --&amp;gt; D
 &lt;/pre&gt;
+
 &lt;p&gt;So, what do we have now? Certainly, at a high level, the codebase doesn&amp;rsquo;t appear to be very modular. Arguably, it is
 even more complex and harder to maintain than it was before. There is no clear separation between the legacy code and
 the Android feature.&lt;/p&gt;
@@ -147,7 +152,7 @@ the user story as quickly as possible without regard for the architecture.&lt;/p
 &lt;h3 id="better-architectural-governance"&gt;&lt;a href="#better-architectural-governance" class="header-anchor"&gt;&lt;/a&gt;Better architectural governance
 &lt;/h3&gt;&lt;p&gt;We need to have automated dependency checks to make sure developers aren&amp;rsquo;t adding new dependencies that go against the
 new architecture. We plan on investigating &lt;a class="link" href="https://github.com/arch-go/arch-go" target="_blank" rel="noopener"
-&gt;arch-go&lt;/a&gt; in the future. Since we don&amp;rsquo;t
+ &gt;arch-go&lt;/a&gt; in the future. Since we don&amp;rsquo;t
 see many off-the-shelf tools for architectural governance of Go projects, we&amp;rsquo;ll have to build our own as well.&lt;/p&gt;
 &lt;p&gt;In addition to automated checks, it makes sense for the architect to regularly review the codebase as a whole and
 related PRs to catch any deviations from the architecture. With today&amp;rsquo;s AI agents, it should be straightforward to
@@ -172,13 +177,14 @@ Ways to measure and track code complexity to improve maintainability.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-our-modular-monolith-attempt"&gt;&lt;a href="#watch-us-discuss-our-modular-monolith-attempt" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss our modular monolith attempt
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/lrM3conC-L8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/lrM3conC-L8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
 things. But just because an AI can work in parallel does not mean you should. The real question is: when is it worth
 multitasking, and when will it hurt your results?&lt;/p&gt;
@@ -240,75 +246,75 @@ any lint issues or failing tests, and address review feedback early.&lt;/p&gt;
 &lt;h2 id="work-modes-single-tasking-vs-multitasking"&gt;&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor"&gt;&lt;/a&gt;Work modes: single-tasking vs multitasking
 &lt;/h2&gt;&lt;p&gt;Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p&gt;
 &lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Aspect&lt;/th&gt;
-&lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
-&lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🧠 Deep focus required&lt;/td&gt;
-&lt;td&gt;😌 Light mental load&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🏗️ Complex features&lt;/td&gt;
-&lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
-&lt;td&gt;📝 Code review comments&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
-&lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;⚡ Performance optimization&lt;/td&gt;
-&lt;td&gt;📊 Adding logging&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
-&lt;td&gt;✅ Switch freely&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
-&lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
-&lt;td&gt;📱 Check periodically&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
-&lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
-&lt;td&gt;🏃 Quick to start&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;💎 Quality critical&lt;/td&gt;
-&lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
-&lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
-&lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;Aspect&lt;/th&gt;
+ &lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
+ &lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🧠 Deep focus required&lt;/td&gt;
+ &lt;td&gt;😌 Light mental load&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🏗️ Complex features&lt;/td&gt;
+ &lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
+ &lt;td&gt;📝 Code review comments&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
+ &lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;⚡ Performance optimization&lt;/td&gt;
+ &lt;td&gt;📊 Adding logging&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
+ &lt;td&gt;✅ Switch freely&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
+ &lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
+ &lt;td&gt;📱 Check periodically&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
+ &lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
+ &lt;td&gt;🏃 Quick to start&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;💎 Quality critical&lt;/td&gt;
+ &lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
+ &lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;Single-task mode&lt;/strong&gt; is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
 planning ahead or preparing test environments. Keep your context intact.&lt;/p&gt;
@@ -328,13 +334,14 @@ Understand the evolving role of developers in an AI-driven world and why human j
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-multitasking-with-ai-agents"&gt;&lt;a href="#watch-us-discuss-multitasking-with-ai-agents" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss multitasking with AI agents
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HSDrhYvE3g0"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HSDrhYvE3g0" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Why transparency beats everything else in engineering</title><link>https://victoronsoftware.com/posts/engineering-transparency/</link><pubDate>Tue, 12 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/engineering-transparency/</guid><description>&lt;img src="https://victoronsoftware.com/posts/engineering-transparency/engineering-transparency-headline.png" alt="Featured image of post Why transparency beats everything else in engineering" /&gt;&lt;p&gt;Have you ever felt like you&amp;rsquo;re working in a fog? Where everyone&amp;rsquo;s busy, everyone&amp;rsquo;s trying, but somehow nothing important
 gets done? I&amp;rsquo;ve been there. The problem isn&amp;rsquo;t the people. It&amp;rsquo;s the system. And specifically, it&amp;rsquo;s the lack of
 transparency and accountability.&lt;/p&gt;
@@ -346,35 +353,47 @@ transparency and accountability.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Let me take you back a couple of years. I was a tech lead at a large company, working on a project that depended on
 another upstream engineering team. Every week, we&amp;rsquo;d have a joint meeting with both teams. And every week, I&amp;rsquo;d ask the
 same question, trying to keep my tone professional:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Hey Alex, any update on that component we need from your side?&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;And every week, Alex would say:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Ah, I meant to, but I got pulled into something else. I&amp;rsquo;ll try to get to it this week.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;At first, I gave it the benefit of the doubt. Stuff happens. Priorities shift.&lt;/p&gt;
 &lt;p&gt;But then it kept happening. Two weeks, three, four. Same story. No progress. No accountability. No one stepping in.&lt;/p&gt;
 &lt;p&gt;I was &lt;em&gt;boiling&lt;/em&gt; inside.&lt;/p&gt;
 &lt;p&gt;I kept thinking:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why is no one telling Alex to work on this? Why don&amp;rsquo;t we have a project manager? Who&amp;rsquo;s making the call on what really
 matters?&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;We technically had a roadmap. But let&amp;rsquo;s be honest: people didn&amp;rsquo;t actually take it seriously. If something couldn&amp;rsquo;t get
 done, it quietly disappeared from the plan. Deadlines slipped. Commitments evaporated. Meanwhile, I had to face my boss
 again with another non-update.&lt;/p&gt;
 &lt;h2 id="years-in-the-fog"&gt;&lt;a href="#years-in-the-fog" class="header-anchor"&gt;&lt;/a&gt;Years in the fog
 &lt;/h2&gt;&lt;p&gt;The frustration started eating at me. I&amp;rsquo;d sit in those meetings, and darker thoughts would creep in:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;How did Alex even get promoted? He can&amp;rsquo;t deliver anything.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Why am I killing myself here when clearly no one cares? Maybe I should take off for the rest of the day.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&amp;ldquo;Maybe I should just get a side gig? At least someone would pay me for work that actually ships.&amp;rdquo;&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;This situation wasn&amp;rsquo;t just a few bad weeks. It was years of my life, years of pretending everything was fine when it
 wasn&amp;rsquo;t, years of wondering if this was just how companies worked.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d go home exhausted, not from hard work, but from the sheer weight of organizational dysfunction. My wife would ask
@@ -397,45 +416,49 @@ frustrating, demoralizing fog. Everyone thought they were doing the right thing,
 direction. Polite status meetings won&amp;rsquo;t save you from a broken system.&lt;/p&gt;
 &lt;p&gt;As leaders, our job isn&amp;rsquo;t just to set direction. It&amp;rsquo;s to make the invisible visible and to make sure it matters.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: The hidden work iceberg
 ---
 graph TD
-subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
-direction TB
-Spacer1[&amp;#34; &amp;#34;]
-A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
-A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
-A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
-Spacer1 -.-&amp;gt; A1
-Spacer1 -.-&amp;gt; A2
-Spacer1 -.-&amp;gt; A3
-end
-subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
-direction TB
-subgraph Row1[&amp;#34; &amp;#34;]
-B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
-B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
-B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
-end
-subgraph Row2[&amp;#34; &amp;#34;]
-B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
-B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
-B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
-end
-subgraph Row3[&amp;#34; &amp;#34;]
-B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
-B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
-end
-end
-Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
-style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-style Row1 fill:none,stroke:none
-style Row2 fill:none,stroke:none
-style Row3 fill:none,stroke:none
-style Spacer1 fill:none,stroke:none
+ subgraph Above[&amp;#34;🌊 Above water&amp;lt;br/&amp;gt;What management sees&amp;#34;]
+ direction TB
+ Spacer1[&amp;#34; &amp;#34;]
+ A1[&amp;#34;Weekly Status Updates&amp;lt;br/&amp;gt;✓ &amp;#39;Working on it&amp;#39;&amp;#34;]
+ A2[&amp;#34;Sprint Deliverables&amp;lt;br/&amp;gt;✓ &amp;#39;In progress&amp;#39;&amp;#34;]
+ A3[&amp;#34;Meeting Attendance&amp;lt;br/&amp;gt;✓ &amp;#39;Present&amp;#39;&amp;#34;]
+ Spacer1 -.-&amp;gt; A1
+ Spacer1 -.-&amp;gt; A2
+ Spacer1 -.-&amp;gt; A3
+ end
+
+ subgraph Below[&amp;#34;🧊 Below water&amp;lt;br/&amp;gt;The reality&amp;#34;]
+ direction TB
+ subgraph Row1[&amp;#34; &amp;#34;]
+ B1[&amp;#34;❌ Blocked by&amp;lt;br/&amp;gt;dependencies&amp;#34;]
+ B2[&amp;#34;❌ Unclear&amp;lt;br/&amp;gt;priorities&amp;#34;]
+ B3[&amp;#34;❌ Context&amp;lt;br/&amp;gt;switching&amp;#34;]
+ end
+ subgraph Row2[&amp;#34; &amp;#34;]
+ B4[&amp;#34;❌ Waiting for&amp;lt;br/&amp;gt;decisions&amp;#34;]
+ B5[&amp;#34;❌ Duplicate&amp;lt;br/&amp;gt;work&amp;#34;]
+ B6[&amp;#34;❌ Technical&amp;lt;br/&amp;gt;debt&amp;#34;]
+ end
+ subgraph Row3[&amp;#34; &amp;#34;]
+ B7[&amp;#34;❌ No authority&amp;lt;br/&amp;gt;to say no&amp;#34;]
+ B8[&amp;#34;❌ Overwhelmed&amp;lt;br/&amp;gt;with requests&amp;#34;]
+ end
+ end
+
+ Above -.-&amp;gt;|&amp;#34;Without Transparency&amp;#34;| Below
+
+ style Above fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ style Below fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+ style Row1 fill:none,stroke:none
+ style Row2 fill:none,stroke:none
+ style Row3 fill:none,stroke:none
+ style Spacer1 fill:none,stroke:none
 &lt;/pre&gt;
+
 &lt;h2 id="taking-action-what-you-can-do-when-you-have-no-visibility"&gt;&lt;a href="#taking-action-what-you-can-do-when-you-have-no-visibility" class="header-anchor"&gt;&lt;/a&gt;Taking action: What you can do when you have no visibility
 &lt;/h2&gt;&lt;p&gt;At the first level, you need to be aligned with your manager. You need to know your manager&amp;rsquo;s priorities, which means
 knowing what your manager knows. You should strive to know about 90% of what your manager knows.&lt;/p&gt;
@@ -451,8 +474,9 @@ not meeting regularly with your manager&amp;rsquo;s manager, ask for a skip-leve
 recurring skip-level meeting.&lt;/p&gt;
 &lt;h3 id="how-to-ask-for-more-visibility"&gt;&lt;a href="#how-to-ask-for-more-visibility" class="header-anchor"&gt;&lt;/a&gt;How to ask for more visibility
 &lt;/h3&gt;&lt;p&gt;Here&amp;rsquo;s a sample script you can adapt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Hey [Manager], I&amp;rsquo;ve been thinking about how I can be more effective in my role and better support our team&amp;rsquo;s goals.
 I&amp;rsquo;d love to have more visibility into the broader priorities and context that drive our work.&lt;/p&gt;
 &lt;p&gt;Specifically, I&amp;rsquo;m interested in:&lt;/p&gt;
 &lt;ul&gt;
@@ -467,7 +491,8 @@ I&amp;rsquo;d love to have more visibility into the broader priorities and conte
 &lt;/ol&gt;
 &lt;p&gt;I believe having this context would help me make better day-to-day decisions, spot potential issues earlier, and
 contribute more strategically to our team&amp;rsquo;s success.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="key-takeaways"&gt;&lt;a href="#key-takeaways" class="header-anchor"&gt;&lt;/a&gt;Key takeaways
 &lt;/h2&gt;&lt;p&gt;Looking back on my journey from frustration to clarity, here are the lessons that transformed how I work:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;It&amp;rsquo;s not a communication problem, it&amp;rsquo;s a trust and transparency problem.&lt;/strong&gt; We had meetings. We had updates. What we
@@ -499,13 +524,14 @@ Learn how code clarity impacts team velocity and why transparency starts at the 
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-engineering-transparency"&gt;&lt;a href="#watch-us-discuss-engineering-transparency" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss engineering transparency
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/3oSdwkC7iiI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/3oSdwkC7iiI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Will AI agents replace software developers?</title><link>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</link><pubDate>Wed, 16 Jul 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/will-ai-agents-replace-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/ai-agents-replace-developers-headline.png" alt="Featured image of post Will AI agents replace software developers?" /&gt;&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; AI coding agents are becoming mainstream, but their impact is focused mainly on implementation and automated
 testing. Productivity gains are real but capped, and engineers must still actively guide and supervise these tools.
 Complete developer replacement is unlikely anytime soon.&lt;/p&gt;
@@ -532,47 +558,56 @@ within about one year, we can reasonably assume that AI agents will likewise be 
 of 2026. With that in mind, what will a typical engineer&amp;rsquo;s day look like in 2026?&lt;/p&gt;
 &lt;h3 id="ai-tools-adoption-timeline-in-software-development"&gt;&lt;a href="#ai-tools-adoption-timeline-in-software-development" class="header-anchor"&gt;&lt;/a&gt;AI tools adoption timeline in software development
 &lt;/h3&gt;&lt;pre class="mermaid"&gt;
-timeline
-2022-2023 : GitHub Copilot Launch
-: Early AI code completion
-: Developer experimentation
-2024 : Code completion mainstream
-: ChatGPT for development
-: Basic code generation
-2025 : Advanced code generation
-: AI debugging tools
-: Early AI agents (experimental)
-2026 : AI agents widely adopted
-: Automated testing with AI
-: AI code review assistants
-2027+ : AI-native development workflows
-: Advanced agent orchestration
-: Full SDLC integration
+ timeline
+ 2022-2023 : GitHub Copilot Launch
+ : Early AI code completion
+ : Developer experimentation
+
+ 2024 : Code completion mainstream
+ : ChatGPT for development
+ : Basic code generation
+
+ 2025 : Advanced code generation
+ : AI debugging tools
+ : Early AI agents (experimental)
+
+ 2026 : AI agents widely adopted
+ : Automated testing with AI
+ : AI code review assistants
+
+ 2027+ : AI-native development workflows
+ : Advanced agent orchestration
+ : Full SDLC integration
 &lt;/pre&gt;
+
 &lt;p&gt;Let&amp;rsquo;s walk through the software development lifecycle (SDLC) and understand where these new AI coding agents can be
 used. We will focus specifically on the new capabilities that AI coding agents bring, and not on the existing and
 largely mainstream capabilities of AI code completion and chatbots.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: SDLC
 ---
 graph LR
-Requirements[Requirements gathering] --&amp;gt; Design[Design]
-Design --&amp;gt; Implementation[Implementation]
-Implementation --&amp;gt; Testing[Testing]
-Testing --&amp;gt; Deployment[Deployment]
-Deployment --&amp;gt; Maintenance[Maintenance]
-%% Color coding based on AI agent impact level
-%% Low impact - light blue
-%% Medium impact - yellow/orange
-%% High impact - green
-classDef lowImpact fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-classDef mediumImpact fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-classDef highImpact fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
-class Requirements,Deployment lowImpact
-class Design,Maintenance mediumImpact
-class Implementation,Testing highImpact
+ Requirements[Requirements gathering] --&amp;gt; Design[Design]
+ Design --&amp;gt; Implementation[Implementation]
+ Implementation --&amp;gt; Testing[Testing]
+ Testing --&amp;gt; Deployment[Deployment]
+ Deployment --&amp;gt; Maintenance[Maintenance]
+
+ %% Color coding based on AI agent impact level
+ %% Low impact - light blue
+ %% Medium impact - yellow/orange
+ %% High impact - green
+
+ classDef lowImpact fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ classDef mediumImpact fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+ classDef highImpact fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+
+ class Requirements,Deployment lowImpact
+ class Design,Maintenance mediumImpact
+ class Implementation,Testing highImpact
 &lt;/pre&gt;
+
 &lt;h2 id="requirements-gathering"&gt;&lt;a href="#requirements-gathering" class="header-anchor"&gt;&lt;/a&gt;Requirements gathering
 &lt;/h2&gt;&lt;p&gt;In requirements gathering, we need to figure out why we are adding a feature and what the feature is, at a high level.
 We have two major sources of product features. The first one is a strategic feature that will open up new sources of
@@ -650,27 +685,30 @@ include things like:&lt;/p&gt;
 and all the work must be redone. For example, an AI agent could decide to implement a third-party library itself because
 it couldn&amp;rsquo;t figure out how to use the existing one.&lt;/p&gt;
 &lt;pre class="mermaid"&gt;
----
+ ---
 title: AI agent development workflow
 ---
 flowchart TD
-A[Developer writes prompt] --&amp;gt; B[AI agent codes&amp;lt;br/&amp;gt;3-5 minutes]
-B --&amp;gt; C[Human reviews code]
-C --&amp;gt; D{Code acceptable?}
-D --&amp;gt;|No| E[Developer provides&amp;lt;br/&amp;gt;corrections]
-E --&amp;gt; B
-D --&amp;gt;|Yes| F[Final code review]
-F --&amp;gt; G[Ask AI agent to review code]
-G --&amp;gt; H[Human peer review]
-H --&amp;gt; I[Ready for QA]
-%% Styling
-classDef humanTask fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-classDef aiTask fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-classDef reviewTask fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
-class A,C,E,F,H humanTask
-class B,G aiTask
-class D,I reviewTask
+ A[Developer writes prompt] --&amp;gt; B[AI agent codes&amp;lt;br/&amp;gt;3-5 minutes]
+ B --&amp;gt; C[Human reviews code]
+ C --&amp;gt; D{Code acceptable?}
+ D --&amp;gt;|No| E[Developer provides&amp;lt;br/&amp;gt;corrections]
+ E --&amp;gt; B
+ D --&amp;gt;|Yes| F[Final code review]
+ F --&amp;gt; G[Ask AI agent to review code]
+ G --&amp;gt; H[Human peer review]
+ H --&amp;gt; I[Ready for QA]
+
+ %% Styling
+ classDef humanTask fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+ classDef aiTask fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+ classDef reviewTask fill:#e8f5e8,stroke:#388e3c,stroke-width:2px,color:#000
+
+ class A,C,E,F,H humanTask
+ class B,G aiTask
+ class D,I reviewTask
 &lt;/pre&gt;
+
 &lt;p&gt;Once we reach a good stopping point, we need to review all the code changes that we and our AI agent have made. Since
 much of the code was autogenerated, we must take extra care to do a thorough review. The goal is to fully understand the
 implementation so that we can speak about it as if we coded all of it ourselves.&lt;/p&gt;
@@ -765,50 +803,50 @@ tend to be small in nature, with most of the software engineer&amp;rsquo;s time 
 to fix it.&lt;/p&gt;
 &lt;h2 id="ai-coding-agent-impact-across-the-sdlc"&gt;&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor"&gt;&lt;/a&gt;AI coding agent impact across the SDLC
 &lt;/h2&gt;&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;SDLC Phase&lt;/th&gt;
-&lt;th&gt;AI Agent Impact&lt;/th&gt;
-&lt;th&gt;🔍 Notes&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;📝 Requirements&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧠 Design&lt;/td&gt;
-&lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
-&lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;💻 Implementation&lt;/td&gt;
-&lt;td&gt;✅ High&lt;/td&gt;
-&lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧪 Automated Testing&lt;/td&gt;
-&lt;td&gt;✅ High&lt;/td&gt;
-&lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🧍 Manual Testing&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🚀 Deployment&lt;/td&gt;
-&lt;td&gt;❌ Low&lt;/td&gt;
-&lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;🔧 Maintenance&lt;/td&gt;
-&lt;td&gt;⚠️ Medium&lt;/td&gt;
-&lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;SDLC Phase&lt;/th&gt;
+ &lt;th&gt;AI Agent Impact&lt;/th&gt;
+ &lt;th&gt;🔍 Notes&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;📝 Requirements&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧠 Design&lt;/td&gt;
+ &lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
+ &lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;💻 Implementation&lt;/td&gt;
+ &lt;td&gt;✅ High&lt;/td&gt;
+ &lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧪 Automated Testing&lt;/td&gt;
+ &lt;td&gt;✅ High&lt;/td&gt;
+ &lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🧍 Manual Testing&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🚀 Deployment&lt;/td&gt;
+ &lt;td&gt;❌ Low&lt;/td&gt;
+ &lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;🔧 Maintenance&lt;/td&gt;
+ &lt;td&gt;⚠️ Medium&lt;/td&gt;
+ &lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id="risk-and-tradeoffs"&gt;&lt;a href="#risk-and-tradeoffs" class="header-anchor"&gt;&lt;/a&gt;Risk and tradeoffs
 &lt;/h2&gt;&lt;p&gt;While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
@@ -829,13 +867,13 @@ treat agent-generated code with &lt;strong&gt;greater&lt;/strong&gt; rigor than 
 &lt;/h2&gt;&lt;p&gt;Recent studies suggest that current AI tools improve productivity by 10% to 20%.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://arxiv.org/abs/2410.12944" target="_blank" rel="noopener"
-&gt;AI speeds up Google engineers by 21%&lt;/a&gt;&lt;/li&gt;
+ &gt;AI speeds up Google engineers by 21%&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://nypost.com/2025/03/14/business/jpmorgan-credits-coding-assistant-tool-for-boosting-engineers-efficiency/" target="_blank" rel="noopener"
-&gt;JPMorgan claims AI boosts efficiency by up to 20%&lt;/a&gt;&lt;/li&gt;
+ &gt;JPMorgan claims AI boosts efficiency by up to 20%&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.itpro.com/software/development/atlassian-says-ai-has-created-an-unexpected-paradox-for-software-developers-theyre-saving-over-10-hours-a-week-but-theyre-still-overworked-and-losing-an-equal-amount-of-time-due-to-organizational-inefficiencies" target="_blank" rel="noopener"
-&gt;Atlassian says AI is saving over 10 hours per week&lt;/a&gt;&lt;/li&gt;
+ &gt;Atlassian says AI is saving over 10 hours per week&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.reuters.com/business/ai-slows-down-some-experienced-software-developers-study-finds-2025-07-10" target="_blank" rel="noopener"
-&gt;AI slows down some developers&lt;/a&gt;&lt;/li&gt;
+ &gt;AI slows down some developers&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;So, will the productivity improvements jump with AI coding agents becoming mainstream? Will one engineer be able to do
 the work of a whole team?&lt;/p&gt;
@@ -858,6 +896,7 @@ SDLC, as well as on other tasks such as:&lt;/p&gt;
 now do the work of 10 people. This is far from the popular claims that AI will replace all software engineers.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/will-ai-agents-replace-developers/productivity-gain.svg"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;In summary, AI in general and AI coding agents in particular should continue to have a noticeable impact on software
 developer productivity. However, developers&amp;rsquo; work is complex and varied, and AI can only provide efficiency improvements
 and not wholesale replacement. AI coding agents won&amp;rsquo;t replace developers, but developers who know how to use them will
@@ -879,13 +918,14 @@ replace those who don&amp;rsquo;t.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-whether-ai-agents-can-replace-software-developers"&gt;&lt;a href="#watch-us-discuss-whether-ai-agents-can-replace-software-developers" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss whether AI agents can replace software developers
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/fdBxpWXajSE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/fdBxpWXajSE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to speed up a large Go test suite</title><link>https://victoronsoftware.com/posts/large-go-test-suite/</link><pubDate>Wed, 09 Apr 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/large-go-test-suite/</guid><description>&lt;img src="https://victoronsoftware.com/posts/large-go-test-suite/large-go-test-suite-headline.png" alt="Featured image of post How to speed up a large Go test suite" /&gt;&lt;p&gt;Fast Continuous Integration (CI) test results are crucial for maintaining a good developer velocity. Quick test results
 give developers immediate feedback on their changes, resulting in a more enjoyable development process. For critical
 changes, slow tests can become a bottleneck, delaying deployments.&lt;/p&gt;
@@ -910,7 +950,7 @@ generally inefficient since each CI job must compile the same package separately
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go list ./...
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;To identify time-consuming packages, you can run your test suite with the &lt;code&gt;-json&lt;/code&gt; switch and save the results. Then,
 find the elapsed time of each package and sort the times. This operation can be done with &lt;a class="link" href="https://jqlang.org/" target="_blank" rel="noopener"
-&gt;jq&lt;/a&gt;:&lt;/p&gt;
+ &gt;jq&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cat test-result.json | jq -s &lt;span style="color:#e6db74"&gt;&amp;#39;map(select(has(&amp;#34;Test&amp;#34;) | not)) | group_by(.Package) | map({package: .[0].Package, elapsed: (map(.Elapsed) | add)}) | sort_by(.elapsed) | reverse&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="split-up-the-go-test-suite"&gt;&lt;a href="#split-up-the-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Split up the Go test suite
 &lt;/h2&gt;&lt;p&gt;You can specify the packages at the end of the &lt;code&gt;go test&lt;/code&gt; command to run a subset of packages in a CI job. For example:&lt;/p&gt;
@@ -918,7 +958,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, manually create groups of packages and identify them with a name.&lt;/p&gt;
 &lt;p&gt;To create a catchall group for packages that were not explicitly assigned to a group, you can use the Linux
 &lt;a class="link" href="https://linux.die.net/man/1/comm" target="_blank" rel="noopener"
-&gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
+ &gt;comm&lt;/a&gt; command to generate the remaining packages. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;comm -23 &amp;lt;&lt;span style="color:#f92672"&gt;(&lt;/span&gt;go list ./... | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt; &amp;lt;&lt;span style="color:#f92672"&gt;({&lt;/span&gt; go list ./cmd/fleetctl/... &lt;span style="color:#f92672"&gt;&amp;amp;&amp;amp;&lt;/span&gt; go list ./server/service/... ;&lt;span style="color:#f92672"&gt;}&lt;/span&gt; | sort&lt;span style="color:#f92672"&gt;)&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The above command returns the packages unique to the first list, which includes all the packages (&lt;code&gt;./...&lt;/code&gt;).&lt;/p&gt;
 &lt;p&gt;The following is a real-world example from Fleet&amp;rsquo;s Makefile that creates test suite groups with identifiers:&lt;/p&gt;
@@ -969,7 +1009,7 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="create-parallel-go-test-jobs-in-ci"&gt;&lt;a href="#create-parallel-go-test-jobs-in-ci" class="header-anchor"&gt;&lt;/a&gt;Create parallel Go test jobs in CI
 &lt;/h2&gt;&lt;p&gt;The major CI tools provide a way to start multiple jobs in parallel. In GitHub, this is done with a
 &lt;a class="link" href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/running-variations-of-jobs-in-a-workflow" target="_blank" rel="noopener"
-&gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
+ &gt;matrix strategy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the previous step, we gave an example of named test suites. Now, we feed those names into the GitHub matrix job:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;jobs&lt;/span&gt;:
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;test-go&lt;/span&gt;:
@@ -996,13 +1036,14 @@ find the elapsed time of each package and sort the times. This operation can be 
 &lt;p&gt;In the past, we reviewed &lt;a class="link" href="../fuzz-testing-with-go/" &gt;the state of fuzz testing in Go&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="watch-how-to-break-apart-a-large-go-test-suite"&gt;&lt;a href="#watch-how-to-break-apart-a-large-go-test-suite" class="header-anchor"&gt;&lt;/a&gt;Watch how to break apart a large Go test suite
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/AFVlbf5LZwc"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/AFVlbf5LZwc" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>6 business benefits of software modularity and cohesion</title><link>https://victoronsoftware.com/posts/software-modularity/</link><pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/software-modularity/</guid><description>&lt;img src="https://victoronsoftware.com/posts/software-modularity/software-modularity-headline.png" alt="Featured image of post 6 business benefits of software modularity and cohesion" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Why readable code is essential&lt;/a&gt;&lt;/li&gt;
@@ -1113,16 +1154,17 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-us-explain-the-business-benefits-of-software-modularity"&gt;&lt;a href="#watch-us-explain-the-business-benefits-of-software-modularity" class="header-anchor"&gt;&lt;/a&gt;Watch us explain the business benefits of software modularity
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/UmSsmGFufTg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/UmSsmGFufTg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>6 lessons from literate programming</title><link>https://victoronsoftware.com/posts/literate-programming-lessons/</link><pubDate>Wed, 12 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/literate-programming-lessons/</guid><description>&lt;img src="https://victoronsoftware.com/posts/literate-programming-lessons/literate-programming-headline.png" alt="Featured image of post 6 lessons from literate programming" /&gt;&lt;p&gt;This article examines the literate programming paradigm introduced in 1984 by
 &lt;a class="link" href="https://en.wikipedia.org/wiki/Donald_Knuth" target="_blank" rel="noopener"
-&gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
+ &gt;Donald Knuth&lt;/a&gt;. We go through a &amp;ldquo;Hello World&amp;rdquo; example and extract the key
 lessons relevant to making today&amp;rsquo;s software more readable and maintainable.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#literate-programming-hello-world-example" &gt;Literate programming example&lt;/a&gt;&lt;/li&gt;
@@ -1134,20 +1176,21 @@ programming language source code is embedded into the program&amp;rsquo;s descri
 human can easily read without jumping back and forth between different sections of the code file. The writer completely
 controls the flow of the document, which can be reorganized in any fashion.&lt;/p&gt;
 &lt;p&gt;Knuth called his implementation of literate programming &lt;a class="link" href="https://en.wikipedia.org/wiki/Web_%28programming_system%29" target="_blank" rel="noopener"
-&gt;WEB&lt;/a&gt;
+ &gt;WEB&lt;/a&gt;
 to emphasize that a computer program is built from many different pieces. He picked the name before the World Wide Web
 was prominent. To produce source code, the user runs the &lt;strong&gt;tangle&lt;/strong&gt; command. To create documentation, the user runs the
 &lt;strong&gt;weave&lt;/strong&gt; command.&lt;/p&gt;
 &lt;h2 id="literate-programming-hello-world-example"&gt;&lt;a href="#literate-programming-hello-world-example" class="header-anchor"&gt;&lt;/a&gt;Literate programming &amp;ldquo;Hello World&amp;rdquo; example
 &lt;/h2&gt;&lt;h3 id="writing-a-literate-program"&gt;&lt;a href="#writing-a-literate-program" class="header-anchor"&gt;&lt;/a&gt;Writing a literate program
 &lt;/h3&gt;&lt;p&gt;To demonstrate literate programming, we will use the &lt;a class="link" href="https://github.com/nrnrnr/noweb" target="_blank" rel="noopener"
-&gt;noweb&lt;/a&gt; literate programming tool
+ &gt;noweb&lt;/a&gt; literate programming tool
 to write a simple program in Go.&lt;/p&gt;
 &lt;p&gt;We create a &lt;code&gt;hello.nw&lt;/code&gt; file and start it with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;This program teaches us how to print to the screen using:
 &amp;lt;&amp;lt;print&amp;gt;&amp;gt;=
 fmt.Println(message)
 @
+
 To print &amp;#34;Hello World&amp;#34;, pass a literal string to the function:
 &amp;lt;&amp;lt;message&amp;gt;&amp;gt;=
 &amp;#34;Hello World&amp;#34;
@@ -1157,15 +1200,16 @@ are macros that we can reuse in other sections of the document, such as:&lt;/p&g
 &lt;pre tabindex="0"&gt;&lt;code&gt;Now, we can create a function that prints a message:
 &amp;lt;&amp;lt;mypackage_print&amp;gt;&amp;gt;=
 func Print(message string) {
-&amp;lt;&amp;lt;print&amp;gt;&amp;gt;
+ &amp;lt;&amp;lt;print&amp;gt;&amp;gt;
 }
 @
+
 Finally, we can call this function from the main function:
 &amp;lt;&amp;lt;main_call&amp;gt;&amp;gt;=
 mypackage.Print(&amp;lt;&amp;lt;message&amp;gt;&amp;gt;)
 @
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;See &lt;a class="link" href="https://github.com/getvictor/noweb_example/blob/main/hello.nw" target="_blank" rel="noopener"
-&gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
+ &gt;the complete literate program&lt;/a&gt; on GitHub.&lt;/p&gt;
 &lt;h3 id="generating-code-and-documentation-from-the-literate-program"&gt;&lt;a href="#generating-code-and-documentation-from-the-literate-program" class="header-anchor"&gt;&lt;/a&gt;Generating code and documentation from the literate program
 &lt;/h3&gt;&lt;p&gt;To install the noweb tool with &lt;code&gt;brew&lt;/code&gt; on macOS, run the following:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;brew install noweb
@@ -1201,7 +1245,7 @@ none can mix arbitrary pieces of code with their documentation.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// This is a class.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Today, the closest mainstream approaches to literate programming are computational notebooks such as
 &lt;a class="link" href="https://jupyter.org/" target="_blank" rel="noopener"
-&gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
+ &gt;Jupyter&lt;/a&gt; and various online tutorials. These are great for sharing examples and small programs
 with others but not sufficient for larger software projects.&lt;/p&gt;
 &lt;p&gt;Some IDEs support rendering comments in a different style than the rest of the code, including rendering diagrams.
 However, no standard works across IDEs and version control hosting systems like GitHub.&lt;/p&gt;
@@ -1234,7 +1278,7 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;h2 id="see-literate-programming-example-code-on-github"&gt;&lt;a href="#see-literate-programming-example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;See literate programming example code on GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/getvictor/noweb_example" target="_blank" rel="noopener"
-&gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
+ &gt;Literate programming example using noweb&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
@@ -1243,13 +1287,14 @@ system for the &amp;ldquo;tangle&amp;rdquo; and &amp;ldquo;weave&amp;rdquo; flow
 &lt;/ul&gt;
 &lt;h2 id="watch-the-literate-programming-example-and-takeaways"&gt;&lt;a href="#watch-the-literate-programming-example-and-takeaways" class="header-anchor"&gt;&lt;/a&gt;Watch the literate programming example and takeaways
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/8cwxxioVbfA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/8cwxxioVbfA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top code complexity metrics every software dev should know</title><link>https://victoronsoftware.com/posts/code-complexity-metrics/</link><pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/code-complexity-metrics/</guid><description>&lt;img src="https://victoronsoftware.com/posts/code-complexity-metrics/code-complexity-headline.png" alt="Featured image of post Top code complexity metrics every software dev should know" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous articles:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Ways to improve your code for readability&lt;/a&gt;&lt;/li&gt;
@@ -1269,7 +1314,7 @@ a module. Complex code is difficult to modify because engineers must spend consi
 Frequently, engineers will not understand the code well enough, so they&amp;rsquo;ll make a change to fix a bug, and the change
 will introduce a new bug somewhere else. Lack of understanding also leads to
 &lt;a class="link" href="https://victoronsoftware.com/posts/common-refactorings/#why-are-engineers-afraid-of-refactoring" target="_blank" rel="noopener"
-&gt;a fear of refactoring&lt;/a&gt;,
+ &gt;a fear of refactoring&lt;/a&gt;,
 because engineers don&amp;rsquo;t want to break the codebase.&lt;/p&gt;
 &lt;h2 id="code-complexity-metrics"&gt;&lt;a href="#code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Code complexity metrics
 &lt;/h2&gt;&lt;p&gt;Many code complexity measures overlap since they all try to measure the same thing.&lt;/p&gt;
@@ -1296,13 +1341,13 @@ manageable pieces. James Lewis from ThoughtWorks said that &amp;ldquo;a microser
 that one person should be able to understand the entire codebase. The smaller the piece of code, the easier it is to
 understand.&lt;/p&gt;
 &lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Halstead_complexity_measures" target="_blank" rel="noopener"
-&gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
+ &gt;Halstead introduced a set of software complexity measures&lt;/a&gt;
 in 1977, and one of his metrics was the Halstead volume, which is directly related to code size. We can approximate the
 Halstead volume by ignoring all comments and whitespace, then multiplying the average code line length by the number of
 lines of code. This approximation is a good enough metric for our purposes.&lt;/p&gt;
 &lt;h3 id="cyclomatic-complexity"&gt;&lt;a href="#cyclomatic-complexity" class="header-anchor"&gt;&lt;/a&gt;Cyclomatic complexity
 &lt;/h3&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank" rel="noopener"
-&gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
+ &gt;Cyclomatic complexity&lt;/a&gt; measures the number of linearly independent
 paths through a program&amp;rsquo;s source code. It is often used as the master metric for code complexity, uncovering
 maintainability and hard-to-test parts of the codebase.&lt;/p&gt;
 &lt;p&gt;A typical calculation of cyclomatic complexity is as follows:&lt;/p&gt;
@@ -1315,7 +1360,7 @@ metric encourages us to write smaller functions.&lt;/p&gt;
 &lt;h3 id="cognitive-complexity"&gt;&lt;a href="#cognitive-complexity" class="header-anchor"&gt;&lt;/a&gt;Cognitive complexity
 &lt;/h3&gt;&lt;p&gt;An alternative to cyclomatic complexity is
 &lt;a class="link" href="https://www.sonarsource.com/docs/CognitiveComplexity.pdf" target="_blank" rel="noopener"
-&gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
+ &gt;cognitive complexity&lt;/a&gt;. This metric tries to adjust the
 cyclomatic complexity metric to focus on the human reader&amp;rsquo;s mental load &amp;ndash; on the maintainability, and not on the
 testability, of the code.&lt;/p&gt;
 &lt;p&gt;The key differences in the calculation are:&lt;/p&gt;
@@ -1346,9 +1391,9 @@ cognitive complexity metrics penalize it.&lt;/p&gt;
 considered complex code based on their experience, language, and code style.&lt;/p&gt;
 &lt;h3 id="go-complexity-metrics"&gt;&lt;a href="#go-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Go complexity metrics
 &lt;/h3&gt;&lt;p&gt;For measuring cyclomatic complexity, Go has &lt;a class="link" href="https://github.com/fzipp/gocyclo" target="_blank" rel="noopener"
-&gt;gocyclo&lt;/a&gt;. For measuring cognitive
+ &gt;gocyclo&lt;/a&gt;. For measuring cognitive
 complexity, there is &lt;a class="link" href="https://github.com/uudashr/gocognit" target="_blank" rel="noopener"
-&gt;gocognit&lt;/a&gt;.&lt;/p&gt;
+ &gt;gocognit&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="what-is-modularity-and-why-is-it-important"&gt;&lt;a href="#what-is-modularity-and-why-is-it-important" class="header-anchor"&gt;&lt;/a&gt;What is modularity and why is it important
 &lt;/h3&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
 &lt;a class="link" href="../software-modularity/" &gt;explain what is modularity and why it is important for modern scalable software systems&lt;/a&gt;.&lt;/p&gt;
@@ -1371,13 +1416,14 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-and-show-examples-of-code-complexity-metrics"&gt;&lt;a href="#watch-us-discuss-and-show-examples-of-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss and show examples of code complexity metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HzZQqrhX3cg"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HzZQqrhX3cg" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to use AI for software development (2025)</title><link>https://victoronsoftware.com/posts/ai-for-software-developers/</link><pubDate>Wed, 26 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/ai-for-software-developers/</guid><description>&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-building-software.png" alt="Featured image of post How to use AI for software development (2025)" /&gt;&lt;p&gt;The AI landscape is changing rapidly. A new tool seems to come out weekly, or we hear about a breakthrough. As a
 software engineer, it is hard to keep up with all the latest developments and even harder to figure out what is relevant
 to your day-to-day work. Many tech leaders claim that AI is helping them achieve greater engineering velocity, improving
@@ -1385,7 +1431,7 @@ the quality of their code, and enhancing the engineering experience, to name a f
 improve your work as a software engineer? And, most importantly, what is the most effective way to use AI right now?&lt;/p&gt;
 &lt;p&gt;We have followed AI since the early 2000s, when Jeff Hawkins published
 &lt;a class="link" href="https://en.wikipedia.org/wiki/On_Intelligence" target="_blank" rel="noopener"
-&gt;On Intelligence&lt;/a&gt;. AI has come a long way since then. Today, most
+ &gt;On Intelligence&lt;/a&gt;. AI has come a long way since then. Today, most
 software engineers can benefit from some AI.&lt;/p&gt;
 &lt;p&gt;The top AI use cases for software engineers are:&lt;/p&gt;
 &lt;ul&gt;
@@ -1404,9 +1450,10 @@ other code that is not quite right.&lt;/p&gt;
 &lt;p&gt;For example, after creating the &lt;code&gt;PubSubMessage&lt;/code&gt; struct in our code, Copilot recommended the &lt;code&gt;PubSubMessageAttributes&lt;/code&gt;
 struct. Opening the completions window shows other multi-line suggestions.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/copilot-example.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Copilot code completion example&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;GitHub Copilot code completion example&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The code completion is not only for software code. We used it for documentation, such as writing a user guide for a new
 feature. AI is most useful for boilerplate introductory content. However, beware that some search engines may be able to
 detect the use of AI in your documentation and reduce your search ranking.&lt;/p&gt;
@@ -1415,10 +1462,12 @@ detect the use of AI in your documentation and reduce your search ranking.&lt;/p
 engineers use a chat interface such as ChatGPT and provide it with a description of the desired function. Providing a
 detailed description along with inputs and outputs is key to getting the best results.&lt;/p&gt;
 &lt;p&gt;For example, given the following prompt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Write a Golang function that takes path.URL, makes a GET request to that URL, parses the JSON response, and returns
+
+ &lt;blockquote&gt;
+ &lt;p&gt;Write a Golang function that takes path.URL, makes a GET request to that URL, parses the JSON response, and returns
 the &amp;ldquo;attributes&amp;rdquo; and &amp;ldquo;data&amp;rdquo; fields of the response.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;ChatGPT o1 model generated the following code:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// FetchAttributesAndData makes a GET request to the provided URL, parses&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// the JSON response, and returns the &amp;#34;attributes&amp;#34; and &amp;#34;data&amp;#34; fields.&lt;/span&gt;
@@ -1452,7 +1501,7 @@ snippets. Now, they can use AI chatbots to generate this code. This approach is 
 code that&amp;rsquo;s not your area of expertise.&lt;/p&gt;
 &lt;p&gt;Some programming languages have dedicated AI code-generation tools. For example, you can create Go functions and
 packages online with &lt;a class="link" href="https://sketch.dev/" target="_blank" rel="noopener"
-&gt;sketch.dev&lt;/a&gt;.&lt;/p&gt;
+ &gt;sketch.dev&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="summarizing-or-explaining-code"&gt;&lt;a href="#summarizing-or-explaining-code" class="header-anchor"&gt;&lt;/a&gt;Summarizing or explaining code
 &lt;/h2&gt;&lt;p&gt;When software engineers work on a large codebase, they often need to understand code written by other engineers, some of
 whom may have left the company, and they may also need to find a specific piece of code in the codebase.&lt;/p&gt;
@@ -1461,15 +1510,18 @@ whom may have left the company, and they may also need to find a specific piece 
 &lt;p&gt;To understand the codebase, the AI tool needs to add the code to its context or to index the codebase. Then, the tool
 can use a combination of AI and deterministic search to find the relevant code. Below is an example of a question we
 asked &lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
-&gt;Cursor&lt;/a&gt; IDE about our codebase:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;
-&lt;/blockquote&gt;
+ &gt;Cursor&lt;/a&gt; IDE about our codebase:&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;In which Go files is macOS disk encryption code located?&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;Cursor provided a list of files and additional information on the top hits.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/cursor-example.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Codebase-wide queries are a great way to find information yourself before asking the broader team. They are also a
 decent way to learn the codebase.&lt;/p&gt;
 &lt;h2 id="agentic-coding"&gt;&lt;a href="#agentic-coding" class="header-anchor"&gt;&lt;/a&gt;Agentic coding
@@ -1486,15 +1538,15 @@ advanced use case, requiring you to know the AI tools, processes, and LLMs well.
 &lt;p&gt;Currently, the top agentic coding tools are:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://github.com/RooVetGit/Roo-Code" target="_blank" rel="noopener"
-&gt;Roo Code&lt;/a&gt; (VSCode plugin)&lt;/li&gt;
+ &gt;Roo Code&lt;/a&gt; (VSCode plugin)&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://cline.bot/" target="_blank" rel="noopener"
-&gt;Cline&lt;/a&gt; (VSCode plugin)&lt;/li&gt;
+ &gt;Cline&lt;/a&gt; (VSCode plugin)&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noopener"
-&gt;Cursor&lt;/a&gt; (IDE built on top of VSCode)&lt;/li&gt;
+ &gt;Cursor&lt;/a&gt; (IDE built on top of VSCode)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;There are many other tools and platforms available. GitHub Copilot also announced Agent mode, which is available in
 preview as of this writing. JetBrains has announced &lt;a class="link" href="https://www.jetbrains.com/junie/" target="_blank" rel="noopener"
-&gt;Junie&lt;/a&gt;, which is only available
+ &gt;Junie&lt;/a&gt;, which is only available
 via the Early Access Program.&lt;/p&gt;
 &lt;p&gt;As the agentic coding tools are still in their early stages, changing rapidly, and require a lot of handholding, it is
 reasonable to wait 6 to 12 months before revisiting them.&lt;/p&gt;
@@ -1504,12 +1556,14 @@ reasonable to wait 6 to 12 months before revisiting them.&lt;/p&gt;
 structure the application and the steps to implement it. You can use another general-purse AI, such as ChatGPT, to help
 you create the high-level plan.&lt;/p&gt;
 &lt;p&gt;For example, we asked ChatGPT to create a high-level plan with the following prompt:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;We want to create a mock Google Android Management API server using an AI agent. The server is written in Golang and
+
+ &lt;blockquote&gt;
+ &lt;p&gt;We want to create a mock Google Android Management API server using an AI agent. The server is written in Golang and
 will interact with our MDM solution during testing. It should hold the state for enterprises, profiles, and fake
 devices enrolled in it. The server should have a mock PubSub webhook that will push notifications regarding ENROLLMENT
 and STATUS_REPORTs. Please create a plan that another AI agent can implement in several steps.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;Next, ask the AI agent to read the plan, update it, and create a more detailed plan. It may make sense to break the plan
 into smaller parts and treat each part as a separate project. In effect, you act as the AI agent&amp;rsquo;s project manager.&lt;/p&gt;
 &lt;p&gt;Make sure to have documentation and have the AI agent update it regularly. In addition to the README, you can have API
@@ -1522,9 +1576,10 @@ changes. This way, you can easily rollback if the AI agent gets stuck or goes of
 will &amp;ldquo;initialize&amp;rdquo; the AI agent with the project context.&lt;/p&gt;
 &lt;p&gt;Work in small development iterations with your AI agent.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-agent-workflow.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;AI agent workflow&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;AI agent workflow&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Learn about your AI agent&amp;rsquo;s specific features to level up your skills. Often, there are ways to provide context to the
 agent or give special meaning to certain words or files.&lt;/p&gt;
 &lt;p&gt;At some point, you may want to take over the maintenance of the code from the AI agent. For example, check the code into
@@ -1563,13 +1618,14 @@ Understand how code clarity impacts team velocity and why readability should be 
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-use-ai-for-software-development"&gt;&lt;a href="#watch-how-to-use-ai-for-software-development" class="header-anchor"&gt;&lt;/a&gt;Watch how to use AI for software development
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/PVdqwcwc2_o"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/PVdqwcwc2_o" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to analyze Go build times</title><link>https://victoronsoftware.com/posts/analyze-go-build/</link><pubDate>Wed, 19 Feb 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/analyze-go-build/</guid><description>&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/analyze-go-build-headline.png" alt="Featured image of post How to analyze Go build times" /&gt;&lt;p&gt;Go is designed for fast compilation. However, sometimes, you notice that your builds have gotten slower or that certain
 code changes cause an unexpectedly long recompile time. In this article, we show how to analyze your compilation times
 and take steps to improve them.&lt;/p&gt;
@@ -1582,7 +1638,7 @@ from scratch.&lt;/p&gt;
 on your development machine, but that may not be true on your CI/CD system. Ensure you use a build cache across multiple
 CI/CD runs. For example, the GitHub Actions
 &lt;a class="link" href="https://github.com/actions/setup-go?tab=readme-ov-file#caching-dependency-files-and-build-outputs" target="_blank" rel="noopener"
-&gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="analyze-a-go-build"&gt;&lt;a href="#analyze-a-go-build" class="header-anchor"&gt;&lt;/a&gt;Analyze a Go build
 &lt;/h2&gt;&lt;p&gt;We can clear the build cache with the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;go clean -cache
@@ -1597,7 +1653,7 @@ shells and OSes.&lt;/p&gt;
 executing user and system code. They are larger than the wall clock time because we use a multi-core machine.&lt;/p&gt;
 &lt;p&gt;The debug trace is in
 &lt;a class="link" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview" target="_blank" rel="noopener"
-&gt;Trace Event Format&lt;/a&gt; and looks
+ &gt;Trace Event Format&lt;/a&gt; and looks
 like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;Running build command&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608027038&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
@@ -1611,15 +1667,16 @@ like this:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;,{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;modfetch.download github.com/getsentry/sentry-go@v0.18.0&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608053496&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;...&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;and&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;so&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;on&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A widespread tool for visualizing Trace Event Format is &lt;a class="link" href="https://ui.perfetto.dev/" target="_blank" rel="noopener"
-&gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
+ &gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
-&gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
+ &gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
 we have 16 cores doesn&amp;rsquo;t help because Go is not parallelizing the build for this dependency. This dependency uses CGO,
 so the build takes time to compile C files.&lt;/p&gt;
 &lt;p&gt;We attempted to speed up the build by adding the &lt;code&gt;go-sqlite3&lt;/code&gt; dependency to our top &lt;code&gt;./cmd/fleet&lt;/code&gt; package, assuming the
@@ -1631,9 +1688,10 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
 takes ~300ms and is not parallelized. This step is part of the Go toolchain. Modifying a smaller package would reduce
 the recompile time. If you have a large package that is frequently modified, you can improve the build time by splitting
@@ -1677,43 +1735,44 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;code&gt;Deps&lt;/code&gt; field shows the package&amp;rsquo;s dependencies.&lt;/p&gt;
 &lt;p&gt;Although we can write our own tool to analyze the &lt;code&gt;actiongraph.json&lt;/code&gt; file, we can also use the
 &lt;a class="link" href="https://github.com/icio/actiongraph" target="_blank" rel="noopener"
-&gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
+ &gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go install github.com/icio/actiongraph@latest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can find the longest compile steps with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;actiongraph -f actiongraph.json top
-13.786s 16.14% build github.com/mattn/go-sqlite3
-1.396s 17.78% build runtime/cgo
-1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
-1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
-1.095s 22.13% build github.com/google/go-github/v37/github
-1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
-0.983s 24.55% build github.com/open-policy-agent/opa/ast
-0.975s 25.69% build github.com/klauspost/compress/zstd
-0.916s 26.76% build github.com/shoenig/go-m1cpu
-0.755s 27.64% build crypto/tls
-0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
-0.722s 29.36% build github.com/shirou/gopsutil/v3/process
-0.664s 30.14% build net
-0.626s 30.87% build github.com/open-policy-agent/opa/topdown
-0.625s 31.60% build runtime
-0.622s 32.33% build google.golang.org/protobuf/internal/impl
-0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
-0.605s 33.75% build golang.org/x/net/http2
-0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
-0.576s 35.10% build github.com/spf13/pflag
+ 13.786s 16.14% build github.com/mattn/go-sqlite3
+ 1.396s 17.78% build runtime/cgo
+ 1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
+ 1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
+ 1.095s 22.13% build github.com/google/go-github/v37/github
+ 1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
+ 0.983s 24.55% build github.com/open-policy-agent/opa/ast
+ 0.975s 25.69% build github.com/klauspost/compress/zstd
+ 0.916s 26.76% build github.com/shoenig/go-m1cpu
+ 0.755s 27.64% build crypto/tls
+ 0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
+ 0.722s 29.36% build github.com/shirou/gopsutil/v3/process
+ 0.664s 30.14% build net
+ 0.626s 30.87% build github.com/open-policy-agent/opa/topdown
+ 0.625s 31.60% build runtime
+ 0.622s 32.33% build google.golang.org/protobuf/internal/impl
+ 0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
+ 0.605s 33.75% build golang.org/x/net/http2
+ 0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
+ 0.576s 35.10% build github.com/spf13/pflag
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The tool also has a &lt;code&gt;graph&lt;/code&gt; subcommand to highlight all import paths from the build target to the package indicated by
 &lt;code&gt;--why&lt;/code&gt;. We can convert the &lt;code&gt;.dot&lt;/code&gt; file to an SVG file with the &lt;a class="link" href="https://graphviz.org/" target="_blank" rel="noopener"
-&gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
+ &gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;
 &lt;p&gt;There is no official documentation for the above debug flags. However, they can be found in the
 &lt;a class="link" href="https://go.dev/src/cmd/go/internal/work/build.go" target="_blank" rel="noopener"
-&gt;Go source code&lt;/a&gt;:&lt;/p&gt;
+ &gt;Go source code&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Undocumented, unstable debugging flags.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugActiongraph&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-actiongraph&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugRuntimeTrace&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-runtime-trace&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
@@ -1726,13 +1785,14 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-analyze-go-builds"&gt;&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor"&gt;&lt;/a&gt;Watch how to analyze Go builds
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/fs81KvxhwhI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/fs81KvxhwhI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to scale your codebase with evolutionary architecture</title><link>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</link><pubDate>Wed, 29 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/</guid><description>&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-architecture-headline.png" alt="Featured image of post How to scale your codebase with evolutionary architecture" /&gt;&lt;p&gt;&lt;em&gt;This article is part of a series on &lt;strong&gt;technical debt&lt;/strong&gt;. Check out the previous article:&lt;/em&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../readable-code/" &gt;Why readable code is important and how to refactor code for readability&lt;/a&gt;&lt;/li&gt;
@@ -1761,9 +1821,10 @@ discuss are common in software development, especially in startups and small com
 &lt;p&gt;The initial state of our example codebase is a web application developed in a mono-repository. The application was built
 from the ground up with a simple architecture, focusing on adding new features and finding product-market fit.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/current-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The current design divides the codebase into a few large modules. We use the term &lt;em&gt;module&lt;/em&gt; to mean a logical grouping of
 code in the same files and directories.&lt;/p&gt;
 &lt;p&gt;However, after a couple of years, the application has grown significantly in features, complexity, and team size. The
@@ -1796,9 +1857,10 @@ the codebase and start contributing.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;At this point in the company&amp;rsquo;s life, an exemplary architecture would be separate groups of modules corresponding to the
 three product teams.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/ideal-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Each team would be responsible for its own set of modules, which aligns with Agile principles. The modules would be
 loosely coupled, and the teams would be able to work independently on their features without affecting other teams. The
 amount of code that each engineer has to understand and change would be drastically reduced.&lt;/p&gt;
@@ -1828,9 +1890,10 @@ Instead of worrying about not making the right decisions in the past, consider w
 or two from now and start moving towards that.&lt;/p&gt;
 &lt;p&gt;For example, when adding a new prominent feature to the product, decouple it from the rest of the codebase.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-design.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Our example shows all the modules decoupled, but it may be OK to decouple one or two.&lt;/p&gt;
 &lt;p&gt;Decoupling a feature from the rest of the codebase has many benefits similar to those we listed above for &amp;ldquo;good
 architecture.&amp;rdquo; Additional benefits include:&lt;/p&gt;
@@ -1847,11 +1910,11 @@ we begin with a monolithic application that has a single database schema. We the
 schemas. It is the starting point and a reference for decoupling a new feature from the rest of the codebase. Since this
 code example is a bit long and requires some context regarding the current implementation, we will not cover it in this
 article. Instead, &lt;a class="link" href="https://www.youtube.com/watch?v=Li1GZzQVXWw&amp;amp;t=1070s" target="_blank" rel="noopener"
-&gt;jump to the code example section&lt;/a&gt; of the video
+ &gt;jump to the code example section&lt;/a&gt; of the video
 below.&lt;/p&gt;
 &lt;p&gt;Link to the
 &lt;a class="link" href="https://github.com/fleetdm/fleet/compare/main...victor/feature-set-up" target="_blank" rel="noopener"
-&gt;source code example decoupling a new backend feature from the rest of the codebase&lt;/a&gt;.&lt;/p&gt;
+ &gt;source code example decoupling a new backend feature from the rest of the codebase&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="track-code-complexity-metrics"&gt;&lt;a href="#track-code-complexity-metrics" class="header-anchor"&gt;&lt;/a&gt;Track code complexity metrics
 &lt;/h2&gt;&lt;p&gt;In the next article of this &lt;strong&gt;technical debt&lt;/strong&gt; series, we
 &lt;a class="link" href="../code-complexity-metrics/" &gt;go over the top code complexity metrics every software engineer should know&lt;/a&gt;.&lt;/p&gt;
@@ -1872,13 +1935,14 @@ A real-world account of attempting to modularize a 500K-line codebase and the le
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-scale-your-codebase-with-evolutionary-architecture"&gt;&lt;a href="#watch-how-to-scale-your-codebase-with-evolutionary-architecture" class="header-anchor"&gt;&lt;/a&gt;Watch how to scale your codebase with evolutionary architecture
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/Li1GZzQVXWw"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/Li1GZzQVXWw" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>What is readable code and why is it important?</title><link>https://victoronsoftware.com/posts/readable-code/</link><pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/readable-code/</guid><description>&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-headline.png" alt="Featured image of post What is readable code and why is it important?" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#metrics-for-unreadable-code" &gt;Metrics for unreadable code&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#how-to-make-your-codebase-more-readable" &gt;How to make your codebase more readable&lt;/a&gt;
@@ -1925,7 +1989,7 @@ using linters or static analysis tools. Some examples of code style violations r
 &lt;/ul&gt;
 &lt;p&gt;Instead of measuring these style code violations, you can also enforce them in your CI pipeline. Most languages have
 linters that update your code to match a standard style. For example, Go has &lt;a class="link" href="https://pkg.go.dev/cmd/gofmt" target="_blank" rel="noopener"
-&gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;gofmt&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="how-to-make-your-codebase-more-readable"&gt;&lt;a href="#how-to-make-your-codebase-more-readable" class="header-anchor"&gt;&lt;/a&gt;How to make your codebase more readable
 &lt;/h2&gt;&lt;p&gt;Readability is not a goal but a process. You can&amp;rsquo;t make your codebase readable overnight, but you can start making
 incremental improvements. Whenever you touch a piece of code, try to make it more readable.&lt;/p&gt;
@@ -1936,9 +2000,10 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
 to make changes. This behavior is reactive software design—one developer reacts to the immediate need to implement a
 feature. Later, when implementing new features becomes almost impossible due to unreadable code, they react again by
@@ -1951,9 +2016,10 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding
 &lt;/h3&gt;&lt;p&gt;When entering a function, you should quickly understand what it does. The function code should be readable. If an
 engineer who first sees the function can&amp;rsquo;t understand it, it is too complex and should be refactored.&lt;/p&gt;
@@ -1967,9 +2033,9 @@ with descriptive names.&lt;/p&gt;
 comments.&lt;/p&gt;
 &lt;p&gt;As an example of a function before and after refactoring, see this
 &lt;a class="link" href="https://gist.github.com/getvictor/740c940ec06735ee02bc652f1093e0b8" target="_blank" rel="noopener"
-&gt;refactoring example gist&lt;/a&gt;. For a full explanation,
+ &gt;refactoring example gist&lt;/a&gt;. For a full explanation,
 you can &lt;a class="link" href="https://www.youtube.com/watch?v=HCGyWuE9zbY&amp;amp;t=720s" target="_blank" rel="noopener"
-&gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
+ &gt;jump to the refactoring section&lt;/a&gt; of the video below.&lt;/p&gt;
 &lt;p&gt;For more examples of common refactorings, see our article on
 &lt;a class="link" href="../common-refactorings/" &gt;top refactorings every software developer should know&lt;/a&gt;.&lt;/p&gt;
 &lt;h3 id="use-unit-and-integration-tests"&gt;&lt;a href="#use-unit-and-integration-tests" class="header-anchor"&gt;&lt;/a&gt;Use unit and integration tests
@@ -2099,13 +2165,14 @@ Explore how AI tools can enhance productivity without replacing the need for rea
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-why-readable-code-is-important"&gt;&lt;a href="#watch-us-discuss-why-readable-code-is-important" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss why readable code is important
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/HCGyWuE9zbY"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/HCGyWuE9zbY" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to create a custom GitHub Action using TypeScript</title><link>https://victoronsoftware.com/posts/typescript-github-action/</link><pubDate>Wed, 23 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/typescript-github-action/</guid><description>&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/typescript-github-action-headline.png" alt="Featured image of post How to create a custom GitHub Action using TypeScript" /&gt;&lt;p&gt;In this article, we&amp;rsquo;ll create a custom reusable GitHub Action using TypeScript. As covered in our article on
 &lt;a class="link" href="../github-reusable-workflows-and-steps/" &gt;reusing GitHub workflows and steps&lt;/a&gt;, GitHub Actions allow you to automate your
 software development workflows. By creating a custom GitHub Action, you can extend the functionality of GitHub Actions
@@ -2116,7 +2183,7 @@ automatically approve Pull Requests that meet specific criteria.&lt;/p&gt;
 &lt;h2 id="start-with-githubs-action-template"&gt;&lt;a href="#start-with-githubs-action-template" class="header-anchor"&gt;&lt;/a&gt;Start with GitHub&amp;rsquo;s Action template
 &lt;/h2&gt;&lt;p&gt;GitHub provides a
 &lt;a class="link" href="https://github.com/actions/typescript-action" target="_blank" rel="noopener"
-&gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
+ &gt;template for creating a new GitHub Action using TypeScript&lt;/a&gt;. You can use
 this template to get started quickly. The template includes the necessary files and structure to create a new GitHub
 Action. Anything unnecessary can be removed or modified to suit your requirements.&lt;/p&gt;
 &lt;p&gt;Follow the instructions in the template&amp;rsquo;s README to set up your action.&lt;/p&gt;
@@ -2129,14 +2196,14 @@ Action. Anything unnecessary can be removed or modified to suit your requirement
 &lt;/ol&gt;
 &lt;p&gt;Check out your new repository, go to the cloned repo directory, and make sure your node version matches the one in the
 &lt;code&gt;.node-version&lt;/code&gt; file. If you&amp;rsquo;re using &lt;a class="link" href="https://github.com/nvm-sh/nvm/blob/master/README.md" target="_blank" rel="noopener"
-&gt;nvm (Node Version Manager)&lt;/a&gt;,
+ &gt;nvm (Node Version Manager)&lt;/a&gt;,
 you can run:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;cp .node-version .nvmrc
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;nvm install
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node --version
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; Our example is based on
 &lt;a class="link" href="https://github.com/actions/typescript-action/tree/0467e124e81b527a246cabdaef9c3b433febf9a8" target="_blank" rel="noopener"
-&gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
+ &gt;this commit of the template repository&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="implement-your-custom-github-action"&gt;&lt;a href="#implement-your-custom-github-action" class="header-anchor"&gt;&lt;/a&gt;Implement your custom GitHub Action
 &lt;/h2&gt;&lt;p&gt;Install the template&amp;rsquo;s dependencies with &lt;code&gt;npm install&lt;/code&gt;. In addition, install the &lt;code&gt;@actions/github&lt;/code&gt; package with
 &lt;code&gt;npm install @actions/github&lt;/code&gt;.&lt;/p&gt;
@@ -2227,7 +2294,7 @@ file points at the &lt;code&gt;dist/index.js&lt;/code&gt; bundled version of you
 &lt;p&gt;This step can easily be forgotten, and you may wonder why your changes are not reflected in the action. You can
 configure our IDE to do &lt;code&gt;npm run bundle&lt;/code&gt; automatically on save, create a check as a
 &lt;a class="link" href="https://git-scm.com/book/ms/v2/Customizing-Git-Git-Hooks" target="_blank" rel="noopener"
-&gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
+ &gt;git pre-commit hook&lt;/a&gt; to ensure the &lt;code&gt;dist/&lt;/code&gt; directory is
 up-to-date, or rely on the &lt;code&gt;Check Transpiled Javascript&lt;/code&gt; workflow in the &lt;code&gt;.github/workflows/&lt;/code&gt; directory.&lt;/p&gt;
 &lt;p&gt;Now, commit your changes and push them to your repository.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; We will not cover testing in this article, but you should add tests to the &lt;code&gt;__tests__/&lt;/code&gt; directory for your
@@ -2287,8 +2354,9 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
-alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+ alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
 &lt;/h3&gt;&lt;p&gt;Commit your changes to a new branch and create a pull request. The &lt;code&gt;Code review&lt;/code&gt; workflow should run automatically and
 show the Failed status.&lt;/p&gt;
@@ -2308,16 +2376,17 @@ show the Failed status.&lt;/p&gt;
 &lt;a class="link" href="../use-github-actions-for-general-purpose-tasks/" &gt;how to use GitHub Actions for general-purpose tasks&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The code for our simple GitHub Action is available on GitHub: &lt;a class="link" href="https://github.com/getvictor/code-review-demo" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-review-demo&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-how-to-create-a-custom-github-action-using-typescript"&gt;&lt;a href="#watch-how-to-create-a-custom-github-action-using-typescript" class="header-anchor"&gt;&lt;/a&gt;Watch how to create a custom GitHub Action using TypeScript
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NFIwPxz5La8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NFIwPxz5La8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to set up a remote development environment</title><link>https://victoronsoftware.com/posts/remote-development-environment/</link><pubDate>Sun, 22 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/remote-development-environment/</guid><description>&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/remote-dev-environment-headline.png" alt="Featured image of post How to set up a remote development environment" /&gt;&lt;h1 id="why-set-up-a-remote-development-environment"&gt;&lt;a href="#why-set-up-a-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Why set up a remote development environment?
 &lt;/h1&gt;&lt;p&gt;A remote development environment can be beneficial for several reasons:&lt;/p&gt;
 &lt;ul&gt;
@@ -2345,7 +2414,7 @@ high-end hardware for your local machine.&lt;/li&gt;
 application uses a monolith repo with a frontend and a backend codebase.&lt;/p&gt;
 &lt;h2 id="choose-a-cloud-provider"&gt;&lt;a href="#choose-a-cloud-provider" class="header-anchor"&gt;&lt;/a&gt;Choose a cloud provider
 &lt;/h2&gt;&lt;p&gt;We used a &lt;a class="link" href="https://www.digitalocean.com/" target="_blank" rel="noopener"
-&gt;Digital Ocean&lt;/a&gt; VM with 8GB of RAM, 4 CPUs, and a 160 GB disk, running Ubuntu
+ &gt;Digital Ocean&lt;/a&gt; VM with 8GB of RAM, 4 CPUs, and a 160 GB disk, running Ubuntu
 24.04 LTS for our remote development environment. We found that Digital Ocean provides VMs that are generally cheaper
 than other cloud providers.&lt;/p&gt;
 &lt;p&gt;Any other cloud provider, such as AWS, Google Cloud, or Azure, can also be used. Your choice of provider depends on your
@@ -2353,23 +2422,24 @@ specific requirements, budget, and familiarity with the platform.&lt;/p&gt;
 &lt;p&gt;After spinning up the VM, we SSH&amp;rsquo;ed into the server, installed the necessary software for our application, and launched
 the server.&lt;/p&gt;
 &lt;p&gt;Since our server required multiple running processes, we used &lt;a class="link" href="https://github.com/tmux/tmux" target="_blank" rel="noopener"
-&gt;tmux&lt;/a&gt; to manage multiple
+ &gt;tmux&lt;/a&gt; to manage multiple
 terminal sessions. Tmux allowed us to create numerous panes and windows within a single terminal session, making it
 easier to manage the server processes. We could disconnect from the server, and the tmux processes ran in the
 background. When reconnected to the server, we could easily reattach to the tmux session and resume work. Additionally,
 we used &lt;a class="link" href="https://iterm2.com/documentation-tmux-integration.html" target="_blank" rel="noopener"
-&gt;iTerm2 tmux integration&lt;/a&gt; to enhance our terminal
+ &gt;iTerm2 tmux integration&lt;/a&gt; to enhance our terminal
 experience.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/tmux-on-remote-server.png"
-alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
-&lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="connect-your-ide-to-the-remote-development-environment"&gt;&lt;a href="#connect-your-ide-to-the-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Connect your IDE to the remote development environment
 &lt;/h2&gt;&lt;p&gt;We used &lt;a class="link" href="https://www.jetbrains.com/" target="_blank" rel="noopener"
-&gt;JetBrains IDE&lt;/a&gt; for development work and
+ &gt;JetBrains IDE&lt;/a&gt; for development work and
 &lt;a class="link" href="https://www.jetbrains.com/remote-development/gateway/" target="_blank" rel="noopener"
-&gt;JetBrains Gateway&lt;/a&gt; to connect to our remote development server
+ &gt;JetBrains Gateway&lt;/a&gt; to connect to our remote development server
 using SSH. JetBrains Gateway automatically installed the IDE backend on the remote server and brought up a local client
 of the IDE.&lt;/p&gt;
 &lt;p&gt;In our case, we wanted to use one IDE for backend development (GoLand) and another IDE for frontend development
@@ -2378,8 +2448,9 @@ of the IDE.&lt;/p&gt;
 from the remote development server without an obvious way to fix the issue. We suspect the issue was due to insufficient
 memory on the machine &amp;ndash; try to plan for around 4 GB of memory per IDE.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/jetbrains-disconnect.png"
-alt="No Connection message in GoLand IDE"&gt;
+ alt="No Connection message in GoLand IDE"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;However, we could use one of the IDEs at a time, which was sufficient for most of our needs.&lt;/p&gt;
 &lt;h1 id="using-a-remote-development-environment"&gt;&lt;a href="#using-a-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Using a remote development environment
 &lt;/h1&gt;&lt;p&gt;After setting up the remote development environment, we reviewed common development use cases to ensure that everything
@@ -2409,7 +2480,7 @@ seconds or so.&lt;/p&gt;
 &lt;h2 id="docker-firewall-rules"&gt;&lt;a href="#docker-firewall-rules" class="header-anchor"&gt;&lt;/a&gt;Docker firewall rules
 &lt;/h2&gt;&lt;p&gt;Docker containers use &lt;code&gt;iptables&lt;/code&gt; rules to open ports for incoming traffic. We can
 &lt;a class="link" href="https://docs.docker.com/engine/network/packet-filtering-firewalls/#restrict-external-connections-to-containers" target="_blank" rel="noopener"
-&gt;restrict external connections to containers&lt;/a&gt;
+ &gt;restrict external connections to containers&lt;/a&gt;
 by adding rules to the &lt;code&gt;DOCKER-USER&lt;/code&gt; chain, such as:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;iptables -I DOCKER-USER -i eth0 ! -s &amp;lt;your local IP&amp;gt; -j DROP
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Where &lt;code&gt;eth0&lt;/code&gt; is the network interface connected to the internet and &lt;code&gt;&amp;lt;your local IP&amp;gt;&lt;/code&gt; is the IP address of your local
@@ -2437,13 +2508,14 @@ did not drill down to the issue, but a potential workaround is to use JetBrains&
 &lt;/ul&gt;
 &lt;h1 id="watch-how-to-set-up-a-remote-development-environment"&gt;&lt;a href="#watch-how-to-set-up-a-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Watch how to set up a remote development environment
 &lt;/h1&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/_VDtA9Tq-1E"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/_VDtA9Tq-1E" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Top 3 issues with GitHub code review process</title><link>https://victoronsoftware.com/posts/github-code-review-issues/</link><pubDate>Sun, 15 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/github-code-review-issues/</guid><description>&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/developer-on-tightrope-headline.png" alt="Featured image of post Top 3 issues with GitHub code review process" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#issue-1-codeowners-is-not-scalable" &gt;CODEOWNERS is not scalable&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="#issue-2-re-approvals-for-every-push" &gt;Re-approvals for every push&lt;/a&gt;&lt;/li&gt;
@@ -2454,14 +2526,15 @@ GitHub code reviews. The default GitHub code review process is not scalable and 
 &lt;h2 id="how-to-set-up-a-github-code-review-process"&gt;&lt;a href="#how-to-set-up-a-github-code-review-process" class="header-anchor"&gt;&lt;/a&gt;How to set up a GitHub code review process
 &lt;/h2&gt;&lt;p&gt;GitHub admins can create a
 &lt;a class="link" href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" target="_blank" rel="noopener"
-&gt;branch protection rule&lt;/a&gt;
+ &gt;branch protection rule&lt;/a&gt;
 that requires a code review before merging the code to the main branch.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a representative branch protection rule:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
-alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
-&lt;h4&gt;PR branch protection rule&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;PR branch protection rule&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
 &lt;code&gt;CODEOWNERS&lt;/code&gt; file in the repository. If someone makes a new push to the PR, all the owners need to re-approve the PR.&lt;/p&gt;
 &lt;p&gt;In a previous article, we covered &lt;a class="link" href="../find-code-owners-for-pull-request" &gt;how to find the required code owners for a PR&lt;/a&gt;.
@@ -2469,7 +2542,7 @@ This is another issue, but we will not discuss it in this article.&lt;/p&gt;
 &lt;h2 id="issue-1-codeowners-is-not-scalable"&gt;&lt;a href="#issue-1-codeowners-is-not-scalable" class="header-anchor"&gt;&lt;/a&gt;Issue 1: CODEOWNERS is not scalable
 &lt;/h2&gt;&lt;p&gt;GitHub uses a
 &lt;a class="link" href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener"
-&gt;&lt;code&gt;CODEOWNERS&lt;/code&gt; file to define individuals or teams responsible for each file in the repository&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;CODEOWNERS&lt;/code&gt; file to define individuals or teams responsible for each file in the repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The &lt;code&gt;CODEOWNERS&lt;/code&gt; file format favors fine-grained code ownership, where the last matching pattern takes precedence over
 previous patterns. Here is an example from the GitHub documentation:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;# In this example, @octocat owns any file in the `/apps`
@@ -2494,8 +2567,9 @@ previous pattern. For example, we would rewrite the above owners as:&lt;/p&gt;
 experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p&gt;
 &lt;p&gt;The issue stems from the lack of fine-grained control over the following option:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
-alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
+ alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;With multiple code owners, every code owner must re-approve every change.&lt;/p&gt;
 &lt;p&gt;A code owner should not need to re-review code that didn&amp;rsquo;t change &amp;ndash; this is a waste of time and effort.&lt;/p&gt;
 &lt;p&gt;With a single code owner, the reviewer must re-approve trivial or irrelevant changes, such as:&lt;/p&gt;
@@ -2565,13 +2639,14 @@ Configure development environments that enhance team collaboration and reduce on
 &lt;/ul&gt;
 &lt;h2 id="watch-the-top-3-issues-with-github-code-reviews"&gt;&lt;a href="#watch-the-top-3-issues-with-github-code-reviews" class="header-anchor"&gt;&lt;/a&gt;Watch the top 3 issues with GitHub code reviews
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/RWnJ84vTK48"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/RWnJ84vTK48" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>How to measure the execution time of Go tests accurately</title><link>https://victoronsoftware.com/posts/go-test-execution-time/</link><pubDate>Wed, 04 Sep 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/go-test-execution-time/</guid><description>&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/crash-test-dummy-headline.png" alt="Featured image of post How to measure the execution time of Go tests accurately" /&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#accurately-measuring-test-execution-time" &gt;Accurately measuring test execution time&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2581,7 +2656,7 @@ title="YouTube Video"
 &lt;h2 id="problems-with-current-measurement-tools"&gt;&lt;a href="#problems-with-current-measurement-tools" class="header-anchor"&gt;&lt;/a&gt;Problems with current measurement tools
 &lt;/h2&gt;&lt;p&gt;We have yet to find a tool that provides detailed, actionable insights into the performance of Go tests.&lt;/p&gt;
 &lt;p&gt;For example, running the &lt;code&gt;gotestsum tool slowest&lt;/code&gt; command from the &lt;a class="link" href="https://github.com/gotestyourself/gotestsum" target="_blank" rel="noopener"
-&gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
+ &gt;gotestsum&lt;/a&gt; tool gave us the following output for our test suite:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;github.com/fleetdm/fleet/v4/server/datastore/mysql TestMDMApple 6m9.65s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestSoftware 4m8.9s
 github.com/fleetdm/fleet/v4/server/datastore/mysql TestPolicies 3m31s
@@ -2606,8 +2681,9 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
-alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+ alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
 &lt;p&gt;Within a package, tests run sequentially by default &amp;ndash; the tests in the same package run one after the other. However, you can run tests in parallel within a package by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your test functions. This behavior is controlled by the &lt;code&gt;-parallel&lt;/code&gt; flag, which also defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;. So, in a system with 8 CPUs, running a test suite with many packages and parallel tests will run 8 packages concurrently and 8 tests within each package concurrently, for a total of 64 tests running concurrently.&lt;/p&gt;
 &lt;p&gt;Each test function may have multiple subtests, which may have their own subtests, and so on. Subtests run sequentially by default. However, you can also run subtests in parallel by calling &lt;code&gt;t.Parallel()&lt;/code&gt; in your subtest functions.&lt;/p&gt;
@@ -2680,10 +2756,10 @@ alt="Sequence diagram of a go test run with two packages, two tests, and two sub
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;While parsing the JSON output, we can track how many tests are running in parallel. We can then adjust the execution time of each test by dividing the total time by the number of tests running concurrently. Since we don&amp;rsquo;t have access to the actual CPU time each test used, this is the best approximation we can get.&lt;/p&gt;
 &lt;p&gt;When tests run in parallel, we typically see the &lt;code&gt;pause&lt;/code&gt; and &lt;code&gt;cont&lt;/code&gt; actions. If we see these actions, we know that the test or subtest is running in parallel.&lt;/p&gt;
 &lt;p&gt;We created a parser called &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; that does these calculations.&lt;/p&gt;
 &lt;h2 id="accurate-test-execution-time-measurement-in-practice"&gt;&lt;a href="#accurate-test-execution-time-measurement-in-practice" class="header-anchor"&gt;&lt;/a&gt;Accurate test execution time measurement in practice
 &lt;/h2&gt;&lt;p&gt;By running our &lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; parser on the JSON output of our test suite, we gained actionable insights into our tests&amp;rsquo; performance.&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;WARNING: Stopped test not found in running tests: TestGenerateMDMApple/successful_run
 github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_20240709132642: 8.142s (total: 2m12.806s parallel: 16)
 github.com/fleetdm/fleet/v4/server/cron TestCalendarEvents1KHosts: 7.853s (total: 36.158s parallel: 4)
@@ -2715,7 +2791,7 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="goteststats-on-github"&gt;&lt;a href="#goteststats-on-github" class="header-anchor"&gt;&lt;/a&gt;&lt;code&gt;goteststats&lt;/code&gt; on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/getvictor/goteststats" target="_blank" rel="noopener"
-&gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
+ &gt;goteststats&lt;/a&gt; is available on GitHub. You can use it to get detailed performance data for your Go test suite.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;Recently, we wrote about &lt;a class="link" href="../optimizing-performance-of-go-app" &gt;optimizing the performance of Go applications&lt;/a&gt; and &lt;a class="link" href="../analyze-go-build/" &gt;analyzing Go build times&lt;/a&gt;.&lt;/li&gt;
@@ -2727,11 +2803,12 @@ github.com/fleetdm/fleet/v4/server/datastore/mysql/migrations/tables TestUp_2024
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-measure-the-execution-time-of-go-tests-accurately"&gt;&lt;a href="#watch-how-to-measure-the-execution-time-of-go-tests-accurately" class="header-anchor"&gt;&lt;/a&gt;Watch how to measure the execution time of Go tests accurately
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/caTDvS5vCjA"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/caTDvS5vCjA" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

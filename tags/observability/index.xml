@@ -26,12 +26,14 @@ instrumentation in production.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;We built a TODO application to demonstrate key OpenTelemetry features for developers. The examples use
 &lt;a class="link" href="https://signoz.io/docs/install/docker/" target="_blank" rel="noopener"
-&gt;SigNoz&lt;/a&gt; as the backend, but any OpenTelemetry-compatible system works (Jaeger,
+ &gt;SigNoz&lt;/a&gt; as the backend, but any OpenTelemetry-compatible system works (Jaeger,
 Grafana, Datadog, etc.).&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
+
+ &lt;blockquote&gt;
+ &lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: In development, we often want more detailed telemetry than in production. Production may limit telemetry due
 to performance or security reasons. Many of the features we&amp;rsquo;ll demonstrate should have environment-specific toggles.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;/blockquote&gt;
 &lt;h2 id="feature-1-api-request-and-response-bodies"&gt;&lt;a href="#feature-1-api-request-and-response-bodies" class="header-anchor"&gt;&lt;/a&gt;Feature 1: API request and response bodies
 &lt;/h2&gt;&lt;p&gt;Seeing actual request and response bodies is invaluable during development. While you&amp;rsquo;d avoid this in production for
 security reasons, it&amp;rsquo;s essential for debugging locally.&lt;/p&gt;
@@ -57,8 +59,9 @@ provides context when debugging.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This approach provides full API context without bloating searchable attributes.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
-alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
+ alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="feature-2-database-query-instrumentation"&gt;&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor"&gt;&lt;/a&gt;Feature 2: Database query instrumentation
 &lt;/h2&gt;&lt;p&gt;Database queries often cause performance bottlenecks. OpenTelemetry captures both query timing and the actual SQL
 executed.&lt;/p&gt;
@@ -66,8 +69,9 @@ executed.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
-alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
+ alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
 &lt;/figure&gt;
+
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = ? AND status = ?&amp;#34;&lt;/span&gt;),
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;attribute&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;String&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;db.statement.formatted&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;SELECT * FROM todos WHERE user_id = 123 AND status = &amp;#39;active&amp;#39;&amp;#34;&lt;/span&gt;),
@@ -86,8 +90,9 @@ storage durations and access controls in production environments.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
 incoming requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
-alt="SigNoz displaying outgoing HTTP request details"&gt;
+ alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;// Before making the request&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;AddEvent&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;http.request.body&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;trace&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;WithAttributes&lt;/span&gt;(
@@ -113,8 +118,9 @@ alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
 output.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
-alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
+ alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
 &lt;/figure&gt;
+
 &lt;h3 id="key-opentelemetry-concepts-spans-vs-traces"&gt;&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: spans vs traces
 &lt;/h3&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -146,8 +152,9 @@ the branches and leaves.&lt;/p&gt;
 &lt;h2 id="feature-5-comprehensive-error-handling"&gt;&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor"&gt;&lt;/a&gt;Feature 5: Comprehensive error handling
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
-alt="SigNoz showing errors"&gt;
+ alt="SigNoz showing errors"&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Database layer throws an error (count: 1)&lt;/li&gt;
@@ -181,12 +188,12 @@ alt="SigNoz showing errors"&gt;
 &lt;p&gt;Telemetry isn&amp;rsquo;t an afterthought. It&amp;rsquo;s a development tool that we can use from day one.&lt;/p&gt;
 &lt;h2 id="try-it-yourself"&gt;&lt;a href="#try-it-yourself" class="header-anchor"&gt;&lt;/a&gt;Try it yourself
 &lt;/h2&gt;&lt;p&gt;See these concepts in action with our &lt;a class="link" href="https://github.com/getvictor/todo-app" target="_blank" rel="noopener"
-&gt;instrumented TODO application on GitHub&lt;/a&gt;.
+ &gt;instrumented TODO application on GitHub&lt;/a&gt;.
 The AI-generated code has readability issues, but effectively demonstrates all telemetry concepts.&lt;/p&gt;
 &lt;p&gt;To get started with your own setup:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Install &lt;a class="link" href="https://signoz.io/docs/install/docker/" target="_blank" rel="noopener"
-&gt;SigNoz using Docker&lt;/a&gt;&lt;/li&gt;
+ &gt;SigNoz using Docker&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Clone the TODO app repository&lt;/li&gt;
 &lt;li&gt;Run the app with OpenTelemetry enabled&lt;/li&gt;
 &lt;li&gt;Start exploring your traces!&lt;/li&gt;
@@ -211,13 +218,14 @@ Our initial skeptical take on OpenTelemetry and its challenges for development u
 development?&lt;/p&gt;
 &lt;h2 id="watch-us-demonstrate-opentelemetry-features-useful-for-developers"&gt;&lt;a href="#watch-us-demonstrate-opentelemetry-features-useful-for-developers" class="header-anchor"&gt;&lt;/a&gt;Watch us demonstrate OpenTelemetry features useful for developers
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/1a8f8FWRWS0"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/1a8f8FWRWS0" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Is OpenTelemetry useful for the average software developer?</title><link>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</link><pubDate>Wed, 30 Oct 2024 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/opentelemetry-with-jaeger/</guid><description>&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/opentelemetry-with-jaeger-headline.png" alt="Featured image of post Is OpenTelemetry useful for the average software developer?" /&gt;&lt;p&gt;This article discusses our first impressions of using OpenTelemetry with Jaeger.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="#use-cases-for-opentelemetry-and-jaeger" &gt;Use cases for OpenTelemetry and Jaeger&lt;/a&gt;&lt;/li&gt;
@@ -225,7 +233,7 @@ title="YouTube Video"
 &lt;/ul&gt;
 &lt;h2 id="what-is-opentelemetry"&gt;&lt;a href="#what-is-opentelemetry" class="header-anchor"&gt;&lt;/a&gt;What is OpenTelemetry?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
-&gt;OpenTelemetry&lt;/a&gt; is a set of APIs, libraries, agents, and instrumentation for collecting
+ &gt;OpenTelemetry&lt;/a&gt; is a set of APIs, libraries, agents, and instrumentation for collecting
 distributed traces and metrics from your applications. It provides a standardized way to instrument your code and
 collect telemetry data. OpenTelemetry supports programming languages like Java, Python, Go, JavaScript, etc.&lt;/p&gt;
 &lt;p&gt;Tracing is a method of monitoring and profiling your application to understand how requests flow through your system.
@@ -233,7 +241,7 @@ For example, you can view the associated database calls and requests to other se
 allows you to identify bottlenecks, latency issues, and other performance problems.&lt;/p&gt;
 &lt;h2 id="what-is-jaeger"&gt;&lt;a href="#what-is-jaeger" class="header-anchor"&gt;&lt;/a&gt;What is Jaeger?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://www.jaegertracing.io/" target="_blank" rel="noopener"
-&gt;Jaeger&lt;/a&gt; is an open-source, end-to-end distributed tracing system. Jaeger is popular for
+ &gt;Jaeger&lt;/a&gt; is an open-source, end-to-end distributed tracing system. Jaeger is popular for
 tracing applications because of its scalability, ease of use, and integration with other tools. Jaeger provides a
 web-based UI for viewing traces and analyzing performance data.&lt;/p&gt;
 &lt;h2 id="add-opentelemetry-instrumentation-to-your-application"&gt;&lt;a href="#add-opentelemetry-instrumentation-to-your-application" class="header-anchor"&gt;&lt;/a&gt;Add OpenTelemetry instrumentation to your application
@@ -307,7 +315,7 @@ go get github.com/XSAM/otelsql@v0.35.0
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="launch-jaeger"&gt;&lt;a href="#launch-jaeger" class="header-anchor"&gt;&lt;/a&gt;Launch Jaeger
 &lt;/h2&gt;&lt;p&gt;To view traces, you need to launch Jaeger. You can run Jaeger locally using Docker. Based on the
 &lt;a class="link" href="https://www.jaegertracing.io/docs/1.62/getting-started/" target="_blank" rel="noopener"
-&gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
+ &gt;Jaeger 1.62 Getting Started guide&lt;/a&gt;, you can run the following
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;docker run --rm --name jaeger &lt;span style="color:#ae81ff"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; -p 16686:16686 &lt;span style="color:#ae81ff"&gt;\
@@ -325,13 +333,14 @@ command:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, you can start your application.&lt;/p&gt;
 &lt;h2 id="view-traces-in-jaeger"&gt;&lt;a href="#view-traces-in-jaeger" class="header-anchor"&gt;&lt;/a&gt;View traces in Jaeger
 &lt;/h2&gt;&lt;p&gt;Open your browser and navigate to &lt;a class="link" href="http://localhost:16686" target="_blank" rel="noopener"
-&gt;http://localhost:16686&lt;/a&gt; to view traces in the Jaeger UI.
+ &gt;http://localhost:16686&lt;/a&gt; to view traces in the Jaeger UI.
 Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Find Traces&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
-alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+ alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
 &lt;/h2&gt;&lt;p&gt;In a local software development environment, OpenTelemetry and Jaeger can be used to:&lt;/p&gt;
 &lt;ul&gt;
@@ -360,7 +369,7 @@ efforts.&lt;/p&gt;
 &lt;p&gt;The Jaeger UI itself is basic and lacks some features. For example, regex search is missing out of the box, unless
 Elasticsearch/OpenSearch storage is added.&lt;/p&gt;
 &lt;p&gt;Our chosen SQL instrumentation library, &lt;a class="link" href="https://github.com/XSAM/otelsql" target="_blank" rel="noopener"
-&gt;github.com/XSAM/otelsql&lt;/a&gt;, could be better. It
+ &gt;github.com/XSAM/otelsql&lt;/a&gt;, could be better. It
 does not provide a way to trace the transaction lifecycle, and it creates many spans at the root level, clogging the
 Jaeger UI.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
@@ -380,14 +389,15 @@ Learn effective techniques for measuring and optimizing Go code performance.&lt;
 &lt;/ul&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/fleetdm/fleet/tree/6bc0b5dcd9214c6e3ff94fe657947aeccbdad352" target="_blank" rel="noopener"
-&gt;Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a&gt;&lt;/p&gt;
+ &gt;Fleet Device Management repo with OpenTelemetry instrumentation (as of this writing)&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="watch-opentelemetry-with-jaeger-video"&gt;&lt;a href="#watch-opentelemetry-with-jaeger-video" class="header-anchor"&gt;&lt;/a&gt;Watch OpenTelemetry with Jaeger video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/eQhdvU2gsmQ"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/eQhdvU2gsmQ" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

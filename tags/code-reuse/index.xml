@@ -4,20 +4,21 @@
 &lt;/ul&gt;
 &lt;h2 id="introduction"&gt;&lt;a href="#introduction" class="header-anchor"&gt;&lt;/a&gt;Introduction
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
+ &gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
 approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
-alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
-&lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The entry point for GitHub Actions is the &lt;code&gt;.github/workflows&lt;/code&gt; directory in your repository. This directory contains one
 or more YAML files that define your workflows. A workflow is an automated process made up of one or more jobs. Each job
 runs on a separate runner. A runner is a server that runs the job. A job contains one or more steps. Each step runs a
 separate command.&lt;/p&gt;
 &lt;h2 id="why-reuse"&gt;&lt;a href="#why-reuse" class="header-anchor"&gt;&lt;/a&gt;Why reuse?
 &lt;/h2&gt;&lt;p&gt;&lt;a class="link" href="https://en.wikipedia.org/wiki/Code_reuse" target="_blank" rel="noopener"
-&gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
+ &gt;Code reuse&lt;/a&gt; is a fundamental principle of software development. Reusing
 GitHub Actions code allows you to:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Improve maintainability by keeping common code in one place and reducing the amount of code&lt;/li&gt;
@@ -38,10 +39,11 @@ GitHub Actions code allows you to:&lt;/p&gt;
 &lt;h2 id="reusable-workflows"&gt;&lt;a href="#reusable-workflows" class="header-anchor"&gt;&lt;/a&gt;Reusable workflows
 &lt;/h2&gt;&lt;p&gt;A reusable workflow replaces a job in the main workflow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
-alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p&gt;
 &lt;p&gt;For file sharing, &amp;lsquo;build artifacts&amp;rsquo; must be used to share files with the main workflow. The reusable workflow does not
 inherit environment variables. However, it accepts inputs and secrets from the calling workflow and may use outputs to
@@ -114,17 +116,19 @@ artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
-alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="reusable-steps-composite-action"&gt;&lt;a href="#reusable-steps-composite-action" class="header-anchor"&gt;&lt;/a&gt;Reusable steps (composite action)
 &lt;/h2&gt;&lt;p&gt;Reusable steps replace a regular step in a job. We will use a &lt;code&gt;composite action&lt;/code&gt; for reusable steps in our example.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
-alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
 outputs to pass data back to the main workflow.&lt;/p&gt;
 &lt;p&gt;Unlike a reusable workflow, a composite action inherits environment variables. However, it does not inherit secrets.
@@ -177,10 +181,11 @@ generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also pro
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
-alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
-&lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;For a reusable TypeScript action example, see the
 &lt;a class="link" href="../typescript-github-action/" &gt;How to create a custom GitHub Action using TypeScript&lt;/a&gt; article.&lt;/p&gt;
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
@@ -191,7 +196,7 @@ great way to reduce errors and increase productivity.&lt;/p&gt;
 work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/github-reusable-workflows-and-steps" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/github-reusable-workflows-and-steps&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="other-articles-related-to-github"&gt;&lt;a href="#other-articles-related-to-github" class="header-anchor"&gt;&lt;/a&gt;Other articles related to GitHub
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="../track-engineering-metrics/" &gt;Automate tracking of engineering metrics with GitHub Actions&lt;/a&gt;&lt;/li&gt;
@@ -202,11 +207,12 @@ work that may run on the same runner and share the same work area.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="github-actions-reusable-workflows-and-steps-video"&gt;&lt;a href="#github-actions-reusable-workflows-and-steps-video" class="header-anchor"&gt;&lt;/a&gt;GitHub Actions reusable workflows and steps video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/ciHJzV6TZB8"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/ciHJzV6TZB8" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

@@ -5,24 +5,25 @@ you deep visibility that your team will actually want to look at.&lt;/p&gt;
 &lt;p&gt;In our previous &lt;a class="link" href="../track-engineering-metrics/" &gt;engineering metrics guide&lt;/a&gt;, we showed a basic way to track metrics using
 GitHub Actions and the Google Sheets API. The data in Google Sheets can be visualized using a tool like
 &lt;a class="link" href="https://lookerstudio.google.com/" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
+ &gt;Google&amp;rsquo;s Looker Studio&lt;/a&gt;. However, we wanted more powerful visualizations that could
 be dynamically sliced, diced, and drilled down into. Also, we wanted the tools to be free so we wouldn&amp;rsquo;t need to justify
 the costs to our management.&lt;/p&gt;
 &lt;h2 id="the-free-engineering-benchmarks-stack"&gt;&lt;a href="#the-free-engineering-benchmarks-stack" class="header-anchor"&gt;&lt;/a&gt;The free engineering benchmarks stack
 &lt;/h2&gt;&lt;p&gt;As in our previous example, we used &lt;a class="link" href="https://github.com/features/actions" target="_blank" rel="noopener"
-&gt;GitHub Actions&lt;/a&gt; to schedule our metrics
+ &gt;GitHub Actions&lt;/a&gt; to schedule our metrics
 collection and compute the data we wanted to track.&lt;/p&gt;
 &lt;p&gt;For visualizations, we decided on &lt;a class="link" href="https://grafana.com/oss/grafana/" target="_blank" rel="noopener"
-&gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
+ &gt;Grafana&lt;/a&gt;. Grafana is a leader in visualizing data,
 is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
 up any infrastructure ourselves.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
-alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
+ alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
 compare our engineering metrics year over year. Due to its generous free tier, we decided to use
 &lt;a class="link" href="https://cloud.google.com/bigquery?hl=en" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
+ &gt;Google&amp;rsquo;s BigQuery&lt;/a&gt; analytics database.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Storage: The first 10 GiB per month is free.&lt;/li&gt;
 &lt;li&gt;Queries: The first 1 TiB of query data processed per month is free.&lt;/li&gt;
@@ -30,8 +31,9 @@ compare our engineering metrics year over year. Due to its generous free tier, w
 &lt;p&gt;We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
 roles, and created a JWT key for the service account to use with our app.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
-alt="Roles for the BigQuery service account."&gt;
+ alt="Roles for the BigQuery service account."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
 recommend enabling billing on the account and monitoring your usage to ensure you stay within the free limits.&lt;/p&gt;
 &lt;h2 id="picking-the-metric-to-track-pickup-time"&gt;&lt;a href="#picking-the-metric-to-track-pickup-time" class="header-anchor"&gt;&lt;/a&gt;Picking the metric to track: pickup time
@@ -48,7 +50,7 @@ from when the developer finishes their work until they get feedback on their wor
 &lt;a class="link" href="../github-reusable-workflows-and-steps/#reusable-steps-composite-action" &gt;reusable GitHub action&lt;/a&gt;. We decided to use
 JavaScript (not TypeScript) to simplify the action.&lt;/p&gt;
 &lt;p&gt;We used the &lt;a class="link" href="https://github.com/octokit/octokit.js" target="_blank" rel="noopener"
-&gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
+ &gt;octokit.js GitHub API client&lt;/a&gt; to fetch the pull requests from our
 repo, extract the timeline events and review events from the PRs, and calculate the pickup time.&lt;/p&gt;
 &lt;p&gt;In our initial review of the data, we noticed occasional spikes in pickup time on Mondays. That&amp;rsquo;s because pull requests
 created on Friday were sitting around over the weekend until being reviewed on Monday. Since we don&amp;rsquo;t expect our
@@ -57,7 +59,7 @@ time-consuming implementation details. We created a unit test to make sure we go
 &lt;p&gt;We added a &lt;code&gt;--print-only&lt;/code&gt; option to our program to manually examine the data before we uploaded it to the analytical
 database.&lt;/p&gt;
 &lt;p&gt;To interface with BigQuery, we used &lt;a class="link" href="https://github.com/googleapis/nodejs-bigquery" target="_blank" rel="noopener"
-&gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
+ &gt;Google&amp;rsquo;s BigQuery Node.js client&lt;/a&gt;.
 Our table schema was:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-javascript" data-lang="javascript"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fields&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; [
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; { &lt;span style="color:#a6e22e"&gt;name&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;review_date&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;type&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;DATE&amp;#39;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;mode&lt;/span&gt;&lt;span style="color:#f92672"&gt;:&lt;/span&gt; &lt;span style="color:#e6db74"&gt;&amp;#39;REQUIRED&amp;#39;&lt;/span&gt; },
@@ -84,8 +86,9 @@ pickup time chart. We had to decide how to visualize the data. We decided on:&lt
 &lt;/ul&gt;
 &lt;p&gt;We created Grafana variables to filter by username/group.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
-alt="List of Grafana dashboard variables, including user and user_group."&gt;
+ alt="List of Grafana dashboard variables, including user and user_group."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
 Below is the query we came up with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;WITH&lt;/span&gt; daily &lt;span style="color:#66d9ef"&gt;AS&lt;/span&gt; (
@@ -219,12 +222,14 @@ time from &lt;code&gt;first_review_time&lt;/code&gt; but displaying the data in 
 attempts to fix the problem by changing the time to noon: &lt;code&gt;TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The final chart looked like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
-alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
+ alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can inspect the data to drill down into the PR numbers for each data point:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
-alt="Raw data from the database query, including PR numbers."&gt;
+ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;With the PR numbers, we can explore our data using the following query:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;-- Sample query to dig into the details. Replace the PR numbers list.
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; &lt;span style="color:#f92672"&gt;`&lt;/span&gt;engineering&lt;span style="color:#f92672"&gt;-&lt;/span&gt;metrics&lt;span style="color:#f92672"&gt;-&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;123456&lt;/span&gt;.github_metrics.pr_pickup_time&lt;span style="color:#f92672"&gt;`&lt;/span&gt;
@@ -278,7 +283,7 @@ alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;SERVICE_ACCOUNT_KEY_PATH&lt;/span&gt;: &lt;span style="color:#e6db74"&gt;&amp;#39;./service-account-key.json&amp;#39;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="code-on-github"&gt;&lt;a href="#code-on-github" class="header-anchor"&gt;&lt;/a&gt;Code on GitHub
 &lt;/h2&gt;&lt;p&gt;Our code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/pickup-time" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/pickup-time&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
 &lt;li&gt;
@@ -296,11 +301,12 @@ Why code readability matters—and how to measure and improve it for long-term p
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-set-up-free-engineering-metrics"&gt;&lt;a href="#watch-how-to-set-up-free-engineering-metrics" class="header-anchor"&gt;&lt;/a&gt;Watch how to set up free engineering metrics
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/okYOm8IPeKM"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/okYOm8IPeKM" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

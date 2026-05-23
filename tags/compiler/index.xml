@@ -10,7 +10,7 @@ from scratch.&lt;/p&gt;
 on your development machine, but that may not be true on your CI/CD system. Ensure you use a build cache across multiple
 CI/CD runs. For example, the GitHub Actions
 &lt;a class="link" href="https://github.com/actions/setup-go?tab=readme-ov-file#caching-dependency-files-and-build-outputs" target="_blank" rel="noopener"
-&gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
+ &gt;&lt;code&gt;setup-go&lt;/code&gt; action has caching turned on by default&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="analyze-a-go-build"&gt;&lt;a href="#analyze-a-go-build" class="header-anchor"&gt;&lt;/a&gt;Analyze a Go build
 &lt;/h2&gt;&lt;p&gt;We can clear the build cache with the following:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;go clean -cache
@@ -25,7 +25,7 @@ shells and OSes.&lt;/p&gt;
 executing user and system code. They are larger than the wall clock time because we use a multi-core machine.&lt;/p&gt;
 &lt;p&gt;The debug trace is in
 &lt;a class="link" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/preview" target="_blank" rel="noopener"
-&gt;Trace Event Format&lt;/a&gt; and looks
+ &gt;Trace Event Format&lt;/a&gt; and looks
 like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;[
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;Running build command&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608027038&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
@@ -39,15 +39,16 @@ like this:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;,{&lt;span style="color:#f92672"&gt;&amp;#34;name&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;modfetch.download github.com/getsentry/sentry-go@v0.18.0&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ph&amp;#34;&lt;/span&gt;:&lt;span style="color:#e6db74"&gt;&amp;#34;B&amp;#34;&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;ts&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;1739801608053496&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;pid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;,&lt;span style="color:#f92672"&gt;&amp;#34;tid&amp;#34;&lt;/span&gt;:&lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#960050;background-color:#1e0010"&gt;...&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;and&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;so&lt;/span&gt; &lt;span style="color:#960050;background-color:#1e0010"&gt;on&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A widespread tool for visualizing Trace Event Format is &lt;a class="link" href="https://ui.perfetto.dev/" target="_blank" rel="noopener"
-&gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
+ &gt;Perfetto&lt;/a&gt;. Click &lt;code&gt;Open trace file&lt;/code&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
-&gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
+ &gt;https://github.com/mattn/go-sqlite3&lt;/a&gt; dependency is taking most of the build time. The fact that
 we have 16 cores doesn&amp;rsquo;t help because Go is not parallelizing the build for this dependency. This dependency uses CGO,
 so the build takes time to compile C files.&lt;/p&gt;
 &lt;p&gt;We attempted to speed up the build by adding the &lt;code&gt;go-sqlite3&lt;/code&gt; dependency to our top &lt;code&gt;./cmd/fleet&lt;/code&gt; package, assuming the
@@ -59,9 +60,10 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
-&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
 takes ~300ms and is not parallelized. This step is part of the Go toolchain. Modifying a smaller package would reduce
 the recompile time. If you have a large package that is frequently modified, you can improve the build time by splitting
@@ -105,43 +107,44 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;code&gt;Deps&lt;/code&gt; field shows the package&amp;rsquo;s dependencies.&lt;/p&gt;
 &lt;p&gt;Although we can write our own tool to analyze the &lt;code&gt;actiongraph.json&lt;/code&gt; file, we can also use the
 &lt;a class="link" href="https://github.com/icio/actiongraph" target="_blank" rel="noopener"
-&gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
+ &gt;https://github.com/icio/actiongraph&lt;/a&gt; tool. Install the tool with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;go install github.com/icio/actiongraph@latest
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We can find the longest compile steps with:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;actiongraph -f actiongraph.json top
-13.786s 16.14% build github.com/mattn/go-sqlite3
-1.396s 17.78% build runtime/cgo
-1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
-1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
-1.095s 22.13% build github.com/google/go-github/v37/github
-1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
-0.983s 24.55% build github.com/open-policy-agent/opa/ast
-0.975s 25.69% build github.com/klauspost/compress/zstd
-0.916s 26.76% build github.com/shoenig/go-m1cpu
-0.755s 27.64% build crypto/tls
-0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
-0.722s 29.36% build github.com/shirou/gopsutil/v3/process
-0.664s 30.14% build net
-0.626s 30.87% build github.com/open-policy-agent/opa/topdown
-0.625s 31.60% build runtime
-0.622s 32.33% build google.golang.org/protobuf/internal/impl
-0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
-0.605s 33.75% build golang.org/x/net/http2
-0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
-0.576s 35.10% build github.com/spf13/pflag
+ 13.786s 16.14% build github.com/mattn/go-sqlite3
+ 1.396s 17.78% build runtime/cgo
+ 1.327s 19.33% build github.com/aws/aws-sdk-go/service/s3
+ 1.295s 20.85% build github.com/aws/aws-sdk-go/aws/endpoints
+ 1.095s 22.13% build github.com/google/go-github/v37/github
+ 1.078s 23.39% build github.com/elastic/go-sysinfo/providers/darwin
+ 0.983s 24.55% build github.com/open-policy-agent/opa/ast
+ 0.975s 25.69% build github.com/klauspost/compress/zstd
+ 0.916s 26.76% build github.com/shoenig/go-m1cpu
+ 0.755s 27.64% build crypto/tls
+ 0.742s 28.51% build github.com/fleetdm/fleet/v4/server/fleet
+ 0.722s 29.36% build github.com/shirou/gopsutil/v3/process
+ 0.664s 30.14% build net
+ 0.626s 30.87% build github.com/open-policy-agent/opa/topdown
+ 0.625s 31.60% build runtime
+ 0.622s 32.33% build google.golang.org/protobuf/internal/impl
+ 0.609s 33.04% build github.com/fleetdm/fleet/v4/server/datastore/mysql
+ 0.605s 33.75% build golang.org/x/net/http2
+ 0.577s 34.43% build github.com/aws/aws-sdk-go/service/lambda
+ 0.576s 35.10% build github.com/spf13/pflag
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The tool also has a &lt;code&gt;graph&lt;/code&gt; subcommand to highlight all import paths from the build target to the package indicated by
 &lt;code&gt;--why&lt;/code&gt;. We can convert the &lt;code&gt;.dot&lt;/code&gt; file to an SVG file with the &lt;a class="link" href="https://graphviz.org/" target="_blank" rel="noopener"
-&gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
+ &gt;Graphviz&lt;/a&gt; &lt;code&gt;dot&lt;/code&gt; command.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
-&lt;/figcaption&gt;
+ &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;
 &lt;p&gt;There is no official documentation for the above debug flags. However, they can be found in the
 &lt;a class="link" href="https://go.dev/src/cmd/go/internal/work/build.go" target="_blank" rel="noopener"
-&gt;Go source code&lt;/a&gt;:&lt;/p&gt;
+ &gt;Go source code&lt;/a&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#75715e"&gt;// Undocumented, unstable debugging flags.&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugActiongraph&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-actiongraph&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;cmd&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Flag&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;StringVar&lt;/span&gt;(&lt;span style="color:#f92672"&gt;&amp;amp;&lt;/span&gt;&lt;span style="color:#a6e22e"&gt;cfg&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;DebugRuntimeTrace&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;debug-runtime-trace&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&lt;/span&gt;)
@@ -154,11 +157,12 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;/ul&gt;
 &lt;h2 id="watch-how-to-analyze-go-builds"&gt;&lt;a href="#watch-how-to-analyze-go-builds" class="header-anchor"&gt;&lt;/a&gt;Watch how to analyze Go builds
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/fs81KvxhwhI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/fs81KvxhwhI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

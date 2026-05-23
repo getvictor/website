@@ -9,8 +9,8 @@
 &lt;p&gt;A module bundler and TypeScript are essential tools for modern web development. They improve the development experience for large or long-running projects.&lt;/p&gt;
 &lt;h1 id="prerequisites---nodejs-and-npm"&gt;&lt;a href="#prerequisites---nodejs-and-npm" class="header-anchor"&gt;&lt;/a&gt;Prerequisites - Node.js and npm
 &lt;/h1&gt;&lt;p&gt;Before we start, make sure you have &lt;a class="link" href="https://nodejs.org/" target="_blank" rel="noopener"
-&gt;Node.js&lt;/a&gt; and &lt;a class="link" href="https://www.npmjs.com/" target="_blank" rel="noopener"
-&gt;npm&lt;/a&gt; installed. Node.js is a JavaScript runtime. We will use it to run webpack and future development tools. npm is a JavaScript package manager.&lt;/p&gt;
+ &gt;Node.js&lt;/a&gt; and &lt;a class="link" href="https://www.npmjs.com/" target="_blank" rel="noopener"
+ &gt;npm&lt;/a&gt; installed. Node.js is a JavaScript runtime. We will use it to run webpack and future development tools. npm is a JavaScript package manager.&lt;/p&gt;
 &lt;p&gt;You can check if you have them installed by running the following commands:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;node -v
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm -v
@@ -25,19 +25,19 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h1 id="what-is-webpack"&gt;&lt;a href="#what-is-webpack" class="header-anchor"&gt;&lt;/a&gt;What is webpack?
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://webpack.js.org/" target="_blank" rel="noopener"
-&gt;Webpack&lt;/a&gt; is a module bundler for JavaScript applications. It takes modules with dependencies and generates static assets representing those modules. We will use webpack to bundle multiple JavaScript files into a single file.&lt;/p&gt;
+ &gt;Webpack&lt;/a&gt; is a module bundler for JavaScript applications. It takes modules with dependencies and generates static assets representing those modules. We will use webpack to bundle multiple JavaScript files into a single file.&lt;/p&gt;
 &lt;p&gt;A module bundler allows you to write modular code and bundle it into a single file. TypeScript is a superset of JavaScript that adds static typing and other features to the language.&lt;/p&gt;
 &lt;p&gt;We will install webpack with &lt;code&gt;npm&lt;/code&gt;:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;npm install --save-dev webpack webpack-cli webpack-merge copy-webpack-plugin
 &lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/webpack" target="_blank" rel="noopener"
-&gt;webpack&lt;/a&gt; is the core module bundler&lt;/li&gt;
+ &gt;webpack&lt;/a&gt; is the core module bundler&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/webpack-cli" target="_blank" rel="noopener"
-&gt;webpack-cli&lt;/a&gt; is the command-line interface for webpack&lt;/li&gt;
+ &gt;webpack-cli&lt;/a&gt; is the command-line interface for webpack&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/webpack-merge" target="_blank" rel="noopener"
-&gt;webpack-merge&lt;/a&gt; is a utility to merge multiple webpack configurations, which we will use to differentiate development and production configs&lt;/li&gt;
+ &gt;webpack-merge&lt;/a&gt; is a utility to merge multiple webpack configurations, which we will use to differentiate development and production configs&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/copy-webpack-plugin" target="_blank" rel="noopener"
-&gt;copy-webpack-plugin&lt;/a&gt; is a plugin to copy files and directories in webpack&lt;/li&gt;
+ &gt;copy-webpack-plugin&lt;/a&gt; is a plugin to copy files and directories in webpack&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The above &lt;code&gt;npm&lt;/code&gt; command will install the packages, create a &lt;code&gt;package-lock.json&lt;/code&gt; file, and add them to the &lt;code&gt;devDependencies&lt;/code&gt; section of the &lt;code&gt;package.json&lt;/code&gt; file. The updated &lt;code&gt;package.json&lt;/code&gt; should look like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-json" data-lang="json"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;{
@@ -95,7 +95,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="refactoring-directory-structure"&gt;&lt;a href="#refactoring-directory-structure" class="header-anchor"&gt;&lt;/a&gt;Refactoring directory structure
 &lt;/h2&gt;&lt;p&gt;We will refactor the directory structure to separate the source code from the static files. Create a &lt;code&gt;src&lt;/code&gt; directory and move the JavaScript files (&lt;code&gt;background.js&lt;/code&gt;, &lt;code&gt;content.js&lt;/code&gt;, &lt;code&gt;popup.js&lt;/code&gt;) into it. Create a &lt;code&gt;static&lt;/code&gt; directory and move the &lt;code&gt;manifest.json&lt;/code&gt;, &lt;code&gt;popup.html&lt;/code&gt;, and &lt;code&gt;popup.css&lt;/code&gt; file into it.&lt;/p&gt;
 &lt;p&gt;The directory structure should look like this (running &lt;a class="link" href="https://en.wikipedia.org/wiki/Tree_%28command%29" target="_blank" rel="noopener"
-&gt;tree&lt;/a&gt;&lt;code&gt; . -I node_modules&lt;/code&gt;):&lt;/p&gt;
+ &gt;tree&lt;/a&gt;&lt;code&gt; . -I node_modules&lt;/code&gt;):&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt;.
 ├── package-lock.json
 ├── package.json
@@ -118,29 +118,29 @@
 &lt;pre tabindex="0"&gt;&lt;code&gt;./node_modules/.bin/webpack --config webpack.prod.js
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Now, we can add scripts to the &lt;code&gt;package.json&lt;/code&gt; file to simplify how we run webpack:&lt;/p&gt;
 &lt;pre tabindex="0"&gt;&lt;code&gt; ...
-&amp;#34;scripts&amp;#34;: {
-&amp;#34;build&amp;#34;: &amp;#34;webpack --config webpack.prod.js&amp;#34;,
-&amp;#34;start&amp;#34;: &amp;#34;webpack --watch --config webpack.dev.js&amp;#34;
-}
+ &amp;#34;scripts&amp;#34;: {
+ &amp;#34;build&amp;#34;: &amp;#34;webpack --config webpack.prod.js&amp;#34;,
+ &amp;#34;start&amp;#34;: &amp;#34;webpack --watch --config webpack.dev.js&amp;#34;
+ }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;These scripts allow us to run &lt;code&gt;npm run build&lt;/code&gt; to build the production version and &lt;code&gt;npm start&lt;/code&gt; (or &lt;code&gt;npm run start&lt;/code&gt;) to start the development version.&lt;/p&gt;
 &lt;p&gt;At this point, we can test the browser extension to ensure it is still working as before. Open the Chrome browser, go to &lt;code&gt;chrome://extensions&lt;/code&gt;, enable &lt;code&gt;Developer mode&lt;/code&gt;, click on &lt;code&gt;Load unpacked&lt;/code&gt;, and select the &lt;code&gt;dist&lt;/code&gt; directory.&lt;/p&gt;
 &lt;h1 id="what-is-typescript"&gt;&lt;a href="#what-is-typescript" class="header-anchor"&gt;&lt;/a&gt;What is TypeScript?
 &lt;/h1&gt;&lt;p&gt;&lt;a class="link" href="https://www.typescriptlang.org/" target="_blank" rel="noopener"
-&gt;TypeScript&lt;/a&gt; is a superset of JavaScript that adds static typing and other features to the language. It compiles to plain JavaScript and can be used in any browser or JavaScript engine. Although TypeScript is not required for writing Chrome extensions, it
+ &gt;TypeScript&lt;/a&gt; is a superset of JavaScript that adds static typing and other features to the language. It compiles to plain JavaScript and can be used in any browser or JavaScript engine. Although TypeScript is not required for writing Chrome extensions, it
 is highly recommended as it can help catch errors early and improve code quality.&lt;/p&gt;
 &lt;p&gt;We install TypeScript with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;npm install --save-dev typescript @tsconfig/recommended ts-node ts-loader @types/chrome
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/typescript" target="_blank" rel="noopener"
-&gt;typescript&lt;/a&gt; is the core TypeScript compiler&lt;/li&gt;
+ &gt;typescript&lt;/a&gt; is the core TypeScript compiler&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/@tsconfig/recommended" target="_blank" rel="noopener"
-&gt;@tsconfig/recommended&lt;/a&gt; is a recommended TypeScript configuration, which we will use&lt;/li&gt;
+ &gt;@tsconfig/recommended&lt;/a&gt; is a recommended TypeScript configuration, which we will use&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/ts-node" target="_blank" rel="noopener"
-&gt;ts-node&lt;/a&gt; is a TypeScript execution environment for Node.js, which is needed for converting the webpack configuration to TypeScript&lt;/li&gt;
+ &gt;ts-node&lt;/a&gt; is a TypeScript execution environment for Node.js, which is needed for converting the webpack configuration to TypeScript&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/ts-loader" target="_blank" rel="noopener"
-&gt;ts-loader&lt;/a&gt; is a TypeScript loader for webpack, which is needed for webpack to understand TypeScript source files&lt;/li&gt;
+ &gt;ts-loader&lt;/a&gt; is a TypeScript loader for webpack, which is needed for webpack to understand TypeScript source files&lt;/li&gt;
 &lt;li&gt;&lt;a class="link" href="https://www.npmjs.com/package/@types/chrome" target="_blank" rel="noopener"
-&gt;@types/chrome&lt;/a&gt; is the TypeScript type definitions for the Chrome extension API&lt;/li&gt;
+ &gt;@types/chrome&lt;/a&gt; is the TypeScript type definitions for the Chrome extension API&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="what-are-typescript-type-definitions"&gt;&lt;a href="#what-are-typescript-type-definitions" class="header-anchor"&gt;&lt;/a&gt;What are TypeScript type definitions?
 &lt;/h2&gt;&lt;p&gt;We loaded the &lt;code&gt;@types/chrome&lt;/code&gt; packages to provide TypeScript type definitions for the Chrome extension API.&lt;/p&gt;
@@ -370,23 +370,25 @@ is highly recommended as it can help catch errors early and improve code quality
 &lt;p&gt;Right-click the extension icon (&lt;code&gt;M&lt;/code&gt;) and select &lt;code&gt;Inspect popup&lt;/code&gt; to open the Chrome Developer Tools. By default, you can see the console logs from the &lt;code&gt;popup.ts&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Go to the &lt;code&gt;Sources&lt;/code&gt; tab in the Chrome Developer Tools and open the &lt;code&gt;top/my-chrome-extension/src/popup.ts&lt;/code&gt; file. You can set breakpoints and debug the popup script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-extension-debug.png"
-alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;The &lt;code&gt;popup.ts&lt;/code&gt; file should exactly match the TypeScript code we wrote. You can set breakpoints, inspect variables, and step through the code.&lt;/p&gt;
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
 &lt;/h2&gt;&lt;p&gt;In the next part of this series, we will add &lt;a class="link" href="../message-passing-in-chrome-extension" &gt;message passing between the content script, the background script, and the popup script&lt;/a&gt;. This communication will allow us to make real-time changes across all parts of our Chrome extension.&lt;/p&gt;
 &lt;h2 id="chrome-extension-with-webpack-and-typescript-code-on-github"&gt;&lt;a href="#chrome-extension-with-webpack-and-typescript-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Chrome extension with webpack and TypeScript code on GitHub
 &lt;/h2&gt;&lt;p&gt;The complete code is available on GitHub at: &lt;a class="link" href="https://github.com/getvictor/create-chrome-extension/tree/main/2-webpack-typescript" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/create-chrome-extension/tree/main/2-webpack-typescript&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/create-chrome-extension/tree/main/2-webpack-typescript&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="add-webpack-and-typescript-to-a-chrome-extension-video"&gt;&lt;a href="#add-webpack-and-typescript-to-a-chrome-extension-video" class="header-anchor"&gt;&lt;/a&gt;Add webpack and TypeScript to a Chrome extension video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/a3n-C-7u3VE"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/a3n-C-7u3VE" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>

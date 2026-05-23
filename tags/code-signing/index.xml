@@ -26,7 +26,7 @@ certificate expires.&lt;/li&gt;
 &lt;/h2&gt;&lt;p&gt;In our example, we will use a self-signed certificate. This approach is suitable for internal business applications. For
 public applications, you should obtain a code signing certificate from a trusted CA.&lt;/p&gt;
 &lt;p&gt;We will use the &lt;a class="link" href="https://www.openssl.org/" target="_blank" rel="noopener"
-&gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
+ &gt;OpenSSL&lt;/a&gt; command line tool to generate the certificates. OpenSSL is a popular
 open-source library for TLS and SSL protocols.&lt;/p&gt;
 &lt;p&gt;The following script generates the certificate and key needed for code signing. It also generates a certificate
 authority (CA) and signs the code signing certificate with the CA.&lt;/p&gt;
@@ -61,7 +61,7 @@ the application with:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The Go build process generates the &lt;code&gt;hello-world.exe&lt;/code&gt; Windows executable.&lt;/p&gt;
 &lt;h2 id="signing-and-timestamping-the-code"&gt;&lt;a href="#signing-and-timestamping-the-code" class="header-anchor"&gt;&lt;/a&gt;Signing and timestamping the code
 &lt;/h2&gt;&lt;p&gt;To sign the code, we will use &lt;a class="link" href="https://github.com/mtrojnar/osslsigncode" target="_blank" rel="noopener"
-&gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
+ &gt;osslsigncode&lt;/a&gt;, an open-source code signing tool
 that uses OpenSSL to sign Windows executables. Unlike Microsoft&amp;rsquo;s &lt;code&gt;signtool,&lt;/code&gt; &lt;code&gt;osslsigncode&lt;/code&gt; is cross-platform and can
 be used on Linux and macOS.&lt;/p&gt;
 &lt;p&gt;To sign the code, we use the following script:&lt;/p&gt;
@@ -115,20 +115,22 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
-alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
 command:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-powershell" data-lang="powershell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;Import-Certificate -FilePath &lt;span style="color:#e6db74"&gt;&amp;#34;certs\ca.crt&amp;#34;&lt;/span&gt; -CertStoreLocation Cert&lt;span style="color:#960050;background-color:#1e0010"&gt;:&lt;/span&gt;\LocalMachine\Root
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
-alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
-&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
-&lt;/figcaption&gt;
+ alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+ &lt;/figcaption&gt;
 &lt;/figure&gt;
+
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
 &lt;/h2&gt;&lt;p&gt;To sign public applications, we must obtain a code signing certificate from a trusted CA. The latest industry standards
 require private keys for code signing certificates to be stored in hardware security modules (HSMs) to prevent
@@ -137,17 +139,18 @@ HSM vendor or a private pipeline runner with an HSM.&lt;/p&gt;
 &lt;p&gt;In a future article, we will explore signing a Windows application using a cloud HSM vendor.&lt;/p&gt;
 &lt;h2 id="example-code-on-github"&gt;&lt;a href="#example-code-on-github" class="header-anchor"&gt;&lt;/a&gt;Example code on GitHub
 &lt;/h2&gt;&lt;p&gt;The example code is available on GitHub at &lt;a class="link" href="https://github.com/getvictor/code-sign-windows" target="_blank" rel="noopener"
-&gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
+ &gt;https://github.com/getvictor/code-sign-windows&lt;/a&gt;&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;p&gt;Recently, we explained &lt;a class="link" href="../exe-installer" &gt;how to create an EXE installer&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;We also discussed &lt;a class="link" href="../connect-to-remote-active-directory/" &gt;connecting your local machine to remote Active Directory&lt;/a&gt; and
 covered &lt;a class="link" href="../test-ndes-scep-server" &gt;how to test a Windows NDES SCEP server&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="code-signing-a-windows-application-video"&gt;&lt;a href="#code-signing-a-windows-application-video" class="header-anchor"&gt;&lt;/a&gt;Code signing a Windows application video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/NQYUgHznXew"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item></channel></rss>
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/NQYUgHznXew" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item></channel></rss>

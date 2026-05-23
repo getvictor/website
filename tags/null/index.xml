@@ -2,7 +2,7 @@
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;:=&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;{}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;However, my IDE flagged it as a warning, and pointed me to
 &lt;a class="link" href="https://go.dev/wiki/CodeReviewComments#declaring-empty-slices" target="_blank" rel="noopener"
-&gt;this Go style guide passage&lt;/a&gt;, which recommended using a
+ &gt;this Go style guide passage&lt;/a&gt;, which recommended using a
 nil slice instead:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;var&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; []&lt;span style="color:#66d9ef"&gt;string&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This recommendation didn&amp;rsquo;t seem right. How can a nil variable be better? Won’t we run into issues like null pointer
@@ -12,9 +12,9 @@ be nil.&lt;/p&gt;
 &lt;p&gt;The main difference between a nil slice and an empty slice is the following. A nil slice compared to nil will return
 true. That’s pretty much it.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; &lt;span style="color:#f92672"&gt;==&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;nil&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is nil.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;} &lt;span style="color:#66d9ef"&gt;else&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is NOT nil.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When printing a nil slice, it will print like an empty slice:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;Slice is: %v\n&amp;#34;&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;)
@@ -23,7 +23,7 @@ true. That’s pretty much it.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; = append(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;, &lt;span style="color:#e6db74"&gt;&amp;#34;bozo&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can loop over a nil slice, and the code will not enter the for loop:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;for&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;range&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt; {
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;We are in a for loop.&amp;#34;&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;	&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Println&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;We are in a for loop.&amp;#34;&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The length of a nil slice is 0:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;fmt&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;Printf&lt;/span&gt;(&lt;span style="color:#e6db74"&gt;&amp;#34;len: %#v\n&amp;#34;&lt;/span&gt;, len(&lt;span style="color:#a6e22e"&gt;slice&lt;/span&gt;))
@@ -49,10 +49,11 @@ pointer like you can a nil slice. This code causes a crash:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-nil-slice-vs-empty-slice-video"&gt;&lt;a href="#watch-nil-slice-vs-empty-slice-video" class="header-anchor"&gt;&lt;/a&gt;Watch nil slice vs empty slice video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/q0B4q_0u4XI"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
-&lt;/div&gt;</description></item></channel></rss>
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/q0B4q_0u4XI" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+</description></item></channel></rss>

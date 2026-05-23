@@ -2,7 +2,7 @@
 background is in hardware verification, which uses sophisticated methodologies for pseudorandom testing, so I wanted to
 see what the Go library had to offer out of the box.&lt;/p&gt;
 &lt;p&gt;A &lt;a class="link" href="https://go.dev/doc/security/fuzz" target="_blank" rel="noopener"
-&gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
+ &gt;Go fuzz test&lt;/a&gt; can run as:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;a normal unit test&lt;/li&gt;
 &lt;li&gt;a test with fuzzing&lt;/li&gt;
@@ -53,9 +53,11 @@ corpus will run as part of the standard Go unit test flow.&lt;/p&gt;
 &lt;h2 id="initial-impressions"&gt;&lt;a href="#initial-impressions" class="header-anchor"&gt;&lt;/a&gt;Initial impressions
 &lt;/h2&gt;&lt;p&gt;Fuzz testing appears to be a good approach to help the development of small functions with limited scope. The library
 documentation mentions the following about the function under test:&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
-&lt;/blockquote&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;This function should be fast and deterministic, and its behavior should not depend on shared state.&lt;/p&gt;
+
+ &lt;/blockquote&gt;
 &lt;p&gt;I plan to give fuzzing a try the next time I develop such a function. I will share the results on this blog.&lt;/p&gt;
 &lt;h2 id="concerns-and-issues"&gt;&lt;a href="#concerns-and-issues" class="header-anchor"&gt;&lt;/a&gt;Concerns and Issues
 &lt;/h2&gt;&lt;p&gt;Native fuzzing support was added to Go in 1.18 and seems like a good initial approach. However, it feels limited in
@@ -93,11 +95,12 @@ such as database accesses. I will report my findings in a future post.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;h2 id="go-fuzz-testing-video"&gt;&lt;a href="#go-fuzz-testing-video" class="header-anchor"&gt;&lt;/a&gt;Go fuzz testing video
 &lt;/h2&gt;&lt;div class="video-wrapper"&gt;
-&lt;iframe loading="lazy"
-src="https://www.youtube.com/embed/4emTXow54F4"
-allowfullscreen
-title="YouTube Video"
-&gt;
-&lt;/iframe&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/4emTXow54F4" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
 &lt;/div&gt;
+
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item></channel></rss>
