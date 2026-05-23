@@ -1,5 +1,5 @@
 baseURL = 'https://victoronsoftware.com/'
-languageCode = 'en-us'
+locale = 'en-us'
 title = 'Victor on Software'
 theme = "hugo-theme-stack"
 enableRobotsTXT = false
@@ -20,13 +20,12 @@ mainSections = ["posts"]
 [params.article]
 headingAnchor = true
 
+[params.comments]
+enabled = false
+
 [params.sidebar]
 subtitle = "Software engineering, security, and related topics"
-
-[params.sidebar.avatar]
-enabled = true
-local = true
-src = "img/avatar.png"
+avatar = "img/avatar.png"
 
 ## Widgets
 [[params.widgets.homepage]]

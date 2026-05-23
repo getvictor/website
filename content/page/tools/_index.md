@@ -10,5 +10,11 @@ menu:
             icon: link
 ---
 
+## [Fleet EDR](https://github.com/getvictor/fleet-edr)
+
+Endpoint detection and response (EDR), starting with macOS.
+
 ## [OpenBlur Chrome extension](./openblur)
-Hide and blur sensitive information on any webpage. Blur your secrets such as personal emails, public IP addresses, and more.
+
+Hide and blur sensitive information on any webpage. Blur your secrets such as personal emails, public IP addresses, and
+more.
