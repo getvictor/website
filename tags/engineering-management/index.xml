@@ -1,4 +1,117 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering Management on Victor on Software</title><link>https://victoronsoftware.com/tags/engineering-management/</link><description>Recent content in Engineering Management on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/engineering-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Engineering Management on Victor on Software</title><link>https://victoronsoftware.com/tags/engineering-management/</link><description>Recent content in Engineering Management on Victor on Software</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sun, 24 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://victoronsoftware.com/tags/engineering-management/index.xml" rel="self" type="application/rss+xml"/><item><title>Comprehension debt: the hidden cost of AI-generated code</title><link>https://victoronsoftware.com/posts/comprehension-debt/</link><pubDate>Sun, 24 May 2026 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/comprehension-debt/</guid><description>&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/comprehension-debt-headline.png" alt="Featured image of post Comprehension debt: the hidden cost of AI-generated code" /&gt;&lt;p&gt;AI coding agents can ship working code before the team has built the mental model to maintain it. I think of that gap as
+comprehension debt, and it behaves differently from the technical debt engineers are used to.&lt;/p&gt;
+&lt;h2 id="what-it-is"&gt;&lt;a href="#what-it-is" class="header-anchor"&gt;&lt;/a&gt;What it is
+&lt;/h2&gt;&lt;p&gt;Comprehension debt is the distance between code that runs and code the team can still reason about.&lt;/p&gt;
+&lt;p&gt;It is not the same as messy code. Messy code announces itself. You open the file, and the pain is obvious. Comprehension
+debt is sneakier. It can sit inside code that looks clean, passes tests, and ships without drama. The danger is that
+nobody can explain why it works, what assumptions it depends on, or what is likely to break when it changes.&lt;/p&gt;
+&lt;p&gt;AI did not invent maintainability problems. Engineers were writing sloppy, hard-to-maintain code for decades before AI.
+What AI changed is the speed and scale. It is now much cheaper to produce code that looks finished before anyone has
+really understood it.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/code-iceberg.png"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
+ &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;h2 id="how-it-differs-from-classic-tech-debt"&gt;&lt;a href="#how-it-differs-from-classic-tech-debt" class="header-anchor"&gt;&lt;/a&gt;How it differs from classic tech debt
+&lt;/h2&gt;&lt;p&gt;Classic tech debt usually has visible friction. The code is tangled. The tests are brittle. The team knows the area is
+painful. Comprehension debt hides longer. The code looks serviceable. The tests pass. The feature ships. But the team
+accepted the change without deeply understanding it. Future work depends on a mental model the team did not build.&lt;/p&gt;
+&lt;p&gt;The cost usually shows up in behavior before it shows up in code:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Nobody wants to touch a module unless they have to.&lt;/li&gt;
+&lt;li&gt;A tiny change triggers a huge amount of regression testing because nobody trusts the blast radius.&lt;/li&gt;
+&lt;li&gt;Design discussions turn into archaeology, searching commit messages, review threads, and old plans to infer what the
+system was supposed to do.&lt;/li&gt;
+&lt;li&gt;A one-line change needs a senior engineer, a full regression run, and a long Slack thread before anyone feels safe
+merging it.&lt;/li&gt;
+&lt;li&gt;Work that should take an hour quietly stretches much longer.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The codebase still works. The team just no longer moves through it with confidence.&lt;/p&gt;
+&lt;h2 id="a-small-example"&gt;&lt;a href="#a-small-example" class="header-anchor"&gt;&lt;/a&gt;A small example
+&lt;/h2&gt;&lt;p&gt;I ran into this recently on a disk encryption feature in our product. Our key escrow flow was taking multiple hours,
+which was too long. On the surface, it looked like a small bug hunt.&lt;/p&gt;
+&lt;p&gt;I did what a lot of engineers would do now. I asked the agent to investigate first. It came back with root causes and
+possible fixes, but they did not hold up. Some did not fit the behavior I was seeing. At one point the agent was blaming
+the customer&amp;rsquo;s environment, which was a bad read of the situation.&lt;/p&gt;
+&lt;p&gt;So I did the real work myself. I read the docs. I tried the product. I traced the flow through the code. I used the
+agent as a helper for local understanding, to summarize files, explain branches, and point me toward likely paths. But I
+was still reading much of the implementation myself and building the mental model on my own. It still took hours. In the
+end, I found that another module was touching disk encryption on a schedule. The fix was a documentation update. The
+system was behaving as designed, but that design lived in the code and in engineers&amp;rsquo; heads, not in documentation.&lt;/p&gt;
+&lt;p&gt;That investigation produced almost no code. But it paid down debt the team did not realize it had taken on.&lt;/p&gt;
+&lt;h2 id="inquiry-vs-delegation"&gt;&lt;a href="#inquiry-vs-delegation" class="header-anchor"&gt;&lt;/a&gt;Inquiry vs delegation
+&lt;/h2&gt;&lt;p&gt;There is a healthy way to use AI and a dangerous one.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Inquiry&lt;/strong&gt; is using AI to ask questions, explore unfamiliar code, compare paths, and build a mental model faster.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Delegation&lt;/strong&gt; is using AI to make the problem go away without understanding it.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Both can produce working code. Only one produces understanding.&lt;/p&gt;
+&lt;p&gt;A &lt;a class="link" href="https://www.anthropic.com/research/AI-assistance-coding-skills" target="_blank" rel="noopener"
+ &gt;January 2026 Anthropic study&lt;/a&gt; found that developers
+using AI scored 17 percent lower on a comprehension quiz after learning a new Python library. Digging into the data,
+people who used AI to ask conceptual questions tended to do much better. People who delegated the work and skipped the
+mental model did much worse. Inquiry built understanding. Delegation bypassed it.&lt;/p&gt;
+&lt;p&gt;An &lt;a class="link" href="https://blog.jetbrains.com/research/2026/04/ai-impact-developer-workflows/" target="_blank" rel="noopener"
+ &gt;April 2026 JetBrains study&lt;/a&gt; adds a
+related warning. Developers reported that AI improved their code quality and readability. The behavioral signal the
+study used (debugging sessions started, an imperfect proxy for quality) did not show the same improvement. What
+developers feel is improving and what their workflow shows may not always line up.&lt;/p&gt;
+&lt;p&gt;When the mental model shrinks while code volume grows, the bottleneck does not go away. It gets worse.&lt;/p&gt;
+&lt;h2 id="who-pays-the-bill"&gt;&lt;a href="#who-pays-the-bill" class="header-anchor"&gt;&lt;/a&gt;Who pays the bill
+&lt;/h2&gt;&lt;p&gt;If something goes wrong in production, the model does not get blamed. A human does. Humans run the postmortems. Humans
+explain what happened and what should change next. So humans still need understanding, even if they did not write every
+line by hand.&lt;/p&gt;
+&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/human-and-robot-pointing-fingers.png"&gt;&lt;figcaption&gt;
+ &lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
+ &lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;AI making code generation cheaper does not change that. It just makes it easier for the team to accumulate work it
+cannot defend.&lt;/p&gt;
+&lt;p&gt;AI can also make the debt feel safer for a while. It can summarize unfamiliar code, propose edits, run tests. That
+helps. But safety is not the same as understanding. If the team still cannot explain what changed and what might break
+next, it has not paid down the debt. It has only delayed the bill.&lt;/p&gt;
+&lt;h2 id="what-to-do-about-it"&gt;&lt;a href="#what-to-do-about-it" class="header-anchor"&gt;&lt;/a&gt;What to do about it
+&lt;/h2&gt;&lt;p&gt;The fix is not &amp;ldquo;review more carefully&amp;rdquo; or &amp;ldquo;work harder.&amp;rdquo; That does not scale. It was already hard enough when humans
+wrote all the code by hand. The fix is making sure understanding gets built somewhere in the workflow before the code
+lands. A few things that help:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use small phases. Do not let the agent run further than you can review.&lt;/li&gt;
+&lt;li&gt;Write the implementation plan with the agent, then read it fully before any code lands.&lt;/li&gt;
+&lt;li&gt;Use AI for inquiry, to summarize files and explain branches, not to make the problem go away.&lt;/li&gt;
+&lt;li&gt;Before merging, require a short behavioral summary: what changed, what stayed invariant, what side effects exist, and
+what might break next.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Generation got cheaper. Comprehension did not. The teams that move fastest will be the ones that notice the difference.&lt;/p&gt;
+&lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../will-ai-agents-replace-developers/" &gt;Will AI agents replace software developers?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+A realistic look at where AI coding agents help across the SDLC and where human judgment still has to do the work.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../multitasking-with-ai-agents/" &gt;Multitasking with AI agents: When it works and when it fails&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+How to balance focus and parallel agent work without losing the context that makes review meaningful.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../readable-code/" &gt;What is readable code and why is it important?&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Why code that is easy to understand is also code that is safe to change, with or without AI in the loop.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="watch-the-full-talk"&gt;&lt;a href="#watch-the-full-talk" class="header-anchor"&gt;&lt;/a&gt;Watch the full talk
+&lt;/h2&gt;&lt;p&gt;This article covers one idea from a longer conference talk on writing maintainable code with AI. The talk also gets into
+PR review, behavioral contracts, AI-generated tests, and architecture fitness functions.&lt;/p&gt;
+&lt;div class="video-wrapper"&gt;
+ &lt;iframe loading="lazy" 
+ src="https://www.youtube.com/embed/7iQthHou_4M" 
+ allowfullscreen 
+ title="YouTube Video"
+ &gt;
+ &lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; If you want to comment on this article, please do so on the YouTube video.&lt;/p&gt;</description></item><item><title>Multitasking with AI agents: When it works and when it fails</title><link>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</link><pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate><guid>https://victoronsoftware.com/posts/multitasking-with-ai-agents/</guid><description>&lt;img src="https://victoronsoftware.com/posts/multitasking-with-ai-agents/multitasking-with-ai-agents-headline.png" alt="Featured image of post Multitasking with AI agents: When it works and when it fails" /&gt;&lt;p&gt;AI agents are changing the way we work. They can handle coding, debugging, and research tasks while we focus on other
 things. But just because an AI can work in parallel does not mean you should. The real question is: when is it worth
 multitasking, and when will it hurt your results?&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m a firm believer that humans cannot multitask. Every popular psychology book I have read, and I have read quite a
@@ -135,6 +248,11 @@ planning ahead or preparing test environments. Keep your context intact.&lt;/p&g
 Switch freely between these smaller tasks as agents finish.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../comprehension-debt/" &gt;Comprehension debt: the hidden cost of AI-generated code&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+Why letting agents run further than you can review creates a debt that does not show up until you try to change the
+code.&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../ai-for-software-developers/" &gt;AI for software developers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
 Explore how AI tools are changing developer workflows and when to embrace AI assistance versus maintaining human
@@ -716,6 +834,10 @@ and not wholesale replacement. AI coding agents won&amp;rsquo;t replace develope
 replace those who don&amp;rsquo;t.&lt;/p&gt;
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
 &lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../comprehension-debt/" &gt;Comprehension debt: the hidden cost of AI-generated code&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+&lt;em&gt;The gap between code that runs and code your team can still reason about, and why AI makes it cheaper to create.&lt;/em&gt;&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../ai-for-software-developers/" &gt;How to use AI for software development (2025)&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
 &lt;em&gt;What every software engineer needs to know about AI right now: code completion, generation, and AI agents.&lt;/em&gt;&lt;/p&gt;
@@ -1397,6 +1519,10 @@ Understand the scalability and developer experience problems with GitHub&amp;rsq
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../ai-for-software-developers/" &gt;Common use cases of AI for today&amp;rsquo;s software developers&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
 Explore how AI tools can enhance productivity without replacing the need for readable, maintainable code.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a class="link" href="../comprehension-debt/" &gt;Comprehension debt: the hidden cost of AI-generated code&lt;/a&gt;&lt;/strong&gt;&lt;br&gt;
+The AI-era extension of unreadable code: code that runs cleanly but that nobody on the team can defend.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="watch-us-discuss-why-readable-code-is-important"&gt;&lt;a href="#watch-us-discuss-why-readable-code-is-important" class="header-anchor"&gt;&lt;/a&gt;Watch us discuss why readable code is important
