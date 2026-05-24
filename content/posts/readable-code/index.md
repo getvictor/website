@@ -268,6 +268,9 @@ In the following article, we
 - **[Common use cases of AI for today's software developers](../ai-for-software-developers/)**  
   Explore how AI tools can enhance productivity without replacing the need for readable, maintainable code.
 
+- **[Comprehension debt: the hidden cost of AI-generated code](../comprehension-debt/)**  
+  The AI-era extension of unreadable code: code that runs cleanly but that nobody on the team can defend.
+
 ## Watch us discuss why readable code is important
 
 {{< youtube HCGyWuE9zbY >}}

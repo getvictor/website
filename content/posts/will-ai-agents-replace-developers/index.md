@@ -391,6 +391,9 @@ replace those who don't.
 
 ## Further reading
 
+- **[Comprehension debt: the hidden cost of AI-generated code](../comprehension-debt/)**  
+  _The gap between code that runs and code your team can still reason about, and why AI makes it cheaper to create._
+
 - **[How to use AI for software development (2025)](../ai-for-software-developers/)**  
   _What every software engineer needs to know about AI right now: code completion, generation, and AI agents._
 

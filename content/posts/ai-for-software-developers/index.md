@@ -196,6 +196,9 @@ tasks.
 
 ## Further reading
 
+- **[Comprehension debt: the hidden cost of AI-generated code](../comprehension-debt/)**  
+  Why AI makes it cheap to ship code before the team has built a mental model, and what to do about it.
+
 - **[Will AI agents replace software developers?](../will-ai-agents-replace-developers/)**  
   A realistic look at how AI coding agents are reshaping software development and what engineers need to do to stay ahead.
 

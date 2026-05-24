@@ -118,6 +118,10 @@ Switch freely between these smaller tasks as agents finish.
 
 ## Further reading
 
+- **[Comprehension debt: the hidden cost of AI-generated code](../comprehension-debt/)**  
+  Why letting agents run further than you can review creates a debt that does not show up until you try to change the
+  code.
+
 - **[AI for software developers](../ai-for-software-developers/)**  
   Explore how AI tools are changing developer workflows and when to embrace AI assistance versus maintaining human
   control.
