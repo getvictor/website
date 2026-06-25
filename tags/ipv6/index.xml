@@ -25,19 +25,19 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
- alt="Enable IPv6 checkbox"&gt;
+			alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
- alt="Choose Droplet authentication method"&gt;
+			alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
- alt="Droplet details"&gt;
+			alt="Droplet details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;

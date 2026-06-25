@@ -59,7 +59,7 @@ provides context when debugging.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This approach provides full API context without bloating searchable attributes.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
- alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
+			alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="feature-2-database-query-instrumentation"&gt;&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor"&gt;&lt;/a&gt;Feature 2: Database query instrumentation
@@ -69,7 +69,7 @@ executed.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
- alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
+			alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
 &lt;/figure&gt;
 
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
@@ -90,7 +90,7 @@ storage durations and access controls in production environments.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
 incoming requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
- alt="SigNoz displaying outgoing HTTP request details"&gt;
+			alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
@@ -118,7 +118,7 @@ incoming requests.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
 output.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
- alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
+			alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="key-opentelemetry-concepts-spans-vs-traces"&gt;&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: spans vs traces
@@ -152,7 +152,7 @@ the branches and leaves.&lt;/p&gt;
 &lt;h2 id="feature-5-comprehensive-error-handling"&gt;&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor"&gt;&lt;/a&gt;Feature 5: Comprehensive error handling
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
- alt="SigNoz showing errors"&gt;
+			alt="SigNoz showing errors"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p&gt;
@@ -729,7 +729,7 @@ Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Fi
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
- alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+			alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
@@ -991,9 +991,9 @@ workflow when the code in the &lt;code&gt;4-linting-and-formatting&lt;/code&gt; 
 &lt;p&gt;After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
 Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
- alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For more details on GitHub Actions workflows, see our article on
@@ -1402,9 +1402,9 @@ is highly recommended as it can help catch errors early and improve code quality
 &lt;p&gt;Right-click the extension icon (&lt;code&gt;M&lt;/code&gt;) and select &lt;code&gt;Inspect popup&lt;/code&gt; to open the Chrome Developer Tools. By default, you can see the console logs from the &lt;code&gt;popup.ts&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Go to the &lt;code&gt;Sources&lt;/code&gt; tab in the Chrome Developer Tools and open the &lt;code&gt;top/my-chrome-extension/src/popup.ts&lt;/code&gt; file. You can set breakpoints and debug the popup script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-extension-debug.png"
- alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The &lt;code&gt;popup.ts&lt;/code&gt; file should exactly match the TypeScript code we wrote. You can set breakpoints, inspect variables, and step through the code.&lt;/p&gt;

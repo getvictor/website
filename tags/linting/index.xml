@@ -462,9 +462,9 @@ workflow when the code in the &lt;code&gt;4-linting-and-formatting&lt;/code&gt; 
 &lt;p&gt;After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
 Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
- alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For more details on GitHub Actions workflows, see our article on

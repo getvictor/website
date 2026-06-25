@@ -14,9 +14,9 @@ parts of our Chrome extension.&lt;/p&gt;
 change the appearance of a webpage. Or a background script needs to send a message to a popup to update the user
 interface based on the page that&amp;rsquo;s being visited.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/message-passing.svg"
- alt="Communication in a Chrome extension"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Communication in a Chrome extension&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Communication in a Chrome extension"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Communication in a Chrome extension&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;One way to communicate between these parts is to use the local storage via the &lt;code&gt;chrome.storage&lt;/code&gt; APIs. We do not
@@ -74,17 +74,17 @@ will use the &lt;code&gt;chrome.tabs.sendMessage&lt;/code&gt; function to send a
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When the user toggles the slider in the popup, the popup sends a message to all tabs. The receiving tab will print this
 message to the Chrome Developer Tools console.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/content-script-received.png"
- alt="Content script received message"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Content script received message&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Content script received message"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Content script received message&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Then, the popup will receive a response from the content script with the tab&amp;rsquo;s title and URL. This response prints to
 the &lt;code&gt;Inspect Popup&lt;/code&gt; console. System tabs like &lt;code&gt;chrome://extensions/&lt;/code&gt; will not respond to messages.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/popup-response.png"
- alt="Popup received response"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Popup received response&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Popup received response"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Popup received response&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="message-passing-from-a-popup-to-the-service-worker-background-script"&gt;&lt;a href="#message-passing-from-a-popup-to-the-service-worker-background-script" class="header-anchor"&gt;&lt;/a&gt;Message passing from a popup to the service worker (background script)

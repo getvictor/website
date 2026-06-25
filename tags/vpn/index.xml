@@ -40,7 +40,7 @@ information:&lt;/p&gt;
  &gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
 and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
- alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+			alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
@@ -70,21 +70,21 @@ connection.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
 Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
- alt="Windows 11 popups for setting DNS server."&gt;
+			alt="Windows 11 popups for setting DNS server."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
 &lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
- alt="Windows 11 dialog to join a domain."&gt;
+			alt="Windows 11 dialog to join a domain."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
 computer to the domain.&lt;/p&gt;
 &lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
- alt="Windows 11 dialog indicating successful domain join."&gt;
+			alt="Windows 11 dialog indicating successful domain join."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;

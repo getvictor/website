@@ -8,7 +8,7 @@ the first process the kernel starts and is responsible for starting all other pr
 &lt;p&gt;If you go to &lt;code&gt;Activity Monitor&lt;/code&gt; on your Mac and &lt;code&gt;View&lt;/code&gt; &amp;gt; &lt;code&gt;All Processes, Hierarchically&lt;/code&gt;, you will see that all
 processes are children of &lt;code&gt;launchd&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/activity-monitor.png"
- alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
+			alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-launchd-agents-and-daemons"&gt;&lt;a href="#what-are-launchd-agents-and-daemons" class="header-anchor"&gt;&lt;/a&gt;What are launchd agents and daemons?
@@ -76,34 +76,34 @@ program to run, the arguments to pass, the environment variables to set, and oth
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The typical locations for agent and daemon &lt;code&gt;.plist&lt;/code&gt; files are:&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Type&lt;/th&gt;
- &lt;th&gt;Location&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;User Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Type&lt;/th&gt;
+					&lt;th&gt;Location&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;User Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; In rare cases, the &lt;code&gt;.plist&lt;/code&gt; files may be located in other directories or missing entirely.&lt;/p&gt;
 &lt;h3 id="how-to-view-the-contents-of-a-plist-file"&gt;&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor"&gt;&lt;/a&gt;How to view the contents of a &lt;code&gt;.plist&lt;/code&gt; file
@@ -230,13 +230,13 @@ contain additional files needed by the script.&lt;/p&gt;
 &lt;p&gt;Download and install the Packages app.&lt;/p&gt;
 &lt;p&gt;Create a new project in the Packages app using the Raw Package template.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-new-project.png"
- alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
+			alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Choose the name and location of your project.&lt;/p&gt;
 &lt;p&gt;In the Scripts tab, choose a Post-installation script. Add additional script resource files if needed for the script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-add-script.png"
- alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
+			alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Save your project with &lt;strong&gt;File &amp;gt; Save&lt;/strong&gt; and build the package with &lt;strong&gt;Build &amp;gt; Build&lt;/strong&gt;.&lt;/p&gt;
@@ -246,7 +246,7 @@ contain additional files needed by the script.&lt;/p&gt;
 &lt;a class="link" href="https://www.mothersruin.com/software/SuspiciousPackage/get.html" target="_blank" rel="noopener"
  &gt;Suspicious Package&lt;/a&gt;&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/suspicious-package.png"
- alt="Suspicious Package app showing the contents of the postinstall script."&gt;
+			alt="Suspicious Package app showing the contents of the postinstall script."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="sign-and-notarize-the-install-package"&gt;&lt;a href="#sign-and-notarize-the-install-package" class="header-anchor"&gt;&lt;/a&gt;Sign and notarize the install package
@@ -682,9 +682,9 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;pre tabindex="0"&gt;&lt;code&gt;https://localhost:8889/hello-world.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
- alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
- &lt;p&gt;Safari mTLS popup&lt;/p&gt;
- &lt;/figcaption&gt;
+			alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
+			&lt;p&gt;Safari mTLS popup&lt;/p&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can click &lt;strong&gt;Continue&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;

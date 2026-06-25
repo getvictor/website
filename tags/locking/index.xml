@@ -5,9 +5,9 @@ distributed lock.&lt;/p&gt;
 to receive a second callback while processing the first one. This second callback can lead to data inconsistency, race
 conditions, and deadlocks.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/data-consistency-problem.svg"
- alt="Sequence diagram demonstrating data inconsistency issue without a distributed lock"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Data inconsistency&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Sequence diagram demonstrating data inconsistency issue without a distributed lock"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Data inconsistency&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the above diagram, two servers, A and B, are processing calendar events. Server B receives a callback from Google
@@ -43,9 +43,9 @@ end
 &lt;h2 id="distributed-lock-solution"&gt;&lt;a href="#distributed-lock-solution" class="header-anchor"&gt;&lt;/a&gt;Distributed lock solution
 &lt;/h2&gt;&lt;p&gt;With the distributed lock in place, we can make sure that only one server is processing a calendar event at a time.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-lock-solution.svg"
- alt="Sequence diagram demonstrating using distributed lock and a processing queue to solve data consistency issue"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Using distributed lock with a processing queue&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Sequence diagram demonstrating using distributed lock and a processing queue to solve data consistency issue"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Using distributed lock with a processing queue&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the above diagram, server B receives a calendar callback and acquires a lock from Redis. Server A also gets a
@@ -60,9 +60,9 @@ compete with other servers.&lt;/p&gt;
 &lt;h2 id="fairness-in-acquiring-the-lock"&gt;&lt;a href="#fairness-in-acquiring-the-lock" class="header-anchor"&gt;&lt;/a&gt;Fairness in acquiring the lock
 &lt;/h2&gt;&lt;p&gt;We implemented a fairness mechanism to ensure a priority process could acquire the lock.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/distributed-lock/distributed-fair-lock.svg"
- alt="Sequence diagram demonstrating using a fairness mechanism to acquire a distributed lock"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Cron job is guaranteed to acquire the lock&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Sequence diagram demonstrating using a fairness mechanism to acquire a distributed lock"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Cron job is guaranteed to acquire the lock&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In the above diagram, the worker process has acquired the lock. Another process, a cron job, also needs to acquire the

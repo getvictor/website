@@ -20,7 +20,7 @@ standard called &lt;strong&gt;HTTP Message Signatures&lt;/strong&gt;, &lt;a clas
  &gt;RFC 9421&lt;/a&gt;. It turns out the
 solution already existed. I just didn&amp;rsquo;t know where to look.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/rfc-9421.png"
- alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
+			alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-http-message-signatures"&gt;&lt;a href="#what-are-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;What are HTTP message signatures?
@@ -322,7 +322,7 @@ app is available on GitHub: &lt;a class="link" href="https://github.com/getvicto
 &lt;p&gt;There are many JavaScript libraries that implement HTTP message signatures. Many companies also don&amp;rsquo;t use libraries and
 do their own implementation of the standard.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/node-http-message-signature-libraries.png"
- alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
+			alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For our demo we chose &lt;a class="link" href="https://github.com/dhensby/node-http-message-signatures" target="_blank" rel="noopener"

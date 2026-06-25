@@ -8,7 +8,7 @@ from communicating with devices in another VLAN. For example, you can create a s
 Things) devices, such as smart light bulbs and thermostats, to prevent them from accessing your primary network. You can
 also create a separate VLAN for guest devices to prevent them from accessing your main network and other VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-basic.png"
- alt="Router with three VLANS -- office, IoT, and guest."&gt;
+			alt="Router with three VLANS -- office, IoT, and guest."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For example, if a hacker gains access to a device in the IoT VLAN, they won&amp;rsquo;t be able to access devices in the office
@@ -22,7 +22,7 @@ can route packets between different VLANs based on their VLAN tags.&lt;/p&gt;
 network need to be configured, and some older or cheaper hardware, such as no-configuration network switches, may not
 support VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-full.png"
- alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
+			alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="selecting-vlan-tags-and-ip-ranges"&gt;&lt;a href="#selecting-vlan-tags-and-ip-ranges" class="header-anchor"&gt;&lt;/a&gt;Selecting VLAN tags and IP ranges
@@ -52,7 +52,7 @@ all VLANs but must configure it to assign IP addresses from different ranges for
 example, you may not allow devices on the Guest VLAN to access devices on the other VLANs.&lt;/p&gt;
 &lt;p&gt;Below is an example of our firewall rules for the GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-firewall.png"
- alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+			alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The rules allow access to our local DNS server to block inappropriate content. The rules block all private networking
@@ -68,7 +68,7 @@ part of the Office VLAN and port 2 to be part of the IoT VLAN. A single port can
 required for a wireless access point.&lt;/p&gt;
 &lt;p&gt;Below is an example of the network switch configuration for our GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-network-switch.png"
- alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+			alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The tagged ports include three wireless access points and the router port.&lt;/p&gt;
@@ -77,7 +77,7 @@ required for a wireless access point.&lt;/p&gt;
 created a WLAN for each VLAN—Office, IoT, and Guest. Each WLAN is associated with a VLAN tag, which we set in the
 advanced options of the WLAN configuration, as shown below.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-wlan-config.png"
- alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
+			alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="guest-network"&gt;&lt;a href="#guest-network" class="header-anchor"&gt;&lt;/a&gt;Guest network
@@ -96,7 +96,7 @@ testing or security reasons.&lt;/p&gt;
 &lt;p&gt;On a wired connection, you can specify the VLAN ID in your device&amp;rsquo;s network settings. For example, you can add a virtual
 interface with a specific VLAN tag on macOS.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-macos-config.png"
- alt="macOS network settings with VLAN ID specified."&gt;
+			alt="macOS network settings with VLAN ID specified."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="debugging-notes"&gt;&lt;a href="#debugging-notes" class="header-anchor"&gt;&lt;/a&gt;Debugging notes
@@ -153,19 +153,19 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
- alt="Enable IPv6 checkbox"&gt;
+			alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
- alt="Choose Droplet authentication method"&gt;
+			alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
- alt="Droplet details"&gt;
+			alt="Droplet details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
@@ -276,18 +276,18 @@ the hypervisor is responsible for managing the router? Below is the approach we 
 &lt;p&gt;For the initial installation, we did not use PCI Passthrough and instead used a virtual network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We
 configured the router VM to start on boot.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-1.jpg"
- alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the router and enabled
 access to it through the serial interface, which we used in the next step. Then, we put the system into its final
 configuration.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-2.jpg"
- alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual

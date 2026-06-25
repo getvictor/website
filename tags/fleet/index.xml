@@ -23,9 +23,9 @@ the failing policy. This article is an example of one such flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
- alt="Tines webhook action"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines webhook action&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines webhook action"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines webhook action&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="handling-errors"&gt;&lt;a href="#handling-errors" class="header-anchor"&gt;&lt;/a&gt;Handling errors
@@ -33,9 +33,9 @@ action to the story. The webhook action listens for incoming webhooks. The webho
 add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
 webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
- alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
@@ -65,9 +65,9 @@ testing, we know that the webhook payload will look like this:&lt;/p&gt;
 &lt;p&gt;We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
 up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
- alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p&gt;
@@ -77,17 +77,17 @@ up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence
 Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
 ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
- alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
 key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
- alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="creating-mdm-command-payload-to-update-os-version"&gt;&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor"&gt;&lt;/a&gt;Creating MDM command payload to update OS version
@@ -121,33 +121,33 @@ command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
 device. Note that the &lt;code&gt;&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code&gt; Tines function creates a unique UUID for this MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
- alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
 to encode the XML payload. It uses the Tines &lt;code&gt;BASE64_ENCODE&lt;/code&gt; function.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
- alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="run-mdm-command-on-device"&gt;&lt;a href="#run-mdm-command-on-device" class="header-anchor"&gt;&lt;/a&gt;Run MDM command on device
 &lt;/h2&gt;&lt;p&gt;Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
 POST request to the Fleet API to send the MDM command to the device.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
- alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The MDM command will run on the device, downloading and installing the OS update.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
- alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
- &lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
@@ -181,7 +181,7 @@ Tines can automate workflows and tasks in IT environments.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Policies can be created from the web UI, the command-line interface called &lt;code&gt;fleetctl&lt;/code&gt; with config files, or the REST API. The user creates a policy and selects which devices need to be checked using that policy. Policies can be global or team-specific.&lt;/p&gt;
 &lt;p&gt;When a policy is created, a record for it is stored in the &lt;strong&gt;policies&lt;/strong&gt; table of the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-policy-creation-1280x720@2x.png"
- alt="Fleet policies block diagram"&gt;
+			alt="Fleet policies block diagram"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="policy-execution"&gt;&lt;a href="#policy-execution" class="header-anchor"&gt;&lt;/a&gt;Policy execution
@@ -198,19 +198,19 @@ Tines can automate workflows and tasks in IT environments.&lt;/p&gt;
 }
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Once the host has executed the policy, it writes the result to the server. The server updates the result in the &lt;strong&gt;policy_membership&lt;/strong&gt; table of the MySQL database. At this point, the Host Details page on the web UI is updated with the policy result.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-host-policy-view-1818x1999@2x.png"
- alt="Fleet policies on host details page"&gt;
+			alt="Fleet policies on host details page"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="force-policy-execution-on-a-device"&gt;&lt;a href="#force-policy-execution-on-a-device" class="header-anchor"&gt;&lt;/a&gt;Force policy execution on a device
 &lt;/h2&gt;&lt;p&gt;The user can force the host to execute all of its policies by clicking the &lt;strong&gt;Refetch&lt;/strong&gt; link:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-refetch-204x64@2x.png"
- alt="Fleet refetch host details"&gt;
+			alt="Fleet refetch host details"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="policy-results-aggregation"&gt;&lt;a href="#policy-results-aggregation" class="header-anchor"&gt;&lt;/a&gt;Policy results aggregation
 &lt;/h2&gt;&lt;p&gt;However, the main &lt;strong&gt;Policies&lt;/strong&gt; page is not updated. This page shows the counts of all passing and failing hosts for each policy. A worker process on one of the Fleet servers updates it once an hour. The worker calculates the counts and stores them in the &lt;strong&gt;policy_stats&lt;/strong&gt; table in the database. This is done for better performance of the UI. For customers with 100,000s of hosts that asynchronously report their policy results, calculating the passing and failing counts in real time was noticeably slow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/understanding-the-intricacies-of-fleet-policies/understanding-the-intricacies-of-fleet-policies-main-policies-page-1999x978@2x.png"
- alt="Fleet policies page"&gt;
+			alt="Fleet policies page"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="summary"&gt;&lt;a href="#summary" class="header-anchor"&gt;&lt;/a&gt;Summary
@@ -246,9 +246,9 @@ Tines can automate workflows and tasks in IT environments.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-shell" data-lang="shell"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;fleetctl query --query &lt;span style="color:#e6db74"&gt;&amp;#34;select name, version from os_version;&amp;#34;&lt;/span&gt; --labels &lt;span style="color:#e6db74"&gt;&amp;#34;All Hosts&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When a client initiates a live query, the server first creates a &lt;strong&gt;Query Campaign&lt;/strong&gt; record in the MySQL database. A Fleet deployment consists of several servers behind a load balancer, so storing the record in the DB makes all servers aware of the new query campaign.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/get-current-telemetry-from-your-devices-with-live-queries/Live%20Query.png"
- alt="Query campaign"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Query campaign&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Query campaign"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Query campaign&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;As devices called &lt;strong&gt;Hosts&lt;/strong&gt; in Fleet check in with the servers, they receive instructions to run a query. For example:&lt;/p&gt;

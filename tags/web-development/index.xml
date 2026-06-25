@@ -157,9 +157,9 @@ All files | 16.96 | 30.9 | 10.71 | 16.96 |
  popup.ts | 0 | 0 | 0 | 0 | 1-86
 ---------------|---------|----------|---------|---------|--------------------------
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
- alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
- &lt;h4&gt;HTML coverage report&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;HTML coverage report&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="adding-unit-tests-to-github-actions"&gt;&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor"&gt;&lt;/a&gt;Adding unit tests to GitHub Actions
@@ -340,16 +340,16 @@ together.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&amp;lt;/&lt;span style="color:#f92672"&gt;html&lt;/span&gt;&amp;gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Testing the extension, we should see a nicer-looking popup page:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/popup.png"
- alt="Popup with Tailwind CSS classes"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Popup with Tailwind CSS classes&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Popup with Tailwind CSS classes"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Popup with Tailwind CSS classes&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;And a nicer-looking options page:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-css-framework-to-chrome-extension/advanced-options.png"
- alt="Options with Tailwind CSS classes"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Options with Tailwind CSS classes&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Options with Tailwind CSS classes"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Options with Tailwind CSS classes&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
@@ -386,9 +386,9 @@ parts of our Chrome extension.&lt;/p&gt;
 change the appearance of a webpage. Or a background script needs to send a message to a popup to update the user
 interface based on the page that&amp;rsquo;s being visited.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/message-passing.svg"
- alt="Communication in a Chrome extension"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Communication in a Chrome extension&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Communication in a Chrome extension"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Communication in a Chrome extension&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;One way to communicate between these parts is to use the local storage via the &lt;code&gt;chrome.storage&lt;/code&gt; APIs. We do not
@@ -446,17 +446,17 @@ will use the &lt;code&gt;chrome.tabs.sendMessage&lt;/code&gt; function to send a
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;When the user toggles the slider in the popup, the popup sends a message to all tabs. The receiving tab will print this
 message to the Chrome Developer Tools console.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/content-script-received.png"
- alt="Content script received message"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Content script received message&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Content script received message"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Content script received message&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Then, the popup will receive a response from the content script with the tab&amp;rsquo;s title and URL. This response prints to
 the &lt;code&gt;Inspect Popup&lt;/code&gt; console. System tabs like &lt;code&gt;chrome://extensions/&lt;/code&gt; will not respond to messages.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/message-passing-in-chrome-extension/popup-response.png"
- alt="Popup received response"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Popup received response&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Popup received response"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Popup received response&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="message-passing-from-a-popup-to-the-service-worker-background-script"&gt;&lt;a href="#message-passing-from-a-popup-to-the-service-worker-background-script" class="header-anchor"&gt;&lt;/a&gt;Message passing from a popup to the service worker (background script)
@@ -553,9 +553,9 @@ browser.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The three main parts of a Chrome extension are the background script, content script(s), and popup. All these parts are
 optional.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-parts.svg"
- alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Parts of a Chrome extension"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Parts of a Chrome extension&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;ol&gt;
@@ -714,9 +714,9 @@ to test the extension.&lt;/li&gt;
 &lt;li&gt;The popup page will appear when you click the &lt;code&gt;M&lt;/code&gt; extension icon.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-chrome-extension/chrome-extension-popup.png"
- alt="Chrome extension popup"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Chrome extension popup&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Chrome extension popup"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Chrome extension popup&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can now do some basic testing:&lt;/p&gt;
@@ -1060,9 +1060,9 @@ page when the code changes.&lt;/p&gt;
 open the app in the default browser.&lt;/p&gt;
 &lt;p&gt;The browser should show the following:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
- alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
- &lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="packagejson-scripts"&gt;&lt;a href="#packagejson-scripts" class="header-anchor"&gt;&lt;/a&gt;package.json scripts

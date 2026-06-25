@@ -43,8 +43,8 @@ like this:&lt;/p&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
@@ -60,8 +60,8 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
@@ -137,8 +137,8 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;

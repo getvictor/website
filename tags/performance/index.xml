@@ -59,7 +59,7 @@ provides context when debugging.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This approach provides full API context without bloating searchable attributes.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
- alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
+			alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="feature-2-database-query-instrumentation"&gt;&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor"&gt;&lt;/a&gt;Feature 2: Database query instrumentation
@@ -69,7 +69,7 @@ executed.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
- alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
+			alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
 &lt;/figure&gt;
 
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
@@ -90,7 +90,7 @@ storage durations and access controls in production environments.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
 incoming requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
- alt="SigNoz displaying outgoing HTTP request details"&gt;
+			alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
@@ -118,7 +118,7 @@ incoming requests.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
 output.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
- alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
+			alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="key-opentelemetry-concepts-spans-vs-traces"&gt;&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: spans vs traces
@@ -152,7 +152,7 @@ the branches and leaves.&lt;/p&gt;
 &lt;h2 id="feature-5-comprehensive-error-handling"&gt;&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor"&gt;&lt;/a&gt;Feature 5: Comprehensive error handling
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
- alt="SigNoz showing errors"&gt;
+			alt="SigNoz showing errors"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p&gt;
@@ -268,8 +268,8 @@ reduce resources to save costs.&lt;/p&gt;
 &lt;li&gt;Memory utilization should be below 80% on average&lt;/li&gt;
 &lt;/ul&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/cpu-utilization.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;High CPU utilization during load test&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;High CPU utilization during load test&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="server-errors"&gt;&lt;a href="#server-errors" class="header-anchor"&gt;&lt;/a&gt;Server errors
@@ -281,8 +281,8 @@ messages. For example, a 404 error is typically not a server error but a client 
 resource that does not exist is a common scenario. Client errors should be logged as informational messages or tagged
 appropriately to be excluded from the server error metric.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/server-errors.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;AWS Logs Insights JSON error filter and sample error patterns&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;AWS Logs Insights JSON error filter and sample error patterns&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The ideal number of server errors is zero. However, in practice, some errors are expected. For example, some startup or
@@ -295,8 +295,8 @@ business cares about user-facing API endpoints, such as the login, checkout, or 
 &lt;p&gt;One standard metric is the 95th percentile latency. This metric indicates the latency that 95% of the requests are
 faster than. It is a good indicator of the user experience because it filters out outliers.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/api-latency.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Example spike in latency during a load test experiment&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Example spike in latency during a load test experiment&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Telemetry tools such as &lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
@@ -312,8 +312,8 @@ query signature. This will identify the queries that have the most impact on dat
 &lt;p&gt;The list of slow queries should remain stable during a load test. If it changes, it may indicate a new unoptimized query
 or a new bug in the application.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/db-slow-queries.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="database-performance-metrics"&gt;&lt;a href="#database-performance-metrics" class="header-anchor"&gt;&lt;/a&gt;Database performance metrics
@@ -351,8 +351,8 @@ code.&lt;/p&gt;
 baseline or the previous load test profile. If the profile changes significantly, it may indicate a new bug in the
 application or a new performance bottleneck.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/performance-profile.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Example performance profile from Go pprof&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Example performance profile from Go pprof&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="database-replication-lag"&gt;&lt;a href="#database-replication-lag" class="header-anchor"&gt;&lt;/a&gt;Database replication lag
@@ -498,7 +498,7 @@ Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Fi
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
- alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+			alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
@@ -579,9 +579,9 @@ was taking a long time for some of our users. First, we used
  &gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
 identify the bottlenecks in our code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
- alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization

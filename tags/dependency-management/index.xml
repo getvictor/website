@@ -90,9 +90,9 @@ together. A Go module is defined by a &lt;code&gt;go.mod&lt;/code&gt; file locat
 name and the versions of the dependencies the module uses.&lt;/p&gt;
 &lt;p&gt;A Go module can contain multiple packages, and the packages do not need to be related to each other.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.svg"
- alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
- &lt;h4&gt;Sample project with two modules&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Sample project with two modules&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;A Go module can exist at any level of the directory structure, even nested within another module. The Go toolchain

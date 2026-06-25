@@ -89,9 +89,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="testing-the-options-page"&gt;&lt;a href="#testing-the-options-page" class="header-anchor"&gt;&lt;/a&gt;Testing the options page
 &lt;/h2&gt;&lt;p&gt;To test the options page, load the extension in Chrome and right-click on its icon. You should see a new &lt;code&gt;Options&lt;/code&gt; item. Clicking on this item will open the options page.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-dropdown.png"
- alt="New Options selection"&gt;&lt;figcaption&gt;
- &lt;h4&gt;New Options selection&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="New Options selection"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;New Options selection&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="adding-a-link-to-the-options-page"&gt;&lt;a href="#adding-a-link-to-the-options-page" class="header-anchor"&gt;&lt;/a&gt;Adding a link to the options page
@@ -129,9 +129,9 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;}
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We will now see the &lt;code&gt;Advanced options&lt;/code&gt; link in the popup. Clicking on the link will take the user to the options page.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-options-to-chrome-extension/chrome-extension-options-link.png"
- alt="Popup with Advanced options link"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Popup with Advanced options link&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Popup with Advanced options link"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Popup with Advanced options link&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="embedded-options-page"&gt;&lt;a href="#embedded-options-page" class="header-anchor"&gt;&lt;/a&gt;Embedded options page

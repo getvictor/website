@@ -149,9 +149,9 @@ one master and one or more read replicas. See this article on
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; host_id, &lt;span style="color:#66d9ef"&gt;COUNT&lt;/span&gt;(&lt;span style="color:#f92672"&gt;*&lt;/span&gt;) &lt;span style="color:#66d9ef"&gt;as&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;count&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; host_software
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;GROUP&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;BY&lt;/span&gt; host_software.host_id;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/simple-insert-with-subquery.svg"
- alt="Simplified INSERT with a subquery"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Simplified INSERT with a subquery&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Simplified INSERT with a subquery"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Simplified INSERT with a subquery&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The above query scans the entire &lt;code&gt;host_software&lt;/code&gt; table index to create a count. While the database is doing the scan and
@@ -174,9 +174,9 @@ table.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;When you write to the master and read from the replica, you might not see the data you wrote. The replica is not in sync
 with the master in real time. In our production, the replica is usually less than 30 milliseconds behind the master.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/read-after-write-consistency.svg"
- alt="Read-after-write database issue"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Read-after-write database issue&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Read-after-write database issue"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Read-after-write database issue&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;These issues are typically not caught in development since dev environments usually have one database instance. Unit or
@@ -207,9 +207,9 @@ operations on a database table at the cost of additional writes and storage spac
 Indexes are created using one or more database columns and are stored and sorted using a B-tree or a similar data
 structure. The goal is to reduce the number of data comparisons needed to find the data.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/database-gotchas-when-scaling-apps/database-index.svg"
- alt="Database index"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Database index&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Database index"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Database index&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Indexes are generally beneficial. They speed up read queries but slightly slow down write queries. Indexes can also be

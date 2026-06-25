@@ -9,8 +9,8 @@ nobody can explain why it works, what assumptions it depends on, or what is like
 What AI changed is the speed and scale. It is now much cheaper to produce code that looks finished before anyone has
 really understood it.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/code-iceberg.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="how-it-differs-from-classic-tech-debt"&gt;&lt;a href="#how-it-differs-from-classic-tech-debt" class="header-anchor"&gt;&lt;/a&gt;How it differs from classic tech debt
@@ -63,8 +63,8 @@ developers feel is improving and what their workflow shows may not always line u
 explain what happened and what should change next. So humans still need understanding, even if they did not write every
 line by hand.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/human-and-robot-pointing-fingers.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;AI making code generation cheaper does not change that. It just makes it easier for the team to accumulate work it
@@ -172,75 +172,75 @@ any lint issues or failing tests, and address review feedback early.&lt;/p&gt;
 &lt;h2 id="work-modes-single-tasking-vs-multitasking"&gt;&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor"&gt;&lt;/a&gt;Work modes: single-tasking vs multitasking
 &lt;/h2&gt;&lt;p&gt;Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Aspect&lt;/th&gt;
- &lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
- &lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🧠 Deep focus required&lt;/td&gt;
- &lt;td&gt;😌 Light mental load&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🏗️ Complex features&lt;/td&gt;
- &lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
- &lt;td&gt;📝 Code review comments&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
- &lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;⚡ Performance optimization&lt;/td&gt;
- &lt;td&gt;📊 Adding logging&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
- &lt;td&gt;✅ Switch freely&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
- &lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
- &lt;td&gt;📱 Check periodically&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
- &lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
- &lt;td&gt;🏃 Quick to start&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;💎 Quality critical&lt;/td&gt;
- &lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
- &lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Aspect&lt;/th&gt;
+					&lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
+					&lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🧠 Deep focus required&lt;/td&gt;
+					&lt;td&gt;😌 Light mental load&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🏗️ Complex features&lt;/td&gt;
+					&lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
+					&lt;td&gt;📝 Code review comments&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
+					&lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;⚡ Performance optimization&lt;/td&gt;
+					&lt;td&gt;📊 Adding logging&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
+					&lt;td&gt;✅ Switch freely&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
+					&lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
+					&lt;td&gt;📱 Check periodically&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
+					&lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
+					&lt;td&gt;🏃 Quick to start&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;💎 Quality critical&lt;/td&gt;
+					&lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
+					&lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;Single-task mode&lt;/strong&gt; is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
 planning ahead or preparing test environments. Keep your context intact.&lt;/p&gt;
@@ -734,50 +734,50 @@ tend to be small in nature, with most of the software engineer&amp;rsquo;s time 
 to fix it.&lt;/p&gt;
 &lt;h2 id="ai-coding-agent-impact-across-the-sdlc"&gt;&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor"&gt;&lt;/a&gt;AI coding agent impact across the SDLC
 &lt;/h2&gt;&lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;SDLC Phase&lt;/th&gt;
- &lt;th&gt;AI Agent Impact&lt;/th&gt;
- &lt;th&gt;🔍 Notes&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;📝 Requirements&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧠 Design&lt;/td&gt;
- &lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
- &lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;💻 Implementation&lt;/td&gt;
- &lt;td&gt;✅ High&lt;/td&gt;
- &lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧪 Automated Testing&lt;/td&gt;
- &lt;td&gt;✅ High&lt;/td&gt;
- &lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧍 Manual Testing&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🚀 Deployment&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🔧 Maintenance&lt;/td&gt;
- &lt;td&gt;⚠️ Medium&lt;/td&gt;
- &lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;SDLC Phase&lt;/th&gt;
+					&lt;th&gt;AI Agent Impact&lt;/th&gt;
+					&lt;th&gt;🔍 Notes&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;📝 Requirements&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧠 Design&lt;/td&gt;
+					&lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
+					&lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;💻 Implementation&lt;/td&gt;
+					&lt;td&gt;✅ High&lt;/td&gt;
+					&lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧪 Automated Testing&lt;/td&gt;
+					&lt;td&gt;✅ High&lt;/td&gt;
+					&lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧍 Manual Testing&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🚀 Deployment&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🔧 Maintenance&lt;/td&gt;
+					&lt;td&gt;⚠️ Medium&lt;/td&gt;
+					&lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id="risk-and-tradeoffs"&gt;&lt;a href="#risk-and-tradeoffs" class="header-anchor"&gt;&lt;/a&gt;Risk and tradeoffs
 &lt;/h2&gt;&lt;p&gt;While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
@@ -880,7 +880,7 @@ collection and compute the data we wanted to track.&lt;/p&gt;
 is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
 up any infrastructure ourselves.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
- alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
+			alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
@@ -894,7 +894,7 @@ compare our engineering metrics year over year. Due to its generous free tier, w
 &lt;p&gt;We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
 roles, and created a JWT key for the service account to use with our app.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
- alt="Roles for the BigQuery service account."&gt;
+			alt="Roles for the BigQuery service account."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
@@ -949,7 +949,7 @@ pickup time chart. We had to decide how to visualize the data. We decided on:&lt
 &lt;/ul&gt;
 &lt;p&gt;We created Grafana variables to filter by username/group.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
- alt="List of Grafana dashboard variables, including user and user_group."&gt;
+			alt="List of Grafana dashboard variables, including user and user_group."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
@@ -1085,12 +1085,12 @@ time from &lt;code&gt;first_review_time&lt;/code&gt; but displaying the data in 
 attempts to fix the problem by changing the time to noon: &lt;code&gt;TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The final chart looked like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
- alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
+			alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can inspect the data to drill down into the PR numbers for each data point:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
- alt="Raw data from the database query, including PR numbers."&gt;
+			alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;With the PR numbers, we can explore our data using the following query:&lt;/p&gt;
@@ -1358,8 +1358,8 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
@@ -1374,8 +1374,8 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding
@@ -1672,7 +1672,7 @@ manually run the workflow to test it.&lt;/p&gt;
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
 &lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
- alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+			alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading

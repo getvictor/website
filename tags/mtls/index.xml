@@ -20,7 +20,7 @@ standard called &lt;strong&gt;HTTP Message Signatures&lt;/strong&gt;, &lt;a clas
  &gt;RFC 9421&lt;/a&gt;. It turns out the
 solution already existed. I just didn&amp;rsquo;t know where to look.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/rfc-9421.png"
- alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
+			alt="RFC 9421 history showing the evolution from drafts to the final RFC 9421 standard."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-http-message-signatures"&gt;&lt;a href="#what-are-http-message-signatures" class="header-anchor"&gt;&lt;/a&gt;What are HTTP message signatures?
@@ -322,7 +322,7 @@ app is available on GitHub: &lt;a class="link" href="https://github.com/getvicto
 &lt;p&gt;There are many JavaScript libraries that implement HTTP message signatures. Many companies also don&amp;rsquo;t use libraries and
 do their own implementation of the standard.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/http-message-signatures/node-http-message-signature-libraries.png"
- alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
+			alt="npm search results showing five Node.js HTTP message signature libraries"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For our demo we chose &lt;a class="link" href="https://github.com/dhensby/node-http-message-signatures" target="_blank" rel="noopener"
@@ -701,7 +701,7 @@ is a no-nonsense breakdown covering what they are, where they shine, and where t
 knows it is connecting to a legitimate server. In mutual TLS (mTLS), the client also presents a certificate to the
 server so that the server can verify the client&amp;rsquo;s identity.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
- alt="Mutual TLS (mTLS) handshake diagram"&gt;
+			alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;mTLS is built into the TLS protocol (1.2 and 1.3) and is fast. The OS knows how to do it, and browsers know how to do
@@ -816,65 +816,65 @@ expiration in ValKey or Redis)&lt;/li&gt;
 &lt;h2 id="mtls-vs-http-message-signatures-choosing-the-right-tool"&gt;&lt;a href="#mtls-vs-http-message-signatures-choosing-the-right-tool" class="header-anchor"&gt;&lt;/a&gt;mTLS vs HTTP message signatures: choosing the right tool
 &lt;/h2&gt;&lt;p&gt;Here&amp;rsquo;s how they compare:&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Feature&lt;/th&gt;
- &lt;th&gt;mTLS&lt;/th&gt;
- &lt;th&gt;HTTP Message Signature&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;Identity verification&lt;/td&gt;
- &lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
- &lt;td&gt;🟡 App-level with public key&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Integrity&lt;/td&gt;
- &lt;td&gt;🟢 Built into TLS&lt;/td&gt;
- &lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Granular control&lt;/td&gt;
- &lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
- &lt;td&gt;🟢 Easy&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Deployment complexity&lt;/td&gt;
- &lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
- &lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Public API suitability&lt;/td&gt;
- &lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
- &lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Certificate handling&lt;/td&gt;
- &lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
- &lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Integration support&lt;/td&gt;
- &lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
- &lt;td&gt;🟡 App libraries available&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Replay protection&lt;/td&gt;
- &lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
- &lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Performance&lt;/td&gt;
- &lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
- &lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Debuggability&lt;/td&gt;
- &lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
- &lt;td&gt;🟢 Signature is visible&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Feature&lt;/th&gt;
+					&lt;th&gt;mTLS&lt;/th&gt;
+					&lt;th&gt;HTTP Message Signature&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Identity verification&lt;/td&gt;
+					&lt;td&gt;🟢 OS-level with client certs&lt;/td&gt;
+					&lt;td&gt;🟡 App-level with public key&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Integrity&lt;/td&gt;
+					&lt;td&gt;🟢 Built into TLS&lt;/td&gt;
+					&lt;td&gt;🟢 Signature over headers/body&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Granular control&lt;/td&gt;
+					&lt;td&gt;🔴 Hard to apply per route&lt;/td&gt;
+					&lt;td&gt;🟢 Easy&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Deployment complexity&lt;/td&gt;
+					&lt;td&gt;🔴 High (requires certs and mTLS-aware proxies)&lt;/td&gt;
+					&lt;td&gt;🟡 Moderate (TLS termination agnostic)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Public API suitability&lt;/td&gt;
+					&lt;td&gt;🔴 Poor (inconsistent client certs)&lt;/td&gt;
+					&lt;td&gt;🟢 Good (no client certs needed)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Certificate handling&lt;/td&gt;
+					&lt;td&gt;🔴 Requires full X.509 cert&lt;/td&gt;
+					&lt;td&gt;🟢 Supports raw public keys&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Integration support&lt;/td&gt;
+					&lt;td&gt;🟢 Strong OS/browser support&lt;/td&gt;
+					&lt;td&gt;🟡 App libraries available&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Replay protection&lt;/td&gt;
+					&lt;td&gt;🟡 Tied to TLS session&lt;/td&gt;
+					&lt;td&gt;🔴 Requires nonce and/or timestamp&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Performance&lt;/td&gt;
+					&lt;td&gt;🟢 Fast (once per connection)&lt;/td&gt;
+					&lt;td&gt;🟡 Moderate (on every request with efficient algo)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Debuggability&lt;/td&gt;
+					&lt;td&gt;🔴 Opaque handshake&lt;/td&gt;
+					&lt;td&gt;🟢 Signature is visible&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;So, which one should you use?&lt;/p&gt;
 &lt;ul&gt;
@@ -1367,9 +1367,9 @@ mTLS Hello World!
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
- alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
- &lt;p&gt;Edge mTLS popup&lt;/p&gt;
- &lt;/figcaption&gt;
+			alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
+			&lt;p&gt;Edge mTLS popup&lt;/p&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can click &lt;strong&gt;OK&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
@@ -1655,7 +1655,7 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-go-client" &gt;mTLS Go client&lt;/a&gt; article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p&gt;
 &lt;p&gt;The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code&gt;CertificateVerify&lt;/code&gt; message. The &lt;code&gt;CertificateVerify&lt;/code&gt; message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
- alt="Mutual TLS (mTLS) handshake diagram"&gt;
+			alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
@@ -2093,9 +2093,9 @@ Features: alt-svc AsynchDNS GSS-API HSTS HTTP2 HTTPS-proxy IPv6 Kerberos Largefi
 &lt;pre tabindex="0"&gt;&lt;code&gt;https://localhost:8889/hello-world.txt
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-apple-keychain/mtls-safari.png"
- alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
- &lt;p&gt;Safari mTLS popup&lt;/p&gt;
- &lt;/figcaption&gt;
+			alt="Safari mTLS popup"&gt;&lt;figcaption&gt;
+			&lt;p&gt;Safari mTLS popup&lt;/p&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can click &lt;strong&gt;Continue&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;
@@ -2151,7 +2151,7 @@ mTLS works.&lt;/p&gt;
 &lt;p&gt;TLS uses a handshake protocol to establish a secure connection. The handshake protocol is a series of messages between
 the client and the server.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-hello-world/mtls-handshake.png"
- alt="Mutual TLS (mTLS) handshake diagram"&gt;
+			alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The client sends a &amp;ldquo;Client Hello&amp;rdquo; message to the server. The server responds with a &amp;ldquo;Server Hello&amp;rdquo; message and sends its

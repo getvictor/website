@@ -17,7 +17,7 @@ collection and compute the data we wanted to track.&lt;/p&gt;
 is open source, and can be self-hosted. We used Grafana&amp;rsquo;s free cloud tier for this example since we didn&amp;rsquo;t want to spin
 up any infrastructure ourselves.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-cloud-free.png"
- alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
+			alt="Free observability plan with generous limits: 10k metrics, 50GB logs, 50GB traces, 50GB profiles, 500 VUh of k6 testing, 50k frontend sessions, 2,232 app observability host hours, 2,232 Kubernetes monitoring host hours, 37,944 container hours, 14-day data retention, and support for 3 active users."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;However, the problem with Grafana Cloud&amp;rsquo;s free tier is that data is retained for only 14 days. We wanted to keep and
@@ -31,7 +31,7 @@ compare our engineering metrics year over year. Due to its generous free tier, w
 &lt;p&gt;We created a project in Google Cloud Console, created a dataset (github_metrics), made a service account with BigQuery
 roles, and created a JWT key for the service account to use with our app.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/bigquery-service-account.png"
- alt="Roles for the BigQuery service account."&gt;
+			alt="Roles for the BigQuery service account."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; BigQuery has a sandbox mode that does not require a credit card. However, it has some API limitations. We
@@ -86,7 +86,7 @@ pickup time chart. We had to decide how to visualize the data. We decided on:&lt
 &lt;/ul&gt;
 &lt;p&gt;We created Grafana variables to filter by username/group.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-variables.png"
- alt="List of Grafana dashboard variables, including user and user_group."&gt;
+			alt="List of Grafana dashboard variables, including user and user_group."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Creating the correct SQL query that gathered all the data and integrated with Grafana&amp;rsquo;s features took considerable time.
@@ -222,12 +222,12 @@ time from &lt;code&gt;first_review_time&lt;/code&gt; but displaying the data in 
 attempts to fix the problem by changing the time to noon: &lt;code&gt;TIMESTAMP(CONCAT(CAST(c.day AS STRING), '12:00:00')) AS time&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;The final chart looked like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-chart.png"
- alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
+			alt="7-day moving average of pickup time for Fleet&amp;#39;s engineering team."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can inspect the data to drill down into the PR numbers for each data point:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/engineering-metrics-no-cost/grafana-inspect-data.png"
- alt="Raw data from the database query, including PR numbers."&gt;
+			alt="Raw data from the database query, including PR numbers."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;With the PR numbers, we can explore our data using the following query:&lt;/p&gt;

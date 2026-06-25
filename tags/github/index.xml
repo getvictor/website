@@ -179,7 +179,7 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
- alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+			alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
@@ -226,9 +226,9 @@ GitHub code reviews. The default GitHub code review process is not scalable and 
 that requires a code review before merging the code to the main branch.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a representative branch protection rule:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
- alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
- &lt;h4&gt;PR branch protection rule&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;PR branch protection rule&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
@@ -263,7 +263,7 @@ previous pattern. For example, we would rewrite the above owners as:&lt;/p&gt;
 experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p&gt;
 &lt;p&gt;The issue stems from the lack of fine-grained control over the following option:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
- alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
+			alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;With multiple code owners, every code owner must re-approve every change.&lt;/p&gt;
@@ -372,9 +372,9 @@ and I didn&amp;rsquo;t know about it.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;The above steps can be done manually by opening the pull request in GitHub and hovering over the blue CODEOWNERS icon
 for each changed file to see the code owners. However, this can be time-consuming and error-prone.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/find-code-owners-for-pull-request/codeowners-hover.png"
- alt="List of files, with code owners showing when hovering over the blue icon next to the file"&gt;&lt;figcaption&gt;
- &lt;h4&gt;See the code owners on hover&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="List of files, with code owners showing when hovering over the blue icon next to the file"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;See the code owners on hover&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="find-code-owners-from-command-line"&gt;&lt;a href="#find-code-owners-from-command-line" class="header-anchor"&gt;&lt;/a&gt;Finding the code owners from the command line
@@ -437,9 +437,9 @@ branches.&lt;/p&gt;
 parent commits: one from the current branch and one from the merged branch.&lt;/p&gt;
 &lt;p&gt;In the following example, we have a &lt;code&gt;branch&lt;/code&gt; that we want to merge into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
- alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;main&lt;/code&gt; branch shows the commit history:&lt;/p&gt;
@@ -538,9 +538,9 @@ Date: Sat Jun 22 17:25:40 2024 -0500
 
  first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
- alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
@@ -579,18 +579,18 @@ make sure their feature works with the newest code. We start this process with t
 where we merge the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch.&lt;/p&gt;
 &lt;p&gt;After the merge, the developer can create a GitHub pull request to merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
- alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note that the commit history only shows the commits from the &lt;code&gt;branch&lt;/code&gt; and the merge commit. The &lt;code&gt;main&lt;/code&gt; commits are not
 shown in the pull request.&lt;/p&gt;
 &lt;p&gt;GitHub shows a few options for merging the pull request:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
- alt="Merge pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Merge pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Merge pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Merge pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;ul&gt;
@@ -603,9 +603,9 @@ from the &lt;code&gt;branch&lt;/code&gt; onto the &lt;code&gt;main&lt;/code&gt; 
 &lt;/ul&gt;
 &lt;p&gt;Selecting &lt;strong&gt;Create a merge commit&lt;/strong&gt; results in the following commit history:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
- alt="Commit history after pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history after pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history after pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history after pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last two commits are both merge commits.&lt;/p&gt;
@@ -626,9 +626,9 @@ Date: Sat Jun 22 21:25:39 2024 -0500
  Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The PR merge commit points to the previous merge commit and the last commit on &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
- alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="update-protected-branch"&gt;&lt;a href="#update-protected-branch" class="header-anchor"&gt;&lt;/a&gt;Updating a protected feature branch
@@ -643,9 +643,9 @@ request.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And create a pull request to merge &lt;code&gt;feature-update&lt;/code&gt; into &lt;code&gt;feature&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
- alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This pull request shows all the commits from the &lt;code&gt;main&lt;/code&gt; branch and the merge commit. This commit history is problematic
@@ -654,30 +654,30 @@ because the PR may trigger a code review from the
  &gt;code owners&lt;/a&gt;
 of the files that were already reviewed in previous pull requests to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
- alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;After the merge, the &lt;code&gt;feature&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
- alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now, we create a pull request to merge the update &lt;code&gt;feature&lt;/code&gt; branch into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
- alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
- &lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;After the merge, the &lt;code&gt;main&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
- alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last three commits are merge commits.&lt;/p&gt;
@@ -706,17 +706,17 @@ Date: Sun Jun 23 08:03:22 2024 -0500
 
  Merge branch &amp;#39;main&amp;#39; into feature
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
- alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="merging-a-pull-request-with-squash-and-merge"&gt;&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor"&gt;&lt;/a&gt;Merging a pull request with &lt;strong&gt;Squash and merge&lt;/strong&gt;
 &lt;/h3&gt;&lt;p&gt;If the final pull request is merged with &lt;strong&gt;Squash and merge&lt;/strong&gt;, the commit history will look like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
- alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last commit is a single commit that combines all the changes from the &lt;code&gt;feature&lt;/code&gt; branch. The merge commits and all
@@ -747,9 +747,9 @@ branch.&lt;/p&gt;
  &gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
 approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
- alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
- &lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The entry point for GitHub Actions is the &lt;code&gt;.github/workflows&lt;/code&gt; directory in your repository. This directory contains one
@@ -779,9 +779,9 @@ GitHub Actions code allows you to:&lt;/p&gt;
 &lt;h2 id="reusable-workflows"&gt;&lt;a href="#reusable-workflows" class="header-anchor"&gt;&lt;/a&gt;Reusable workflows
 &lt;/h2&gt;&lt;p&gt;A reusable workflow replaces a job in the main workflow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
- alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p&gt;
@@ -856,17 +856,17 @@ artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
- alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="reusable-steps-composite-action"&gt;&lt;a href="#reusable-steps-composite-action" class="header-anchor"&gt;&lt;/a&gt;Reusable steps (composite action)
 &lt;/h2&gt;&lt;p&gt;Reusable steps replace a regular step in a job. We will use a &lt;code&gt;composite action&lt;/code&gt; for reusable steps in our example.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
- alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
@@ -921,9 +921,9 @@ generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also pro
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
- alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For a reusable TypeScript action example, see the
@@ -972,7 +972,7 @@ use them as an extension of your application to perform tasks such as:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
- alt="GitHub Action block diagram"&gt;
+			alt="GitHub Action block diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a

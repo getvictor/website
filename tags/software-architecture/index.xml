@@ -857,8 +857,8 @@ discuss are common in software development, especially in startups and small com
 &lt;p&gt;The initial state of our example codebase is a web application developed in a mono-repository. The application was built
 from the ground up with a simple architecture, focusing on adding new features and finding product-market fit.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/current-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The current design divides the codebase into a few large modules. We use the term &lt;em&gt;module&lt;/em&gt; to mean a logical grouping of
@@ -893,8 +893,8 @@ the codebase and start contributing.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;At this point in the company&amp;rsquo;s life, an exemplary architecture would be separate groups of modules corresponding to the
 three product teams.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/ideal-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Each team would be responsible for its own set of modules, which aligns with Agile principles. The modules would be
@@ -926,8 +926,8 @@ Instead of worrying about not making the right decisions in the past, consider w
 or two from now and start moving towards that.&lt;/p&gt;
 &lt;p&gt;For example, when adding a new prominent feature to the product, decouple it from the rest of the codebase.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our example shows all the modules decoupled, but it may be OK to decouple one or two.&lt;/p&gt;

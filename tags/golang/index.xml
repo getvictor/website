@@ -73,35 +73,35 @@ unique, factory-installed identity key, and the Storage Root Key (SRK), which an
 &lt;h2 id="tpm-key-storage"&gt;&lt;a href="#tpm-key-storage" class="header-anchor"&gt;&lt;/a&gt;TPM key storage
 &lt;/h2&gt;&lt;p&gt;TPM defines four main authorization hierarchies, each rooted in a different seed and intended for various use cases:&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Hierarchy&lt;/th&gt;
- &lt;th&gt;Seed Used&lt;/th&gt;
- &lt;th&gt;Purpose&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
- &lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
- &lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
- &lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
- &lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Hierarchy&lt;/th&gt;
+					&lt;th&gt;Seed Used&lt;/th&gt;
+					&lt;th&gt;Purpose&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Owner&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;em&gt;Storage Seed&lt;/em&gt;&lt;/td&gt;
+					&lt;td&gt;Storage keys, general-purpose keys&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Endorsement&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;em&gt;Endorsement Seed&lt;/em&gt;&lt;/td&gt;
+					&lt;td&gt;Identity, attestation (e.g. EK)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Platform&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;em&gt;Platform Seed&lt;/em&gt;&lt;/td&gt;
+					&lt;td&gt;Firmware-level trust &amp;amp; control&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Null&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;&lt;em&gt;(None)&lt;/em&gt;&lt;/td&gt;
+					&lt;td&gt;Ephemeral keys not tied to any seed&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Each hierarchy has:&lt;/p&gt;
 &lt;ul&gt;
@@ -535,8 +535,8 @@ like this:&lt;/p&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
@@ -552,8 +552,8 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
@@ -629,8 +629,8 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;
@@ -863,8 +863,8 @@ package files.&lt;/p&gt;
 requests a file from a CloudFront distribution, CloudFront checks its cache for the file. If the file is not in the
 cache, CloudFront retrieves it from the origin and caches it for future requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/users-requesting-from-cloudfront.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-cloudfront-signed-urls"&gt;&lt;a href="#what-are-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;What are CloudFront signed URLs?
@@ -1033,7 +1033,7 @@ Hello, World! 0
 Hello, World! 1
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The composed struct forwards the method call to the embedded struct.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/method-overriding-in-go/embedded-struct.png"
- alt="MyPrint struct inside the MyComposedPrint struct."&gt;
+			alt="MyPrint struct inside the MyComposedPrint struct."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="method-overriding-with-embedded-structs"&gt;&lt;a href="#method-overriding-with-embedded-structs" class="header-anchor"&gt;&lt;/a&gt;Method overriding with embedded structs
@@ -1245,7 +1245,7 @@ manually run the workflow to test it.&lt;/p&gt;
 This operation will create a one-way link from Google Sheets to the document. You can refresh the data by clicking
 &lt;strong&gt;Tools &amp;gt; Linked objects &amp;gt; Update All&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/track-engineering-metrics/google-sheets-linked-to-google-docs.png"
- alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
+			alt="Google Docs showing an embedded 4x4 table from Google Sheets. The title is: Our open bugs"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="further-reading"&gt;&lt;a href="#further-reading" class="header-anchor"&gt;&lt;/a&gt;Further reading
@@ -1309,24 +1309,24 @@ interaction. The API key (JWT) method interacts with two parties: your app and G
  &gt;Google Cloud Console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Create a new project or select an existing project.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
- alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
+ 			alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;In the new project, go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; and enable the &lt;strong&gt;Google Sheets API&lt;/strong&gt;. After enabling it, you should see
 it in the &lt;strong&gt;Enabled APIs &amp;amp; services&lt;/strong&gt; list.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
- alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
+ 			alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; &amp;gt; &lt;strong&gt;Credentials&lt;/strong&gt; and create a new Service Account. This account does not need any optional
 permissions.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
- alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
+ 			alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Create a new JSON key for the service account.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
- alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
+ 			alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
@@ -1350,7 +1350,7 @@ credentials for your service account. Keep it secure. For example, we received
 &lt;/h2&gt;&lt;p&gt;Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
 In our case, the service account email is &lt;code&gt;example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
- alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
+			alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note the spreadsheet ID from the URL. For example, in the URL
@@ -1430,7 +1430,7 @@ incremented value:&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js"&gt;&lt;/script&gt;
 &lt;p&gt;We can review the spreadsheet to verify that our code added the new row.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
- alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
+			alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps
@@ -1481,9 +1481,9 @@ together. A Go module is defined by a &lt;code&gt;go.mod&lt;/code&gt; file locat
 name and the versions of the dependencies the module uses.&lt;/p&gt;
 &lt;p&gt;A Go module can contain multiple packages, and the packages do not need to be related to each other.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-modules-and-packages/go-modules-and-packages.svg"
- alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
- &lt;h4&gt;Sample project with two modules&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Go project directory structure, containing one module at the top level with two packages in a subdirectory. Another module exists in a third subdirectory."&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Sample project with two modules&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;A Go module can exist at any level of the directory structure, even nested within another module. The Go toolchain
@@ -1818,7 +1818,7 @@ Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Fi
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
- alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+			alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
@@ -2132,7 +2132,7 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
- alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+			alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
@@ -2281,9 +2281,9 @@ was taking a long time for some of our users. First, we used
  &gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
 identify the bottlenecks in our code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
- alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization
@@ -2976,7 +2976,7 @@ mTLS Hello World!
 &lt;/h2&gt;&lt;p&gt;In the &lt;a class="link" href="../mtls-go-client" &gt;mTLS Go client&lt;/a&gt; article, we built a simple Go client that uses mTLS. Our client used Go standard library methods and loaded the client certificate and private key from the filesystem. However, keeping the private key on the filesystem is insecure and not recommended. We aim to build an mTLS client fully integrated with the operating system&amp;rsquo;s keystore.&lt;/p&gt;
 &lt;p&gt;The first step toward that goal is to extract the functionality of the mTLS handshake that requires the private key. Luckily, the client&amp;rsquo;s private key is only needed to sign the &lt;code&gt;CertificateVerify&lt;/code&gt; message. The &lt;code&gt;CertificateVerify&lt;/code&gt; message is the last in the mTLS handshake. It proves to the server that the client has the private key associated with the client certificate.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="../mtls-hello-world/mtls-handshake.png"
- alt="Mutual TLS (mTLS) handshake diagram"&gt;
+			alt="Mutual TLS (mTLS) handshake diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;From &lt;a class="link" href="https://en.wikipedia.org/wiki/Transport_Layer_Security#Client-authenticated_TLS_handshake" target="_blank" rel="noopener"
@@ -3613,7 +3613,7 @@ file. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;authzcheck&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewMiddleware&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;AuthzCheck&lt;/span&gt;()(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;kithttp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewServer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;decodeFn&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;encodeResponse&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg"
- alt="Catch missed authorization check block diagram"&gt;
+			alt="Catch missed authorization check block diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This means that after the business logic is processed, the AuthzCheck is called. This check ensures that authorization

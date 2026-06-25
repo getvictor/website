@@ -19,7 +19,7 @@ file. For example:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt; = &lt;span style="color:#a6e22e"&gt;authzcheck&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewMiddleware&lt;/span&gt;().&lt;span style="color:#a6e22e"&gt;AuthzCheck&lt;/span&gt;()(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;kithttp&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;NewServer&lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;decodeFn&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;encodeResponse&lt;/span&gt;, &lt;span style="color:#a6e22e"&gt;opts&lt;/span&gt;&lt;span style="color:#f92672"&gt;...&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/catch-missed-authorization-checks-during-software-development/AuthzCheck.jpg"
- alt="Catch missed authorization check block diagram"&gt;
+			alt="Catch missed authorization check block diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This means that after the business logic is processed, the AuthzCheck is called. This check ensures that authorization

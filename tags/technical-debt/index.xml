@@ -9,8 +9,8 @@ nobody can explain why it works, what assumptions it depends on, or what is like
 What AI changed is the speed and scale. It is now much cheaper to produce code that looks finished before anyone has
 really understood it.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/code-iceberg.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="how-it-differs-from-classic-tech-debt"&gt;&lt;a href="#how-it-differs-from-classic-tech-debt" class="header-anchor"&gt;&lt;/a&gt;How it differs from classic tech debt
@@ -63,8 +63,8 @@ developers feel is improving and what their workflow shows may not always line u
 explain what happened and what should change next. So humans still need understanding, even if they did not write every
 line by hand.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/human-and-robot-pointing-fingers.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;AI making code generation cheaper does not change that. It just makes it easier for the team to accumulate work it
@@ -1023,8 +1023,8 @@ discuss are common in software development, especially in startups and small com
 &lt;p&gt;The initial state of our example codebase is a web application developed in a mono-repository. The application was built
 from the ground up with a simple architecture, focusing on adding new features and finding product-market fit.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/current-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The current design divides the codebase into a few large modules. We use the term &lt;em&gt;module&lt;/em&gt; to mean a logical grouping of
@@ -1059,8 +1059,8 @@ the codebase and start contributing.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;At this point in the company&amp;rsquo;s life, an exemplary architecture would be separate groups of modules corresponding to the
 three product teams.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/ideal-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Each team would be responsible for its own set of modules, which aligns with Agile principles. The modules would be
@@ -1092,8 +1092,8 @@ Instead of worrying about not making the right decisions in the past, consider w
 or two from now and start moving towards that.&lt;/p&gt;
 &lt;p&gt;For example, when adding a new prominent feature to the product, decouple it from the rest of the codebase.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our example shows all the modules decoupled, but it may be OK to decouple one or two.&lt;/p&gt;
@@ -1202,8 +1202,8 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
@@ -1218,8 +1218,8 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding

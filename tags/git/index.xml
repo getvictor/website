@@ -16,9 +16,9 @@ branches.&lt;/p&gt;
 parent commits: one from the current branch and one from the merged branch.&lt;/p&gt;
 &lt;p&gt;In the following example, we have a &lt;code&gt;branch&lt;/code&gt; that we want to merge into the &lt;code&gt;main&lt;/code&gt; branch:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-1.svg"
- alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="git merge of two branches before merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;git merge of two branches before merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The &lt;code&gt;git log&lt;/code&gt; of the &lt;code&gt;main&lt;/code&gt; branch shows the commit history:&lt;/p&gt;
@@ -117,9 +117,9 @@ Date: Sat Jun 22 17:25:40 2024 -0500
 
  first commit
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/git-merge-two-branches-2.svg"
- alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="git merge of two branches after merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;git merge of two branches after merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The result would be the same if &lt;strong&gt;instead&lt;/strong&gt; we merged the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch:&lt;/p&gt;
@@ -158,18 +158,18 @@ make sure their feature works with the newest code. We start this process with t
 where we merge the &lt;code&gt;main&lt;/code&gt; branch into the &lt;code&gt;branch&lt;/code&gt; branch.&lt;/p&gt;
 &lt;p&gt;After the merge, the developer can create a GitHub pull request to merge the &lt;code&gt;branch&lt;/code&gt; into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request.png"
- alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub pull request after merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub pull request after merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note that the commit history only shows the commits from the &lt;code&gt;branch&lt;/code&gt; and the merge commit. The &lt;code&gt;main&lt;/code&gt; commits are not
 shown in the pull request.&lt;/p&gt;
 &lt;p&gt;GitHub shows a few options for merging the pull request:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/merge-pull-request-options.png"
- alt="Merge pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Merge pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Merge pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Merge pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;ul&gt;
@@ -182,9 +182,9 @@ from the &lt;code&gt;branch&lt;/code&gt; onto the &lt;code&gt;main&lt;/code&gt; 
 &lt;/ul&gt;
 &lt;p&gt;Selecting &lt;strong&gt;Create a merge commit&lt;/strong&gt; results in the following commit history:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-pull-request.png"
- alt="Commit history after pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history after pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history after pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history after pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last two commits are both merge commits.&lt;/p&gt;
@@ -205,9 +205,9 @@ Date: Sat Jun 22 21:25:39 2024 -0500
  Merge branch &amp;#39;main&amp;#39; into branch
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The PR merge commit points to the previous merge commit and the last commit on &lt;code&gt;main&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history.svg"
- alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Diagram of commit history after pull request"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Diagram of commit history after pull request&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="update-protected-branch"&gt;&lt;a href="#update-protected-branch" class="header-anchor"&gt;&lt;/a&gt;Updating a protected feature branch
@@ -222,9 +222,9 @@ request.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;git push origin feature-update
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;And create a pull request to merge &lt;code&gt;feature-update&lt;/code&gt; into &lt;code&gt;feature&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-branches.png"
- alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Create a PR to merge into feature branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Create a PR to merge into feature branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This pull request shows all the commits from the &lt;code&gt;main&lt;/code&gt; branch and the merge commit. This commit history is problematic
@@ -233,30 +233,30 @@ because the PR may trigger a code review from the
  &gt;code owners&lt;/a&gt;
 of the files that were already reviewed in previous pull requests to the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-commits.png"
- alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commits from feature-update branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commits from feature-update branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;After the merge, the &lt;code&gt;feature&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-feature-after-pr.png"
- alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of feature branch after PR"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of feature branch after PR&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now, we create a pull request to merge the update &lt;code&gt;feature&lt;/code&gt; branch into the &lt;code&gt;main&lt;/code&gt; branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/github-pull-request-feature.png"
- alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
- &lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="PR to merge feature branch into main"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;PR to merge feature branch into main&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;After the merge, the &lt;code&gt;main&lt;/code&gt; branch commit history looks like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-of-main-after-feature-pr.png"
- alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of main after PR from feature branch"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of main after PR from feature branch&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last three commits are merge commits.&lt;/p&gt;
@@ -285,17 +285,17 @@ Date: Sun Jun 23 08:03:22 2024 -0500
 
  Merge branch &amp;#39;main&amp;#39; into feature
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/pull-request-commit-history-2.svg"
- alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Diagram of commit history after two pull requests"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Diagram of commit history after two pull requests&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="merging-a-pull-request-with-squash-and-merge"&gt;&lt;a href="#merging-a-pull-request-with-squash-and-merge" class="header-anchor"&gt;&lt;/a&gt;Merging a pull request with &lt;strong&gt;Squash and merge&lt;/strong&gt;
 &lt;/h3&gt;&lt;p&gt;If the final pull request is merged with &lt;strong&gt;Squash and merge&lt;/strong&gt;, the commit history will look like:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/git-merges-and-pull-requests/commit-history-after-squash-and-merge.png"
- alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Commit history of main after squash and merge"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Commit history of main after squash and merge&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The last commit is a single commit that combines all the changes from the &lt;code&gt;feature&lt;/code&gt; branch. The merge commits and all

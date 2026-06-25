@@ -235,9 +235,9 @@ was taking a long time for some of our users. First, we used
  &gt;Go pprof&lt;/a&gt; to enable profiling and generated a flame graph to
 identify the bottlenecks in our code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/optimizing-performance-of-go-app/go-pprof-flame-graph.png"
- alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Flame graph showing the execution time of different parts of the Go app"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Go pprof flame graph&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The flame graph showed us that the JSON decoding process took the most time. We benchmarked different serialization

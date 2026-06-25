@@ -26,24 +26,24 @@ interaction. The API key (JWT) method interacts with two parties: your app and G
  &gt;Google Cloud Console&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;Create a new project or select an existing project.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-new-project.png"
- alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
+ 			alt="Welcome to Google Cloud screen, with a modal to select a project. The NEW PROJECT text in the top right of the modal is highlighted."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;In the new project, go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; and enable the &lt;strong&gt;Google Sheets API&lt;/strong&gt;. After enabling it, you should see
 it in the &lt;strong&gt;Enabled APIs &amp;amp; services&lt;/strong&gt; list.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-enabled-sheets-api.png"
- alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
+ 			alt="Google Cloud APIs &amp;amp; Services console with the Google Sheets API enabled."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Go to &lt;strong&gt;APIs &amp;amp; Services&lt;/strong&gt; &amp;gt; &lt;strong&gt;Credentials&lt;/strong&gt; and create a new Service Account. This account does not need any optional
 permissions.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account.png"
- alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
+ 			alt="Google Cloud IAM &amp;amp; Admin screen with a service account."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;Create a new JSON key for the service account.
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-cloud-service-account-create-new-key.png"
- alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
+ 			alt="Google Cloud service account detailed view. The KEYS tab is selected. ADD KEY button is pressed, showing the option to Create new key."&gt;
  &lt;/figure&gt;
 &lt;/li&gt;
 &lt;li&gt;After creating the key, the JSON file will be automatically downloaded to your computer. This file contains the
@@ -67,7 +67,7 @@ credentials for your service account. Keep it secure. For example, we received
 &lt;/h2&gt;&lt;p&gt;Share the spreadsheet with the service account email address to allow the account to access a Google Sheets spreadsheet.
 In our case, the service account email is &lt;code&gt;example@axial-paratext-444915-f9.iam.gserviceaccount.com&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-share-with-service-account.png"
- alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
+			alt="Google Sheets spreadsheet with the Share modal open. The spreadsheet is shared with the service account with editor permissions."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Note the spreadsheet ID from the URL. For example, in the URL
@@ -147,7 +147,7 @@ incremented value:&lt;/p&gt;
 &lt;script type="application/javascript" src="https://gist.github.com/getvictor/5c7fa2770089755066cde5ab2c772cca.js"&gt;&lt;/script&gt;
 &lt;p&gt;We can review the spreadsheet to verify that our code added the new row.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/google-sheets-api/google-sheets-with-new-row.png"
- alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
+			alt="Google Sheets spreadsheet with two rows containing populated Date and Value columns."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="next-steps"&gt;&lt;a href="#next-steps" class="header-anchor"&gt;&lt;/a&gt;Next steps

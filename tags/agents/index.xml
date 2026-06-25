@@ -8,7 +8,7 @@ the first process the kernel starts and is responsible for starting all other pr
 &lt;p&gt;If you go to &lt;code&gt;Activity Monitor&lt;/code&gt; on your Mac and &lt;code&gt;View&lt;/code&gt; &amp;gt; &lt;code&gt;All Processes, Hierarchically&lt;/code&gt;, you will see that all
 processes are children of &lt;code&gt;launchd&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/activity-monitor.png"
- alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
+			alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-launchd-agents-and-daemons"&gt;&lt;a href="#what-are-launchd-agents-and-daemons" class="header-anchor"&gt;&lt;/a&gt;What are launchd agents and daemons?
@@ -76,34 +76,34 @@ program to run, the arguments to pass, the environment variables to set, and oth
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The typical locations for agent and daemon &lt;code&gt;.plist&lt;/code&gt; files are:&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Type&lt;/th&gt;
- &lt;th&gt;Location&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;User Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Type&lt;/th&gt;
+					&lt;th&gt;Location&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;User Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; In rare cases, the &lt;code&gt;.plist&lt;/code&gt; files may be located in other directories or missing entirely.&lt;/p&gt;
 &lt;h3 id="how-to-view-the-contents-of-a-plist-file"&gt;&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor"&gt;&lt;/a&gt;How to view the contents of a &lt;code&gt;.plist&lt;/code&gt; file

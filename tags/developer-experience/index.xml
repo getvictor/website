@@ -9,8 +9,8 @@ nobody can explain why it works, what assumptions it depends on, or what is like
 What AI changed is the speed and scale. It is now much cheaper to produce code that looks finished before anyone has
 really understood it.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/code-iceberg.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Comprehension debt hides below the surface of code that compiles and ships&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="how-it-differs-from-classic-tech-debt"&gt;&lt;a href="#how-it-differs-from-classic-tech-debt" class="header-anchor"&gt;&lt;/a&gt;How it differs from classic tech debt
@@ -63,8 +63,8 @@ developers feel is improving and what their workflow shows may not always line u
 explain what happened and what should change next. So humans still need understanding, even if they did not write every
 line by hand.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/comprehension-debt/human-and-robot-pointing-fingers.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;When something goes wrong in production, humans are still the ones who get blamed&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;AI making code generation cheaper does not change that. It just makes it easier for the team to accumulate work it
@@ -359,75 +359,75 @@ any lint issues or failing tests, and address review feedback early.&lt;/p&gt;
 &lt;h2 id="work-modes-single-tasking-vs-multitasking"&gt;&lt;a href="#work-modes-single-tasking-vs-multitasking" class="header-anchor"&gt;&lt;/a&gt;Work modes: single-tasking vs multitasking
 &lt;/h2&gt;&lt;p&gt;Categorize tasks before starting them to decide whether they need full attention or can run in parallel.&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Aspect&lt;/th&gt;
- &lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
- &lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🧠 Deep focus required&lt;/td&gt;
- &lt;td&gt;😌 Light mental load&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🏗️ Complex features&lt;/td&gt;
- &lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
- &lt;td&gt;📝 Code review comments&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
- &lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;/td&gt;
- &lt;td&gt;⚡ Performance optimization&lt;/td&gt;
- &lt;td&gt;📊 Adding logging&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
- &lt;td&gt;✅ Switch freely&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
- &lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
- &lt;td&gt;📱 Check periodically&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
- &lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
- &lt;td&gt;🏃 Quick to start&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;💎 Quality critical&lt;/td&gt;
- &lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
- &lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
- &lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Aspect&lt;/th&gt;
+					&lt;th&gt;🎯 Single-Task Mode&lt;/th&gt;
+					&lt;th&gt;🔄 Multitask Mode&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Focus Level&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🧠 Deep focus required&lt;/td&gt;
+					&lt;td&gt;😌 Light mental load&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Task Types&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🏗️ Complex features&lt;/td&gt;
+					&lt;td&gt;🔧 Minor refactoring&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;🚨 Production bug fixes&lt;/td&gt;
+					&lt;td&gt;📝 Code review comments&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;🏛️ Architecture decisions&lt;/td&gt;
+					&lt;td&gt;✅ Simple bug fixes&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;/td&gt;
+					&lt;td&gt;⚡ Performance optimization&lt;/td&gt;
+					&lt;td&gt;📊 Adding logging&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Context Switching&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;❌ Avoid at all costs&lt;/td&gt;
+					&lt;td&gt;✅ Switch freely&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Agent Strategy&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🎪 One or more agents on same task&lt;/td&gt;
+					&lt;td&gt;🎭 Multiple agents on different tasks&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Monitoring&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;👁️ Watch progress closely&lt;/td&gt;
+					&lt;td&gt;📱 Check periodically&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Risk Level&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;⚠️ High - mistakes costly&lt;/td&gt;
+					&lt;td&gt;🟢 Low - easy to spot issues&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Mental Setup&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🏔️ Significant ramp-up time&lt;/td&gt;
+					&lt;td&gt;🏃 Quick to start&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Quality Impact&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;💎 Quality critical&lt;/td&gt;
+					&lt;td&gt;👍 Quality easier to verify&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;&lt;strong&gt;Best For&lt;/strong&gt;&lt;/td&gt;
+					&lt;td&gt;🚀 Mission-critical work&lt;/td&gt;
+					&lt;td&gt;📋 Routine repeatable work&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;Single-task mode&lt;/strong&gt; is for deep-focus work. Run one or more AI agent jobs focused on this task. Monitor progress while
 planning ahead or preparing test environments. Keep your context intact.&lt;/p&gt;
@@ -921,50 +921,50 @@ tend to be small in nature, with most of the software engineer&amp;rsquo;s time 
 to fix it.&lt;/p&gt;
 &lt;h2 id="ai-coding-agent-impact-across-the-sdlc"&gt;&lt;a href="#ai-coding-agent-impact-across-the-sdlc" class="header-anchor"&gt;&lt;/a&gt;AI coding agent impact across the SDLC
 &lt;/h2&gt;&lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;SDLC Phase&lt;/th&gt;
- &lt;th&gt;AI Agent Impact&lt;/th&gt;
- &lt;th&gt;🔍 Notes&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;📝 Requirements&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧠 Design&lt;/td&gt;
- &lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
- &lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;💻 Implementation&lt;/td&gt;
- &lt;td&gt;✅ High&lt;/td&gt;
- &lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧪 Automated Testing&lt;/td&gt;
- &lt;td&gt;✅ High&lt;/td&gt;
- &lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🧍 Manual Testing&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🚀 Deployment&lt;/td&gt;
- &lt;td&gt;❌ Low&lt;/td&gt;
- &lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;🔧 Maintenance&lt;/td&gt;
- &lt;td&gt;⚠️ Medium&lt;/td&gt;
- &lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;SDLC Phase&lt;/th&gt;
+					&lt;th&gt;AI Agent Impact&lt;/th&gt;
+					&lt;th&gt;🔍 Notes&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;📝 Requirements&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Some research support, but little for strategic/product thinking&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧠 Design&lt;/td&gt;
+					&lt;td&gt;⚠️ Low–Medium&lt;/td&gt;
+					&lt;td&gt;Help limited to spike stories and boilerplate&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;💻 Implementation&lt;/td&gt;
+					&lt;td&gt;✅ High&lt;/td&gt;
+					&lt;td&gt;Most benefit seen here (code gen, agent pair programming)&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧪 Automated Testing&lt;/td&gt;
+					&lt;td&gt;✅ High&lt;/td&gt;
+					&lt;td&gt;Strong at generating/fixing tests, needs human oversight&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🧍 Manual Testing&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Still mostly a human-driven process&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🚀 Deployment&lt;/td&gt;
+					&lt;td&gt;❌ Low&lt;/td&gt;
+					&lt;td&gt;Some help with writing release notes, limited technical role&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;🔧 Maintenance&lt;/td&gt;
+					&lt;td&gt;⚠️ Medium&lt;/td&gt;
+					&lt;td&gt;Good at fixes; weak at reproducing or analyzing issues&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id="risk-and-tradeoffs"&gt;&lt;a href="#risk-and-tradeoffs" class="header-anchor"&gt;&lt;/a&gt;Risk and tradeoffs
 &lt;/h2&gt;&lt;p&gt;While AI coding agents offer clear benefits, they also introduce new risks and tradeoffs that teams must actively
@@ -1572,8 +1572,8 @@ other code that is not quite right.&lt;/p&gt;
 &lt;p&gt;For example, after creating the &lt;code&gt;PubSubMessage&lt;/code&gt; struct in our code, Copilot recommended the &lt;code&gt;PubSubMessageAttributes&lt;/code&gt;
 struct. Opening the completions window shows other multi-line suggestions.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/copilot-example.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Copilot code completion example&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;GitHub Copilot code completion example&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The code completion is not only for software code. We used it for documentation, such as writing a user guide for a new
@@ -1640,8 +1640,8 @@ asked &lt;a class="link" href="https://www.cursor.com/" target="_blank" rel="noo
  &lt;/blockquote&gt;
 &lt;p&gt;Cursor provided a list of files and additional information on the top hits.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/cursor-example.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Cursor codebase search example&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Codebase-wide queries are a great way to find information yourself before asking the broader team. They are also a
@@ -1698,8 +1698,8 @@ changes. This way, you can easily rollback if the AI agent gets stuck or goes of
 will &amp;ldquo;initialize&amp;rdquo; the AI agent with the project context.&lt;/p&gt;
 &lt;p&gt;Work in small development iterations with your AI agent.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/ai-for-software-developers/ai-agent-workflow.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;AI agent workflow&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;AI agent workflow&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Learn about your AI agent&amp;rsquo;s specific features to level up your skills. Often, there are ways to provide context to the
@@ -1797,8 +1797,8 @@ like this:&lt;/p&gt;
 and upload your trace. Use &lt;code&gt;Ctrl&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to zoom in and out and &lt;code&gt;Shift&lt;/code&gt; + &lt;code&gt;Scroll&lt;/code&gt; to move right or left. The &lt;code&gt;WASD&lt;/code&gt;
 keyboard keys also work.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-clean.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go build debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The trace shows that our &lt;a class="link" href="https://github.com/mattn/go-sqlite3" target="_blank" rel="noopener"
@@ -1814,8 +1814,8 @@ try making a small change and analyzing the recompile time. We make a change to 
 time go build -debug-trace=debug-trace-recompile.json ./cmd/fleet
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The total recompile time is 1.229s, and the trace looks like this:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/debug-trace-recompile.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;The Perfetto tool showing a Go recompile debug trace&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We see that the &lt;code&gt;mysql&lt;/code&gt; package we modified is taking about half the recompile time. The &lt;code&gt;load.PackagesAndErrors&lt;/code&gt; step
@@ -1891,8 +1891,8 @@ time go build -debug-actiongraph=actiongraph.json ./cmd/fleet
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;actiongraph -f actiongraph.json graph --why github.com/mattn/go-sqlite3 &amp;gt; actiongraph-sqlite3.dot
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;dot -Tsvg &amp;lt; actiongraph-sqlite3.dot &amp;gt; actiongraph-sqlite3.svg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/analyze-go-build/actiongraph-sqlite3.svg"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Why the go-sqlite3 package is included in the build&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can use this knowledge to refactor the codebase or, perhaps, hide the problematic dependency behind a build flag.&lt;/p&gt;
@@ -1947,8 +1947,8 @@ discuss are common in software development, especially in startups and small com
 &lt;p&gt;The initial state of our example codebase is a web application developed in a mono-repository. The application was built
 from the ground up with a simple architecture, focusing on adding new features and finding product-market fit.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/current-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Current design with a few large modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The current design divides the codebase into a few large modules. We use the term &lt;em&gt;module&lt;/em&gt; to mean a logical grouping of
@@ -1983,8 +1983,8 @@ the codebase and start contributing.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;At this point in the company&amp;rsquo;s life, an exemplary architecture would be separate groups of modules corresponding to the
 three product teams.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/ideal-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Good design with dedicated modules for each product team.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Each team would be responsible for its own set of modules, which aligns with Agile principles. The modules would be
@@ -2016,8 +2016,8 @@ Instead of worrying about not making the right decisions in the past, consider w
 or two from now and start moving towards that.&lt;/p&gt;
 &lt;p&gt;For example, when adding a new prominent feature to the product, decouple it from the rest of the codebase.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/scaling-codebase-evolutionary-architecture/evolutionary-design.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Evolutionary design with big features going into dedicated modules.&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our example shows all the modules decoupled, but it may be OK to decouple one or two.&lt;/p&gt;
@@ -2126,8 +2126,8 @@ modules that implement the feature. Often, this requires grepping the codebase f
 error-prone process. The second problem is that the developer has to jump between files and directories to understand
 how the feature works, files that often have tons of other unrelated and distracting code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-before.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Hard to understand feature due to poor software design&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Poor software structure often arises when we hurry to implement a feature and don&amp;rsquo;t consider future developers needing
@@ -2142,8 +2142,8 @@ task—the best time to improve code is when you have all the context in your he
 reorganization makes it easier to understand the feature because we have to look at a much smaller number of files and
 are not distracted by unrelated code.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/readable-code/readable-code-after.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Easier to understand feature encapsulated in separate modules&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="refactor-local-code-for-understanding"&gt;&lt;a href="#refactor-local-code-for-understanding" class="header-anchor"&gt;&lt;/a&gt;Refactor local code for understanding
@@ -2484,7 +2484,7 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
- alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+			alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
@@ -2560,9 +2560,9 @@ we used &lt;a class="link" href="https://iterm2.com/documentation-tmux-integrati
  &gt;iTerm2 tmux integration&lt;/a&gt; to enhance our terminal
 experience.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/tmux-on-remote-server.png"
- alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
- &lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="connect-your-ide-to-the-remote-development-environment"&gt;&lt;a href="#connect-your-ide-to-the-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Connect your IDE to the remote development environment
@@ -2578,7 +2578,7 @@ of the IDE.&lt;/p&gt;
 from the remote development server without an obvious way to fix the issue. We suspect the issue was due to insufficient
 memory on the machine &amp;ndash; try to plan for around 4 GB of memory per IDE.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/jetbrains-disconnect.png"
- alt="No Connection message in GoLand IDE"&gt;
+			alt="No Connection message in GoLand IDE"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;However, we could use one of the IDEs at a time, which was sufficient for most of our needs.&lt;/p&gt;
@@ -2660,9 +2660,9 @@ GitHub code reviews. The default GitHub code review process is not scalable and 
 that requires a code review before merging the code to the main branch.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a representative branch protection rule:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/pr-branch-protection-rule.png"
- alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
- &lt;h4&gt;PR branch protection rule&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Branch protection rule requiring code review before merging"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;PR branch protection rule&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When a developer creates a pull request, GitHub requires code reviews from all relevant owners specified by the
@@ -2697,7 +2697,7 @@ previous pattern. For example, we would rewrite the above owners as:&lt;/p&gt;
 experience, as it requires the code owners to review potentially the same code changes multiple times.&lt;/p&gt;
 &lt;p&gt;The issue stems from the lack of fine-grained control over the following option:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-code-review-issues/dismiss-stale-pr-approvals.png"
- alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
+			alt="Dismiss stale pull request approvals when new commits are pushed"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;With multiple code owners, every code owner must re-approve every change.&lt;/p&gt;
@@ -2811,7 +2811,7 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
- alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+			alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;

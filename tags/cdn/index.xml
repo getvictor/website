@@ -14,8 +14,8 @@ package files.&lt;/p&gt;
 requests a file from a CloudFront distribution, CloudFront checks its cache for the file. If the file is not in the
 cache, CloudFront retrieves it from the origin and caches it for future requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/users-requesting-from-cloudfront.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-cloudfront-signed-urls"&gt;&lt;a href="#what-are-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;What are CloudFront signed URLs?

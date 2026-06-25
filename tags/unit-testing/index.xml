@@ -150,7 +150,7 @@ github.com/fleetdm/fleet/v4/server/vulnerabilities/nvd TestTranslateCPEToCVE/rec
 &lt;h2 id="understanding-parallelism-in-go-tests"&gt;&lt;a href="#understanding-parallelism-in-go-tests" class="header-anchor"&gt;&lt;/a&gt;Understanding parallelism in Go tests
 &lt;/h2&gt;&lt;p&gt;Before measuring the execution time of our tests, we need to understand how Go tests run in parallel.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/go-test-execution-time/go-test-parallelism.svg"
- alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
+			alt="Sequence diagram of a go test run with two packages, two tests, and two subtests."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;When you run &lt;code&gt;go test&lt;/code&gt;, Go compiles each package in your test suite in a separate binary. It then runs each binary in parallel. The tests in different packages run concurrently. This behavior is controlled by the &lt;code&gt;-p&lt;/code&gt; flag, which defaults to &lt;code&gt;GOMAXPROCS&lt;/code&gt;, the number of CPUs on your machine.&lt;/p&gt;
@@ -439,9 +439,9 @@ All files | 16.96 | 30.9 | 10.71 | 16.96 |
  popup.ts | 0 | 0 | 0 | 0 | 1-86
 ---------------|---------|----------|---------|---------|--------------------------
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
- alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
- &lt;h4&gt;HTML coverage report&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;HTML coverage report&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="adding-unit-tests-to-github-actions"&gt;&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor"&gt;&lt;/a&gt;Adding unit tests to GitHub Actions

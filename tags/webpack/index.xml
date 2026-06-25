@@ -370,9 +370,9 @@ is highly recommended as it can help catch errors early and improve code quality
 &lt;p&gt;Right-click the extension icon (&lt;code&gt;M&lt;/code&gt;) and select &lt;code&gt;Inspect popup&lt;/code&gt; to open the Chrome Developer Tools. By default, you can see the console logs from the &lt;code&gt;popup.ts&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Go to the &lt;code&gt;Sources&lt;/code&gt; tab in the Chrome Developer Tools and open the &lt;code&gt;top/my-chrome-extension/src/popup.ts&lt;/code&gt; file. You can set breakpoints and debug the popup script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-extension-debug.png"
- alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The &lt;code&gt;popup.ts&lt;/code&gt; file should exactly match the TypeScript code we wrote. You can set breakpoints, inspect variables, and step through the code.&lt;/p&gt;

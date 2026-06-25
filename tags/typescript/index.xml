@@ -157,9 +157,9 @@ All files | 16.96 | 30.9 | 10.71 | 16.96 |
  popup.ts | 0 | 0 | 0 | 0 | 1-86
 ---------------|---------|----------|---------|---------|--------------------------
 &lt;/code&gt;&lt;/pre&gt;&lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-unit-tests-to-chrome-extension/coverage-report.png"
- alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
- &lt;h4&gt;HTML coverage report&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Coverage report web page showing some coverage for content.ts file and no coverage on other files"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;HTML coverage report&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="adding-unit-tests-to-github-actions"&gt;&lt;a href="#adding-unit-tests-to-github-actions" class="header-anchor"&gt;&lt;/a&gt;Adding unit tests to GitHub Actions
@@ -386,9 +386,9 @@ workflow when the code in the &lt;code&gt;4-linting-and-formatting&lt;/code&gt; 
 &lt;p&gt;After pushing our code to GitHub and waiting for the GitHub Actions workflow to run, we can see the results in the
 Actions tab of our repository. We can see the linting and formatting checks, as well as the build step:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/linting-and-formatting-typescript/github-lint-format-build-workflow-result.png"
- alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions workflow results"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions workflow results&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For more details on GitHub Actions workflows, see our article on
@@ -827,9 +827,9 @@ is highly recommended as it can help catch errors early and improve code quality
 &lt;p&gt;Right-click the extension icon (&lt;code&gt;M&lt;/code&gt;) and select &lt;code&gt;Inspect popup&lt;/code&gt; to open the Chrome Developer Tools. By default, you can see the console logs from the &lt;code&gt;popup.ts&lt;/code&gt; file.&lt;/p&gt;
 &lt;p&gt;Go to the &lt;code&gt;Sources&lt;/code&gt; tab in the Chrome Developer Tools and open the &lt;code&gt;top/my-chrome-extension/src/popup.ts&lt;/code&gt; file. You can set breakpoints and debug the popup script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/add-webpack-and-typescript-to-chrome-extension/chrome-extension-debug.png"
- alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Debugging Chrome extension popup"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Debugging Chrome extension popup&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The &lt;code&gt;popup.ts&lt;/code&gt; file should exactly match the TypeScript code we wrote. You can set breakpoints, inspect variables, and step through the code.&lt;/p&gt;
@@ -1024,9 +1024,9 @@ page when the code changes.&lt;/p&gt;
 open the app in the default browser.&lt;/p&gt;
 &lt;p&gt;The browser should show the following:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/react-hello-world/hello-world.png"
- alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
- &lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="React app served by Webpack dev server"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;React app served by Webpack dev server&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="packagejson-scripts"&gt;&lt;a href="#packagejson-scripts" class="header-anchor"&gt;&lt;/a&gt;package.json scripts

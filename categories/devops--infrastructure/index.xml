@@ -59,7 +59,7 @@ provides context when debugging.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;))
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This approach provides full API context without bloating searchable attributes.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/api-request-response.png"
- alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
+			alt="SigNoz showing API request and response bodies as events in a trace span"&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="feature-2-database-query-instrumentation"&gt;&lt;a href="#feature-2-database-query-instrumentation" class="header-anchor"&gt;&lt;/a&gt;Feature 2: Database query instrumentation
@@ -69,7 +69,7 @@ executed.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-sql" data-lang="sql"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;SELECT&lt;/span&gt; &lt;span style="color:#f92672"&gt;*&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;FROM&lt;/span&gt; todos &lt;span style="color:#66d9ef"&gt;WHERE&lt;/span&gt; user_id &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt; &lt;span style="color:#66d9ef"&gt;AND&lt;/span&gt; status &lt;span style="color:#f92672"&gt;=&lt;/span&gt; &lt;span style="color:#f92672"&gt;?&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;For debugging, we need the actual values. Our enhanced instrumentation includes both:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/database-query-instrumentation.png"
- alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
+			alt="SigNoz showing database queries with both parameterized and populated SQL statements"&gt;
 &lt;/figure&gt;
 
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-go" data-lang="go"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#a6e22e"&gt;span&lt;/span&gt;.&lt;span style="color:#a6e22e"&gt;SetAttributes&lt;/span&gt;(
@@ -90,7 +90,7 @@ storage durations and access controls in production environments.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Modern applications integrate with external APIs and microservices. Outgoing HTTP calls need the same visibility as
 incoming requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/outgoing-http-requests.png"
- alt="SigNoz displaying outgoing HTTP request details"&gt;
+			alt="SigNoz displaying outgoing HTTP request details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Our TODO app instruments outgoing HTTP requests, capturing:&lt;/p&gt;
@@ -118,7 +118,7 @@ incoming requests.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry connects traces with logs, enabling seamless navigation between high-level trace data and detailed log
 output.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/trace-log-correlation.png"
- alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
+			alt="SigNoz showing correlated logs for a specific trace with direct navigation links"&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="key-opentelemetry-concepts-spans-vs-traces"&gt;&lt;a href="#key-opentelemetry-concepts-spans-vs-traces" class="header-anchor"&gt;&lt;/a&gt;Key OpenTelemetry concepts: spans vs traces
@@ -152,7 +152,7 @@ the branches and leaves.&lt;/p&gt;
 &lt;h2 id="feature-5-comprehensive-error-handling"&gt;&lt;a href="#feature-5-comprehensive-error-handling" class="header-anchor"&gt;&lt;/a&gt;Feature 5: Comprehensive error handling
 &lt;/h2&gt;&lt;p&gt;OpenTelemetry captures complete error context and propagation paths throughout your system.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-for-devs/error-handling.png"
- alt="SigNoz showing errors"&gt;
+			alt="SigNoz showing errors"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Error counts may appear inflated because they&amp;rsquo;re counted at each span level:&lt;/p&gt;
@@ -268,8 +268,8 @@ reduce resources to save costs.&lt;/p&gt;
 &lt;li&gt;Memory utilization should be below 80% on average&lt;/li&gt;
 &lt;/ul&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/cpu-utilization.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;High CPU utilization during load test&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;High CPU utilization during load test&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="server-errors"&gt;&lt;a href="#server-errors" class="header-anchor"&gt;&lt;/a&gt;Server errors
@@ -281,8 +281,8 @@ messages. For example, a 404 error is typically not a server error but a client 
 resource that does not exist is a common scenario. Client errors should be logged as informational messages or tagged
 appropriately to be excluded from the server error metric.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/server-errors.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;AWS Logs Insights JSON error filter and sample error patterns&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;AWS Logs Insights JSON error filter and sample error patterns&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The ideal number of server errors is zero. However, in practice, some errors are expected. For example, some startup or
@@ -295,8 +295,8 @@ business cares about user-facing API endpoints, such as the login, checkout, or 
 &lt;p&gt;One standard metric is the 95th percentile latency. This metric indicates the latency that 95% of the requests are
 faster than. It is a good indicator of the user experience because it filters out outliers.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/api-latency.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Example spike in latency during a load test experiment&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Example spike in latency during a load test experiment&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Telemetry tools such as &lt;a class="link" href="https://opentelemetry.io/" target="_blank" rel="noopener"
@@ -312,8 +312,8 @@ query signature. This will identify the queries that have the most impact on dat
 &lt;p&gt;The list of slow queries should remain stable during a load test. If it changes, it may indicate a new unoptimized query
 or a new bug in the application.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/db-slow-queries.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;AWS RDS Performance Insights uses Average Active Sessions (AAS) as its slow query metric&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="database-performance-metrics"&gt;&lt;a href="#database-performance-metrics" class="header-anchor"&gt;&lt;/a&gt;Database performance metrics
@@ -351,8 +351,8 @@ code.&lt;/p&gt;
 baseline or the previous load test profile. If the profile changes significantly, it may indicate a new bug in the
 application or a new performance bottleneck.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/software-load-testing/performance-profile.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Example performance profile from Go pprof&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Example performance profile from Go pprof&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="database-replication-lag"&gt;&lt;a href="#database-replication-lag" class="header-anchor"&gt;&lt;/a&gt;Database replication lag
@@ -402,8 +402,8 @@ package files.&lt;/p&gt;
 requests a file from a CloudFront distribution, CloudFront checks its cache for the file. If the file is not in the
 cache, CloudFront retrieves it from the origin and caches it for future requests.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/cloudfront-signed-urls/users-requesting-from-cloudfront.png"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
- &lt;/figcaption&gt;
+			&lt;h4&gt;Users around the world requesting data from their local Cloudfront CDN cache&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-cloudfront-signed-urls"&gt;&lt;a href="#what-are-cloudfront-signed-urls" class="header-anchor"&gt;&lt;/a&gt;What are CloudFront signed URLs?
@@ -529,7 +529,7 @@ the first process the kernel starts and is responsible for starting all other pr
 &lt;p&gt;If you go to &lt;code&gt;Activity Monitor&lt;/code&gt; on your Mac and &lt;code&gt;View&lt;/code&gt; &amp;gt; &lt;code&gt;All Processes, Hierarchically&lt;/code&gt;, you will see that all
 processes are children of &lt;code&gt;launchd&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/macos-launchd-agents-and-daemons/activity-monitor.png"
- alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
+			alt="The top process name is kernel_task, its child is launchd, and everything else is a child of launchd."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="what-are-launchd-agents-and-daemons"&gt;&lt;a href="#what-are-launchd-agents-and-daemons" class="header-anchor"&gt;&lt;/a&gt;What are launchd agents and daemons?
@@ -597,34 +597,34 @@ program to run, the arguments to pass, the environment variables to set, and oth
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#f92672"&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The typical locations for agent and daemon &lt;code&gt;.plist&lt;/code&gt; files are:&lt;/p&gt;
 &lt;table&gt;
- &lt;thead&gt;
- &lt;tr&gt;
- &lt;th&gt;Type&lt;/th&gt;
- &lt;th&gt;Location&lt;/th&gt;
- &lt;/tr&gt;
- &lt;/thead&gt;
- &lt;tbody&gt;
- &lt;tr&gt;
- &lt;td&gt;User Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Agents&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;Global Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;tr&gt;
- &lt;td&gt;System Daemons&lt;/td&gt;
- &lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
- &lt;/tr&gt;
- &lt;/tbody&gt;
+	&lt;thead&gt;
+			&lt;tr&gt;
+					&lt;th&gt;Type&lt;/th&gt;
+					&lt;th&gt;Location&lt;/th&gt;
+			&lt;/tr&gt;
+	&lt;/thead&gt;
+	&lt;tbody&gt;
+			&lt;tr&gt;
+					&lt;td&gt;User Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;~/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Agents&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchAgents&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;Global Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+					&lt;td&gt;System Daemons&lt;/td&gt;
+					&lt;td&gt;&lt;code&gt;/System/Library/LaunchDaemons&lt;/code&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+	&lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; In rare cases, the &lt;code&gt;.plist&lt;/code&gt; files may be located in other directories or missing entirely.&lt;/p&gt;
 &lt;h3 id="how-to-view-the-contents-of-a-plist-file"&gt;&lt;a href="#how-to-view-the-contents-of-a-plist-file" class="header-anchor"&gt;&lt;/a&gt;How to view the contents of a &lt;code&gt;.plist&lt;/code&gt; file
@@ -701,7 +701,7 @@ from communicating with devices in another VLAN. For example, you can create a s
 Things) devices, such as smart light bulbs and thermostats, to prevent them from accessing your primary network. You can
 also create a separate VLAN for guest devices to prevent them from accessing your main network and other VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-basic.png"
- alt="Router with three VLANS -- office, IoT, and guest."&gt;
+			alt="Router with three VLANS -- office, IoT, and guest."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For example, if a hacker gains access to a device in the IoT VLAN, they won&amp;rsquo;t be able to access devices in the office
@@ -715,7 +715,7 @@ can route packets between different VLANs based on their VLAN tags.&lt;/p&gt;
 network need to be configured, and some older or cheaper hardware, such as no-configuration network switches, may not
 support VLANs.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/VLAN-full.png"
- alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
+			alt="Detailed picture of router with three VLANS -- office, IoT, and guest. The picture includes firewall and switches."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="selecting-vlan-tags-and-ip-ranges"&gt;&lt;a href="#selecting-vlan-tags-and-ip-ranges" class="header-anchor"&gt;&lt;/a&gt;Selecting VLAN tags and IP ranges
@@ -745,7 +745,7 @@ all VLANs but must configure it to assign IP addresses from different ranges for
 example, you may not allow devices on the Guest VLAN to access devices on the other VLANs.&lt;/p&gt;
 &lt;p&gt;Below is an example of our firewall rules for the GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-firewall.png"
- alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+			alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The rules allow access to our local DNS server to block inappropriate content. The rules block all private networking
@@ -761,7 +761,7 @@ part of the Office VLAN and port 2 to be part of the IoT VLAN. A single port can
 required for a wireless access point.&lt;/p&gt;
 &lt;p&gt;Below is an example of the network switch configuration for our GUEST VLAN.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-network-switch.png"
- alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
+			alt="pfsense firewall rules for GUEST VLAN, which only allows access to GUEST VLAN."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The tagged ports include three wireless access points and the router port.&lt;/p&gt;
@@ -770,7 +770,7 @@ required for a wireless access point.&lt;/p&gt;
 created a WLAN for each VLAN—Office, IoT, and Guest. Each WLAN is associated with a VLAN tag, which we set in the
 advanced options of the WLAN configuration, as shown below.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-wlan-config.png"
- alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
+			alt="WLAN priority tab that specifies the VLAN tag of 4."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="guest-network"&gt;&lt;a href="#guest-network" class="header-anchor"&gt;&lt;/a&gt;Guest network
@@ -789,7 +789,7 @@ testing or security reasons.&lt;/p&gt;
 &lt;p&gt;On a wired connection, you can specify the VLAN ID in your device&amp;rsquo;s network settings. For example, you can add a virtual
 interface with a specific VLAN tag on macOS.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/why-you-need-vlan/vlan-macos-config.png"
- alt="macOS network settings with VLAN ID specified."&gt;
+			alt="macOS network settings with VLAN ID specified."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="debugging-notes"&gt;&lt;a href="#debugging-notes" class="header-anchor"&gt;&lt;/a&gt;Debugging notes
@@ -861,7 +861,7 @@ information:&lt;/p&gt;
  &gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
 and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
- alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+			alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
@@ -891,21 +891,21 @@ connection.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
 Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
- alt="Windows 11 popups for setting DNS server."&gt;
+			alt="Windows 11 popups for setting DNS server."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
 &lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
- alt="Windows 11 dialog to join a domain."&gt;
+			alt="Windows 11 dialog to join a domain."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
 computer to the domain.&lt;/p&gt;
 &lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
- alt="Windows 11 dialog indicating successful domain join."&gt;
+			alt="Windows 11 dialog indicating successful domain join."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;
@@ -996,13 +996,13 @@ contain additional files needed by the script.&lt;/p&gt;
 &lt;p&gt;Download and install the Packages app.&lt;/p&gt;
 &lt;p&gt;Create a new project in the Packages app using the Raw Package template.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-new-project.png"
- alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
+			alt="Choose a template for your project. A Raw Package project lets you install files at specific locations."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Choose the name and location of your project.&lt;/p&gt;
 &lt;p&gt;In the Scripts tab, choose a Post-installation script. Add additional script resource files if needed for the script.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/packages-app-add-script.png"
- alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
+			alt="Scripts tab is selected on the top. From the two options, pre-installation and post-installation, the post-installation contains an exec file."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Save your project with &lt;strong&gt;File &amp;gt; Save&lt;/strong&gt; and build the package with &lt;strong&gt;Build &amp;gt; Build&lt;/strong&gt;.&lt;/p&gt;
@@ -1012,7 +1012,7 @@ contain additional files needed by the script.&lt;/p&gt;
 &lt;a class="link" href="https://www.mothersruin.com/software/SuspiciousPackage/get.html" target="_blank" rel="noopener"
  &gt;Suspicious Package&lt;/a&gt;&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/script-only-macos-install-package/suspicious-package.png"
- alt="Suspicious Package app showing the contents of the postinstall script."&gt;
+			alt="Suspicious Package app showing the contents of the postinstall script."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="sign-and-notarize-the-install-package"&gt;&lt;a href="#sign-and-notarize-the-install-package" class="header-anchor"&gt;&lt;/a&gt;Sign and notarize the install package
@@ -1159,7 +1159,7 @@ Select your &lt;strong&gt;Service&lt;/strong&gt; name and click &lt;strong&gt;Fi
 &lt;p&gt;You can click into a trace to view the details of each span. You can see the duration, logs, and tags for each span. The
 example below shows the HTTP request details and multiple SQL queries.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/opentelemetry-with-jaeger/example-jaeger-trace.png"
- alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
+			alt="Fleet hosts request with SQL queries to sessions, users, user_teams, and host tables."&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="use-cases-for-opentelemetry-and-jaeger"&gt;&lt;a href="#use-cases-for-opentelemetry-and-jaeger" class="header-anchor"&gt;&lt;/a&gt;Use cases for OpenTelemetry and Jaeger
@@ -1402,7 +1402,7 @@ workflow run to fix this.&lt;/p&gt;
 &lt;/h3&gt;&lt;p&gt;Create a branch protection rule in the repository settings that requires the above &lt;code&gt;Code review&lt;/code&gt; workflow to pass in a
 PR before merging to your default branch.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/typescript-github-action/github-code-review-rule.png"
- alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
+			alt="Require a pull request before merging. Require the Code review status check to pass."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="create-a-pull-request"&gt;&lt;a href="#create-a-pull-request" class="header-anchor"&gt;&lt;/a&gt;Create a pull request
@@ -1469,7 +1469,7 @@ corporate network, test it using the public URL or IP address.&lt;/p&gt;
 &lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
 like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
- alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+			alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
@@ -1477,7 +1477,7 @@ considered when parsing this page with a script.&lt;/p&gt;
 &lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
 returns the following.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
- alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+			alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
 
 &lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
@@ -1638,9 +1638,9 @@ we used &lt;a class="link" href="https://iterm2.com/documentation-tmux-integrati
  &gt;iTerm2 tmux integration&lt;/a&gt; to enhance our terminal
 experience.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/tmux-on-remote-server.png"
- alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
- &lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="4 open windows with running processes"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;tmux running on remote dev server&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="connect-your-ide-to-the-remote-development-environment"&gt;&lt;a href="#connect-your-ide-to-the-remote-development-environment" class="header-anchor"&gt;&lt;/a&gt;Connect your IDE to the remote development environment
@@ -1656,7 +1656,7 @@ of the IDE.&lt;/p&gt;
 from the remote development server without an obvious way to fix the issue. We suspect the issue was due to insufficient
 memory on the machine &amp;ndash; try to plan for around 4 GB of memory per IDE.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/remote-development-environment/jetbrains-disconnect.png"
- alt="No Connection message in GoLand IDE"&gt;
+			alt="No Connection message in GoLand IDE"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;However, we could use one of the IDEs at a time, which was sufficient for most of our needs.&lt;/p&gt;
@@ -1870,9 +1870,9 @@ the failing policy. This article is an example of one such flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
- alt="Tines webhook action"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines webhook action&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines webhook action"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines webhook action&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="handling-errors"&gt;&lt;a href="#handling-errors" class="header-anchor"&gt;&lt;/a&gt;Handling errors
@@ -1880,9 +1880,9 @@ action to the story. The webhook action listens for incoming webhooks. The webho
 add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
 webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
- alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
@@ -1912,9 +1912,9 @@ testing, we know that the webhook payload will look like this:&lt;/p&gt;
 &lt;p&gt;We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
 up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
- alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p&gt;
@@ -1924,17 +1924,17 @@ up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence
 Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
 ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
- alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
 key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
- alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="creating-mdm-command-payload-to-update-os-version"&gt;&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor"&gt;&lt;/a&gt;Creating MDM command payload to update OS version
@@ -1968,33 +1968,33 @@ command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
 device. Note that the &lt;code&gt;&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code&gt; Tines function creates a unique UUID for this MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
- alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
 to encode the XML payload. It uses the Tines &lt;code&gt;BASE64_ENCODE&lt;/code&gt; function.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
- alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="run-mdm-command-on-device"&gt;&lt;a href="#run-mdm-command-on-device" class="header-anchor"&gt;&lt;/a&gt;Run MDM command on device
 &lt;/h2&gt;&lt;p&gt;Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
 POST request to the Fleet API to send the MDM command to the device.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
- alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The MDM command will run on the device, downloading and installing the OS update.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
- alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
- &lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion
@@ -2046,19 +2046,19 @@ machine uses IPv4 only.&lt;/p&gt;
 &lt;p&gt;Both droplets will use Ubuntu 24.04 (LTS), although any Linux distribution should work. Both droplets should have IPv6
 enabled in Advanced Options.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/enable-ipv6.png"
- alt="Enable IPv6 checkbox"&gt;
+			alt="Enable IPv6 checkbox"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The first droplet will use the Password authentication method.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-authentication-method.png"
- alt="Choose Droplet authentication method"&gt;
+			alt="Choose Droplet authentication method"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The second droplet can have either Password or SSH authentication.&lt;/p&gt;
 &lt;h2 id="ssh-from-ipv4-client-to-ipv6-only-server"&gt;&lt;a href="#ssh-from-ipv4-client-to-ipv6-only-server" class="header-anchor"&gt;&lt;/a&gt;Step 2: SSH from IPv4 client to IPv6-only server
 &lt;/h2&gt;&lt;p&gt;You can find the Droplet IPv4 and IPv6 addresses in the Droplet details.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/create-ipv6-only-linux-server/droplet-details.png"
- alt="Droplet details"&gt;
+			alt="Droplet details"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Now, we connect to the second droplet using SSH.&lt;/p&gt;
@@ -2152,9 +2152,9 @@ own IPv6-only servers and experiment with them.&lt;/p&gt;
  &gt;GitHub Actions&lt;/a&gt; is a way to automate your software development workflows. The
 approach is similar to CI/CD tools like Jenkins, CircleCI, and TravisCI. However, GitHub Actions are built into GitHub.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20workflow.svg"
- alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
- &lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="High level diagram of GitHub Actions"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;High level diagram of GitHub Actions&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The entry point for GitHub Actions is the &lt;code&gt;.github/workflows&lt;/code&gt; directory in your repository. This directory contains one
@@ -2184,9 +2184,9 @@ GitHub Actions code allows you to:&lt;/p&gt;
 &lt;h2 id="reusable-workflows"&gt;&lt;a href="#reusable-workflows" class="header-anchor"&gt;&lt;/a&gt;Reusable workflows
 &lt;/h2&gt;&lt;p&gt;A reusable workflow replaces a job in the main workflow.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow.svg"
- alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable workflow"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable workflow&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;A reusable workflow may be shared across repositories and run on a different platform than the main workflow.&lt;/p&gt;
@@ -2261,17 +2261,17 @@ artifact called &lt;code&gt;output_file&lt;/code&gt;.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20workflow%20success.png"
- alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable workflow success"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable workflow success&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="reusable-steps-composite-action"&gt;&lt;a href="#reusable-steps-composite-action" class="header-anchor"&gt;&lt;/a&gt;Reusable steps (composite action)
 &lt;/h2&gt;&lt;p&gt;Reusable steps replace a regular step in a job. We will use a &lt;code&gt;composite action&lt;/code&gt; for reusable steps in our example.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20reusable%20steps.svg"
- alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions reusable steps (composite action)"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions reusable steps (composite action)&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Like a reusable workflow, a composite action may be shared across repositories, it accepts inputs, and it may use
@@ -2326,9 +2326,9 @@ generates an output called &lt;code&gt;reusable_output&lt;/code&gt;. It also pro
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#f92672"&gt;HELLO_WORLD_SECRET&lt;/span&gt;: &lt;span style="color:#ae81ff"&gt;TERCES_DLROW_OLLEH&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;A successful run of the main workflow with reusable steps looks like this on GitHub:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/github-reusable-workflows-and-steps/GitHub%20Actions%20composite%20action%20success.png"
- alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
- &lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="GitHub Actions composite action success"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;GitHub Actions composite action success&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;For a reusable TypeScript action example, see the
@@ -2477,9 +2477,9 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
- alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
@@ -2488,9 +2488,9 @@ command:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
- alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
@@ -2532,7 +2532,7 @@ use them as an extension of your application to perform tasks such as:&lt;/p&gt;
 &lt;/ul&gt;
 &lt;p&gt;A GitHub Action can run arbitrary code, taking inputs from multiple sources such as API calls, databases, and files.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/use-github-actions-for-general-purpose-tasks/GitHub-action.png"
- alt="GitHub Action block diagram"&gt;
+			alt="GitHub Action block diagram"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You can use a GitHub Action as a worker for your application. For example, you can use it to process data from a
@@ -2613,7 +2613,7 @@ GitBook is a newcomer to the space, and is still reaching maturity.&lt;/p&gt;
 you’d like to search, and integrate them into GitBook spaces. After indexing is complete, you’ll be
 able to effectively search the documentation.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/you-need-a-personal-dev-docs-db-gitbook/GitBook-1.png"
- alt="Search for database migrations in Fleet&amp;#39;s GitBook"&gt;
+			alt="Search for database migrations in Fleet&amp;#39;s GitBook"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To keep the forks in sync with the parent repositories, we use Github Actions. Github Actions are
@@ -2682,18 +2682,18 @@ the hypervisor is responsible for managing the router? Below is the approach we 
 &lt;p&gt;For the initial installation, we did not use PCI Passthrough and instead used a virtual network bridge (&lt;strong&gt;vmbr0&lt;/strong&gt;). We
 configured the router VM to start on boot.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-1.jpg"
- alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Initial virtual router configuration"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Initial virtual router configuration&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;This allowed us to continue controlling the virtual router through the PVE web GUI. We set up the router and enabled
 access to it through the serial interface, which we used in the next step. Then, we put the system into its final
 configuration.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/setting-up-a-virtual-router/Virtual-Router-2.jpg"
- alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Final virtual router configuration"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Final virtual router configuration&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;In order to finish configuring, we had to plug in a monitor and keyboard into our hardware. We accessed the virtual

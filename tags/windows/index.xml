@@ -40,7 +40,7 @@ information:&lt;/p&gt;
  &gt;WireGuard&lt;/a&gt;, a modern VPN protocol known for its simplicity
 and security.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/wireguard-vpn-settings.png"
- alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
+			alt="WireGuard interface, including public key, listen port, addresses, and DNS servers."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; The &lt;code&gt;Allowed IPs&lt;/code&gt; field above specifies which IP addresses will be routed through the VPN. Make sure to include
@@ -70,21 +70,21 @@ connection.&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Alternatively, we can manually set the DNS server for the VPN connection in &lt;strong&gt;Control Panel &amp;gt; Network and Sharing
 Center &amp;gt; &lt;em&gt;your VPN connection&lt;/em&gt; &amp;gt; Properties &amp;gt; Networking &amp;gt; Internet Protocol Version 4 (TCP/IPv4) &amp;gt; Properties&lt;/strong&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/vpn-dns-settings.png"
- alt="Windows 11 popups for setting DNS server."&gt;
+			alt="Windows 11 popups for setting DNS server."&gt;
 &lt;/figure&gt;
 
 &lt;h3 id="3-join-your-computer-to-the-active-directory-domain"&gt;&lt;a href="#3-join-your-computer-to-the-active-directory-domain" class="header-anchor"&gt;&lt;/a&gt;3. Join your computer to the Active Directory domain
 &lt;/h3&gt;&lt;p&gt;Open &lt;strong&gt;Control Panel &amp;gt; System and Security &amp;gt; System &amp;gt; Domain or workgroup &amp;gt; Change&amp;hellip;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Enter the domain name provided by your IT department. You can also change your computer name if necessary.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-domain.png"
- alt="Windows 11 dialog to join a domain."&gt;
+			alt="Windows 11 dialog to join a domain."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Click &lt;strong&gt;OK&lt;/strong&gt; and enter your domain credentials when prompted. You must have permission from Active Directory to join a
 computer to the domain.&lt;/p&gt;
 &lt;p&gt;After a few seconds, you should see a message indicating that your computer has successfully joined the domain.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/connect-to-remote-active-directory/join-active-directory-success.png"
- alt="Windows 11 dialog indicating successful domain join."&gt;
+			alt="Windows 11 dialog indicating successful domain join."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;You must restart your computer for the changes to take effect.&lt;/p&gt;
@@ -149,7 +149,7 @@ corporate network, test it using the public URL or IP address.&lt;/p&gt;
 &lt;code&gt;http://ndes-server/certsrv/mscep_admin/&lt;/code&gt; and requires authentication. The username must use the Windows name format,
 like &lt;code&gt;username@example.domain.com&lt;/code&gt;. Accessing this URL should prompt you to log in and display the SCEP challenge.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep_admin.png"
- alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
+			alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). To complete certificate enrollment for your network device you will need the following information: The thumbprint (hash value) for the CA certificate is: A656FA66 AB12B433 A2DA5CF7 CC153D9A The enrollment challenge password is: 1ED0DD50F7459D6E This password can be used only once and will expire within 60 minutes. Each enrollment requires a new challenge password. You can refresh this web page to obtain a new challenge password. For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; The above admin page is encoded as UTF-16, as opposed to the more popular UTF-8 encoding. This encoding must
@@ -157,7 +157,7 @@ considered when parsing this page with a script.&lt;/p&gt;
 &lt;p&gt;The other URL to test is the actual SCEP enrollment URL, typically &lt;code&gt;http://ndes-server/certsrv/mscep/mscep.dll&lt;/code&gt;. It
 returns the following.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/test-ndes-scep-server/ndes-mscep.png"
- alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
+			alt="Network Device Enrollment Service allows you to obtain certificates for routers or other network devices using the Simple Certificate Enrollment Protocol (SCEP). This URL is used by network devices to submit certificate requests. To obtain an enrollment challenge password, go to the admin URL. By default, the admin URL is http://ndes-server/CertSrv/mscep_admin For more information see Using Network Device Enrollment Service."&gt;
 &lt;/figure&gt;
 
 &lt;h1 id="test-ndes-using-powershell"&gt;&lt;a href="#test-ndes-using-powershell" class="header-anchor"&gt;&lt;/a&gt;Test NDES using PowerShell
@@ -306,26 +306,26 @@ the installation instructions.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;Launch the &lt;code&gt;Inno Setup Compiler&lt;/code&gt; application. The main window will appear, with a toolbar and a script editor.&lt;/p&gt;
 &lt;p&gt;On the Welcome modal, choose &lt;code&gt;Create a new script file using the Script Wizard&lt;/code&gt; and click &lt;code&gt;OK&lt;/code&gt;.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-welcome.png"
- alt="Untitled Inno Setup Compile with Welcome modal open."&gt;
+			alt="Untitled Inno Setup Compile with Welcome modal open."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Follow the instructions on several subsequent screens.&lt;/p&gt;
 &lt;p&gt;On the &lt;code&gt;Application Files&lt;/code&gt; screen, add your program executable file and any other files, such as a README.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-application-files.png"
- alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified."&gt;
+			alt="Application Files window of Inno Setup Script Wizard. hello-world.exe and hello-world.txt are specified."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Continue following the instructions.&lt;/p&gt;
 &lt;p&gt;On the &lt;code&gt;Compiler Settings&lt;/code&gt; screen, select the file name for your installer.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-compiler-settings.png"
- alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name."&gt;
+			alt="Compiler Settings window of Inno Setup Script Wizard. hello-world-installer is specified as the compiler output base file name."&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;Finally, click&amp;rsquo; Finish&amp;rsquo; after a couple more screens to generate the script.&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;Yes&lt;/code&gt; to compile the script.&lt;/p&gt;
 &lt;p&gt;Click &lt;code&gt;No&lt;/code&gt; to save the script before compiling. If needed, it can be saved later.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/exe-installer/inno-setup-save-script.png"
- alt="Inno Setup modal asking: Would you like to save the script before compiling?"&gt;
+			alt="Inno Setup modal asking: Would you like to save the script before compiling?"&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Inno Setup Compiler will create an EXE installer for your program and put it in the &lt;code&gt;Documents/Output&lt;/code&gt; folder.&lt;/p&gt;
@@ -467,9 +467,9 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
- alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
@@ -478,9 +478,9 @@ command:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
- alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
@@ -926,9 +926,9 @@ mTLS Hello World!
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;https://myhost:8889/hello-world.txt
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;We see the following popup:&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/mtls-with-windows/mtls-edge.png"
- alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
- &lt;p&gt;Edge mTLS popup&lt;/p&gt;
- &lt;/figcaption&gt;
+			alt="Edge mTLS popup"&gt;&lt;figcaption&gt;
+			&lt;p&gt;Edge mTLS popup&lt;/p&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can click &lt;strong&gt;OK&lt;/strong&gt; to connect to the mTLS server. Future connections will not show the popup and will automatically use the client certificate.&lt;/p&gt;

@@ -23,9 +23,9 @@ the failing policy. This article is an example of one such flow.&lt;/p&gt;
 &lt;/h2&gt;&lt;p&gt;First, we create a new Tines story. A story is a sequence of actions that are executed in order. Next, we add a webhook
 action to the story. The webhook action listens for incoming webhooks. The webhook will contain a JSON body.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/1-tines-webhook.png"
- alt="Tines webhook action"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines webhook action&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines webhook action"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines webhook action&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="handling-errors"&gt;&lt;a href="#handling-errors" class="header-anchor"&gt;&lt;/a&gt;Handling errors
@@ -33,9 +33,9 @@ action to the story. The webhook action listens for incoming webhooks. The webho
 add a trigger action that checks whether the webhook body contains an error. Specifically, our action checks whether the
 webhook body contains a non-empty &amp;ldquo;error&amp;rdquo; field.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/2-tines-error-handling.png"
- alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an error"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an error&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We leave this error-handling portion of the story as a stub. In the future, we can expand it by sending an email or
@@ -65,9 +65,9 @@ testing, we know that the webhook payload will look like this:&lt;/p&gt;
 &lt;p&gt;We are interested in the failing policies. When one of the failing policies contains a policy named &amp;ldquo;macOS - OS version
 up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence, we create a trigger that looks for this policy.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/3-tines-os-version-trigger.png"
- alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines trigger action checking for an outdated OS"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines trigger action checking for an outdated OS&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We use the following formula, which loops over all policies and will only allow the workflow to proceed if true:&lt;/p&gt;
@@ -77,17 +77,17 @@ up to date,&amp;rdquo; we know that the device&amp;rsquo;s OS is outdated. Hence
 Request&amp;rdquo; action to the story. The action makes a GET request to the Fleet API to get the device details. We use the host
 ID from the webhook payload. We are looking for the device&amp;rsquo;s UUID, which we need to send the OS update MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/4-tines-get-host-request.png"
- alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to get Fleet device details"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to get Fleet device details&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;To access Fleet&amp;rsquo;s API, we need to provide an API key. We store the API key as a CREDENTIAL in the current story. The API
 key should belong to an API-only user in Fleet so that the key does not reset when the user logs out.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/5-tines-credential.png"
- alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Add credential to Tines story"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Add credential to Tines story&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="creating-mdm-command-payload-to-update-os-version"&gt;&lt;a href="#creating-mdm-command-payload-to-update-os-version" class="header-anchor"&gt;&lt;/a&gt;Creating MDM command payload to update OS version
@@ -121,33 +121,33 @@ command from Apple&amp;rsquo;s MDM protocol.&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This command will download macOS 14.4.1, install it, and pop up a 60-second countdown dialog box before restarting the
 device. Note that the &lt;code&gt;&amp;lt;&amp;lt;UUID()&amp;gt;&amp;gt;&lt;/code&gt; Tines function creates a unique UUID for this MDM command.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/6-tines-create-mdm-command.png"
- alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines event to create ScheduleOSUpdate MDM command"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines event to create ScheduleOSUpdate MDM command&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The Fleet API requires the command to be sent as a base64-encoded string. We add a &amp;ldquo;Base64 Encode&amp;rdquo; action to the story
 to encode the XML payload. It uses the Tines &lt;code&gt;BASE64_ENCODE&lt;/code&gt; function.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/7-tines-base64-encode.png"
- alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines Base64 Encode event"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines Base64 Encode event&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="run-mdm-command-on-device"&gt;&lt;a href="#run-mdm-command-on-device" class="header-anchor"&gt;&lt;/a&gt;Run MDM command on device
 &lt;/h2&gt;&lt;p&gt;Finally, we send the MDM command to the device. We add another &amp;ldquo;HTTP Request&amp;rdquo; action to the story. The action makes a
 POST request to the Fleet API to send the MDM command to the device.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/8-tines-run-mdm-command.png"
- alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Tines HTTP Request action to run MDM command on device"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Tines HTTP Request action to run MDM command on device&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;The MDM command will run on the device, downloading and installing the OS update.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/webhook-flow-with-tines/9-macos-device-restart.png"
- alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
- &lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="macOS restart notification after OS update"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;macOS restart notification after OS update&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="conclusion"&gt;&lt;a href="#conclusion" class="header-anchor"&gt;&lt;/a&gt;Conclusion

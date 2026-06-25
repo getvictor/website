@@ -115,9 +115,9 @@ view the certificate details and verify that the signature is valid.&lt;/p&gt;
 Our self-signed certificate is not trusted because the certificate authority is not part of the Windows trusted root
 certificate store.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-not-verified.png"
- alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature cannot be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature cannot be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;p&gt;We can add the certificate authority to the Windows trusted root certificate store with the following Powershell
@@ -126,9 +126,9 @@ command:&lt;/p&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;After adding the certificate authority to the trusted root certificate store, users will see that the certificate is
 trusted and the signature is valid.&lt;/p&gt;
 &lt;figure&gt;&lt;img src="https://victoronsoftware.com/posts/code-signing-windows/certificate-signature-verified.png"
- alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
- &lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
- &lt;/figcaption&gt;
+			alt="Certificate in code signature is be verified"&gt;&lt;figcaption&gt;
+			&lt;h4&gt;Certificate in code signature is be verified&lt;/h4&gt;
+		&lt;/figcaption&gt;
 &lt;/figure&gt;
 
 &lt;h2 id="code-signing-using-a-certificate-from-a-public-ca"&gt;&lt;a href="#code-signing-using-a-certificate-from-a-public-ca" class="header-anchor"&gt;&lt;/a&gt;Code signing using a certificate from a public CA
