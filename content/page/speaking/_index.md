@@ -29,6 +29,13 @@ fast without creating chaos.
 Whether speaking on AI's role in development, scaling architectures, or leading with openness, Victor helps engineers
 and leaders think like builders of resilient companies.
 
+## Upcoming speaking engagements
+
+**OWASP LASCON 2026**  
+**Dates:** October 29-30, 2026  
+**Location:** Austin, Texas  
+**Session:** Don't Let AI Trash Your Codebase: An AppSec Survival Guide
+
 ## Past speaking engagements
 
 **Conf42 Golang 2026**  
@@ -61,7 +68,7 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **SCALE 23x**  
 **Dates:** March 5-8, 2026  
 **Location:** Pasadena, California  
-**Session:** Why Engineers Work on the Wrong Things and How Transparency Fixes It
+**Session:** [Why Engineers Work on the Wrong Things and How Transparency Fixes It](https://youtu.be/aXliIIDFW-s)
 
 **NDC Security 2026**  
 **Dates:** March 2-5, 2026  
