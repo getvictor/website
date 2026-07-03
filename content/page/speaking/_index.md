@@ -106,7 +106,7 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **Dates:** September 30-October 1, 2025  
 **Location:** Council Bluffs, Iowa  
 **Sessions:**  
-[Will AI Coding Agents Replace Software Developers?](https://www.youtube.com/watch?v=ATGrRb9gCHo)  
+[Will AI Coding Agents Replace Software Developers?](https://www.youtube.com/watch?v=z0r3slyDbok)  
 [Why Great Developers Draw: 4 Architecture Diagrams That Clarify Everything](https://www.youtube.com/watch?v=ATGrRb9gCHo)
 
 **The Commit Your Code Conference 2025!**  
