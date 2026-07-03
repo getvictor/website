@@ -31,6 +31,11 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
+**CYBR.SEC.CON 2026**  
+**Dates:** September 15-16, 2026  
+**Location:** Houston, Texas  
+**Session:** What AppSec Teams Should Ask Their EDR Vendor: Lessons From Building an Open Source EDR
+
 **OWASP LASCON 2026**  
 **Dates:** October 29-30, 2026  
 **Location:** Austin, Texas  
