@@ -73,7 +73,7 @@ Modularizing a 10-Year Monolith: The Architecture, the People, and the Pain
 **SCALE 23x**  
 **Dates:** March 5-8, 2026  
 **Location:** Pasadena, California  
-**Session:** [Why Engineers Work on the Wrong Things and How Transparency Fixes It](https://youtu.be/aXliIIDFW-s)
+**Session:** [Why Engineers Work on the Wrong Things and How Transparency Fixes It](https://www.youtube.com/watch?v=ttWbWaBDEZI)
 
 **NDC Security 2026**  
 **Dates:** March 2-5, 2026  
