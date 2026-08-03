@@ -31,6 +31,13 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
+**X World 2026**  
+**Dates:** August 25-26, 2026  
+**Location:** Melbourne, Australia  
+**Sessions:**  
+[Does Your Mac Fleet Need an EDR? A Field Guide for Mac Admins](https://xworld.au/presentation/index/247)  
+[Building an Open Source macOS EDR: Lessons From Apple's Endpoint Security Framework](https://xworld.au/presentation/index/248)
+
 **CYBR.SEC.CON 2026**  
 **Dates:** September 15-16, 2026  
 **Location:** Houston, Texas  
