@@ -14,6 +14,8 @@ menu:
 
 Endpoint detection and response (EDR), starting with macOS.
 
+- [Does your Mac fleet need an EDR?](./edr-decision-worksheet.pdf)
+
 ## [OpenBlur Chrome extension](./openblur)
 
 Hide and blur sensitive information on any webpage. Blur your secrets such as personal emails, public IP addresses, and
