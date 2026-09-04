@@ -31,13 +31,6 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**X World 2026**  
-**Dates:** August 25-26, 2026  
-**Location:** Melbourne, Australia  
-**Sessions:**  
-[Does Your Mac Fleet Need an EDR? A Field Guide for Mac Admins](https://xworld.au/presentation/index/247)  
-[Building an Open Source macOS EDR: Lessons From Apple's Endpoint Security Framework](https://xworld.au/presentation/index/248)
-
 **CYBR.SEC.CON 2026**  
 **Dates:** September 15-16, 2026  
 **Location:** Houston, Texas  
@@ -48,7 +41,19 @@ and leaders think like builders of resilient companies.
 **Location:** Austin, Texas  
 **Session:** Don't Let AI Trash Your Codebase: An AppSec Survival Guide
 
+**Black Hat Europe**  
+**Dates:** December 7-10, 2026  
+**Location:** London, UK  
+**Session:** Fleet EDR: One Open Source Stack for macOS Process, Network, and DNS Detection
+
 ## Past speaking engagements
+
+**X World 2026**  
+**Dates:** August 25-26, 2026  
+**Location:** Melbourne, Australia  
+**Sessions:**  
+[Does Your Mac Fleet Need an EDR? A Field Guide for Mac Admins](https://www.youtube.com/watch?v=zI1wFQip1Fk)  
+[Building an Open Source macOS EDR: Lessons From Apple's Endpoint Security Framework](https://www.youtube.com/watch?v=_4X6ePe-cDw)
 
 **Conf42 Golang 2026**  
 **Date:** May 21, 2026  
