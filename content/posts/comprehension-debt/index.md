@@ -122,6 +122,9 @@ Generation got cheaper. Comprehension did not. The teams that move fastest will 
 - **[What is readable code and why is it important?](../readable-code/)**  
   Why code that is easy to understand is also code that is safe to change, with or without AI in the loop.
 
+- **[My AI coding agent looks exactly like a reverse shell](../ai-coding-agent-reverse-shell/)**  
+  Why an AI coding agent running shell commands on your laptop looks, to a security tool, exactly like an attack.
+
 ## Watch the full talk
 
 This article covers one idea from a longer conference talk on writing maintainable code with AI. The talk also gets into

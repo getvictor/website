@@ -187,6 +187,9 @@ Recently, we explained [how to create an EXE installer](../exe-installer).
 We also discussed [connecting your local machine to remote Active Directory](../connect-to-remote-active-directory/) and
 covered [how to test a Windows NDES SCEP server](../test-ndes-scep-server).
 
+For a case where a valid signature was not enough, see how a signed, trojanized 3CX app was
+[trusted over the security alerts it triggered](../ai-coding-agent-reverse-shell/).
+
 ## Code signing a Windows application video
 
 {{< youtube NQYUgHznXew >}}

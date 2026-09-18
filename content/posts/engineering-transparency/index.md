@@ -200,6 +200,9 @@ better systems. You just need to start asking for and creating transparency.
 - **[What is readable code and why is it important?](../readable-code/)**  
   Learn how code clarity impacts team velocity and why transparency starts at the code level.
 
+- **[My AI coding agent looks exactly like a reverse shell](../ai-coding-agent-reverse-shell/)**  
+  The same argument applied to security tools: you can't trust a detection rule you aren't allowed to read.
+
 ## Watch us discuss engineering transparency
 
 {{< youtube 3oSdwkC7iiI >}}
