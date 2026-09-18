@@ -37,9 +37,9 @@
 {{- end -}}
 {{- end -}}
 
-{{ $image := partialCached "helper/image" (dict "Context" . "Type" "opengraph") .RelPermalink "opengraph" }}
-{{- if $image.exists -}}
-<meta property='og:image' content='{{ absURL $image.permalink }}' />
+{{ $image := partial "helper/image" (dict "Image" .Params.image "Resources" .Resources "Context" .) }}
+{{- if $image -}}
+<meta property='og:image' content='{{ absURL $image.Permalink }}' />
 {{- end -}}
 
 {{ range .Param "authors" }}
