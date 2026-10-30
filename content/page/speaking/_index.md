@@ -31,17 +31,17 @@ and leaders think like builders of resilient companies.
 
 ## Upcoming speaking engagements
 
-**OWASP LASCON 2026**  
-**Dates:** October 29-30, 2026  
-**Location:** Austin, Texas  
-**Session:** Don't Let AI Trash Your Codebase: An AppSec Survival Guide
-
 **Black Hat Europe**  
 **Dates:** December 7-10, 2026  
 **Location:** London, UK  
 **Session:** Fleet EDR: One Open Source Stack for macOS Process, Network, and DNS Detection
 
 ## Past speaking engagements
+
+**OWASP LASCON 2026**  
+**Dates:** October 29-30, 2026  
+**Location:** Austin, Texas  
+**Session:** Don't Let AI Trash Your Codebase: An AppSec Survival Guide
 
 **CYBR.SEC.CON 2026**  
 **Dates:** September 15-16, 2026  

@@ -10,10 +10,12 @@ menu:
             icon: link
 ---
 
-## [Fleet EDR](https://github.com/getvictor/fleet-edr)
+## [RawTrail](https://rawtrail.io)
 
-Endpoint detection and response (EDR), starting with macOS.
+Open-source macOS tool that independently records what AI agents run: processes, file changes and network activity. Also
+a macOS EDR.
 
+- [RawTrail on GitHub](https://github.com/RawTrail/RawTrail)
 - [Does your Mac fleet need an EDR?](./edr-decision-worksheet.pdf)
 
 ## [OpenBlur Chrome extension](./openblur)
